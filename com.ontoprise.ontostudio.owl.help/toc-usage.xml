@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="Using the OWL Editor" link_to="/../org.neontoolkit.help/toc.xml#more-samples">
+	<topic href="html/using_owl_editor.html" label="Using the OWL Editor">
+		<topic href="html/create_owl_project.html" label="Create an Ontology Project"></topic>
+		<topic href="html/create_ontology.html" label="Create an Ontology"></topic>
+		<topic href="html/create_class.html" label="Create a Class"></topic>
+		<topic href="html/create_object_property.html" label="Create an Object Property"></topic>
+		<topic href="html/create_datatype_property.html" label="Create a Datatype Property"></topic>
+		<topic href="html/create_annotation_property.html" label="Create an Annotation Property"></topic>
+		<topic href="html/create_annotation.html" label="Create an Annotation"></topic>
+		<topic href="html/import_ontology.html" label="Import an Ontology"></topic>
+		<topic href="html/export_ontology.html" label="Export an Ontology"></topic>
+		<topic href="html/delete_resource.html" label="Delete a Resource"></topic>
+	</topic>
+</toc>

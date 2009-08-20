@@ -1,0 +1,42 @@
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Entity Properties</title>
+    <link rel="stylesheet" type="text/css" href="../css/stylesheet.css">
+</head>
+<body class="bodynormal">
+<h4>OWL Ontology</h4>
+<p>This Entity Properties panel displays general properties of an OWL ontology itself. Once you have selected an ontology in the 
+<a href="ontology_navigator.html">Ontology Navigator</a>, the Entity Properties panel will show import and namespace
+information of the currently selected ontology.</p>
+<p><img class="format" src="../images/screenshots/owl2.jpg" title="Entity Properties panel" alt="Entity Properties panel"></p>
+<p><b>Imports</b></p>
+<p>In the Imports section, ontologies imported by the currently selected ontology are shown. Importing another ontology brings
+the entire set of classes, properties, and individuals provided by that ontology into the current ontology. Importing another
+ontology will also import all of the ontologies that the initial ontology imports.</p> 
+<hr>
+<b>Note &ndash;</b> Only ontologies located in the current ontology project can be imported.<br/>
+<hr>
+<hr>
+<b>Tip &ndash;</b> The OWL <a href="preferences.html">preferences</a> dialog lets you decide whether you want to see imported axioms (and entities)
+in the user interface or not.
+<hr>
+<p><b>Namespaces</b></p>
+<p>Usually, each imported ontology is coordinated with a namespace declaration. The namespace declaration provides
+convenient means to reference names defined in other OWL ontologies. A namespace is a string of characters that
+prefixes the identifiers of classes, properties, and individuals in an ontology. By maintaining different namespaces
+for different ontologies it is possible for one ontology to reference resources in another ontology in an unambiguous manner.</p>
+<hr>
+<b>Note &ndash;</b> Notice that adding a namespace just adds an <tt>xmlns</tt> statement to the ontology.
+The namespace will not be imported. To import a namespace, see <a href="import_ontology.html">Import an Ontology</a>.
+<hr>
+<p>In addition, every ontology can specify a default namespace, stating that unprefixed names refer to this
+namespace. You can specify the default namespace by selecting the check box in front of the namespace. 
+Newly generated resources will then get this namespace by default.</p>
+<hr>
+<b>Note &ndash;</b> If you did not select a default namespace, the following namespace will be used by default:
+<tt>http://kaon2.semanticweb.org/defaultNamespace</tt>
+<hr>
+</body>
+</html>

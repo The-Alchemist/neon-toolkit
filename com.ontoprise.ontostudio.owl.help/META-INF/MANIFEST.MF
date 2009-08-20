@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: com.ontoprise.ontostudio.owl.help; singleton:=true
+Bundle-Version: 2.3.0
+Bundle-Vendor: %providerName
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Localization: plugin

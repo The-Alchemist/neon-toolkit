@@ -1,0 +1,45 @@
+
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>OWL Individuals</title>
+	<link rel="stylesheet" type="text/css" href="../css/stylesheet.css">
+</head>
+
+<body class="bodynormal">
+<h4> OWL Individuals</h4>
+The Entity Properties View for individuals contains the property values of the instance. The various configuration
+options are located on the following tabs:
+<ul>
+<li>Properties</li>
+<li>Taxonomy</li>
+<li>Annotations</li>
+</ul>
+
+<h5>Properties</h5>
+On the Properties tab you can edit the the object and datatype property values
+of the selected instance. <a href="owl_object_properties.html">Object properties</a> link an individual to an individual.
+<a href="owl_data_properties.html">Datatype properties</a> link an individual to an <a href="owl_datatypes.html">XML Schema datatype</a>
+value or an RDF literal.
+<p><img class="format" src="../images/screenshots/indi2.jpg" title="Screenshot of the Properties Tab" alt="Screenshot of the Properties Tab"></p> 
+
+<h5>Taxonomy</h5>
+On the Taxonomy tab you can edit the classes of which the individual is member of. In addition, you can
+specify whether two individuals are identical or different. Note that two different names of individuals can actually refer to the 
+same individual. For the ontology language OWL does not make the so-called Unique Name Assumption (UNA), which means that that
+two different names of individuals in the ontology necessarily refer to different entities in the world. Instead, OWL provides
+explicit constructs to express that two names denote distinct entities.
+	<ul>
+	<li><tt>owl:sameAs</tt> is the OWL property that states that two given named individuals have the same identity.</li>
+	<li><tt>owl:differentFrom</tt> is the OWL property that states that two given named individuals have different identities.</li>
+	</ul>
+For Data Properties you can also define a Type, which is either an XML Schema datatype or RDFS Literal, and a language code.
+<p><img class="format" src="../images/screenshots/indi3.jpg" title="Screenshot of the Taxonomy Tab" alt="Screenshot of the Taxonomy Tab"></p>
+<h5>Annotations</h5>
+<p>Usually, annotations are used to add information to resources of the ontology. They contain useful information such
+as who is the creator or what are the readable labels and comments for single elements of the ontology.</p>
+<p>For information on how to create an annotation, see <a href="create_annotation.html">Create an Annotation</a>.</p>
+<p><img class="format" src="../images/screenshots/indi4.jpg" title="Screenshot of the Annotations Tab" alt="Screenshot of the Annotations Tab"></p>
+</body>
+</html>
