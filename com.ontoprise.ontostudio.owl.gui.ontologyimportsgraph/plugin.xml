@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.neontoolkit.ontovisualize.visualizerContext">
+      <visualizerContext
+            configuratorClass="com.ontoprise.ontostudio.owl.gui.ontologyimportsgraph.OntologyImportsGraphConfiguration"
+            ontologyLanguage="OWLOntologyImports">
+         <nodeContentProviderDefinition
+               contentProvider="com.ontoprise.ontostudio.owl.gui.ontologyimportsgraph.nodes.contentprovider.OntologyNodeContentProvider"
+               id="com.ontoprise.ontostudio.owl.gui.ontologyimportsgraph.moduleNode"
+               nodeClass="com.ontoprise.ontostudio.owl.visualize.nodes.OntologyNode"
+               treeElementClass="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement">
+         </nodeContentProviderDefinition>
+      </visualizerContext>
+   </extension>
+
+    <extension
+          point="org.neontoolkit.gui.entityProperties">
+	   <entityPropertyContributor
+	         activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement"
+	         class="com.ontoprise.ontostudio.owl.gui.ontologyimportsgraph.ui.OntologyImportsGraphPropertyPage"
+	         id="org.neontoolkit.gui.ontologyimportsgraph.propertyContributorOntologyImportsVisualization"
+	         name="Ontology Imports Graph">
+            <subContributorOf
+            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorOWLModules2"
+            	priority="0.1" />
+	   </entityPropertyContributor>
+	</extension>
+
+</plugin>
