@@ -1,0 +1,56 @@
+/*****************************************************************************
+ * Copyright (c) 2008 ontoprise GmbH.
+ *
+ * All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the 
+ * Eclipse Public License v1.0 which accompanies this distribution, 
+ * and is available at http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Created on: 19.12.2008
+ * Created by: werner
+ ******************************************************************************/
+package com.ontoprise.ontostudio.owl.visualize.nodes;
+
+import org.eclipse.core.runtime.CoreException;
+import org.semanticweb.owlapi.model.OWLEntity;
+
+import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
+import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
+import com.ontoprise.ontostudio.owl.visualize.Messages;
+
+/**
+ * @author werner
+ *
+ */
+public class DataPropertyNode extends AbstractOWLEntityNode {
+
+    public DataPropertyNode(OWLEntity entity, String ontologyId, String projectId, boolean isRoot) {
+        super(entity, ontologyId, projectId, isRoot);
+        setImage(OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.DATA_PROPERTY));
+    }
+
+    public DataPropertyNode() {
+        super();
+        setImage(OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.DATA_PROPERTY));
+    }
+
+    public DataPropertyNode(OWLEntity entity, String ontologyId, String projectId) {
+        this(entity, ontologyId, projectId, false);
+    }
+
+    @Override
+    public String getNodeType() {
+        return Messages.DataPropertyNode_0;
+    }
+
+    @Override
+    public Object create() throws CoreException {
+        return new DataPropertyNode();
+    }
+
+    @Override
+    public boolean canBeNavigatedTo() {
+        return false;
+    }
+}
