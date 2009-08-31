@@ -1,0 +1,651 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension id="ide" point="org.eclipse.core.runtime.products"> 
+      <!-- for documentation of this, cf. http://www.eclipse.org/articles/Article-Branding/branding-your-application.html -->
+      <product name="%productName" 
+      		application="org.eclipse.ui.ide.workbench" 
+      		description="%productBlurb"> 
+          <property name="windowImages" value="neon_16x16.png,neon_32x32.png"/> 
+          <property name="aboutImage" value="neon_large.png"/> 
+          <property name="aboutText" value="%productBlurb"/> 
+          <property name="appName" value="%productName"/> 
+      </product> 
+   </extension> 
+<!--   <extension
+         id="ide"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.neontoolkit.plugin.application"
+            name="NeOn Toolkit">
+      </product>
+   </extension>
+-->
+
+   <extension  
+         point="org.eclipse.ui.intro">
+      <intro
+            class="org.eclipse.ui.intro.config.CustomizableIntroPart"
+            id="org.neontoolkit.plugin.intro">
+      </intro>
+      <introProductBinding
+            introId="org.neontoolkit.plugin.intro"
+            productId="org.neontoolkit.plugin.ide">
+      </introProductBinding>
+   </extension>
+
+   <extension   
+         id="intro"
+         point="org.eclipse.ui.intro.config">
+      <config
+            introId="org.neontoolkit.plugin.intro"
+            id="org.neontoolkit.plugin.config"
+            content="$nl$/introContent.xml">
+         <presentation
+               home-page-id="root">
+            <implementation
+                  kind="html"
+                  os="win32,linux,macosx">
+            </implementation>
+         </presentation>
+      </config>
+   </extension>
+   <!--
+   <extension
+         point="org.eclipse.ui.cheatsheets.cheatSheetContent">
+      <cheatsheet
+            name="%cheatsheet.cvs.name"
+            contentFile="$nl$/cheatsheets/CVS_1.xml"
+            id="org.eclipse.platform.cvs_1">
+         <description>
+            %cheatsheet.cvs.desc
+         </description>
+      </cheatsheet>
+   </extension>
+   -->
+
+   <!-- =====================================================  -->
+   <!--Standby Content Part contributions                     -->
+   <!-- =====================================================  
+   <extension point="org.eclipse.ui.intro.configExtension">
+      <standbyContentPart
+            id="org.eclipse.platform.cheatsheet"
+            class="org.eclipse.platform.internal.CheatSheetStandbyContent"
+            pluginId="org.eclipse.platform"/>
+   </extension>
+   -->
+
+   <!-- =====================================================  -->
+   <!-- Using Capabilities to disable unneeded Eclipse stuff   -->
+   <!-- =====================================================  -->
+  <extension
+         point="org.eclipse.ui.activities">
+         <category
+         	name="Eclipse Plugins"
+         	description="EclipsePlugins"
+         	id="com.ontoprise.ontostudio.EclipsePlugins">
+         </category>
+
+          <activity
+         	name="Eclipse File Search Page"
+         	description="Eclipse File Search Page"
+         	id="com.ontoprise.ontostudio.eclipseFileSearchPage">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseFileSearchPage"
+         	pattern="org\.eclipse\.search/org.eclipse.search.OpenFileSearchPage">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseFileSearchPage"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+          <activity
+         	name="Eclipse Text Search Stuff"
+         	description="Eclipse Text Search Stuff"
+         	id="com.ontoprise.ontostudio.eclipseTextSearchStuff">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseTextSearchStuff"
+         	pattern="org\.eclipse\.search/textSearchSubMenu">
+         </activityPatternBinding>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseTextSearchStuff"
+         	pattern="org\.eclipse\.search/org.eclipse.search.TextSearchFile">
+         </activityPatternBinding>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseTextSearchStuff"
+         	pattern="org\.eclipse\.search/org.eclipse.search.TextSearchProject">
+         </activityPatternBinding>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseTextSearchStuff"
+         	pattern="org\.eclipse\.search/org.eclipse.search.TextSearchWorkspace">
+         </activityPatternBinding>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseTextSearchStuff"
+         	pattern="org\.eclipse\.search/org.eclipse.search.TextSearchWorkingSet">
+         </activityPatternBinding>         
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseTextSearchStuff"
+         	pattern="org\.eclipse\.search/org.eclipse.search.internal.ui.text.TextSearchPage">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseTextSearchStuff"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+         
+         <activity
+         	name="Eclipse JDT"
+         	description="Eclipse JDT Functionality"
+         	id="com.ontoprise.ontostudio.eclipseJDT">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseJDT"
+         	pattern="org\.eclipse\.jdt\..*/.*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseJDT"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+         <activity
+         	name="Eclipse PDE"
+         	description="Eclipse PDE Functionality"
+         	id="com.ontoprise.ontostudio.eclipsePDE">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipsePDE"
+         	pattern="org\.eclipse\.pde\..*/.*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipsePDE"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+         <activity
+         	name="Eclipse UI IDE"
+         	description="Eclipse UI IDE"
+         	id="com.ontoprise.ontostudio.eclipseUI.ide">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.ide"
+         	pattern="org\.eclipse\.ui\.ide/org.eclipse.ui.category.project">
+         </activityPatternBinding>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.ide"
+         	pattern="org\.eclipse\.ui\.ide/org.eclipse.ui.project.buildAutomatically">
+         </activityPatternBinding>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.ide"
+         	pattern="org\.eclipse\.ui\.ide/*folder.*">
+         </activityPatternBinding>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.ide"
+         	pattern="org\.eclipse\.ui\.ide/.*new.*file.*">
+         </activityPatternBinding>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.ide"
+         	pattern="org\.eclipse\.ui\.ide/.*FileSystem.*">
+         </activityPatternBinding>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.ide"
+         	pattern="org\.eclipse\.ui\.ide/org.eclipse.ui.wizards.import.Preferences">
+         </activityPatternBinding>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.ide"
+         	pattern="org\.eclipse\.ui\.ide/org.eclipse.ui.wizards.export.Preferences">
+         </activityPatternBinding>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.ide"
+         	pattern="org\.eclipse\.ui\.editors/org.eclipse.ui.editors.wizards.UntitledTextFileWizard">
+         </activityPatternBinding>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.ide"
+         	pattern="org\.eclipse\.ui\.ide/org.eclipse.ui.wizards.new.folder">
+         </activityPatternBinding>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.ide"
+         	pattern="org\.eclipse\.ui\.ide/org.eclipse.ui.wizards.new.project">
+         </activityPatternBinding>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.ide"
+         	pattern="org\.eclipse\.ui\.ide/org.eclipse.ui.wizards.import.ExternalProject">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.ide"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+				<!-- Run Menu -->
+         <activity
+         	name="Eclipse UI External Tools"
+         	description="Eclipse UI External Tools"
+         	id="com.ontoprise.ontostudio.eclipseUI.externaltools">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.externaltools"
+         	pattern="org\.eclipse\.ui\.externaltools/..*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.externaltools"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+				<!-- Properties View -->
+         <activity
+         	name="Eclipse UI Properties View"
+         	description="Eclipse UI Properties View"
+         	id="com.ontoprise.ontostudio.eclipseUI.propertiesview">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.propertiesview"
+         	pattern="org\.eclipse\.ui\.views/org.eclipse.ui.views.PropertySheet">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.propertiesview"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+				<!-- BIRT -->
+         <activity
+         	name="Eclipse BIRT"
+         	description="Eclipse BIRT"
+         	id="com.ontoprise.ontostudio.eclipseUI.birt">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.birt"
+         	pattern="org\.eclipse\.birt\.report\.designer\.ui\.ide/org.eclipse.birt.report.designer.ui.wizards.NewLibraryWizard">
+         </activityPatternBinding>
+         <!-- ### see bug 7982 ###
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.birt"
+         	pattern="org\.eclipse\.birt\.report\.designer\.ui\.ide/org.eclipse.birt.report.designer.ui.ide.wizards.NewReportWizard">
+         </activityPatternBinding>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.birt"
+         	pattern="org\.eclipse\.birt\.report\.designer\.ui\.ide/org.eclipse.birt.report.designer.ui.ide.wizards.NewReportProjectWizard">
+         </activityPatternBinding>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.birt"
+         	pattern="org\.eclipse\.birt\.report\.designer\.ui\.ide/org.eclipse.birt.report.designer.ui.ide.wizards.NewTemplateWizard">
+         </activityPatternBinding>
+         -->
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.birt"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+
+
+         
+
+
+         <activity
+         	name="Eclipse Datatools"
+         	description="Eclipse Datatools Functionality"
+         	id="com.ontoprise.ontostudio.eclipseDatatools">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseDatatools"
+         	pattern="org\.eclipse\.datatools\..*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseDatatools"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+
+         <activity
+         	name="Eclipse Platform ProjectMenu Build"
+         	description="Eclipse Platform Project Menu Build"
+         	id="com.ontoprise.ontostudio.eclipsePlatformProjectMenuBuild">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipsePlatformProjectMenuBuild"
+         	pattern="org\.eclipse\..*build.*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipsePlatformProjectMenuBuild"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+         <activity
+         	name="Eclipse Platform ProjectMenu Properties"
+         	description="Eclipse Platform Project Menu Build Properties"
+         	id="com.ontoprise.ontostudio.eclipsePlatformProjectMenuBuildProperties">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipsePlatformProjectMenuBuildProperties"
+         	pattern="org\.eclipse\..*properties.*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipsePlatformProjectMenuBuildProperties"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+         <activity
+         	name="Eclipse Platform ProjectMenu Clean"
+         	description="Eclipse Platform Project Menu Build Clean"
+         	id="com.ontoprise.ontostudio.eclipsePlatformProjectMenuBuildPropertiesClean">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipsePlatformProjectMenuBuildPropertiesClean"
+         	pattern="org\.eclipse\..*clean.*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipsePlatformProjectMenuBuildPropertiesClean"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+         <activity
+         	name="Eclipse Bookmarks"
+         	description="Eclipse Bookmarks"
+         	id="com.ontoprise.ontostudio.eclipseBookmarks">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseBookmarks"
+         	pattern=".*Bookmark.*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseBookmarks"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+         <activity
+         	name="Eclipse Tasks"
+         	description="Eclipse Tasks"
+         	id="com.ontoprise.ontostudio.eclipseTasks">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseTasks"
+         	pattern=".*Task.*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseTasks"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+
+
+         <activity
+         	name="Eclipse Navigate Show In"
+         	description="Eclipse Navigate Show In"
+         	id="com.ontoprise.ontostudio.eclipseNavigateShowIn">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseNavigateShowIn"
+         	pattern="org\.eclipse\.ui/.*ShowIn.*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseNavigateMenu"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+         <activity
+         	name="Eclipse Debug"
+         	description="Eclipse Debug Functionality"
+         	id="com.ontoprise.ontostudio.eclipseDebug">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseDebug"
+         	pattern="org\.eclipse\.debug\..*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseDebug"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+         <activity
+         	name="Eclipse Resources"
+         	description="Eclipse Resouces Functionality"
+         	id="com.ontoprise.ontostudio.eclipseResources">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseResources"
+         	pattern="org\.eclipse\.core\.resources\..*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseResources"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+
+         <activity
+         	name="Eclipse FileSystem"
+         	description="Eclipse FileSystem Functionality"
+         	id="com.ontoprise.ontostudio.eclipseFileSystem">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseFileSystem"
+         	pattern="org\.eclipse\.core\.filesystem\..*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseFileSystem"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+         <activity
+         	name="Eclipse Team"
+         	description="Eclipse Team Functionality"
+         	id="com.ontoprise.ontostudio.eclipseTeam">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseTeam"
+         	pattern="org\.eclipse\.team\..*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseTeam"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+         <activity
+         	name="Eclipse New Window"
+         	description="Eclipse New Window Functionality"
+         	id="com.ontoprise.ontostudio.eclipseNewWindow">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseNewWindow"
+         	pattern=".*newWindow.*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseNewWindow"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+         <activity
+         	name="Eclipse New Editor"
+         	description="Eclipse New Editor Functionality"
+         	id="com.ontoprise.ontostudio.eclipseNewEditor">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseNewEditor"
+         	pattern=".*newEditor.*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseNewEditor"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+         <activity
+         	name="Eclipse UI Cheatsheets"
+         	description="Eclipse UI Cheatsheets"
+         	id="com.ontoprise.ontostudio.eclipseUI.cheatSheets">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.cheatSheets"
+         	pattern="org\.eclipse\.ui\.cheatsheets\..*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.cheatSheets"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+         <activity
+         	name="Eclipse UI Editors"
+         	description="Eclipse UI Editors"
+         	id="com.ontoprise.ontostudio.eclipseUI.editors">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.editors"
+         	pattern="org\.eclipse\.ui\.editors\..*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.editors"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+         <activity
+         	name="Eclipse UI Forms"
+         	description="Eclipse UI Forms"
+         	id="com.ontoprise.ontostudio.eclipseUI.forms">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.forms"
+         	pattern="org\.eclipse\.ui\.forms\..*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.forms"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+         <activity
+         	name="Eclipse UI Navigator"
+         	description="Eclipse UI Navigator"
+         	id="com.ontoprise.ontostudio.eclipseUI.navigator">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.navigator"
+         	pattern="org\.eclipse\.ui\.navigator\..*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.navigator"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+<!--
+         <activity
+         	name="Eclipse Update"
+         	description="Eclipse Update Functionality"
+         	id="com.ontoprise.ontostudio.eclipseUpdate">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUpdate"
+         	pattern="org\.eclipse\.update\..*">
+         </activityPatternBinding>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUpdate"
+         	pattern=".*update.*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUpdate"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+-->
+
+        <activity
+         	name="Eclipse Ant"
+         	description="Eclipse Ant Functionality"
+         	id="com.ontoprise.ontostudio.eclipseAnt">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseAnt"
+         	pattern="org\.eclipse\.ant.*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseAnt"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+         
+         <activity
+         	name="JUnit"
+         	description="JUnit Functionality"
+         	id="com.ontoprise.ontostudio.jUnit">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.jUnit"
+         	pattern="org\.junit.*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.jUnit"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+         <activity
+         	name="Eclipse Dynamic Help"
+         	description="Eclipse Dynamic Help"
+         	id="com.ontoprise.ontostudio.eclipseDynamicHelp">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseDynamicHelp"
+         	pattern=".*dynamicHelp.*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseDynamicHelp"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+         
+         <activity
+         	name="Eclipse Tips And Tricks"
+         	description="Eclipse Tips And Tricks"
+         	id="com.ontoprise.ontostudio.eclipseTipsAndTricks">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseTipsAndTricks"
+         	pattern=".*tipsAndTricks.*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseTipsAndTricks"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+         
+         <activity
+         	name="Eclipse Modeling Framework"
+         	description="Eclipse Modeling Framework"
+         	id="com.ontoprise.ontostudio.eclipseModelingFramework">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseModelingFramework"
+         	pattern="org\.eclipse\..*emf.*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseModelingFramework"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+         <activity
+         	name="UML"
+         	description="UML"
+         	id="com.ontoprise.ontostudio.eclipseUML">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUML"
+         	pattern="org\.eclipse\..*uml.*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUML"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+         <activity
+         	name="ResourcePerspective"
+         	description="ResourcePerspective"
+         	id="com.ontoprise.ontostudio.eclipseResourcePerspective">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseResourcePerspective"
+         	pattern="org\.eclipse\.ui\..*resource.*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseResourcePerspective"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+         
+  </extension>
+  <extension
+        point="org.eclipse.ui.startup">
+     <startup
+           class="org.neontoolkit.plugin.NeonToolkitStarter">
+     </startup>
+  </extension>
+
+</plugin>
