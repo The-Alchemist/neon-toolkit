@@ -1,0 +1,177 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.neontoolkit.gui" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appinfo>
+         <meta.schema plugin="org.neontoolkit.gui" id="entityProperties" name="Entity Property View Extension"/>
+      </appinfo>
+      <documentation>
+         Multiple PropertyPages for each Tree Element can be created using this extension point. The Pages are organized as tabs (if there is more than one available). This is similar to the plugin.xml &amp; MANIFEST.MF Viewer of Eclipse.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="entityPropertyContributor" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="entityPropertyContributor">
+      <complexType>
+         <sequence minOccurs="0" maxOccurs="unbounded">
+            <element ref="subContributorOf"/>
+         </sequence>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn=":org.neontoolkit.gui.properties.IPropertyPage"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="activatorClass" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="type" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="subContributorOf">
+      <complexType>
+         <attribute name="superContributorId" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="priority" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="since"/>
+      </appinfo>
+      <documentation>
+         [Enter the first release in which this extension point appears.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="examples"/>
+      </appinfo>
+      <documentation>
+         In the following example SynonymsPropertyPage is a Sub-PropertyPage
+of ConceptPropertyPage:
+(Notice that the id of super-entityPropertyContributor &amp; the superContributorId 
+of subContributorOf must match.)
+
+
+ &lt;extension
+         point=&quot;org.neontoolkit.gui.entityProperties&quot;&gt;
+      &lt;!-- The main Property Page for ConceptTreeElements (ConceptPropertyPage) --&gt;
+      &lt;entityPropertyContributor
+            activatorClass=&quot;com.ontoprise.ontostudio.gui.navigator.concept.ConceptTreeElement&quot;
+            class=&quot;com.ontoprise.ontostudio.gui.properties.concept.ConceptPropertyPage2&quot;
+            id=&quot;com.ontoprise.ontostudio.propertyContributorConcepts&quot;
+            name=&quot;Attributes and Relations&quot;&gt;
+      &lt;/entityPropertyContributor&gt;
+      &lt;!-- Sub Property Page of ConceptPropertyPage--&gt;
+      &lt;entityPropertyContributor
+            activatorClass=&quot;com.ontoprise.ontostudio.gui.navigator.concept.ConceptTreeElement&quot;
+            class=&quot;com.ontoprise.ontostudio.synonyms.properties.SynonymsPropertyPage&quot;
+            id=&quot;com.ontoprise.ontostudio.propertyContributorSynonyms&quot;
+            name=&quot;Synonyms&quot;&gt;
+            &lt;subContributorOf
+             superContributorId=&quot;com.ontoprise.ontostudio.propertyContributorConcepts&quot;
+             priority=&quot;5&quot; /&gt;
+      &lt;/entityPropertyContributor&gt;
+ &lt;/extension&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="apiInfo"/>
+      </appinfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appinfo>
+         <meta.section type="implementation"/>
+      </appinfo>
+      <documentation>
+         [Enter information about supplied implementation of this extension point.]
+      </documentation>
+   </annotation>
+
+
+</schema>
