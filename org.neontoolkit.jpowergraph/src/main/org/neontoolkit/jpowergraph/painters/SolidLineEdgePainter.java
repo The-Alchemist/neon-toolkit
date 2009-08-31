@@ -1,0 +1,55 @@
+/*****************************************************************************
+ * Copyright (c) 2007 ontoprise GmbH.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU General Public License (GPL)
+ * which accompanies this distribution, and is available at
+ * http://www.ontoprise.de/legal/gpl.html
+ *****************************************************************************/
+
+package org.neontoolkit.jpowergraph.painters;
+
+import net.sourceforge.jpowergraph.Edge;
+import net.sourceforge.jpowergraph.manipulator.dragging.DraggingManipulator;
+import net.sourceforge.jpowergraph.manipulator.selection.HighlightingManipulator;
+import net.sourceforge.jpowergraph.pane.JGraphPane;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Composite;
+
+/*
+ * Created by Werner Hihn
+ */
+
+/**
+ * Draws an edge using a solid line in the passed color. 
+ *  
+ */
+public class SolidLineEdgePainter extends ExtendedLineEdgePainter {
+
+    public SolidLineEdgePainter(Composite theParent) {
+        super(theParent);
+    }
+
+    public SolidLineEdgePainter(Color blackAndWhite, Color dragging, Color normal) {
+        super(blackAndWhite, dragging, normal);
+    }
+
+    @Override
+    public void paintEdge(JGraphPane graphPane, GC g, Edge edge) {
+        HighlightingManipulator highlightingManipulator=(HighlightingManipulator)graphPane.getManipulator(HighlightingManipulator.NAME);
+        boolean isHighlighted=highlightingManipulator!=null && highlightingManipulator.getHighlightedEdge()==edge;
+        DraggingManipulator draggingManipulator=(DraggingManipulator)graphPane.getManipulator(DraggingManipulator.NAME);
+        boolean isDragging=draggingManipulator!=null && draggingManipulator.getDraggedEdge()==edge;
+        Point from=graphPane.getScreenPointForNode(edge.getFrom());
+        Point to=graphPane.getScreenPointForNode(edge.getTo());
+        Color oldFGColor=g.getForeground();
+        Color oldBGColor=g.getBackground();
+        g.setForeground(getEdgeColor(edge,isHighlighted,isDragging, false));
+        g.setBackground(getEdgeColor(edge,isHighlighted,isDragging, false));
+        paintArrow(g,from.x,from.y,to.x,to.y, SWT.LINE_SOLID);
+        g.setForeground(oldFGColor);
+        g.setBackground(oldBGColor);    
+    }}
