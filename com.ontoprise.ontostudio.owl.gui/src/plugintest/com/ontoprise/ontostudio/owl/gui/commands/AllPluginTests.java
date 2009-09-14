@@ -1,15 +1,18 @@
+/*****************************************************************************
+ * Copyright (c) 2009 ontoprise GmbH.
+ *
+ * All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+
 package com.ontoprise.ontostudio.owl.gui.commands;
 
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Properties;
-
 import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized.Parameters;
 import org.junit.runners.Suite.SuiteClasses;
-import org.neontoolkit.core.ParameterizedConfiguration;
 import org.neontoolkit.core.ParameterizedSuite;
 
 import com.ontoprise.ontostudio.owl.gui.commands.annotationProperty.CreateRemoveAnnotationPropertyTest;
@@ -78,15 +81,4 @@ import com.ontoprise.ontostudio.owl.gui.commands.rename.RenameProjectTest;
 })
 
 public class AllPluginTests {
-    /**
-     * @return parameters
-     */
-    @Parameters
-    public static Collection<Properties[]> getParameters() {
-        List<Properties[]> list = new ArrayList<Properties[]>();
-        Properties properties = new Properties();
-        properties.put(ParameterizedConfiguration.PARAMETER_TO_STRING, "ManchesterImplementation"); //$NON-NLS-1$
-        list.add(new Properties[] { properties });
-        return list;
-    }
 }

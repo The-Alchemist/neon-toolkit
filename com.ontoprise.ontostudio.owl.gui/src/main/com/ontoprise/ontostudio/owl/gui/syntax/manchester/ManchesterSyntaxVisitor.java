@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2008 ontoprise GmbH.
+ * Copyright (c) 2009 ontoprise GmbH.
  *
  * All rights reserved.
  *
@@ -175,7 +175,7 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
                 if (!value.isTyped()) {
                     OWLStringLiteral untypedConstant = (OWLStringLiteral)value;
                     String lang = untypedConstant.getLang();
-                    if (lang.equals(_language)) {
+                    if (_language.equals(lang)) {
                         result = untypedConstant.getLiteral();
                         break;
                     }

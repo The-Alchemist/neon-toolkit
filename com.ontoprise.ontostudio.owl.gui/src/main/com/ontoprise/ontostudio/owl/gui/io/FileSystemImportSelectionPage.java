@@ -1,9 +1,12 @@
 /*****************************************************************************
- * Copyright (c) 2008 ontoprise GmbH.
+ * Copyright (c) 2009 ontoprise GmbH.
  *
  * All rights reserved.
  *
- *****************************************************************************/
+ * This program and the accompanying materials are made available under the
+ * Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
 
 package com.ontoprise.ontostudio.owl.gui.io;
 
@@ -48,7 +51,7 @@ import com.ontoprise.ontostudio.owl.gui.Messages;
 
 /**
  * Page for FileSystemImportWizard to specify from where to load an ontology.
- * Selection of project name and file
+ * Selection of projectname and file
  */
 public class FileSystemImportSelectionPage extends AbstractImportSelectionPage {
 
@@ -58,6 +61,7 @@ public class FileSystemImportSelectionPage extends AbstractImportSelectionPage {
     protected Composite _composite;
 
     class EventHandler implements SelectionListener, ModifyListener {
+
         public void widgetSelected(SelectionEvent se) {
             if (se.getSource().equals(_browseButton)) {
                 browse();
@@ -73,11 +77,6 @@ public class FileSystemImportSelectionPage extends AbstractImportSelectionPage {
             checkStatus();
         }
     }
-
-    EventHandler getEventListener() {
-        return new EventHandler();
-    }
-    
 
     public FileSystemImportSelectionPage(FileFilter filter) {
         super(filter);
@@ -104,7 +103,7 @@ public class FileSystemImportSelectionPage extends AbstractImportSelectionPage {
         GridLayout gridLayout = new GridLayout(3, false);
         _composite.setLayout(gridLayout);
         GridData gridData;
-        EventHandler listener = getEventListener();
+        EventHandler listener = new EventHandler();
 
         Label containerLabel = new Label(_composite, SWT.NONE);
         containerLabel.setText(Messages.FileSystemImportSelectionPage_5);

@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2008 ontoprise GmbH.
+ * Copyright (c) 2009 ontoprise GmbH.
  *
  * All rights reserved.
  *

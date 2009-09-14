@@ -1,12 +1,15 @@
-/**
- * Copyright (c) 2008 ontoprise GmbH.
- */
+/*****************************************************************************
+ * Copyright (c) 2009 ontoprise GmbH.
+ *
+ * All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
 
 package com.ontoprise.ontostudio.owl.gui.commands;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -18,7 +21,7 @@ import org.junit.runner.RunWith;
 import org.neontoolkit.core.NeOnCorePlugin;
 import org.neontoolkit.core.ParameterizedConfiguration;
 import org.neontoolkit.core.PluginTestDatamodel;
-import org.neontoolkit.core.ParameterizedConfiguration.DefaultParameters;
+import org.neontoolkit.core.ParameterizedConfiguration.DefaultConfiguration;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.command.project.CreateProject;
 import org.neontoolkit.core.command.project.RemoveProject;
@@ -40,7 +43,7 @@ import com.ontoprise.ontostudio.owl.model.commands.ontology.CreateOntology;
  * Keywords: 
  */
 /**
- * Abstract superclass for plugin tests that need a project and a module. This abstract class creates a project and a module before any of the tests is started.
+ * Abstract superclass for plugin tests that need a project and an ontology. This abstract class creates a project and an ontology before any of the tests is started.
  * After each test, all information contained in the module is deleted.
  */
 @RunWith(ParameterizedConfiguration.class)
@@ -51,9 +54,8 @@ public class AbstractOWLPluginTest extends BasePluginTest  {
     protected static final String INVALID_ID = "http://test.ontoprise.de#INVALID_ID"; //$NON-NLS-1$
     protected static final String SYSTEM_INTERNAL_NAMESPACE = "http://schema.ontoprise.com/reserved#"; //$NON-NLS-1$
 
-    @DefaultParameters
-    public static Collection<Properties[]> getDefaultConfigurations() {
-        List<Properties[]> result = new ArrayList<Properties[]>();
+    @DefaultConfiguration
+    public static Properties getDefaultConfigurations() {
         Properties properties = new Properties();
 
 //        // KAON2
@@ -73,8 +75,7 @@ public class AbstractOWLPluginTest extends BasePluginTest  {
         // Manchester
         properties.put(ParameterizedConfiguration.PROJECT_FACTORY_ID_KEY, OWLManchesterProjectFactory.FACTORY_ID);
         
-        result.add(new Properties[] { properties });
-        return result;
+        return properties;
 
     }
     

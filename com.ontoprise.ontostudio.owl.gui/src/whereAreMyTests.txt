@@ -1,7 +1,0 @@
-josp 2009.02.03: Moved test from:
-/com.ontoprise.ontostudio.owl.gui/src/test
-to:
-com.ontoprise.ontostudio.tests/src/test
-because of class path problems:
-Plugin tests use: JUnit 4.3.1 (/ontostudioBase/eclipse/plugins/org.junit4_4.3.1/junit.jar)
-Normal tests use: JUnit 4.4.0 (/com.ontoprise.dependencies/lib/testing/junit-4.4.jar)

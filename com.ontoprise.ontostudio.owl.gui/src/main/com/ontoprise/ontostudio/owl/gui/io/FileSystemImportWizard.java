@@ -1,9 +1,12 @@
 /*****************************************************************************
- * Copyright (c) 2008 ontoprise GmbH.
+ * Copyright (c) 2009 ontoprise GmbH.
  *
  * All rights reserved.
  *
- *****************************************************************************/
+ * This program and the accompanying materials are made available under the
+ * Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
 
 package com.ontoprise.ontostudio.owl.gui.io;
 
@@ -48,6 +51,8 @@ import com.ontoprise.ontostudio.owl.model.commands.ontology.RemoveOntology;
  * Import Wizard to select an (ontology-)file from the filesystem
  */
 public class FileSystemImportWizard extends AbstractImportWizard {
+
+    public String _ontoUri;
 
     public FileSystemImportWizard() {
         super();
@@ -280,5 +285,8 @@ public class FileSystemImportWizard extends AbstractImportWizard {
               throw new OntologyImportException(e);
           }
     }
+    
 
+
+    
 }
