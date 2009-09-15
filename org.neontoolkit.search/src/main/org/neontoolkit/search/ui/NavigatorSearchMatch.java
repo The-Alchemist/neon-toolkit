@@ -1,10 +1,12 @@
 /*****************************************************************************
- * Copyright (c) 2007 ontoprise GmbH.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU General Public License (GPL)
- * which accompanies this distribution, and is available at
- * http://www.ontoprise.de/legal/gpl.html
- *****************************************************************************/
+ * Copyright (c) 2009 ontoprise GmbH.
+ *
+ * All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
 
 package org.neontoolkit.search.ui;
 
@@ -19,9 +21,12 @@ import org.neontoolkit.gui.navigator.MTreeView;
 import org.neontoolkit.gui.navigator.elements.AbstractOntologyEntity;
 import org.neontoolkit.gui.navigator.elements.AbstractOntologyTreeElement;
 import org.neontoolkit.gui.navigator.elements.IProjectElement;
+import org.neontoolkit.gui.properties.EntityPropertiesView;
 import org.neontoolkit.gui.util.ItemSorter;
 import org.neontoolkit.search.Messages;
 import org.neontoolkit.search.SearchPlugin;
+
+import com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
 
 
 /* 
@@ -39,6 +44,7 @@ import org.neontoolkit.search.SearchPlugin;
 public abstract class NavigatorSearchMatch extends SearchMatch {
 	protected ITreeElementPath[] _paths;
 	protected static MTreeView _navigator;
+	protected static EntityPropertiesView _entityPropertyView;
 
 	public NavigatorSearchMatch(IProjectElement element) {
 		super(element);
@@ -76,6 +82,12 @@ public abstract class NavigatorSearchMatch extends SearchMatch {
 		return _navigator;
 	}
 	
+    public static EntityPropertiesView getPropertyView() {
+        if (_entityPropertyView == null)
+            _entityPropertyView = (EntityPropertiesView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(EntityPropertiesView.ID);
+        return _entityPropertyView;
+    }
+	   
 	/* (non-Javadoc)
 	 * @see org.neontoolkit.search.flogic.match.SearchMatch#show(int)
 	 */
@@ -84,12 +96,18 @@ public abstract class NavigatorSearchMatch extends SearchMatch {
 		if (getNavigator() != null) {
 			TreeItem item = (_navigator.getTreeViewer()).setPathExpanded(getPaths()[index]);
 			if (item != null) {
-				ArrayList<TreeItem> list = new ArrayList<TreeItem>();
-				list.add(item);
+//				ArrayList<TreeItem> list = new ArrayList<TreeItem>();
+//				list.add(item);
 				try {
 					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(MTreeView.ID);
-					_navigator.getTreeViewer().setSelection(new StructuredSelection());
-					_navigator.getTreeViewer().selection(list);
+					
+					//Bugfix: Selecting a list of TreeItems results in a empty EntityPropertyPage. 
+					//Use a StructuredSelection with the specific TreeElement from getMatch() 
+//					_navigator.getTreeViewer().setSelection(new StructuredSelection());
+//					_navigator.getTreeViewer().selection(list);
+					_navigator.getTreeViewer().setSelection(new StructuredSelection(getMatch()));
+		            
+		            
 				} catch (PartInitException e) {
 					SearchPlugin.logError(Messages.NavigatorSearchMatch_0, e);
 				}
@@ -102,8 +120,7 @@ public abstract class NavigatorSearchMatch extends SearchMatch {
 	 */
 	@Override
     public void setFocus() {
-		if (getNavigator() != null) {
-			_navigator.setFocus();
-		}
-	}
+        if (getPropertyView() != null)
+            getPropertyView().setFocus();
+    }
 }
