@@ -17,6 +17,6 @@ Require-Bundle: org.eclipse.ui,
  org.neontoolkit.core,
  org.neontoolkit.gui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: ontostudio-owl-visualize.jar
 Export-Package: com.ontoprise.ontostudio.owl.visualize.nodes
