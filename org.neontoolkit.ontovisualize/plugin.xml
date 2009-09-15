@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.1"?>
+<plugin>
+   <extension-point id="visualizerContext" name="Visualizer Context" schema="schema/visualizerContext.exsd"/>
+
+  <extension
+        point="org.eclipse.ui.views">
+     <view
+           allowMultiple="false"
+           category="com.ontoprise.ontostudio.flogic.ui.views"
+           class="org.neontoolkit.ontovisualize.gui.OntoVisualizerView"
+           icon="icons/Graph.gif"
+           id="org.neontoolkit.ontovisualize2.OntoVisualizerView2"
+           name="%ontologyGraphVisualizeView2"/>
+  </extension>
+  <extension
+        point="org.eclipse.ui.preferencePages">
+     <page
+           class="org.neontoolkit.ontovisualize.preferences.OntoVisualizerPreferencePage"
+           id="org.neontoolkit.ontovisualize2.preferences.OntoVisualizerPreferencePage"
+           name="%ontovisualizePreferences"/>
+  </extension>
+  <extension 
+  	point="org.eclipse.ui.perspectiveExtensions">
+  	<perspectiveExtension
+  		targetID="com.ontoprise.ontostudio.perspectives.Schema">
+  		<view
+          closeable="true"
+          id="org.neontoolkit.ontovisualize2.OntoVisualizerView2"
+          moveable="true"
+          relationship="stack"
+          relative="com.ontoprise.ontostudio.views.propertiesview"
+          visible="false"/>
+  	</perspectiveExtension>
+  </extension>
+</plugin>

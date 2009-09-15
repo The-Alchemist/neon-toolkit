@@ -1,0 +1,46 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Annotation Properties</title>
+    <link rel="stylesheet" type="text/css" href="../css/stylesheet.css">
+</head>
+
+<body class="bodynormal">
+<h4>Annotation Properties</h4>
+<p>OWL allows classes, properties, individuals, and the ontology header to be annotated with useful information such as
+labels, comments, creation date, author, or references to web pages. An OWL annotation simply associates property-value
+pairs for resources of the ontology or the entire ontology itself. However, this information is not really part of the
+semantics of the ontology and will thus be ignored by most reasoning engines.</p>
+<p>The selection of meaningful names and the use of annotations is especially of importance if the ontology is to be 
+reused by someone else. You can enter annotations when you first create a resource or when you modify it later on.</p>
+<p><img class="format" src="../images/screenshots/annoprop1.jpg" title="OWL Annotation Property" alt="OWL Annotation Property"></p>
+<p>Five annotation properties are predefined by OWL:</p>
+<ul>
+<li><b>versionInfo.</b> An <span style="font-family: monospace;">owl:versionInfo</span> statement is intended to provide
+hooks for version control systems working with ontologies.</li>
+<li><b>label.</b> An <span style="font-family: monospace;">rdfs:label</span> statement supports a natural language label for the resource.</li>
+<li><b>comment.</b> An <span style="font-family: monospace;">rdfs:comment</span> statement supports a natural language comment about
+a resource for future readers to see.</li>
+<li><b>seeAlso</b>. An <span style="font-family: monospace;">rdfs:seeAlso</span> statement provides a way to specify the web
+location of supplementary information about the resource.</li>
+<li><b>isDefinedBy</b> An <span style="font-family: monospace;">rdfs:isDefinedBy</span> statement provides a link to the
+source of information about the resource.</li>
+</ul>
+<p>For user-defined annotation properties, please keep the following constraints in mind:</p>
+<ul>
+<li>At least in OWL DL, object properties, datatype properties, annotation properties and ontology properties must be mutually
+disjoint. For that reason, a property cannot be at the same time a datatype property and an annotation property. Note, however,
+that OWL Full does not put any constraints on annotations in an ontology.</li>
+<li>Annotation properties must not be used in property axioms. Thus, in OWL DL one cannot define subproperties or domain/range
+constraints for annotation properties.</li>
+<li>The object of an annotation property must be either a data literal, a URI reference, or an individual.</li>
+</ul>
+<p>For instructions on how to create an annotation property, see <a href="create_annotation_property.html">Create an Annotation Property</a>.</p>
+<p><b>Online References</b></p>
+<p>Further information is available at the following Web sites:</p>
+<ul>
+<li><a href="http://www.w3.org/TR/owl-ref/#Header">OWL Web Ontology Language Reference</a>
+(Chapter 7, "Annotations, ontology header, imports and version information")</li>
+</ul>
+ </body>
+</html>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.1"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.workingSets">
+      <workingSet
+            icon="icons/csearch_obj.GIF"
+            name="%ontology"
+            pageClass="org.neontoolkit.search.workingset.OntologyWorkingSetPage"
+            id="org.neontoolkit.search.ontologyWorkingSet"/>
+   </extension>
+
+   <extension
+         point="org.eclipse.search.searchResultViewPages">
+      <viewPage
+            class="org.neontoolkit.search.ui.SearchResultPage"
+            icon="icons/csearch_obj.GIF"
+            id="org.neontoolkit.search.ui.SearchResultPage"
+            searchResultClass="org.neontoolkit.search.ui.SearchResult">
+      </viewPage>
+   </extension>
+
+</plugin>
