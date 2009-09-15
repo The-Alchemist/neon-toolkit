@@ -7,7 +7,7 @@ Bundle-Localization: plugin
 Bundle-Activator: com.ontoprise.ontostudio.owl.gui.ontologyimportsgraph.Activator
 Bundle-Vendor: %ontoprise
 Require-Bundle: org.eclipse.ui,
- org.eclipse.ui.forms;bundle-version="3.3.0",
+ org.eclipse.ui.forms,
  org.eclipse.core.runtime,
  com.ontoprise.ontostudio.dependencies,
  org.neontoolkit.jpowergraph,
@@ -18,5 +18,5 @@ Require-Bundle: org.eclipse.ui,
  org.neontoolkit.gui,
  org.neontoolkit.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: ontostudio-owl-ontologyimportsgraph.jar
