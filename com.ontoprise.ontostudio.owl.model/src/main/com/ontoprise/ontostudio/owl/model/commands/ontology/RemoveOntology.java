@@ -3,13 +3,11 @@
  *
  * All rights reserved.
  *
- * This program and the accompanying materials are made available under the 
- * Eclipse Public License v1.0 which accompanies this distribution, 
+ * This program and the accompanying materials are made available under the
+ * Eclipse Public License v1.0 which accompanies this distribution,
  * and is available at http://www.eclipse.org/legal/epl-v10.html
- *
- * Created on: 16.06.2009
- * Created by: diwe
  ******************************************************************************/
+
 package com.ontoprise.ontostudio.owl.model.commands.ontology;
 
 import org.neontoolkit.core.NeOnCorePlugin;
