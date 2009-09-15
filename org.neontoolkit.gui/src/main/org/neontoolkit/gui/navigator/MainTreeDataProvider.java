@@ -1,9 +1,12 @@
 /*****************************************************************************
- * Copyright (c) 2008 ontoprise GmbH.
+ * Copyright (c) 2009 ontoprise GmbH.
  *
  * All rights reserved.
  *
- *****************************************************************************/
+ * This program and the accompanying materials are made available under the
+ * Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
 
 package org.neontoolkit.gui.navigator;
 
@@ -191,8 +194,10 @@ public class MainTreeDataProvider extends LabelProvider implements ITreeContentP
         ITreeDataProvider[] provs = _extensionHandler.getSubProviders(provider.getId());
         if (provider.getChildCount(parent) > 0) {
             ITreeElement[] elements = provider.getChildren(parent, _topIndex, _visibleRows);
-            for (int j = 0; j < elements.length; j++) {
-                children.add(elements[j]);
+            if (elements != null) {
+                for (int j = 0; j < elements.length; j++) {
+                    children.add(elements[j]);
+                }
             }
         }
         for (int i = 0; i < provs.length; i++) {
