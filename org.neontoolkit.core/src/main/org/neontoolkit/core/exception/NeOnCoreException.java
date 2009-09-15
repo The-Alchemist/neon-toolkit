@@ -3,13 +3,11 @@
  *
  * All rights reserved.
  *
- * This program and the accompanying materials are made available under the 
- * Eclipse Public License v1.0 which accompanies this distribution, 
+ * This program and the accompanying materials are made available under the
+ * Eclipse Public License v1.0 which accompanies this distribution,
  * and is available at http://www.eclipse.org/legal/epl-v10.html
- *
- * Created on: 05.03.2009
- * Created by: Dirk Wenke
  ******************************************************************************/
+
 package org.neontoolkit.core.exception;
 
 import java.io.PrintWriter;

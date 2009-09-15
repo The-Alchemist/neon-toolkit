@@ -16,8 +16,8 @@
          point="org.eclipse.ui.ide.projectNatureImages">
       <image
             icon="icons/ontoprj_obj.gif"
-            natureId="org.neontoolkit.datamodel.natures.ontologyNature"
-            id="org.neontoolkit.datamodel.natures.ontologyNatureImage">
+            natureId="org.neontoolkit.core.natures.ontologyNature"
+            id="org.neontoolkit.core.natures.ontologyNatureImage">
       </image>
    </extension>
    <extension

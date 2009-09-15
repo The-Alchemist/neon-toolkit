@@ -1,9 +1,13 @@
 /*****************************************************************************
- * Copyright (c) 2008 ontoprise GmbH.
+ * Copyright (c) 2009 ontoprise GmbH.
  *
  * All rights reserved.
  *
- *****************************************************************************/
+ * This program and the accompanying materials are made available under the
+ * Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html
+ ******************************************************************************/
+
 package org.neontoolkit.core.command.project;
 
 import org.neontoolkit.core.NeOnCorePlugin;
@@ -34,7 +38,9 @@ public class RemoveProject extends LoggedCommand {
     		String projectName = (String)getArgument(0);
     		boolean removeFromDatamodel = (Boolean)getArgument(1);
     		IOntologyProject project = NeOnCorePlugin.getDefault().getOntologyProject(projectName);
-    		project.dispose(removeFromDatamodel);
+    		if (project != null) {
+    		    project.dispose(removeFromDatamodel);
+    		}
 	    } catch (NeOnCoreException e) {
 	        throw new CommandException(e);
 	    }

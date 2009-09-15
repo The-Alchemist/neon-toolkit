@@ -3,13 +3,11 @@
  *
  * All rights reserved.
  *
- * This program and the accompanying materials are made available under the 
- * Eclipse Public License v1.0 which accompanies this distribution, 
+ * This program and the accompanying materials are made available under the
+ * Eclipse Public License v1.0 which accompanies this distribution,
  * and is available at http://www.eclipse.org/legal/epl-v10.html
- *
- * Created on: 11.06.2009
- * Created by: Dirk Wenke
  ******************************************************************************/
+
 package org.neontoolkit.core.project;
 
 import java.io.ByteArrayInputStream;
@@ -308,7 +306,14 @@ public class OntologyProjectManager {
                             if (project.hasNature(OntologyProjectNature.ID)) {
                                 OntologyProjectNature nature = (OntologyProjectNature)project.getNature(OntologyProjectNature.ID);
                                 String id = nature.getProjectFactoryId();
+                                if (id == null) {
+                                    return null;
+                                }
+                                
                                 IOntologyProjectFactory factory = NeOnCorePlugin.getDefault().getOntologyProjectFactory(id);
+                                if (factory == null) {
+                                    return null;
+                                }
                                 ontologyProject = factory.createOntologyProject(project);
                                 _ontologyProjects.put(projectName, ontologyProject);
 
