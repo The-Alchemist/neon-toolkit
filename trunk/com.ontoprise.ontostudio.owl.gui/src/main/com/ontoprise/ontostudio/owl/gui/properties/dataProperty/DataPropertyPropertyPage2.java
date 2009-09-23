@@ -349,11 +349,13 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 String input = text.getText();
                 try {
                     remove();
-                    String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDescription(input, _owlModel)); 
+                   
                     if (mode == DOMAIN) {
+                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDescription(input, _owlModel)); 
                         new CreateDataPropertyDomain(_project, _ontologyUri, _id, value).run();
                         initDomainSection(false);
                     } else {
+                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDataRange(input, _owlModel)); 
                         new CreateDataPropertyRange(_project, _ontologyUri, _id, value).run();
                         initRangeSection(false);
                     }
@@ -425,10 +427,12 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 // add new entry
                 String input = text.getText();
                 try {
-                    String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDescription(input, _owlModel));
+                   
                     if (mode == DOMAIN) {
+                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDescription(input, _owlModel));
                         new CreateDataPropertyDomain(_project, _ontologyUri, _id, value).run();
                     } else {
+                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDataRange(input, _owlModel));
                         new CreateDataPropertyRange(_project, _ontologyUri, _id, value).run();
                     }
                 } catch (NeOnCoreException ce) {

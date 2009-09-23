@@ -577,7 +577,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             OWLStringLiteral untypedConstant = (OWLStringLiteral)target;
             String literal = untypedConstant.getLiteral();
             String language = untypedConstant.getLang();
-            String dataType = OWLConstants.RDF_XML_LITERAL;
+            String dataType = OWLConstants.RDFS_LITERAL;
             contents.add(propArray);
             contents.add(new String[] {literal});
             try {
@@ -655,7 +655,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             OWLGUIUtilities.enable(typeText, false);
             String datatype = datatypeArray.length > 1 ? datatypeArray[1] : datatypeArray[0];
             try {
-                if (((OWLDatatype) _manager.parseDataRange(datatype, _owlModel)).getURI().toString().equals(OWLConstants.RDF_XML_LITERAL)) { 
+                if (((OWLDatatype) _manager.parseDataRange(datatype, _owlModel)).getURI().toString().equals(OWLConstants.RDFS_LITERAL)) { 
                     showLanguange = true;
                 }
             } catch (NeOnCoreException e) {
@@ -690,7 +690,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 
                     OWLDatatype type;
                     if (typeText.getText().equals("")) { //$NON-NLS-1$
-                        type = OWLModelFactory.getOWLDataFactory(_project).getOWLDatatype(OWLUtilities.toURI(OWLConstants.RDF_XML_LITERAL));
+                        type = OWLModelFactory.getOWLDataFactory(_project).getOWLDatatype(OWLUtilities.toURI(OWLConstants.RDFS_LITERAL));
                     } else {
                         type = (OWLDatatype) _manager.parseDataRange(typeText.getText(), _owlModel);
                     }
@@ -807,14 +807,14 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 
                     OWLDatatype type;
                     if (typeText.getText().equals("")) { //$NON-NLS-1$
-                        type = OWLModelFactory.getOWLDataFactory(_project).getOWLDatatype(OWLUtilities.toURI(OWLConstants.RDF_XML_LITERAL));
+                        type = OWLModelFactory.getOWLDataFactory(_project).getOWLDatatype(OWLUtilities.toURI(OWLConstants.RDFS_LITERAL));
                     } else {
                         type = (OWLDatatype) _manager.parseDataRange(typeText.getText(), _owlModel);
                     }
 
                     OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(_project);
                     OWLLiteral c;
-                    if (type.getURI().toString().equals(OWLConstants.RDF_XML_LITERAL)) {
+                    if (type.getURI().toString().equals(OWLConstants.RDFS_LITERAL)) {
                         if (!languageCombo.getText().equals(OWLCommandUtils.EMPTY_LANGUAGE) && !languageCombo.getText().equals("")) { //$NON-NLS-1$
                             c = factory.getOWLStringLiteral(valueText.getText(), languageCombo.getText());
                         } else {

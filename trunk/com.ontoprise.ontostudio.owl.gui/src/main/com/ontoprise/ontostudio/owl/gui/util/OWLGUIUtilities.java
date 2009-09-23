@@ -91,10 +91,10 @@ import com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.Object
 import com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.syntax.ISyntaxManager;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.AbstractOwlTextField;
+import com.ontoprise.ontostudio.owl.model.OWLConstants;
 import com.ontoprise.ontostudio.owl.model.OWLManchesterProjectFactory;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
-import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.OWLCommandUtils;
 import com.ontoprise.ontostudio.owl.model.util.OWLAxiomUtils;
@@ -112,8 +112,6 @@ public class OWLGUIUtilities {
     
     private static final String UTF8 = "utf-8"; //$NON-NLS-1$
     private static final String HEX_CHARACTERS = "0123456789ABCDEF"; //$NON-NLS-1$
-//    private static final String RDFS_LITERAL = OWLNamespaces.RDFS_NS + "Literal"; //$NON-NLS-1$
-    private static final String RDF_LITERAL = OWLNamespaces.RDF_NS + "XMLLiteral"; //$NON-NLS-1$
 
 	private static final int LANGUAGE_SELECT_BOX_WIDTH = 50;
 
@@ -619,12 +617,12 @@ public class OWLGUIUtilities {
      * @param owlModel
      * @return
      */
-    private static String[] getRdfLiteral(OWLModel owlModel) {
+    private static String[] getRdfsLiteral(OWLModel owlModel) {
         try {
-            String[] idArray = OWLGUIUtilities.getIdArray((OWLDatatype) owlModel.getOWLDataFactory().getOWLDatatype(OWLUtilities.toURI(RDF_LITERAL)), owlModel.getOntologyURI(), owlModel.getProjectId());
+            String[] idArray = OWLGUIUtilities.getIdArray((OWLDatatype) owlModel.getOWLDataFactory().getOWLDatatype(OWLUtilities.toURI(OWLConstants.RDFS_LITERAL)), owlModel.getOntologyURI(), owlModel.getProjectId());
             return idArray;
         } catch (NeOnCoreException e) {
-            return new String[]{"Literal", RDF_LITERAL}; //$NON-NLS-1$
+            return new String[]{"Literal", OWLConstants.RDFS_LITERAL}; //$NON-NLS-1$
         }
     }
 
@@ -634,7 +632,7 @@ public class OWLGUIUtilities {
             public void modifyText(ModifyEvent e) {
                 if (e.widget instanceof StyledText) {
                     String text = ((StyledText) e.widget).getText();
-                    String[] literalText = getRdfLiteral(owlModel);
+                    String[] literalText = getRdfsLiteral(owlModel);
                     if (!text.equals(literalText[0]) && !text.equals(literalText[1])) {
                         languageCombo.select(languageCombo.indexOf(OWLCommandUtils.EMPTY_LANGUAGE));
                     }
@@ -648,7 +646,7 @@ public class OWLGUIUtilities {
             public void widgetSelected(SelectionEvent e) {
                 String selectedText = ((CCombo) e.widget).getText();
                 if (!selectedText.equals(OWLCommandUtils.EMPTY_LANGUAGE)) {
-                    typeText.setText(getRdfLiteral(owlModel)[1]);
+                    typeText.setText(getRdfsLiteral(owlModel)[1]);
                 }
             }
 

@@ -59,7 +59,7 @@ public class DataPropertyMemberHitsTest extends AbstractOWLPluginTest {
         Assert.assertEquals(0, results.length);
 
         String[] newValue = new String[] {"my value", "de"}; //$NON-NLS-1$//$NON-NLS-2$
-        new CreateDataPropertyMember(PROJECT_ID, ONTOLOGY_URI, i1, dp1, OWLConstants.RDF_XML_LITERAL, newValue).run();
+        new CreateDataPropertyMember(PROJECT_ID, ONTOLOGY_URI, i1, dp1, OWLConstants.RDFS_LITERAL, newValue).run();
 
         results = new GetDataPropertyMemberHits(PROJECT_ID, ONTOLOGY_URI, i1).getResults();
         Assert.assertEquals(1, results.length);
@@ -68,7 +68,7 @@ public class DataPropertyMemberHitsTest extends AbstractOWLPluginTest {
         assertUnsortedArrayEquals(expected, results[0]);
 
         newValue = new String[] {"my value2", OWLCommandUtils.EMPTY_LANGUAGE}; //$NON-NLS-1$
-        new CreateDataPropertyMember(PROJECT_ID, ONTOLOGY_URI, i1, dp1, OWLConstants.RDF_XML_LITERAL, newValue).run();
+        new CreateDataPropertyMember(PROJECT_ID, ONTOLOGY_URI, i1, dp1, OWLConstants.RDFS_LITERAL, newValue).run();
 
         results = new GetDataPropertyMemberHits(PROJECT_ID, ONTOLOGY_URI, i1).getResults();
         Assert.assertEquals(2, results.length);

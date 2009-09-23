@@ -208,6 +208,7 @@ public class InternalParserTest {
     @DataPoint public static final OWLDatatype xsdUnsignedByte = _f.getOWLDatatype(xsdURI("unsignedByte"));
     @DataPoint public static final OWLDatatype xsdPositiveInteger = _f.getOWLDatatype(xsdURI("positiveInteger"));
     
+   
     // OWLConstants
     @DataPoint public static final OWLStringLiteral untypedConstant0 = _f.getOWLStringLiteral("lexical value", "en");
     @DataPoint public static final OWLStringLiteral untypedConstant1 = _f.getOWLStringLiteral("emtpy language", "");
@@ -280,8 +281,11 @@ public class InternalParserTest {
     @DataPoint public static final OWLDatatypeRestriction dataRangeRestriction10 = _f.getOWLDatatypeRestriction(xsdString, dataRangeFacetRestriction0, dataRangeFacetRestriction1);
     @DataPoint public static final OWLDataUnionOf dataUnionOf0 = _f.getOWLDataUnionOf(dataRangeRestriction0, dataRangeRestriction1);
     @DataPoint public static final OWLDataUnionOf dataUnionOf1 = _f.getOWLDataUnionOf(dataRangeRestriction0, dataRangeRestriction10);
+    @DataPoint public static final OWLDataUnionOf dataUnionOf2 = _f.getOWLDataUnionOf(xsdFloat, xsdDecimal);
     @DataPoint public static final OWLDataIntersectionOf dataIntersectionOf0 = _f.getOWLDataIntersectionOf(dataRangeRestriction0, dataRangeRestriction1);
     @DataPoint public static final OWLDataIntersectionOf dataIntersectionOf1 = _f.getOWLDataIntersectionOf(dataRangeRestriction0, dataRangeRestriction10);
+     
+    
     
     // OWLDescriptions
     @DataPoint public static final OWLClass owlClass0 = _f.getOWLClass(uri("class0"));
@@ -414,6 +418,7 @@ public class InternalParserTest {
     @DataPoint public static final OWLDataPropertyRangeAxiom dataPropertyRangeAxiom16 = _f.getOWLDataPropertyRangeAxiom(dataProperty0, dataUnionOf1);
     @DataPoint public static final OWLDataPropertyRangeAxiom dataPropertyRangeAxiom17 = _f.getOWLDataPropertyRangeAxiom(dataProperty0, dataIntersectionOf0);
     @DataPoint public static final OWLDataPropertyRangeAxiom dataPropertyRangeAxiom18 = _f.getOWLDataPropertyRangeAxiom(dataProperty0, dataIntersectionOf1);
+    @DataPoint public static final OWLDataPropertyRangeAxiom dataPropertyRangeAxiom19 = _f.getOWLDataPropertyRangeAxiom(dataProperty0, dataUnionOf2);
     @DataPoint public static final OWLSubDataPropertyOfAxiom dataSubPropertyAxiom0 = _f.getOWLSubDataPropertyOfAxiom(dataProperty0, dataProperty1);
     @DataPoint public static final OWLDisjointDataPropertiesAxiom disjointDataPropertiesAxiom0 = _f.getOWLDisjointDataPropertiesAxiom(asSet(dataProperty0, dataProperty1));
     @DataPoint public static final OWLDisjointDataPropertiesAxiom disjointDataPropertiesAxiom1 = _f.getOWLDisjointDataPropertiesAxiom(asSet(dataProperty0, dataProperty1, dataProperty2));
@@ -517,16 +522,17 @@ public class InternalParserTest {
     @DataPoint public static final OWLDeclarationAxiom declarationAxiom4 = _f.getOWLDeclarationAxiom(objectProperty0);
     @DataPoint public static final OWLDeclarationAxiom declarationAxiom5 = _f.getOWLDeclarationAxiom(annotationProperty0);
 
+   
     @Theory
     public void testOWLAxiom(OWLAxiom object) throws Exception {
 //        System.out.println(object);
-        
         testSerialization(object);
         testSerialization(object.getAnnotatedAxiom(new LinkedHashSet<OWLAnnotation>(Arrays.asList(constantAnnotation0))));
         testSerialization(object.getAnnotatedAxiom(new LinkedHashSet<OWLAnnotation>(Arrays.asList(constantAnnotation0, constantAnnotation1))));
     }
     
     private void testSerialization(OWLAxiom object) throws Exception {
+        
         StringBuilder target = new StringBuilder();
         OWLFormattingVisitor serializer = new OWLFormattingVisitor(target, OWLNamespaces.EMPTY_INSTANCE);
         object.accept(serializer);
@@ -539,6 +545,7 @@ public class InternalParserTest {
 
     @Theory
     public void testStoring(OWLAxiom object) throws Exception {
+//        if(!object.equals(dataPropertyRangeAxiom19))return;
         Set<OWLAxiom> currentlyUnsupportedAxioms = new LinkedHashSet<OWLAxiom>(Arrays.asList(
                 swrlRule0,
                 swrlRule1,

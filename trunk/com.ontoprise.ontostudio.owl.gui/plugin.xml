@@ -916,6 +916,14 @@
             </reference>
          </activeWhen>
       </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.io.actions.OpenOntologyHandler"
+            commandId="org.neontoolkit.gui.menu.file.openOntologyCommand">
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.io.actions.LoadOntologyFromWebHandler"
+            commandId="org.neontoolkit.gui.menu.file.loadOntologyFromWebCommand">
+      </handler>
    </extension>
 
    <extension
@@ -1246,6 +1254,16 @@
             id="com.ontoprise.ontostudio.owl.individuals.moveIndividual"
             name="%command.name.2">
       </command>
+      <command
+            description="%command.openontology.description"
+            id="org.neontoolkit.gui.menu.file.openOntologyCommand"
+            name="%command.openontology.label">
+      </command>
+      <command
+            description="%command.loadontologyfromweb.description"
+            id="org.neontoolkit.gui.menu.file.loadOntologyFromWebCommand"
+            name="%command.loadontologyfromweb.label">
+      </command>
    </extension>
 <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
 <!--+++++++++++++++++++++++++++++ KEY BINDINGS ++++++++++++++++++++++++++++-->
@@ -1332,6 +1350,43 @@
          default
          <description>
             %fileSystemExportWizardDescription
+         </description>
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:file?after=New">
+         <command
+               commandId="org.neontoolkit.gui.menu.file.loadOntologyFromWebCommand"
+               label="%command.loadontologyfromweb.label"
+               style="push"
+               tooltip="%command.loadontologyfromweb.description">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:file?after=New">
+         <command
+               commandId="org.neontoolkit.gui.menu.file.openOntologyCommand"
+               label="%command.openontology.label"
+               style="push"
+               tooltip="%command.openontology.description">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            name="Import Ontology from the Web"
+            icon="icons/browser.gif"
+            category="com.ontoprise.ontostudio.wizards"
+            class="com.ontoprise.ontostudio.owl.gui.io.WebImportOntologyWizard"
+            id="com.ontoprise.ontostudio.owl.gui.io.WebImportOntologyWizard">
+         <description>
+            Import an ontology from the Web.
          </description>
       </wizard>
    </extension>

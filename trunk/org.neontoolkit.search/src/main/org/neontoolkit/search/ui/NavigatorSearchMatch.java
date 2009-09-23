@@ -26,8 +26,6 @@ import org.neontoolkit.gui.util.ItemSorter;
 import org.neontoolkit.search.Messages;
 import org.neontoolkit.search.SearchPlugin;
 
-import com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
-
 
 /* 
  * Created on: 22.03.2006

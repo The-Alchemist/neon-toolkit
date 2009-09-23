@@ -302,7 +302,7 @@ public class OntologyAnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage 
 //            String[] indivArray = (String[]) individual.accept(visitor);
 //            
 //            // FIXME not sure about this. what' s the datatype here?
-//            String dataType = OWLConstants.RDF_XML_LITERAL; //$NON-NLS-1$
+//            String dataType = OWLConstants.RDFS_LITERAL; //$NON-NLS-1$
 //            contents.add(propArray);
 //            contents.add(indivArray);
 //            contents.add(new String[] {null});
@@ -319,7 +319,7 @@ public class OntologyAnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage 
                 OWLStringLiteral untypedConstant = (OWLStringLiteral)o;
                 String literal = untypedConstant.getLiteral();
                 language = untypedConstant.getLang();
-                String dataType = OWLConstants.RDF_XML_LITERAL;
+                String dataType = OWLConstants.RDFS_LITERAL;
 
                 contents.add(propArray);
                 contents.add(new String[] {literal});
