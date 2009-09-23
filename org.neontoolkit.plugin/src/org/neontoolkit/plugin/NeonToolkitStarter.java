@@ -51,8 +51,8 @@ public class NeonToolkitStarter implements IStartup {
         if (bundle != null && bundle.getHeaders() != null) {
             version = String.valueOf(bundle.getHeaders().get(Constants.BUNDLE_VERSION));
         }
-        // NeOnToolkit 1.3.0-B22
-        System.out.println("Starting " + productName + " " + version + "-" + RegisterTypeData.BUILD_ID); //$NON-NLS-1$
+        // e.g. NeOnToolkit 1.3.0-B22
+        System.out.println("Starting '" + productName + "' " + version + "-" + RegisterTypeData.BUILD_ID); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         // See: /org.neontoolkit.plugin/about.mappings
         System.setProperty("neon.BUILD_ID", RegisterTypeData.BUILD_ID); //$NON-NLS-1$
     }

@@ -277,7 +277,7 @@ public class AnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage implemen
                 OWLStringLiteral untypedConstant = (OWLStringLiteral)o;
                 String literal = untypedConstant.getLiteral();
                 String language = untypedConstant.getLang();
-                String dataType = OWLConstants.RDF_XML_LITERAL;
+                String dataType = OWLConstants.RDFS_LITERAL;
                 contents.add(propArray);
                 contents.add(new String[] {literal});
                 contents.add((String[]) OWLModelFactory.getOWLDataFactory(_project).getOWLDatatype(OWLUtilities.toURI(dataType)).accept(visitor));

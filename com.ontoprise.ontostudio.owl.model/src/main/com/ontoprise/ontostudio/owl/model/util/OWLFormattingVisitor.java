@@ -991,6 +991,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
         append("[dataIntersectionOf ");
         
         for(OWLDataRange dataRange : node.getOperands()){
+            append(' ');
             dataRange.accept(this);
         }
         append(']');
@@ -1001,11 +1002,13 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
         append("[dataUnionOf ");
         
         for(OWLDataRange dataRange : node.getOperands()){
+            append(' ');
             dataRange.accept(this);
         }
         append(']');
         return null;
     }
+    
     @Override
     public Object visit(IRI iri) {
         visit(iri.toURI());

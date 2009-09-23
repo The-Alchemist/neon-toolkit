@@ -36,7 +36,9 @@ import org.semanticweb.owlapi.model.OWLDataPropertyCharacteristicAxiom;
 import org.semanticweb.owlapi.model.OWLDataPropertyDomainAxiom;
 import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
+import org.semanticweb.owlapi.model.OWLDataRange;
 import org.semanticweb.owlapi.model.OWLDataSomeValuesFrom;
+import org.semanticweb.owlapi.model.OWLDataUnionOf;
 import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLDatatypeRestriction;
 import org.semanticweb.owlapi.model.OWLDeclarationAxiom;
@@ -80,6 +82,7 @@ import org.semanticweb.owlapi.model.OWLObjectPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
 import org.semanticweb.owlapi.model.OWLObjectUnionOf;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLPropertyRange;
 import org.semanticweb.owlapi.model.OWLReflexiveObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
 import org.semanticweb.owlapi.model.OWLStringLiteral;
@@ -246,12 +249,14 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
         return newArray;
     }
 
-    private String[] bracketArrayIfNeeded(OWLClassExpression description, String open, String[] array, String close) {
+    private String[] bracketArrayIfNeeded(OWLPropertyRange description, String open, String[] array, String close) {
         if (description instanceof OWLClass) {
             return array;
         } else if (description instanceof OWLObjectOneOf) {
             return array;
         } else if (description instanceof OWLObjectComplementOf) {
+            return array;
+        }else if (description instanceof OWLDataRange){
             return array;
         } else {
             return bracketArray(open, array, close);
@@ -538,6 +543,27 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
         Set<OWLClassExpression> descs = object.getOperands();
         Iterator<OWLClassExpression> iter = descs.iterator();
         OWLClassExpression desc = iter.next();
+        String[] result = (String[]) desc.accept(this);
+
+        result = bracketArrayIfNeeded(desc, "(", result, ")"); //$NON-NLS-1$ //$NON-NLS-2$
+
+        while (iter.hasNext()) {
+            desc = iter.next();
+            String[] temp = (String[]) desc.accept(this);
+
+            temp = bracketArrayIfNeeded(desc, "(", temp, ")"); //$NON-NLS-1$ //$NON-NLS-2$
+
+            result = appendArrays(appendArrays(result, createSingle(ManchesterSyntaxConstants.OR)), temp);
+        }
+        return result;
+    }
+    
+
+    @Override
+    public String[] visit(OWLDataUnionOf object) {
+        Set<OWLDataRange> descs = object.getOperands();
+        Iterator<OWLDataRange> iter = descs.iterator();
+        OWLDataRange desc = iter.next();
         String[] result = (String[]) desc.accept(this);
 
         result = bracketArrayIfNeeded(desc, "(", result, ")"); //$NON-NLS-1$ //$NON-NLS-2$

@@ -18,6 +18,7 @@ import java.util.Collections;
 
 import sun.io.ByteToCharConverter;
 
+import com.ontoprise.ontostudio.owl.model.OWLConstants;
 import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 
 /**
@@ -32,11 +33,11 @@ public class BuiltInDatatypes {
     protected static void regusterHandlers() {
         DatatypeManager.INSTANCE.registerDatatypeHandler(new NullHandler());
         DatatypeManager.INSTANCE.registerDatatypeHandler(new BooleanHandler());
-        DatatypeManager.INSTANCE.registerDatatypeHandler(new StringHandler(OWLNamespaces.XSD_NS+"string"));
-        DatatypeManager.INSTANCE.registerDatatypeHandler(new StringHandler(OWLNamespaces.XSD_NS+"normalizedString"));
-        DatatypeManager.INSTANCE.registerDatatypeHandler(new StringHandler(OWLNamespaces.RDFS_NS+"Literal"));
-        DatatypeManager.INSTANCE.registerDatatypeHandler(new StringHandler(OWLNamespaces.RDF_NS+"XMLLiteral"));
-        DatatypeManager.INSTANCE.registerDatatypeHandler(new StringHandler(OWLNamespaces.RDF_NS+"text"));
+        DatatypeManager.INSTANCE.registerDatatypeHandler(new StringHandler(OWLConstants.XSD_STRING));
+        DatatypeManager.INSTANCE.registerDatatypeHandler(new StringHandler(OWLConstants.XSD_NORMALIZED_STRING)); 
+        DatatypeManager.INSTANCE.registerDatatypeHandler(new StringHandler(OWLConstants.RDFS_LITERAL)); 
+        DatatypeManager.INSTANCE.registerDatatypeHandler(new StringHandler(OWLConstants.RDF_XML_LITERAL));
+        DatatypeManager.INSTANCE.registerDatatypeHandler(new StringHandler(OWLConstants.RDF_TEXT)); 
         DatatypeManager.INSTANCE.registerDatatypeHandler(new UnsignedByteHandler());
         DatatypeManager.INSTANCE.registerDatatypeHandler(new ByteHandler());
         DatatypeManager.INSTANCE.registerDatatypeHandler(new UnsignedShortHandler());

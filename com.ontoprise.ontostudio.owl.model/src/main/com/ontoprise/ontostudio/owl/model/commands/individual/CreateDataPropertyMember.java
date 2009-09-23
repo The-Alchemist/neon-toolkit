@@ -18,6 +18,7 @@ import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
+import com.ontoprise.ontostudio.owl.model.OWLConstants;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
@@ -53,7 +54,7 @@ public class CreateDataPropertyMember extends OWLModuleChangeCommand {
             OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(getProjectName());
             OWLIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.toURI(individualUri));
             OWLLiteral c;
-            if (type.equals(OWLNamespaces.RDF_NS + "XMLLiteral")) { //$NON-NLS-1$
+            if (type.equals(OWLConstants.RDFS_LITERAL)) { //$NON-NLS-1$
                 if (!language.equals(OWLCommandUtils.EMPTY_LANGUAGE) && !language.equals("")) { //$NON-NLS-1$
                     c = factory.getOWLStringLiteral(value, language);
                 } else {

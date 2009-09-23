@@ -50,7 +50,8 @@ public interface OWLConstants {
     public static final String XSD_INTEGER = OWLNamespaces.XSD_NS + "integer";
     public static final String XSD_DECIMAL = OWLNamespaces.XSD_NS + "decimal";
     public static final String RDF_TEXT = OWLNamespaces.RDF_NS + "text";
-    public static final String RDF_XML_LITERAL = OWLNamespaces.RDF_NS + "XMLLiteral";
+    public static final String RDFS_LITERAL = OWLNamespaces.RDFS_NS + "Literal";
+    public static final String RDF_XML_LITERAL = OWLNamespaces.RDFS_NS + "XMLLiteral";
     public static final String OWL_RATIONAL = OWLNamespaces.OWL_NS + "rational";
     public static final String OWL_REAL = OWLNamespaces.OWL_NS + "real";
 
@@ -88,6 +89,7 @@ public interface OWLConstants {
             XSD_ANY_URI,
             XSD_DATE_TIME,
             XSD_DATE_TIME_STAMP,
+            RDFS_LITERAL,
             RDF_XML_LITERAL,
             RDF_TEXT
             )));
