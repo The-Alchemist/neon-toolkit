@@ -43,6 +43,7 @@ import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.util.URIUtils;
 import org.semanticweb.owlapi.expression.OWLEntityChecker;
 import org.semanticweb.owlapi.expression.ParserException;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
@@ -208,11 +209,14 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
             }
             return OWLUtilities.toURI(uri);
         }
+        private IRI getIRI(String name) {
+            return IRI.create(getUri(name));
+        }
 
         public OWLObjectProperty getOWLObjectProperty(String name) {
             try {
                 for (OWLModel model: ontologies) {
-                    if (model.getOntology().containsObjectPropertyReference(getUri(name)) || allowUndeclared) {
+                    if (model.getOntology().containsObjectPropertyReference(getIRI(name)) || allowUndeclared) {
                         return dataFactory.getOWLObjectProperty(getUri(name));
                     }
                 }
@@ -233,7 +237,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
         public OWLDataProperty getOWLDataProperty(String name) {
             try {
                 for (OWLModel model: ontologies) {
-                    if (model.getOntology().containsDataPropertyReference(getUri(name)) || allowUndeclared) {
+                    if (model.getOntology().containsDataPropertyReference(getIRI(name)) || allowUndeclared) {
                         return dataFactory.getOWLDataProperty(getUri(name));
                     }
                 }
@@ -250,7 +254,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
             //method is only called if HAS_VALUE is selected. Selecting a not existing individual 
             //is allowed.
             if(getUri(name) != null)
-                return dataFactory.getOWLNamedIndividual(getUri(name));
+                return dataFactory.getOWLNamedIndividual(getIRI(name));
             else
                 return null;
         }
@@ -258,7 +262,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
         public OWLDatatype getOWLDatatype(String name) {
             try {
                 for (OWLModel model: ontologies) {
-                    if (model.getOntology().containsDatatypeReference(getUri(name)) || dataTypeNameMap.containsKey(name) || allowUndeclared) {
+                    if (model.getOntology().containsDatatypeReference(getIRI(name)) || dataTypeNameMap.containsKey(name) || allowUndeclared) {
                         return dataFactory.getOWLDatatype(getUri(name));
                     }
                 }
@@ -272,7 +276,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
         public OWLAnnotationProperty getOWLAnnotationProperty(String name) {
             try {
                 for (OWLModel model: ontologies) {
-                    if (model.getOntology().containsAnnotationPropertyReference(getUri(name)) || allowUndeclared) {
+                    if (model.getOntology().containsAnnotationPropertyReference(getIRI(name)) || allowUndeclared) {
                         return dataFactory.getOWLAnnotationProperty(getUri(name));
                     }
                 }

@@ -1391,4 +1391,37 @@
       </wizard>
    </extension>
 
+
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<!-- additional extension of the gOntt plugin for the NeOn project         -->
+<!--                                                                       -->
+<!-- Note:                                                                 -->
+<!-- This will give a warning, but that's no problem for compile or deploy -->
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<extension point="org.neontoolkit.upm.gontt">
+  <plugin
+    name= "OWL modeling"
+    perspectiveId="com.ontoprise.ontostudio.owl.perspectives.OWLPerspective"
+    viewId="org.neontoolkit.gui.views.navigator"
+    activityId="ontologyImplementation"
+  />
+</extension>
+<extension point="org.neontoolkit.upm.gontt">
+  <plugin
+    name= "OWL modeling"
+    perspectiveId="com.ontoprise.ontostudio.owl.perspectives.OWLPerspective"
+    viewId="org.neontoolkit.gui.views.navigator"
+    activityId="ontologyFormalization"
+  />
+</extension>
+<extension point="org.neontoolkit.upm.gontt">
+  <plugin
+    name= "OWL modeling"
+    perspectiveId="com.ontoprise.ontostudio.owl.perspectives.OWLPerspective"
+    viewId="com.ontoprise.ontostudio.owl.views.individualview"
+    activityId="ontologyPopulation"
+  />
+</extension>
+
+
 </plugin>

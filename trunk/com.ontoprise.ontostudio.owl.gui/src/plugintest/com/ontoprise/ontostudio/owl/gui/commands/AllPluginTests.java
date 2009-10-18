@@ -26,6 +26,7 @@ import com.ontoprise.ontostudio.owl.gui.commands.dataProperty.DataPropertyDomain
 import com.ontoprise.ontostudio.owl.gui.commands.dataProperty.DataPropertyTaxonomyTest;
 import com.ontoprise.ontostudio.owl.gui.commands.dataProperty.IsDataPropertyTest;
 import com.ontoprise.ontostudio.owl.gui.commands.events.SyncEventHandlerTest;
+import com.ontoprise.ontostudio.owl.gui.commands.imports.ImportTest;
 import com.ontoprise.ontostudio.owl.gui.commands.individual.CreateMoveIndividualTest;
 import com.ontoprise.ontostudio.owl.gui.commands.individual.DataPropertyMemberHitsTest;
 import com.ontoprise.ontostudio.owl.gui.commands.individual.EquivalentDifferentIndividualsTest;
@@ -78,6 +79,7 @@ import com.ontoprise.ontostudio.owl.gui.commands.rename.RenameProjectTest;
     GetAllImportingOntologiesTest.class,
     SyncEventHandlerTest.class,
     RenameAnnotationPropertyTest.class,
+    ImportTest.class,
 })
 
 public class AllPluginTests {

@@ -1358,7 +1358,7 @@ public class InternalParser {
         nextToken();
         
         if(ruleUri == null)
-            return _f.getSWRLRule((IRI)null, antecedent, consequent);
+            return _f.getSWRLRule(antecedent, consequent);
         else
             return _f.getSWRLRule(ruleUri, antecedent, consequent);
     }
@@ -1441,7 +1441,7 @@ public class InternalParser {
         nextToken();
         SWRLIArgument iAtom0 = parseSWRLAtomIObject();
         SWRLIArgument iAtom1 = parseSWRLAtomIObject();
-        return _f.getSWRLSameAsAtom(iAtom0, iAtom1);
+        return _f.getSWRLSameIndividualAtom(iAtom0, iAtom1);
     }
 
     private SWRLObjectPropertyAtom parseSWRLObjectProperty() throws InternalParserException {
@@ -1456,7 +1456,7 @@ public class InternalParser {
         nextToken();
         SWRLIArgument iAtom0 = parseSWRLAtomIObject();
         SWRLIArgument iAtom1 = parseSWRLAtomIObject();
-        return _f.getSWRLDifferentFromAtom(iAtom0, iAtom1);
+        return _f.getSWRLDifferentIndividualsAtom(iAtom0, iAtom1);
     }
 
     private SWRLDataPropertyAtom parseSWRLDataValueProperty() throws InternalParserException {
@@ -1470,7 +1470,7 @@ public class InternalParser {
     private SWRLDArgument parseSWRLAtomDObject() throws InternalParserException {
         if(_tokenizer.ttype == '?'){
             nextToken();
-            return _f.getSWRLLiteralVariable(parseIRI(_tokenizer.sval));
+            return _f.getSWRLVariable(parseIRI(_tokenizer.sval));
         }else if(_tokenizer.ttype == '"'){
             return _f.getSWRLLiteralArgument(parseConstant());
         }else
@@ -1480,7 +1480,7 @@ public class InternalParser {
     private SWRLIArgument parseSWRLAtomIObject() throws InternalParserException {
         if(_tokenizer.ttype == '?'){
             nextToken();
-            return _f.getSWRLIndividualVariable(parseIRI(_tokenizer.sval));
+            return _f.getSWRLVariable(parseIRI(_tokenizer.sval));
         }else if(_tokenizer.ttype == StreamTokenizer.TT_WORD){
             return _f.getSWRLIndividualArgument(parseIndividual());
         }else

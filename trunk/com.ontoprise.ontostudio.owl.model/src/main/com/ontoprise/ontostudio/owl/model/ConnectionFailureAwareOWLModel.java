@@ -22,6 +22,7 @@ import org.neontoolkit.core.project.IOntologyProject;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLAxiomChange;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -42,7 +43,6 @@ import org.semanticweb.owlapi.model.OWLEquivalentDataPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLEquivalentObjectPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLInverseObjectPropertiesAxiom;
-import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
@@ -404,7 +404,7 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
     }
 
     @Override
-    public Set<OWLLiteral> getAnnotations(String owlEntityId, String annotationPropertyId) throws NeOnCoreException {
+    public Set<OWLAnnotationValue> getAnnotations(String owlEntityId, String annotationPropertyId) throws NeOnCoreException {
         try {
             return _model.getAnnotations(owlEntityId, annotationPropertyId);
         } catch (NeOnCoreException e) {

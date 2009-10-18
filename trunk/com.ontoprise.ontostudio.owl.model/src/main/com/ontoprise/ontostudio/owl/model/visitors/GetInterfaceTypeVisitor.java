@@ -97,12 +97,11 @@ import org.semanticweb.owlapi.model.SWRLDataPropertyAtom;
 import org.semanticweb.owlapi.model.SWRLDataRangeAtom;
 import org.semanticweb.owlapi.model.SWRLDifferentIndividualsAtom;
 import org.semanticweb.owlapi.model.SWRLIndividualArgument;
-import org.semanticweb.owlapi.model.SWRLIndividualVariable;
 import org.semanticweb.owlapi.model.SWRLLiteralArgument;
-import org.semanticweb.owlapi.model.SWRLLiteralVariable;
 import org.semanticweb.owlapi.model.SWRLObjectPropertyAtom;
 import org.semanticweb.owlapi.model.SWRLRule;
 import org.semanticweb.owlapi.model.SWRLSameIndividualAtom;
+import org.semanticweb.owlapi.model.SWRLVariable;
 
 
 /*****************************************************************************
@@ -363,12 +362,8 @@ public class GetInterfaceTypeVisitor implements OWLObjectVisitorEx<Object> {
         return SWRLBuiltInAtom.class;
     }
     @Override
-    public Object visit(SWRLLiteralVariable node) {
-        return SWRLLiteralVariable.class;
-    }
-    @Override
-    public Object visit(SWRLIndividualVariable node) {
-        return SWRLIndividualVariable.class;
+    public Object visit(SWRLVariable node) {
+        return SWRLVariable.class;
     }
     @Override
     public Object visit(SWRLIndividualArgument node) {

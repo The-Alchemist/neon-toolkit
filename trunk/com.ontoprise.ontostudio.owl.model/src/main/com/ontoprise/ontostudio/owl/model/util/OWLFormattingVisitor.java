@@ -19,6 +19,7 @@ import java.util.Set;
 import org.semanticweb.owlapi.model.*;
 
 import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
+import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 
 
 public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
@@ -759,8 +760,8 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
         append('[');
         appendAnnotations("rule", rule);
         append(' ');
-        if(rule.getIRI() != null){
-            visit(rule.getIRI());
+        if(OWLUtilities.getIRI(rule) != null){
+            visit(OWLUtilities.getIRI(rule));
             append(' ');
         }
         
@@ -870,13 +871,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
         return null;
     }
     @Override
-    public Object visit(SWRLLiteralVariable node) {
-        append('?');
-        visit(node.getIRI());
-        return null;
-    }
-    @Override
-    public Object visit(SWRLIndividualVariable node) {
+    public Object visit(SWRLVariable node) {
         append('?');
         visit(node.getIRI());
         return null;

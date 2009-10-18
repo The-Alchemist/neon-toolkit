@@ -40,6 +40,7 @@ import com.ontoprise.ontostudio.owl.model.commands.clazz.CreateRootClazz;
 import com.ontoprise.ontostudio.owl.model.commands.dataproperties.CreateDataProperty;
 import com.ontoprise.ontostudio.owl.model.commands.individual.CreateIndividual;
 import com.ontoprise.ontostudio.owl.model.commands.objectproperties.CreateObjectProperty;
+import com.ontoprise.ontostudio.owl.model.commands.rename.RenameOWLIndividual;
 
 /**
  * @author werner
@@ -170,6 +171,41 @@ public class AnnotationsTest extends AbstractOWLPluginTest {
         String[][] expected = new String[][] {
                 {expectedAxiom, ONTOLOGY_URI}};
         assertUnsortedArrayEquals(expected, results);
+    }
+
+    @Test
+    public void testRenameIndividual() throws Exception {
+        String c1 = createQualifiedIdentifier("c1", DEFAULT_NS);
+        String i1 = createQualifiedIdentifier("i1", DEFAULT_NS);
+        String i2 = createQualifiedIdentifier("i2", DEFAULT_NS);
+        
+        new CreateRootClazz(PROJECT_ID, ONTOLOGY_URI, c1).run();
+        new CreateIndividual(PROJECT_ID, ONTOLOGY_URI, c1, i1).run();
+        readAndDispatch();
+        String owlIndividual = "http://schema.ontoprise.com/reserved#owlIndividual";
+        String expectedAxiom = "[annotationIRI rdfs:seeAlso " + i1 + " [" + i1 + "]]";
+        
+        String annotationProperty = "rdfs:seeAlso";
+        String value = i1;
+        String range = owlIndividual;
+        String language = "";
+        String[] newValues = new String[] {annotationProperty, value, range, language};
+        
+        new AddEntityAnnotation(PROJECT_ID, ONTOLOGY_URI, i1, newValues).run();
+
+        String[][] results = new GetEntityAnnotationHits(PROJECT_ID, ONTOLOGY_URI, i1).getResults();
+        Assert.assertEquals(1, results.length);
+        String[][] expected = new String[][] {
+                {expectedAxiom, ONTOLOGY_URI}};
+        assertUnsortedArrayEquals(expected, results);
+
+        String expectedAxiom2 = "[annotationIRI rdfs:seeAlso " + i2 + " [" + i2 + "]]";
+        new RenameOWLIndividual(PROJECT_ID, ONTOLOGY_URI, i1, i2).run();
+        String[][] results2 = new GetEntityAnnotationHits(PROJECT_ID, ONTOLOGY_URI, i2).getResults();
+        Assert.assertEquals(1, results2.length);
+        String[][] expected2 = new String[][] {
+                {expectedAxiom2, ONTOLOGY_URI}};
+        assertUnsortedArrayEquals(expected2, results2);
     }
     
     @Test
