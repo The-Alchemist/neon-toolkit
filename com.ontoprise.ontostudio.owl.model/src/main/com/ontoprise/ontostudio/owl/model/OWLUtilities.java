@@ -18,6 +18,7 @@ import java.util.Set;
 import org.neontoolkit.core.exception.InternalNeOnException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -51,6 +52,8 @@ import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLRuntimeException;
+import org.semanticweb.owlapi.model.OWLStringLiteral;
+import org.semanticweb.owlapi.model.SWRLRule;
 
 import com.ontoprise.ontostudio.owl.model.util.Cast;
 import com.ontoprise.ontostudio.owl.model.util.InternalParser;
@@ -58,6 +61,7 @@ import com.ontoprise.ontostudio.owl.model.util.InternalParserException;
 import com.ontoprise.ontostudio.owl.model.util.OWLFormattingVisitor;
 
 public class OWLUtilities {
+    private static final URI SWRL_RULE_IRI_URI = URI.create("http://www.semanticweb.org/owlapi#iri"); //$NON-NLS-1$
     private static final URI OWL_THING_URI;
     static {
         try {
@@ -411,5 +415,20 @@ public class OWLUtilities {
         } else {
             throw new UnsupportedOperationException();
         }
+    }
+    
+    public static IRI getIRI(SWRLRule rule) {
+        for (OWLAnnotation a: rule.getAnnotations()) {
+            if (SWRL_RULE_IRI_URI.equals(a.getProperty().getURI())) {
+                if (a.getValue() instanceof OWLStringLiteral) {
+                    String literal = ((OWLStringLiteral)a.getValue()).getLiteral();
+                    if (literal != null && literal.startsWith("<") && literal.endsWith(">")) { //$NON-NLS-1$ //$NON-NLS-2$
+                        return IRI.create(literal.substring(1, literal.length() - 2));
+                    }
+                }
+                return null;
+            }
+        }
+        return null;
     }
 }

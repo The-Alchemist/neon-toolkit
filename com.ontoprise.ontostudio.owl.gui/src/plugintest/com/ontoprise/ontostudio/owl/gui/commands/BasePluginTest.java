@@ -10,16 +10,24 @@
 
 package com.ontoprise.ontostudio.owl.gui.commands;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
 import org.junit.Assert;
 import org.neontoolkit.core.AfterEarly;
 import org.neontoolkit.core.AfterLate;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.core.project.OntologyProjectManager;
+
+import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 
 /**
  * Avoid copy and paste code and put equal code here!
@@ -115,5 +123,21 @@ public abstract class BasePluginTest {
 
     protected boolean contains(String[] haystack, String needle) {
     	return Arrays.asList(haystack).contains(needle);
+    }
+    
+
+    protected static final File PLUGIN_ROOT_DIR;
+    static {
+        try {
+            PLUGIN_ROOT_DIR = new File(new URI("file:" + FileLocator.resolve(FileLocator.find(OWLPlugin.getDefault().getBundle(), new Path("/"), null)).getFile().replace(" ", "%20"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    protected static File getFile(String pluginRelativePath) {
+        return new File(PLUGIN_ROOT_DIR, pluginRelativePath);
     }
 }

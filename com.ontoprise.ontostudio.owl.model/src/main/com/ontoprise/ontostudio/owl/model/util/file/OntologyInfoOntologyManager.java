@@ -148,8 +148,12 @@ public final class OntologyInfoOntologyManager implements OWLOntologyManager {
         return Collections.emptySet();
     }
     @Override
-    public Set<OWLOntology> getImportsClosure(OWLOntology ontology) throws UnknownOWLOntologyException {
+    public Set<OWLOntology> getDirectImports(OWLOntology ontology) throws UnknownOWLOntologyException {
         return Collections.emptySet();
+    }
+    @Override
+    public Set<OWLOntology> getImportsClosure(OWLOntology ontology) throws UnknownOWLOntologyException {
+        return Collections.singleton(ontology);
     }
 
     

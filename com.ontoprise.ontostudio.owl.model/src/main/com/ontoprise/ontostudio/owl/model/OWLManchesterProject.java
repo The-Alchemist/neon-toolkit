@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -44,6 +45,7 @@ import org.semanticweb.owlapi.model.OWLAxiomChange;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLException;
+import org.semanticweb.owlapi.model.OWLImportsDeclaration;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
 import org.semanticweb.owlapi.model.OWLOntologyChangeException;
@@ -76,7 +78,21 @@ import com.ontoprise.ontostudio.owl.model.util.file.UnknownOWLOntologyFormatExce
  */
 public class OWLManchesterProject extends AbstractOntologyProject {
     private static final String DEFAULT_NAMESPACE_PREFIX = "";
-
+    
+    private static void removeOntologies(OWLOntologyManager manager, Set<String> ontologyURIs) {
+        for (String ontologyUri: ontologyURIs) {
+            try {
+                IRI ontologyIRI = IRI.create(ontologyUri);
+                OWLOntology ontology = manager.getOntology(ontologyIRI);
+                if (ontology != null) {
+                    manager.removeOntology(ontology);
+                }
+            } catch (RuntimeException e) {
+                Logger.getLogger(OWLManchesterProject.class).error(e);
+            }
+        }
+    }
+    
     private class OntologyChangeVisitor implements OWLOntologyChangeVisitor {
         private void setOntologyModified(OWLOntologyChange change) {
             OWLManchesterProject.this.setOntologyDirty(OWLManchesterProject.toString(change.getOntology().getOntologyID()), true);
@@ -289,6 +305,7 @@ public class OWLManchesterProject extends AbstractOntologyProject {
     @Override
     public void init() {
         _ontologyManager = OWLManager.createOWLOntologyManager();
+        _ontologyManager.setSilentMissingImportsHandling(false);
         _ontologyChangeVisitor = new OntologyChangeVisitor();
         _ontologyChangeListener = new OntologyChangeListener();
         _ontologyManager.addOntologyChangeListener(_ontologyChangeListener, new DefaultChangeBroadcastStrategy());
@@ -436,7 +453,7 @@ public class OWLManchesterProject extends AbstractOntologyProject {
     public void ontologyRemoved(String ontologyURI) throws NeOnCoreException {
         fireAddRemoveEvent(EventTypes.ONTOLOGY_REMOVED, ontologyURI);
     }
-
+    
     public Set<String> importOntologies(URI[] physicalURIs, boolean restoringFromWorkspace) throws UnknownOWLOntologyFormatException, OWLOntologyCreationException, NeOnCoreException {
         try {
             List<SimpleIRIMapper> iriMappers = new ArrayList<SimpleIRIMapper>();
@@ -459,10 +476,17 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                     }
                 }
 
+                final AtomicReference<OWLOntologyCreationException> exception = new AtomicReference<OWLOntologyCreationException>();
                 OWLOntologyLoaderListener owlOntologyLoaderListener = new OWLOntologyLoaderListener() {
                     @Override
                     public void finishedLoadingOntology(LoadingFinishedEvent event) {
-                        owlOntologyUris.put(OWLUtilities.toString(event.getOntologyID()), event.getPhysicalURI().toString());
+                        if (event.getException() == null) {
+                            owlOntologyUris.put(OWLUtilities.toString(event.getOntologyID()), event.getPhysicalURI().toString());
+                        } else {
+                            if (exception.get() == null) {
+                                exception.set(event.getException());
+                            }
+                        }
                     }
 
                     @Override
@@ -472,22 +496,48 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                 };
 
                 _ontologyManager.addOntologyLoaderListener(owlOntologyLoaderListener);
-
                 try {
-                    if (physicalURIs.length == 1) {
-                        _ontologyManager.loadOntologyFromPhysicalURI(physicalURIs[0]);
-                    } else {
-                        for (IRI ontologyIRI: ontologyIRIs) {
-                            _ontologyManager.loadOntology(ontologyIRI);
+                    try {
+                        if (physicalURIs.length == 1) {
+                            _ontologyManager.loadOntologyFromPhysicalURI(physicalURIs[0]);
+                        } else {
+                            for (IRI ontologyIRI: ontologyIRIs) {
+                                _ontologyManager.loadOntology(ontologyIRI);
+                            }
                         }
+                        if (exception.get() != null) {
+                            throw exception.get();
+                        }
+                    } catch (OWLOntologyCreationException e) {
+                        removeOntologies(_ontologyManager, owlOntologyUris.keySet());
+                        throw e;
+                    } catch (RuntimeException e) {
+                        removeOntologies(_ontologyManager, owlOntologyUris.keySet());
+                        throw e;
+                    }
+                    Set<String> registeredOntologies = new LinkedHashSet<String>();
+                    try {
+                        for (String ontologyUri: owlOntologyUris.keySet()) {
+                            this.addOntology(ontologyUri);
+                            registeredOntologies.add(ontologyUri);
+                            String physicalUri = owlOntologyUris.get(ontologyUri);
+                            _ontologyManager.setPhysicalURIForOntology(getOntology(ontologyUri), URI.create(physicalUri));
+                        }
+                    } catch (NeOnCoreException e) {
+                        unregisterOntologies(registeredOntologies);
+                        removeOntologies(_ontologyManager, owlOntologyUris.keySet());
+                        throw e;
+                    } catch (UnknownOWLOntologyException e) {
+                        unregisterOntologies(registeredOntologies);
+                        removeOntologies(_ontologyManager, owlOntologyUris.keySet());
+                        throw e;
+                    } catch (RuntimeException e) {
+                        unregisterOntologies(registeredOntologies);
+                        removeOntologies(_ontologyManager, owlOntologyUris.keySet());
+                        throw e;
                     }
                 } finally {
                     _ontologyManager.removeOntologyLoaderListener(owlOntologyLoaderListener);
-                    for (String ontologyUri: owlOntologyUris.keySet()) {
-                        this.addOntology(ontologyUri);
-                        String physicalUri = owlOntologyUris.get(ontologyUri);
-                        _ontologyManager.setPhysicalURIForOntology(getOntology(ontologyUri), URI.create(physicalUri));
-                    }
                 }
             } finally {
                 for (SimpleIRIMapper simpleIRIMapper: iriMappers) {
@@ -499,6 +549,26 @@ public class OWLManchesterProject extends AbstractOntologyProject {
         } finally {
             // hack to avoid pending file handles, see issue 12863
             System.gc();
+        }
+    }
+
+    private void unregisterOntologies(Set<String> registeredOntologies) throws NeOnCoreException {
+        List<Exception> exceptions = new ArrayList<Exception>();
+        for (String ontologyURI: registeredOntologies) {
+            try {
+                super.removeOntology(ontologyURI, true);
+            } catch (NeOnCoreException e) {
+                exceptions.add(e);
+            } catch (RuntimeException e) {
+                exceptions.add(e);
+            }
+        }
+        if (exceptions.size() > 0) {
+            Exception exception = exceptions.get(0);
+            if (exception instanceof NeOnCoreException) {
+                throw (NeOnCoreException)exception;
+            }
+            throw (RuntimeException)exception;
         }
     }
 
@@ -582,8 +652,12 @@ public class OWLManchesterProject extends AbstractOntologyProject {
         if (mainOntology == null) {
             return result;
         }
-        for (OWLOntology ontology: mainOntology.getImports(_ontologyManager)) {
-            result.add(OWLUtilities.toString(ontology.getOntologyID()));
+//      for (OWLOntology ontology: mainOntology.getDirectImports()) {
+//      result.add(OWLUtilities.toString(ontology.getOntologyID()));
+//  }
+        // use import declarations instead of getDirectImports to make things work with OWL API 3.0.0 revision 1310
+        for (OWLImportsDeclaration d: mainOntology.getImportsDeclarations()) {
+            result.add(d.getURI().toString());
         }
         return result;
     }

@@ -41,6 +41,7 @@ import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnnotationSubject;
+import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLAxiomChange;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -64,7 +65,6 @@ import org.semanticweb.owlapi.model.OWLEquivalentDataPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLEquivalentObjectPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLInverseObjectPropertiesAxiom;
-import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
@@ -189,7 +189,7 @@ public class OWLModelCore implements OWLModel {
         if (_subClassOfAxioms != null) {
             return;
         }
-        _subClassOfAxioms = new LinkedHashSet<OWLSubClassOfAxiom>(_ontology.getAxioms(AxiomType.SUBCLASS));
+        _subClassOfAxioms = new LinkedHashSet<OWLSubClassOfAxiom>(_ontology.getAxioms(AxiomType.SUBCLASS_OF));
     }
     
     private void assertEntityCache() {
@@ -641,13 +641,13 @@ public class OWLModelCore implements OWLModel {
             return ontology.getSameIndividualAxioms((OWLIndividual)parameters[0]);
         }
     };
-    private final AxiomRequest<OWLSubClassOfAxiom> SubClassOf_subDescription_Request = new AxiomRequestCore<OWLSubClassOfAxiom>(AxiomType.SUBCLASS, "subDescription") {
+    private final AxiomRequest<OWLSubClassOfAxiom> SubClassOf_subDescription_Request = new AxiomRequestCore<OWLSubClassOfAxiom>(AxiomType.SUBCLASS_OF, "subDescription") {
         @Override
         protected Iterable<OWLSubClassOfAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
             return ontology.getSubClassAxiomsForSubClass((OWLClass)parameters[0]);
         }
     };
-    private final AxiomRequest<OWLSubClassOfAxiom> SubClassOf_superDescription_Request = new AxiomRequestCore<OWLSubClassOfAxiom>(AxiomType.SUBCLASS, "superDescription") {
+    private final AxiomRequest<OWLSubClassOfAxiom> SubClassOf_superDescription_Request = new AxiomRequestCore<OWLSubClassOfAxiom>(AxiomType.SUBCLASS_OF, "superDescription") {
         @Override
         protected Iterable<OWLSubClassOfAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
             return ontology.getSubClassAxiomsForSuperClass((OWLClass)parameters[0]);
@@ -926,7 +926,7 @@ public class OWLModelCore implements OWLModel {
     private final ItemCollector<OWLClassExpression,OWLClassAssertionAxiom> ClassMember_description_NamedDescriptionsOnly_Collector = new ItemCollectorCore<OWLClassExpression,OWLClassAssertionAxiom>("description", OWLClassExpression.class, NAMED_DESCRIPTION_FILTER);
     private final ItemCollector<OWLClassExpression,OWLClassAssertionAxiom> ClassMember_description_ComplexDescriptionsOnly_Collector = new ItemCollectorCore<OWLClassExpression,OWLClassAssertionAxiom>("description", OWLClassExpression.class, COMPLEX_DESCRIPTION_FILTER);
     private final ItemCollector<OWLIndividual,OWLClassAssertionAxiom> ClassMember_individual_Collector = new ItemCollectorCore<OWLIndividual,OWLClassAssertionAxiom>("individual", OWLIndividual.class);
-    private final ItemCollector<OWLLiteral,OWLAnnotationAssertionAxiom> EntityAnnotation_annotationValue_Collector = new ItemCollectorCore<OWLLiteral,OWLAnnotationAssertionAxiom>("annotationValue", OWLLiteral.class);
+    private final ItemCollector<OWLAnnotationValue,OWLAnnotationAssertionAxiom> EntityAnnotation_annotationValue_Collector = new ItemCollectorCore<OWLAnnotationValue,OWLAnnotationAssertionAxiom>("annotationValue", OWLAnnotationValue.class);
     private final ItemCollector<OWLClassExpression,OWLEquivalentClassesAxiom> EquivalentClasses_descriptions_ComplexDescriptionsOnly_Collector = new ItemCollectorCore<OWLClassExpression,OWLEquivalentClassesAxiom>("descriptions", OWLClassExpression.class, COMPLEX_DESCRIPTION_FILTER);
     private final ItemCollector<OWLClassExpression,OWLEquivalentClassesAxiom> EquivalentClasses_descriptions_NamedDescriptionsOnly_Collector = new ItemCollectorCore<OWLClassExpression,OWLEquivalentClassesAxiom>("descriptions", OWLClassExpression.class, NAMED_DESCRIPTION_FILTER);
     private final ItemCollector<OWLClassExpression,OWLEquivalentClassesAxiom> EquivalentClasses_descriptions_RestrictionsOnly_Collector = new ItemCollectorCore<OWLClassExpression,OWLEquivalentClassesAxiom>("descriptions", OWLClassExpression.class, RESTRICTION_FILTER);
@@ -1175,7 +1175,7 @@ public class OWLModelCore implements OWLModel {
     }
 
     @Override
-    public Set<OWLLiteral> getAnnotations(String owlEntityId, String annotationPropertyId) throws NeOnCoreException {
+    public Set<OWLAnnotationValue> getAnnotations(String owlEntityId, String annotationPropertyId) throws NeOnCoreException {
         String expandedURI = getNamespaces().expandString(owlEntityId);
         return EntityAnnotation_annotationValue_Collector.getItems(EntityAnnotation_annotationProperty_entity_Request, autoBox(annotationProperty(annotationPropertyId), IRI.create(expandedURI)));
     }
@@ -2009,13 +2009,24 @@ public class OWLModelCore implements OWLModel {
         // change annotation subjects
         List<OWLAxiomChange> annotationSubjectChanges = new ArrayList<OWLAxiomChange>();
         Set<OWLAnnotationAssertionAxiom> annotationAssertions = getOntology().getAnnotationAssertionAxioms(oldEntity.getIRI());
-        IRI newSubject = IRI.create(newUri);
+        IRI newIRI = IRI.create(newUri);
         for (OWLAnnotationAssertionAxiom a: annotationAssertions) {
             annotationSubjectChanges.add(getRemoveAxiom(a));
-            annotationSubjectChanges.add(getAddAxiom(getOWLDataFactory().getOWLAnnotationAssertionAxiom(newSubject, a.getAnnotation(), a.getAnnotations())));
+            annotationSubjectChanges.add(getAddAxiom(getOWLDataFactory().getOWLAnnotationAssertionAxiom(a.getAnnotation().getProperty(), newIRI, a.getAnnotation().getValue())));
             monitor.worked(1);
         }
         applyChanges(annotationSubjectChanges);
+
+        // change annotation values... sadly we have to iterate over all annotation assertions 
+        // since we cannot set a condition on the annotation value
+        List<OWLAxiomChange> annotationValueChanges = new ArrayList<OWLAxiomChange>();
+        Set<OWLAnnotationAssertionAxiom> annotationAssertions2 = getOntology().getAxioms(AxiomType.ANNOTATION_ASSERTION);
+        for (OWLAnnotationAssertionAxiom a: annotationAssertions2) {
+            annotationValueChanges.add(getRemoveAxiom(a));
+            annotationValueChanges.add(getAddAxiom(getOWLDataFactory().getOWLAnnotationAssertionAxiom(a.getAnnotation().getProperty(), a.getSubject(), newIRI)));
+            monitor.worked(1);
+        }
+        applyChanges(annotationValueChanges);
     }
 
     // ///////////////////////////////////////////////////////////////////////
@@ -2030,7 +2041,7 @@ public class OWLModelCore implements OWLModel {
 
     @Override
     public Set<OWLEntity> getEntity(String owlEntityId) throws NeOnCoreException {
-        URI uri = OWLUtilities.toURI(owlEntityId);
+        IRI uri = IRI.create(OWLUtilities.toURI(owlEntityId));
         Set<OWLEntity> result = new LinkedHashSet<OWLEntity>();
         for (OWLModel model: getRelevantOntologies(getIncludeImportedOntologies())) {
             OWLOntology ontology = model.getOntology();

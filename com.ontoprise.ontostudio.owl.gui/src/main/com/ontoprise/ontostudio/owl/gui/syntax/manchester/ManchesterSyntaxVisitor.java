@@ -18,6 +18,7 @@ import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLAsymmetricObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
@@ -173,9 +174,9 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
         }
 
         try {
-            Set<OWLLiteral> annotations = _owlModel.getAnnotations(uri, RDFS_LABEL);
-            for (OWLLiteral value: annotations) {
-                if (!value.isTyped()) {
+            Set<OWLAnnotationValue> annotations = _owlModel.getAnnotations(uri, RDFS_LABEL);
+            for (OWLAnnotationValue value: annotations) {
+                if (value instanceof OWLStringLiteral) {
                     OWLStringLiteral untypedConstant = (OWLStringLiteral)value;
                     String lang = untypedConstant.getLang();
                     if (_language.equals(lang)) {

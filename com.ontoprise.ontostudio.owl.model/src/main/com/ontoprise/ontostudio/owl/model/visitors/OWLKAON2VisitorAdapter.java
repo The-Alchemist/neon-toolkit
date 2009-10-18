@@ -96,12 +96,11 @@ import org.semanticweb.owlapi.model.SWRLDataPropertyAtom;
 import org.semanticweb.owlapi.model.SWRLDataRangeAtom;
 import org.semanticweb.owlapi.model.SWRLDifferentIndividualsAtom;
 import org.semanticweb.owlapi.model.SWRLIndividualArgument;
-import org.semanticweb.owlapi.model.SWRLIndividualVariable;
 import org.semanticweb.owlapi.model.SWRLLiteralArgument;
-import org.semanticweb.owlapi.model.SWRLLiteralVariable;
 import org.semanticweb.owlapi.model.SWRLObjectPropertyAtom;
 import org.semanticweb.owlapi.model.SWRLRule;
 import org.semanticweb.owlapi.model.SWRLSameIndividualAtom;
+import org.semanticweb.owlapi.model.SWRLVariable;
 
 /**
  * Default implementation of the visitor containing an empty method for each object.
@@ -351,11 +350,7 @@ public class OWLKAON2VisitorAdapter implements OWLObjectVisitorEx<Object> {
         return null;
     }
     @Override
-    public Object visit(SWRLIndividualVariable node) {
-        return null;
-    }
-    @Override
-    public Object visit(SWRLLiteralVariable node) {
+    public Object visit(SWRLVariable node) {
         return null;
     }
     @Override

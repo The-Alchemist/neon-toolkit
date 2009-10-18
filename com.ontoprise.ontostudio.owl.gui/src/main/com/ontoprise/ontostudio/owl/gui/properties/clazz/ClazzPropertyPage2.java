@@ -444,19 +444,21 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 try {
                     String[] newValues = getNewValues(quantifierCombo, propertyText, formRow.getRangeText(), cardinalityText);
                     new AddRestriction(_project, _ontologyUri, _id, newValues, clazzType).run();
+
+                    OWLGUIUtilities.enable(quantifierCombo, false);
+                    if (clazzType.equals(OWLCommandUtils.EQUIV)) {
+                        initEquivalentRestrictionSection(true);
+                    } else if (clazzType.equals(OWLCommandUtils.INCL)) {
+                        initSuperRestrictionSection(true);
+                    }
+                    layoutSections();
+                    _form.reflow(true);
+                    
                 } catch (NeOnCoreException k2e) {
                     handleException(k2e, Messages.ClazzPropertyPage2_40, _equivRestrictionsComp.getShell());
                 } catch (CommandException e) {
                     handleException(e, Messages.ClazzPropertyPage2_40, _equivRestrictionsComp.getShell());
                 }
-                OWLGUIUtilities.enable(quantifierCombo, false);
-                if (clazzType.equals(OWLCommandUtils.EQUIV)) {
-                    initEquivalentRestrictionSection(true);
-                } else if (clazzType.equals(OWLCommandUtils.INCL)) {
-                    initSuperRestrictionSection(true);
-                }
-                layoutSections();
-                _form.reflow(true);
             }
 
             @Override

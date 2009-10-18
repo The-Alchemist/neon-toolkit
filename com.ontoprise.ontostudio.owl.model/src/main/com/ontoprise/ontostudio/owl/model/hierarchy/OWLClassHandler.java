@@ -30,7 +30,7 @@ import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 
 public class OWLClassHandler implements EntityHierarchyUpdater.EntityHandler<OWLClassExpression> {
     @SuppressWarnings("unchecked")
-    private static final Set<AxiomType<? extends OWLAxiom>> HANDLED_AXIOMS = Collections.unmodifiableSet(new LinkedHashSet<AxiomType<? extends OWLAxiom>>(Arrays.asList(AxiomType.SUBCLASS, AxiomType.EQUIVALENT_CLASSES)));
+    private static final Set<AxiomType<? extends OWLAxiom>> HANDLED_AXIOMS = Collections.unmodifiableSet(new LinkedHashSet<AxiomType<? extends OWLAxiom>>(Arrays.asList(AxiomType.SUBCLASS_OF, AxiomType.EQUIVALENT_CLASSES)));
     private static class Edge {
         private OWLClassExpression _child;
         private OWLClassExpression _parent;

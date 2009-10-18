@@ -4,12 +4,12 @@ Bundle-Name: OWLAPI lib Plug-in
 Bundle-SymbolicName: org.semanticweb.owl
 Bundle-Version: 3.0.0
 Bundle-Vendor: ontoprise GmbH
-Bundle-ClassPath: lib/owlapi/owlapi-bin-3.0.0-snapshot-1259.jar
+Bundle-ClassPath: lib/owlapi/org.semanticweb.owlapi_3.0.0.v1310.jar
 Export-Package: 
- com.clarkparsia.explanation,
- com.clarkparsia.explanation.io,
- com.clarkparsia.explanation.util,
- com.clarkparsia.modularity.locality,
+ com.clarkparsia.owlapi.explanation,
+ com.clarkparsia.owlapi.explanation.io,
+ com.clarkparsia.owlapi.explanation.util,
+ com.clarkparsia.owlapi.modularity.locality,
  de.uulm.ecs.ai.owlapi.krssparser,
  de.uulm.ecs.ai.owlapi.krssrenderer,
  org.coode.mansyntax.editor,
@@ -43,6 +43,7 @@ Export-Package:
  org.semanticweb.owlapi.rdf.syntax,
  org.semanticweb.owlapi.rdf.util,
  org.semanticweb.owlapi.reasoner,
+ org.semanticweb.owlapi.reasoner.impl,
  org.semanticweb.owlapi.reasoner.query,
  org.semanticweb.owlapi.reasonerfactory,
  org.semanticweb.owlapi.reasonerfactory.factpp,
@@ -51,12 +52,12 @@ Export-Package:
  org.semanticweb.owlapi.util,
  org.semanticweb.owlapi.vocab,
  uk.ac.manchester.cs.bhig.util,
- uk.ac.manchester.cs.owl.dlsyntax,
- uk.ac.manchester.cs.owl.dlsyntax.parser,
  uk.ac.manchester.cs.owl.explanation.ordering,
  uk.ac.manchester.cs.owl.inference.dig11,
- uk.ac.manchester.cs.owl.modularity,
  uk.ac.manchester.cs.owl.owlapi,
  uk.ac.manchester.cs.owl.owlapi.mansyntaxrenderer,
- uk.ac.manchester.cs.owl.owlapi.turtle.parser
+ uk.ac.manchester.cs.owl.owlapi.turtle.parser,
+ uk.ac.manchester.cs.owlapi.dlsyntax,
+ uk.ac.manchester.cs.owlapi.dlsyntax.parser,
+ uk.ac.manchester.cs.owlapi.modularity
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

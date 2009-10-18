@@ -35,8 +35,6 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.dnd.DropTargetListener;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.activities.IActivityManager;
-import org.eclipse.ui.activities.IWorkbenchActivitySupport;
 import org.neontoolkit.gui.internal.properties.PropertyPageInfo;
 import org.neontoolkit.gui.navigator.MTreeView;
 import org.neontoolkit.gui.properties.EntityPropertiesView;
@@ -145,19 +143,19 @@ public class NeOnUIPlugin extends LoggingUIPlugin {
     /**
      * 
      */
-    @SuppressWarnings("unchecked")
     private void disableUnneededCapability() {
-        if (!PluginTest.hasWorkbench()) {
-            return;
-        }
-        IWorkbenchActivitySupport workbenchActivitySupport = PlatformUI.getWorkbench().getActivitySupport();
-        IActivityManager activityManager = workbenchActivitySupport.getActivityManager();
-        Set enabledActivityIds = new HashSet(activityManager.getEnabledActivityIds());
-        enabledActivityIds.remove("org.eclipse.team"); //$NON-NLS-1$
-        enabledActivityIds.remove("org.eclipse.team.cvs"); //$NON-NLS-1$
-        enabledActivityIds.remove("org.eclipse.javaDevelopment"); //$NON-NLS-1$
-        enabledActivityIds.remove("org.eclipse.plugInDevelopment"); //$NON-NLS-1$
-        workbenchActivitySupport.setEnabledActivityIds(enabledActivityIds);
+        // Bug 13383
+//        if (!PluginTest.hasWorkbench()) {
+//            return;
+//        }
+//        IWorkbenchActivitySupport workbenchActivitySupport = PlatformUI.getWorkbench().getActivitySupport();
+//        IActivityManager activityManager = workbenchActivitySupport.getActivityManager();
+//        Set enabledActivityIds = new HashSet(activityManager.getEnabledActivityIds());
+//        enabledActivityIds.remove("org.eclipse.team"); //$NON-NLS-1$
+//        enabledActivityIds.remove("org.eclipse.team.cvs"); //$NON-NLS-1$
+//        enabledActivityIds.remove("org.eclipse.javaDevelopment"); //$NON-NLS-1$
+//        enabledActivityIds.remove("org.eclipse.plugInDevelopment"); //$NON-NLS-1$
+//        workbenchActivitySupport.setEnabledActivityIds(enabledActivityIds);
     }
 
     /*

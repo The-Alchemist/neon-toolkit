@@ -10,8 +10,6 @@
 
 package org.neontoolkit.search.ui;
 
-import java.util.ArrayList;
-
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PartInitException;
