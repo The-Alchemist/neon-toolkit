@@ -97,13 +97,13 @@ public class IndividualDropHandler implements DropTargetListener {
             // only for classes in one ontology
             String targetOntologyUri = target.getOntologyUri();
             Object[] items = elems.toArray();
-            ArrayList<IndividualViewItem> individuals = new ArrayList<IndividualViewItem>();
+            ArrayList<IIndividualTreeElement> individuals = new ArrayList<IIndividualTreeElement>();
             for (int i = 0; i < items.length; i++) {
                 TreeItem item = (TreeItem) items[i];
                 Object nextElem = item.getData();
                 // Object nextElemParent = item.getParentItem() != null ? item.getParentItem().getData() : null;
-                if (nextElem instanceof IndividualViewItem) {
-                    IndividualViewItem elem = (IndividualViewItem) nextElem;
+                if (nextElem instanceof IIndividualTreeElement) {
+                    IIndividualTreeElement elem = (IIndividualTreeElement) nextElem;
                     individuals.add(elem);
                     if (!targetOntologyUri.equals(elem.getOntologyUri())) {
                         Shell shell = new Shell();
@@ -114,9 +114,9 @@ public class IndividualDropHandler implements DropTargetListener {
             }
 
             if (event.detail == DND.DROP_COPY) {
-                doCopy(individuals.toArray(new IndividualViewItem[0]), target);
+                doCopy(individuals.toArray(new IIndividualTreeElement[0]), target);
             } else if (event.detail == DND.DROP_MOVE) {
-                doMove(individuals.toArray(new IndividualViewItem[0]), target);
+                doMove(individuals.toArray(new IIndividualTreeElement[0]), target);
             } else {
                 Shell shell = new Shell();
                 MessageDialog.openInformation(shell, Messages.IndividualDropHandler_0, Messages.IndividualDropHandler_1);
@@ -134,7 +134,7 @@ public class IndividualDropHandler implements DropTargetListener {
 
     }
 
-    protected void doCopy(IndividualViewItem[] elem, Object target) {
+    protected void doCopy(IIndividualTreeElement[] elem, Object target) {
         if (target instanceof ClazzTreeElement) {
             // instance is dropped on a concept
             ClazzTreeElement targetElem = (ClazzTreeElement) target;
@@ -156,13 +156,13 @@ public class IndividualDropHandler implements DropTargetListener {
         }
     }
 
-    protected void doMove(IndividualViewItem elem[], Object target) {
+    protected void doMove(IIndividualTreeElement elem[], Object target) {
         if (target instanceof ClazzTreeElement) {
             try {
                 ClazzTreeElement newParent = (ClazzTreeElement) target;
 
                 ArrayList<ClazzTreeElement> oldParents = new ArrayList<ClazzTreeElement>();
-                ArrayList<IndividualViewItem> movedInstances = new ArrayList<IndividualViewItem>();
+                ArrayList<IIndividualTreeElement> movedInstances = new ArrayList<IIndividualTreeElement>();
 
                 for (int i = 0; i < elem.length; i++) {
                     String clazzUri = elem[i].getClazz();
@@ -176,7 +176,7 @@ public class IndividualDropHandler implements DropTargetListener {
                 }
                 if (oldParents.size() > 0) {
                     GenericRefactoringExecutionStarter.startRefactoring(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "com.ontoprise.ontostudio.owl.gui.refactor.moveIndividual", //$NON-NLS-1$
-                            movedInstances.toArray(new IndividualViewItem[0]),
+                            movedInstances.toArray(new IIndividualTreeElement[0]),
                             oldParents.get(0),
                             newParent);
                 }

@@ -16,7 +16,7 @@ import org.eclipse.ltk.core.refactoring.participants.ProcessorBasedRefactoring;
 import org.eclipse.ltk.ui.refactoring.RefactoringWizard;
 import org.neontoolkit.refactor.IRefactoringFactory;
 
-import com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem;
+import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 
 public class MoveIndividualRefactoringFactory implements IRefactoringFactory {
@@ -32,10 +32,10 @@ public class MoveIndividualRefactoringFactory implements IRefactoringFactory {
         Object parent = parameters[1];
         MoveIndividualProcessor processor = null;
         if (parent instanceof ClazzTreeElement) {
-            processor = new MoveIndividualProcessor((IndividualViewItem[]) parameters[0], (ClazzTreeElement) parameters[1]);
+            processor = new MoveIndividualProcessor((IIndividualTreeElement[]) parameters[0], (ClazzTreeElement) parameters[1]);
         } else if (parent instanceof ClazzTreeElement[]) {
             ClazzTreeElement[] parents = (ClazzTreeElement[]) parent;
-            processor = new MoveIndividualProcessor((IndividualViewItem[]) parameters[0], (ClazzTreeElement) parents[0]);
+            processor = new MoveIndividualProcessor((IIndividualTreeElement[]) parameters[0], (ClazzTreeElement) parents[0]);
         }
         if (parameters.length > 2 && processor != null) {
             processor.setDestination((ClazzTreeElement) parameters[2]);

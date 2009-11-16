@@ -16,7 +16,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses( {
-    OWLFileUtilitiesTest.class,
+    OWLFileUtilitiesTest.class
     } )
 public class AllUtilFileTests {
 

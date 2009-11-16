@@ -19,6 +19,7 @@ import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
+import org.semanticweb.owlapi.model.OWLAnonymousIndividual;
 import org.semanticweb.owlapi.model.OWLAsymmetricObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
@@ -175,18 +176,25 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
 
         try {
             Set<OWLAnnotationValue> annotations = _owlModel.getAnnotations(uri, RDFS_LABEL);
-            for (OWLAnnotationValue value: annotations) {
-                if (value instanceof OWLStringLiteral) {
-                    OWLStringLiteral untypedConstant = (OWLStringLiteral)value;
-                    String lang = untypedConstant.getLang();
-                    if (_language.equals(lang)) {
-                        result = untypedConstant.getLiteral();
-                        break;
-                    }
-                }
-            }
+            String label = getLocalizedLiteral(annotations);
+            if(label != null) result = label;
         } catch (NeOnCoreException e) {
             // log.error()
+        }
+        return result;
+    }
+    
+    private String getLocalizedLiteral(Set<OWLAnnotationValue> annotations){
+        String result = null;
+        for (OWLAnnotationValue value: annotations) {
+            if (value instanceof OWLStringLiteral) {
+                OWLStringLiteral untypedConstant = (OWLStringLiteral)value;
+                String lang = untypedConstant.getLang();
+                if (_language.equals(lang)) {
+                    result = untypedConstant.getLiteral();
+                    break;
+                }
+            }
         }
         return result;
     }
@@ -299,6 +307,17 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
     public Object visit(OWLNamedIndividual object) {
         String uri = object.getURI().toString();
         return createStandardArray(uri);
+    }
+    
+    @Override
+    public Object visit(OWLAnonymousIndividual object) {
+        String id = object.getID().toString();
+        try {
+            String label = getLocalizedLiteral(_owlModel.getAnnotations(object, RDFS_LABEL));
+            return new String[] {getURI(id), getLocalName(id), getQName(id), (label!=null)?label:getQName(id)};
+        } catch (NeOnCoreException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
     
     @Override

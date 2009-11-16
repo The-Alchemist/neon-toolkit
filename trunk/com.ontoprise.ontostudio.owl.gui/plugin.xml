@@ -189,6 +189,9 @@
             </visibleWhen>
          </command>
       </menuContribution>
+      <menuContribution
+            locationURI="com.ontoprise.ontostudio.owl.gui.menuContribution2">
+      </menuContribution>
    </extension>
    
    <extension
@@ -236,7 +239,60 @@
             </command>
          </menu>
       </menuContribution>
-
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar">
+         <toolbar
+               id="com.ontoprise.ontostudio.owl.gui.toolbar1">
+            <command
+                  commandId="org.neontoolkit.gui.navigator.newCommand"
+                  icon="icons/clazz.gif"
+                  label="%newClazzLabel"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <reference
+                        definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneClazzOrClazzFolderSelected">
+                  </reference>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="org.neontoolkit.gui.navigator.newCommand"
+                  icon="icons/onto/object_property.gif"
+                  label="%newObjectPropertyLabel"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <reference
+                        definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneObjectPropertyOrObjectPropertyFolderSelected">
+                  </reference>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="org.neontoolkit.gui.navigator.newCommand"
+                  icon="icons/onto/data_property.gif"
+                  label="%newDataPropertyLabel"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <reference
+                        definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneDataPropertyOrDataPropertyFolderSelected">
+                  </reference>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="org.neontoolkit.gui.navigator.newCommand"
+                  icon="icons/onto/annotation_property.gif"
+                  label="%newAnnotationPropertyLabel"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <reference
+                        definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneAnnotationPropertyOrAnnotationPropertyFolderSelected">
+                  </reference>
+               </visibleWhen>
+            </command>
+         </toolbar>
+      </menuContribution>
    </extension>
 
 
@@ -490,13 +546,19 @@
             name="%DatatypePropertyPage"/>
 
       <!-- Individual PropertyPage -->
+      <!-- activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem" -->
       <entityPropertyContributor
-            activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem"
+            activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.AnonymousIndividualViewItem" 
             class="com.ontoprise.ontostudio.owl.gui.properties.individual.IndividualPropertyPage2"
-            id="com.ontoprise.ontostudio.owl.gui.propertyContributorIndividual2"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorAnonymousIndividual2"
             name="%IndividualPropertyPage">
       </entityPropertyContributor>
-
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.NamedIndividualViewItem" 
+            class="com.ontoprise.ontostudio.owl.gui.properties.individual.IndividualPropertyPage2"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorNamedIndividual2"
+            name="%IndividualPropertyPage">
+      </entityPropertyContributor>
 <!-- ####################################################### -->
 <!-- ################# Sub PropertyPages ################### -->
 <!-- ####################################################### -->
@@ -588,22 +650,42 @@
 
 
       <!-- SubPropertyPages of IndividualPropertyPage -->
+      <!-- activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem"-->
       <entityPropertyContributor
-            activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem"
+            activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.AnonymousIndividualViewItem"
             class="com.ontoprise.ontostudio.owl.gui.properties.individual.IndividualTaxonomyPropertyPage"
             id="com.ontoprise.ontostudio.owl.gui.propertyContributorIndividualTaxonomy"
             name="%taxonomyPropertyPage">
             <subContributorOf
-            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorIndividual2"
+            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorAnonymousIndividual2"
             	priority="910" />
       </entityPropertyContributor>
       <entityPropertyContributor
-            activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem"
+            activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.NamedIndividualViewItem"
+            class="com.ontoprise.ontostudio.owl.gui.properties.individual.IndividualTaxonomyPropertyPage"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorIndividualTaxonomy"
+            name="%taxonomyPropertyPage">
+            <subContributorOf
+            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorNamedIndividual2"
+            	priority="910" />
+      </entityPropertyContributor>
+      
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.AnonymousIndividualViewItem"
             class="com.ontoprise.ontostudio.owl.gui.properties.AnnotationsPropertyPage2"
             id="com.ontoprise.ontostudio.owl.gui.propertyContributorAnnotations2"
             name="%annotationsPropertyPage">
             <subContributorOf
-            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorIndividual2"
+            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorAnonymousIndividual2"
+            	priority="900" />
+      </entityPropertyContributor>
+            <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.NamedIndividualViewItem"
+            class="com.ontoprise.ontostudio.owl.gui.properties.AnnotationsPropertyPage2"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorAnnotations2"
+            name="%annotationsPropertyPage">
+            <subContributorOf
+            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorNamedIndividual2"
             	priority="900" />
       </entityPropertyContributor>
 
@@ -697,7 +779,7 @@
             dropClass="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyFolderTreeElement"
             class="com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyDropHandler"/>
       <dropHandler
-            dragClass="com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem"
+            dragClass="com.ontoprise.ontostudio.owl.gui.individualview.NamedIndividualViewItem"
             dropClass="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement"
             class="com.ontoprise.ontostudio.owl.gui.individualview.IndividualDropHandler"/>
    </extension>
@@ -1109,7 +1191,7 @@
             </count>
             <iterate>
                <instanceof
-                     value="com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem">
+                     value="com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement">
                </instanceof>
             </iterate>
          </and>
@@ -1119,7 +1201,7 @@
          <iterate
                ifEmpty="false">
             <instanceof
-                  value="com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem">
+                  value="com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement">
             </instanceof>
          </iterate>
       </definition>

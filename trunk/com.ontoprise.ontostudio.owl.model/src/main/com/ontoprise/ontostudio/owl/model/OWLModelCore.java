@@ -11,7 +11,6 @@
 package com.ontoprise.ontostudio.owl.model;
 
 import java.lang.reflect.InvocationTargetException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -42,6 +41,7 @@ import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnnotationSubject;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
+import org.semanticweb.owlapi.model.OWLAnonymousIndividual;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLAxiomChange;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -98,6 +98,8 @@ import com.ontoprise.ontostudio.owl.model.hierarchy.OWLClassHandler;
 import com.ontoprise.ontostudio.owl.model.hierarchy.ObjectPropertyHandler;
 import com.ontoprise.ontostudio.owl.model.util.Cast;
 import com.ontoprise.ontostudio.owl.model.util.Filter;
+import com.ontoprise.ontostudio.owl.model.util.InternalParser;
+import com.ontoprise.ontostudio.owl.model.util.InternalParserException;
 import com.ontoprise.ontostudio.owl.model.visitors.GetInterfaceTypeVisitor;
 import com.ontoprise.ontostudio.owl.model.visitors.GetMemberVisitor;
 
@@ -495,7 +497,7 @@ public class OWLModelCore implements OWLModel {
     private static Set<OWLAnnotationAssertionAxiom> getAnnotationAssertionAxioms(final OWLOntology ontology, final OWLAnnotationSubject subject) {
         return ontology.getAnnotationAssertionAxioms(subject);
     }
-    private final AxiomRequest<OWLAnnotationAssertionAxiom> EntityAnnotation_annotationProperty_entity_Request = new AxiomRequestCore<OWLAnnotationAssertionAxiom>(AxiomType.ANNOTATION_ASSERTION, "annotationProperty", "entity") {
+    private final AxiomRequest<OWLAnnotationAssertionAxiom> Annotation_annotationProperty_Request = new AxiomRequestCore<OWLAnnotationAssertionAxiom>(AxiomType.ANNOTATION_ASSERTION, "annotationProperty", "subject") {
         @Override
         protected Iterable<OWLAnnotationAssertionAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
             OWLAnnotationProperty property = (OWLAnnotationProperty)parameters[0];
@@ -515,6 +517,7 @@ public class OWLModelCore implements OWLModel {
             return getAnnotationAssertionAxioms(ontology, (OWLAnnotationSubject)parameters[0]);
         }
     };
+
     private final AxiomRequest<OWLEquivalentClassesAxiom> EquivalentClasses_descriptions_Request = new AxiomRequestCore<OWLEquivalentClassesAxiom>(AxiomType.EQUIVALENT_CLASSES, "descriptions") {
         @Override
         protected Iterable<OWLEquivalentClassesAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
@@ -1170,6 +1173,7 @@ public class OWLModelCore implements OWLModel {
     }
 
     public Set<LocatedItem<OWLAnnotationAssertionAxiom>> getAnnotationHits(String owlEntityId) throws NeOnCoreException {
+        
         String expandedURI = getNamespaces().expandString(owlEntityId);
         return EntityAnnotation_entity_Request.getLocatedAxioms(OWLUtilities.toIRI(expandedURI));
     }
@@ -1177,9 +1181,24 @@ public class OWLModelCore implements OWLModel {
     @Override
     public Set<OWLAnnotationValue> getAnnotations(String owlEntityId, String annotationPropertyId) throws NeOnCoreException {
         String expandedURI = getNamespaces().expandString(owlEntityId);
-        return EntityAnnotation_annotationValue_Collector.getItems(EntityAnnotation_annotationProperty_entity_Request, autoBox(annotationProperty(annotationPropertyId), IRI.create(expandedURI)));
+        return EntityAnnotation_annotationValue_Collector.getItems(Annotation_annotationProperty_Request, autoBox(annotationProperty(annotationPropertyId), IRI.create(expandedURI)));
+    }
+    
+    // ///////////////////////////////////////////////////////////////////////
+    // 
+    // OWL AnonymousIndividual
+    //
+    // ///////////////////////////////////////////////////////////////////////
+    
+    @Override
+    public Set<OWLAnnotationValue> getAnnotations(OWLAnonymousIndividual anonymousIndividual, String annotationPropertyId) throws NeOnCoreException {
+        return EntityAnnotation_annotationValue_Collector.getItems(Annotation_annotationProperty_Request, autoBox(annotationProperty(annotationPropertyId), anonymousIndividual));
     }
 
+    @Override
+    public Set<LocatedItem<OWLAnnotationAssertionAxiom>> getAnnotationHits(OWLAnnotationSubject annotationSubject) throws NeOnCoreException {
+        return EntityAnnotation_entity_Request.getLocatedAxioms(annotationSubject);
+    }
     // ///////////////////////////////////////////////////////////////////////
     // 
     // OWL ONTOLOGY
@@ -2080,7 +2099,12 @@ public class OWLModelCore implements OWLModel {
     }
 
     private OWLIndividual individual(String uri) throws NeOnCoreException {
-        return getOWLDataFactory().getOWLNamedIndividual(OWLUtilities.toURI(uri));
+        try {
+            return new InternalParser(uri, OWLNamespaces.EMPTY_INSTANCE, getOWLDataFactory()).parseOWLIndividual();
+        } catch (InternalParserException e) {
+            throw new InternalNeOnException(e.getMessage(), e.getCause());
+            
+        }//.getOWLNamedIndividual(OWLUtilities.toURI(uri));
     }
 
     private OWLClass owlClass(String uri) throws NeOnCoreException {
@@ -2215,12 +2239,15 @@ public class OWLModelCore implements OWLModel {
     public Set<OWLAxiom> getReferencingAxioms(OWLEntity owlEntity) {
         return _ontology.getReferencingAxioms(owlEntity);
     }
-    
+ 
+    public Set<OWLAxiom> getReferencingAxioms(OWLAnonymousIndividual anonymousIndividual) {
+        return _ontology.getReferencingAxioms(anonymousIndividual);
+    }
+     
     @Override
     public Set<OWLAxiom> getReferencingAxioms(OWLIndividual individual) throws NeOnCoreException {
-        if (!(individual instanceof OWLEntity)) {
-            // TODO: migration
-            throw new UnsupportedOperationException("TODO: migration");
+        if (individual instanceof OWLAnonymousIndividual) {
+            return getReferencingAxioms((OWLAnonymousIndividual)individual);
         }
         return getReferencingAxioms((OWLEntity)individual);
     }

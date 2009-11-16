@@ -91,6 +91,7 @@ import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubDataPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLTypedLiteral;
+import org.semanticweb.owlapi.model.SWRLArgument;
 import org.semanticweb.owlapi.model.SWRLAtom;
 import org.semanticweb.owlapi.model.SWRLBuiltInAtom;
 import org.semanticweb.owlapi.model.SWRLClassAtom;
@@ -101,6 +102,7 @@ import org.semanticweb.owlapi.model.SWRLDifferentIndividualsAtom;
 import org.semanticweb.owlapi.model.SWRLIArgument;
 import org.semanticweb.owlapi.model.SWRLObjectPropertyAtom;
 import org.semanticweb.owlapi.model.SWRLSameIndividualAtom;
+import org.semanticweb.owlapi.model.SWRLVariable;
 import org.semanticweb.owlapi.vocab.OWLFacet;
 
 import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
@@ -137,6 +139,10 @@ public class InternalParser {
 
     public <E extends OWLLiteral> E parseOWLConstant() throws InternalParserException  {
         return Cast.cast(parseConstant());
+    }
+    
+    public <E extends OWLIndividual> E parseOWLIndividual() throws InternalParserException  {
+        return Cast.cast(parseIndividual());
     }
     
     private InternalParserException createException(String message) {
@@ -305,7 +311,7 @@ public class InternalParser {
 
     private OWLIndividual parseIndividual() throws InternalParserException {
         checkTokenType(_tokenizer,StreamTokenizer.TT_WORD);
-        if(_tokenizer.sval.startsWith("_:"))
+        if(_tokenizer.sval.startsWith("_:")) //$NON-NLS-1$
             return parseAnonymousIndividual();
         else
             return parseNamedIndividual();
@@ -984,10 +990,8 @@ public class InternalParser {
             // space
             tokenizer.wordChars(33, 33);
             // quote
-            tokenizer.wordChars(35, 62);
+            tokenizer.wordChars(35, 90);
             // '[', '\', ']'
-            tokenizer.wordChars(64, 90);
-            // '?'
             tokenizer.wordChars(94, 122);
             // '{', '|', '}'
             tokenizer.wordChars(126, Integer.MAX_VALUE);
@@ -1014,7 +1018,7 @@ public class InternalParser {
         tokenizer.wordChars('&','&');
         tokenizer.wordChars('+','+');
         tokenizer.wordChars('=','=');
-//        tokenizer.wordChars('?','?');
+        tokenizer.wordChars('?','?');
         tokenizer.wordChars('/','/');
         tokenizer.wordChars('@','@');
         tokenizer.wordChars('%','%');
@@ -1468,23 +1472,42 @@ public class InternalParser {
     }
 
     private SWRLDArgument parseSWRLAtomDObject() throws InternalParserException {
-        if(_tokenizer.ttype == '?'){
+        SWRLDArgument result = null;
+        if(_tokenizer.ttype == '['){
             nextToken();
-            return _f.getSWRLVariable(parseIRI(_tokenizer.sval));
+            if("swrlVariable".equalsIgnoreCase(_tokenizer.sval))
+                result = parseSWRLVarable();
+            else 
+                throw createException("Unexpected SWRLAtom '"+_tokenizer.sval+"'. Expected \"swrlVariable\"");
+            nextToken();
         }else if(_tokenizer.ttype == '"'){
             return _f.getSWRLLiteralArgument(parseConstant());
         }else
-            throw createException("Unexpected token "+_tokenizer.ttype+". Expected "+Character.getNumericValue('?') +" or Individual URI");
+            throw createException("Unexpected token "+String.valueOf((char)_tokenizer.ttype)+". Expected \'[\'  or Constant");
+        
+        return result;
     }
 
     private SWRLIArgument parseSWRLAtomIObject() throws InternalParserException {
-        if(_tokenizer.ttype == '?'){
+        SWRLIArgument result = null;
+        if(_tokenizer.ttype == '['){
             nextToken();
-            return _f.getSWRLVariable(parseIRI(_tokenizer.sval));
+            if("swrlVariable".equalsIgnoreCase(_tokenizer.sval))
+                result = parseSWRLVarable();            
+            else
+                throw createException("Unexpected SWRLAtom '"+_tokenizer.sval+"'. Expect \"swrlVariable\"");
+            nextToken();
         }else if(_tokenizer.ttype == StreamTokenizer.TT_WORD){
-            return _f.getSWRLIndividualArgument(parseIndividual());
+            result =  _f.getSWRLIndividualArgument(parseIndividual());
         }else
-            throw createException("Unexpected token "+_tokenizer.ttype+". Expected "+Character.getNumericValue('?') +" or Constant");
+            throw createException("Unexpected token "+String.valueOf((char)_tokenizer.ttype)+". Expected \'[\'  or Individual URI");
+        
+        return result;
+    }
+    
+    private SWRLVariable parseSWRLVarable() throws InternalParserException{
+        nextToken();
+        return _f.getSWRLVariable(parseIRI(_tokenizer.sval));
     }
 
     private OWLAxiom parseAxiom() throws InternalParserException {

@@ -52,16 +52,17 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
+import org.neontoolkit.gui.navigator.ITreeElement;
 import org.neontoolkit.gui.properties.AbstractMainIDPropertyPage;
 import org.neontoolkit.gui.util.PerspectiveChangeHandler;
 import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.control.AlphabeticalItemHitsComparer;
+import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
 import com.ontoprise.ontostudio.owl.gui.syntax.ISyntaxManager;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
@@ -93,10 +94,10 @@ public abstract class AbstractOWLMainIDPropertyPage extends AbstractMainIDProper
     protected OWLDataFactory _factory;
 
     /** The _entity. */
-    protected OWLEntity _entity;
+    protected OWLObject _owlObject;
 
     /** stores the tree node from the Navigator for this property view. */
-    AbstractOwlEntityTreeElement _treeElement;
+    ITreeElement _treeElement;
 
     /** The _buttons to disable. */
     protected List<Button> _buttonsToDisable;
@@ -161,6 +162,12 @@ public abstract class AbstractOWLMainIDPropertyPage extends AbstractMainIDProper
     protected void addComplexText(final DescriptionText text) {
         addComplexText(text, false);
     }
+    
+//    @Override
+//    public Composite createGlobalContents(Composite parent) {
+//        parent.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WHITE));
+//        return super.createGlobalContents(parent);
+//    }
 
     /**
      * Adds the complex text.
@@ -657,7 +664,11 @@ public abstract class AbstractOWLMainIDPropertyPage extends AbstractMainIDProper
         if (first instanceof AbstractOwlEntityTreeElement) {
             // the owl entities
             AbstractOwlEntityTreeElement element = (AbstractOwlEntityTreeElement) first;
-            _entity = element.getEntity();
+            _owlObject = element.getEntity();
+            _treeElement = element;
+        } else if(first instanceof IIndividualTreeElement){
+            IIndividualTreeElement element = (IIndividualTreeElement)first;
+            _owlObject = element.getIndividual();
             _treeElement = element;
         }
         updateOwlModel();
@@ -844,9 +855,9 @@ public abstract class AbstractOWLMainIDPropertyPage extends AbstractMainIDProper
         try {
             ISyntaxManager manager = OWLPlugin.getDefault().getSyntaxManager();
             OWLModel owlModel = OWLModelFactory.getOWLModel(_ontologyUri, _project);
-            OWLEntity entity = getEntity();
+            OWLObject entity = getOWLObject();
             if (entity != null) {
-                String[] idArray = (String[]) getEntity().accept(manager.getVisitor(owlModel));
+                String[] idArray = (String[]) getOWLObject().accept(manager.getVisitor(owlModel));
                 _uriText.setText(idArray[0]); // always use the URI
                 _localText.setText(idArray[1]);
                 _qNameText.setText(idArray[2]);
@@ -897,18 +908,18 @@ public abstract class AbstractOWLMainIDPropertyPage extends AbstractMainIDProper
     }
 
     /**
-     * Gets the entity.
+     * Gets the owl object.
      * 
-     * @return the entity
+     * @return the owl object
      * 
      * @throws NeOnCoreException the KAO n2 exception
      */
-    public OWLEntity getEntity() throws NeOnCoreException {
-        return _entity;
+    public OWLObject getOWLObject() throws NeOnCoreException {
+        return _owlObject;
     }
 
-    public void setEntity(OWLEntity entity) {
-        _entity = entity;
+    public void setEntity(OWLObject owlObject) {
+        _owlObject = owlObject;
     }
 
     protected void handleException(Throwable e, String message, Shell shell) {

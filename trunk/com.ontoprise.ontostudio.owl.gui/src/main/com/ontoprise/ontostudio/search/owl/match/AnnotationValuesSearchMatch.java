@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.gui.navigator.elements.IProjectElement;
 import org.neontoolkit.gui.properties.EntityPropertiesView;
 import org.neontoolkit.search.SearchPlugin;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
@@ -50,7 +51,7 @@ public class AnnotationValuesSearchMatch extends OwlSearchMatch {
     private String _searchString;
     private OWLAnnotationProperty _annotProperty;
 
-    public AnnotationValuesSearchMatch(AbstractOwlEntityTreeElement element, OWLAnnotationProperty annotProperty, String annotationValue, String searchString) {
+    public AnnotationValuesSearchMatch(IProjectElement element, OWLAnnotationProperty annotProperty, String annotationValue, String searchString) {
         super(element);
         _annotationValue = annotationValue;
         _searchString = searchString;

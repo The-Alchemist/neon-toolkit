@@ -16,7 +16,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.neontoolkit.refactor.GenericRefactoringExecutionStarter;
 
-import com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem;
+import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 import com.ontoprise.ontostudio.owl.gui.refactor.move.individual.MoveIndividualRefactoringFactory;
 
@@ -42,7 +42,7 @@ public class MoveIndividualHandler extends AbstractOWLIndividualViewHandler {
             IStructuredSelection selection = (IStructuredSelection) _view.getTreeViewer().getSelection();
             if (selection != null && _view != null && !selection.isEmpty()) {
                 List<?> list = selection.toList();
-                IndividualViewItem[] items = (IndividualViewItem[]) list.toArray(new IndividualViewItem[0]);
+                IIndividualTreeElement[] items = (IIndividualTreeElement[]) list.toArray(new IIndividualTreeElement[0]);
                 GenericRefactoringExecutionStarter.startRefactoring(_view.getSite().getShell(), MoveIndividualRefactoringFactory.MOVE_INDIVIDUAL_REFACTORING_ID, items, new ClazzTreeElement[] {_view.getSelectedClazz()});
             }
         } catch (Exception e) {

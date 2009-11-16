@@ -20,8 +20,8 @@ import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.neontoolkit.refactor.GenericRefactoringExecutionStarter;
 
+import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewContentProvider;
-import com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 import com.ontoprise.ontostudio.owl.gui.refactor.delete.individual.DeleteIndividualRefactoringFactory;
 
@@ -45,7 +45,7 @@ public class DeleteIndividualHandler extends AbstractOWLIndividualViewHandler {
         ClazzTreeElement clazz = _view.getSelectedClazz();
         IStructuredSelection selection = (IStructuredSelection) treeViewer.getSelection();
         List<?> list = selection.toList();
-        IndividualViewItem[] individuals = (IndividualViewItem[]) list.toArray(new IndividualViewItem[0]);
+        IIndividualTreeElement[] individuals = (IIndividualTreeElement[]) list.toArray(new IIndividualTreeElement[0]);
         try {
             GenericRefactoringExecutionStarter.startRefactoring(_view.getSite().getShell(), DeleteIndividualRefactoringFactory.DELETE_INDIVIDUAL_REFACTORING_ID, individuals, clazz);
         } catch (CoreException e) {

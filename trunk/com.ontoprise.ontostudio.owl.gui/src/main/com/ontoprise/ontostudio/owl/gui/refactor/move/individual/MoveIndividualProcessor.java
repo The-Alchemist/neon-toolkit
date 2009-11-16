@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.neontoolkit.core.natures.OntologyProjectNature;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
-import com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem;
+import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 
 /* 
@@ -47,14 +47,14 @@ import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 public class MoveIndividualProcessor extends MoveProcessor {
     public static final String IDENTIFIER = "com.ontoprise.ontostudio.gui.refactor.move.MoveInstanceProcessor"; //$NON-NLS-1$
 
-    private IndividualViewItem[] _elements;
+    private IIndividualTreeElement[] _elements;
     private ClazzTreeElement _parent;
     private ClazzTreeElement _destination;
 
     /**
 	 * 
 	 */
-    public MoveIndividualProcessor(IndividualViewItem[] elements, ClazzTreeElement parent) {
+    public MoveIndividualProcessor(IIndividualTreeElement[] elements, ClazzTreeElement parent) {
         _elements = elements;
         _parent = parent;
     }

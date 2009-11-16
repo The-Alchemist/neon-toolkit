@@ -20,7 +20,7 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
-import com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem;
+import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 import com.ontoprise.ontostudio.owl.model.commands.individual.RemoveIndividual;
 
@@ -36,10 +36,10 @@ import com.ontoprise.ontostudio.owl.model.commands.individual.RemoveIndividual;
  */
 
 public class IndividualDeleteChange extends Change {
-    private IndividualViewItem[] _individuals;
+    private IIndividualTreeElement[] _individuals;
     private ClazzTreeElement _clazz;
 
-    public IndividualDeleteChange(IndividualViewItem[] individuals, ClazzTreeElement clazz) {
+    public IndividualDeleteChange(IIndividualTreeElement[] individuals, ClazzTreeElement clazz) {
         _individuals = individuals;
         _clazz = clazz;
     }

@@ -57,6 +57,7 @@ import org.semanticweb.owlapi.model.OWLTypedLiteral;
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
+import com.ontoprise.ontostudio.owl.gui.individualview.AnonymousIndividualViewItem;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.gui.util.UnknownDatatypeException;
 import com.ontoprise.ontostudio.owl.gui.util.forms.AbstractFormRow;
@@ -70,8 +71,10 @@ import com.ontoprise.ontostudio.owl.model.OWLConstants;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLModelPlugin;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
+import com.ontoprise.ontostudio.owl.model.commands.annotations.AddAnonymousIndividualAnnotation;
 import com.ontoprise.ontostudio.owl.model.commands.annotations.AddEntityAnnotation;
 import com.ontoprise.ontostudio.owl.model.commands.annotations.EditEntityAnnotation;
+import com.ontoprise.ontostudio.owl.model.commands.annotations.GetAnonymousIndividualAnnotationHits;
 import com.ontoprise.ontostudio.owl.model.commands.annotations.GetEntityAnnotationHits;
 import com.ontoprise.ontostudio.owl.model.util.OWLAxiomUtils;
 
@@ -135,11 +138,20 @@ public class AnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage implemen
      * @param setFocus the set focus
      */
     private void initAnnotationsSection(boolean setFocus) {
+        
         clearComposite(_annotationsComp);
         int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
         OWLObjectVisitorEx visitor = _manager.getVisitor(_owlModel, idDisplayStyle);
         try {
-            String[][] annotationValueHits = new GetEntityAnnotationHits(_project, _ontologyUri, _id).getResults();
+            String[][] annotationValueHits;
+            
+            if(getMainPage().getSelection().getFirstElement() instanceof AnonymousIndividualViewItem){
+                AnonymousIndividualViewItem individualViewItem = (AnonymousIndividualViewItem)getMainPage().getSelection().getFirstElement();
+                
+                annotationValueHits = new GetAnonymousIndividualAnnotationHits(_project, _ontologyUri, individualViewItem.getIndividual()).getResults();
+            }else{
+                annotationValueHits = new GetEntityAnnotationHits(_project, _ontologyUri, _id).getResults();    
+            }
             TreeSet<String[]> sortedSet = getSortedSet(annotationValueHits);
             
             createAnnotationRowTitles(_annotationsComp, annotationValueHits.length > 0);
@@ -165,7 +177,8 @@ public class AnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage implemen
             activeComposite.setFocus();
         }
         _form.setMessage(null, IMessageProvider.NONE);
-    }
+        
+     }
 
     /**
      * Creates the annotation row titles.
@@ -506,7 +519,12 @@ public class AnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage implemen
                 // add new entry
                 try {
                     String[] newValues = getNewValues(propertyText, valueText, typeText, languageCombo);
-                    new AddEntityAnnotation(_project, _ontologyUri, _id, newValues).run();
+                    if(getMainPage().getSelection().getFirstElement() instanceof AnonymousIndividualViewItem){
+                        AnonymousIndividualViewItem individualViewItem = (AnonymousIndividualViewItem)getMainPage().getSelection().getFirstElement();
+                        new AddAnonymousIndividualAnnotation(_project, _ontologyUri, individualViewItem.getIndividual(), newValues).run();
+                    }else{
+                        new AddEntityAnnotation(_project, _ontologyUri, _id, newValues).run();
+                    }
                 } catch (NeOnCoreException k2e) {
                     handleException(k2e, Messages.AnnotationsPropertyPage2_25, languageCombo.getShell());
                     return;

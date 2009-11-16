@@ -21,7 +21,9 @@ import org.neontoolkit.core.project.IOntologyProject;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLAnnotationSubject;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
+import org.semanticweb.owlapi.model.OWLAnonymousIndividual;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLAxiomChange;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -120,6 +122,14 @@ public interface OWLModel {
      * @throws NeOnCoreException
      */
     public Set<OWLAnnotationValue> getAnnotations(String owlEntityId, String annotationPropertyId) throws NeOnCoreException;
+
+    /**
+     * @param owlAnonymousIndividual
+     * @param annotationPropertyId
+     * @return
+     * @throws NeOnCoreException
+     */
+    public Set<OWLAnnotationValue> getAnnotations(OWLAnonymousIndividual owlAnonymousIndividual, String annotationPropertyId) throws NeOnCoreException;
 
     /**
      * @return directly imported ontologies
@@ -768,6 +778,7 @@ public interface OWLModel {
     public Set<OWLModel> getAllImportingOntologies() throws NeOnCoreException;
 
     public Set<LocatedItem<OWLAnnotationAssertionAxiom>> getAnnotationHits(String owlEntityId) throws NeOnCoreException;
+    public Set<LocatedItem<OWLAnnotationAssertionAxiom>> getAnnotationHits(OWLAnnotationSubject annotationSubject) throws NeOnCoreException;
     public Set<ItemHits<OWLClassExpression,OWLDisjointClassesAxiom>> getDisjointDescriptionHits(String classId) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLEquivalentClassesAxiom>> getEquivalentDescriptionHits(String clazzUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLClassAssertionAxiom>> getClassHits(String individualUri) throws NeOnCoreException;

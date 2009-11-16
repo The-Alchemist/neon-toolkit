@@ -20,12 +20,8 @@ package org.neontoolkit.gui.navigator.elements;
  * This interface defines the methods for entities with qualified identifiers.
  */
 
-public interface IEntityElement {
-	/**
-	 * Returns the fully qualified identifier
-	 * @return qualified identifier
-	 */
-	String getId();
+public interface IEntityElement extends IQualifiedIDElement {
+
 	
 	/**
 	 * Returns the local part of the identifier

@@ -24,7 +24,7 @@ import org.neontoolkit.gui.navigator.ITreeDataProvider;
  * represent an ontology in the tree or represent an element that is
  * contained in an ontology.
  */
-public class AbstractOntologyTreeElement extends
+public abstract class AbstractOntologyTreeElement extends
 		AbstractProjectTreeElement implements IOntologyElement {
 
 	private String _ontologyUri;

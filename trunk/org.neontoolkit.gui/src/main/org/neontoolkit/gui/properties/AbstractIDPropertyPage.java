@@ -14,6 +14,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.neontoolkit.gui.navigator.elements.IEntityElement;
 import org.neontoolkit.gui.navigator.elements.IOntologyElement;
 import org.neontoolkit.gui.navigator.elements.IProjectElement;
+import org.neontoolkit.gui.navigator.elements.IQualifiedIDElement;
 
 /*
  * Created on 29.09.2008
@@ -77,8 +78,8 @@ public abstract class AbstractIDPropertyPage implements IPropertyPage {
 		}
 		
 	    Object first = selection.getFirstElement();
-		if (first instanceof IEntityElement) {
-			IEntityElement element = (IEntityElement) first;
+		if (first instanceof IQualifiedIDElement) {
+		    IQualifiedIDElement element = (IQualifiedIDElement) first;
 			_id = element.getId();
 		}
 		if (first instanceof IProjectElement) {

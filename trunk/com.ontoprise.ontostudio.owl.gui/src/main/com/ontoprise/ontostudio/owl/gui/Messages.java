@@ -369,6 +369,7 @@ public class Messages extends NLS {
 	public static String AddOWLOntologyAction_6;
 	public static String RenameClazzHandler_0;
 	public static String RenameIndividualHandler_0;
+	public static String RenameIndividualHandler_1;
 	public static String RenameOWLEntityDialog_0;
 	public static String RenameOWLEntityDialog_1;
     public static String RenameOWLEntityDialog_2;

@@ -127,7 +127,7 @@ public class IndividualViewDragListener implements DragSourceListener {
         boolean allowed = true;
         for (int i = 0; i < treeItems.length; i++) {
             Object data = treeItems[i].getData();
-            if (data instanceof IndividualViewItem) {
+            if (data instanceof IIndividualTreeElement) {
                 allowed = true;
             } else {
                 allowed = false;

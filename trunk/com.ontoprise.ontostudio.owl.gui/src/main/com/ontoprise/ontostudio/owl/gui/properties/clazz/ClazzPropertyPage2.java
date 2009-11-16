@@ -58,6 +58,7 @@ import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
 import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLObjectAllValuesFrom;
 import org.semanticweb.owlapi.model.OWLObjectCardinalityRestriction;
+import org.semanticweb.owlapi.model.OWLObjectHasSelf;
 import org.semanticweb.owlapi.model.OWLObjectHasValue;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
@@ -109,7 +110,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
      */
     public static final int NUM_COLS = 7;
 
-    public static final String[] QUANTOR_TYPES = {OWLCommandUtils.SOME, OWLCommandUtils.ALL, OWLCommandUtils.HAS_VALUE, OWLCommandUtils.AT_LEAST_MIN, OWLCommandUtils.AT_MOST_MAX, OWLCommandUtils.EXACTLY_CARDINALITY};
+    public static final String[] QUANTOR_TYPES = {OWLCommandUtils.SOME, OWLCommandUtils.ALL, OWLCommandUtils.HAS_VALUE, OWLCommandUtils.HAS_SELF, OWLCommandUtils.AT_LEAST_MIN, OWLCommandUtils.AT_MOST_MAX, OWLCommandUtils.EXACTLY_CARDINALITY};
 
     /*
      * JFace Forms variables
@@ -328,6 +329,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 List<LocatedAxiom> axiomList = new ArrayList<LocatedAxiom>();
                 axiomList.add(new LocatedAxiom(axiom, !imported));
                 OWLClassExpression desc = axiom.getSuperClass();
+                
                 createRow(_superRestrictionComp, desc, axiomList, imported, new String[] {ontologyUri}, OWLCommandUtils.INCL);
             }
 
@@ -478,7 +480,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 
         final RestrictionRow row = new RestrictionRow(_toolkit, parent, NUM_COLS, imported, sourceOntos.length > 0 ? sourceOntos[0] : ""); //$NON-NLS-1$
         OWLObjectVisitorEx visitor = _manager.getVisitor(_owlModel, NeOnUIPlugin.getDefault().getIdDisplayStyle());
-        final ArrayList<String[]> restrictions = RestrictionOnPropertyWriter.performRestriction(description, _namespaces, visitor);
+        final ArrayList<String[]> restrictions = RestrictionOnPropertyWriter.performRestriction(description, _namespaces, visitor, (OWLEntity)_owlObject);
 
         final String[] propertyArray = restrictions.get(1);
         final String[] rangeArray = restrictions.get(2);
@@ -641,7 +643,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
     }
 
     private StyledText getRangeText(OWLClassExpression restriction, Composite rowComp, boolean imported) {
-        if ((restriction instanceof OWLObjectSomeValuesFrom) || (restriction instanceof OWLObjectAllValuesFrom) || (restriction instanceof OWLObjectCardinalityRestriction)) {
+        if ((restriction instanceof OWLObjectSomeValuesFrom) || (restriction instanceof OWLObjectAllValuesFrom) || (restriction instanceof OWLObjectCardinalityRestriction) || (restriction instanceof OWLObjectHasSelf)) {
             DescriptionText descriptionText = new DescriptionText(rowComp, _owlModel, imported, _toolkit);
             addComplexText(descriptionText, true);
             StyledText text = descriptionText.getStyledText();
@@ -868,7 +870,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             }
             if (formRow instanceof AbstractRestrictionRow) {
                 AbstractRestrictionRow row = (AbstractRestrictionRow) formRow;
-                if (row.getRangeText().getText().trim().length() == 0 && (quantifier.equals(OWLCommandUtils.SOME) || quantifier.equals(OWLCommandUtils.HAS_VALUE) || quantifier.equals(OWLCommandUtils.ALL))) {
+                if (row.getRangeText().getText().trim().length() == 0 && (quantifier.equals(OWLCommandUtils.SOME) || quantifier.equals(OWLCommandUtils.HAS_VALUE) || quantifier.equals(OWLCommandUtils.ALL) || quantifier.equals(OWLCommandUtils.HAS_SELF))) {
                     if (row.getRangeText().getText().trim().length() == 0) {
                         message = Messages.ClazzPropertyPage2_11;
                         type = IMessageProvider.WARNING;
@@ -939,7 +941,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     || cardinalityString.equals("") && //$NON-NLS-1$
                     (quantifierString.equals(OWLCommandUtils.AT_LEAST_MIN) || quantifierString.equals(OWLCommandUtils.AT_MOST_MAX) || quantifierString.equals(OWLCommandUtils.EXACTLY_CARDINALITY))
                     || rangeString.equals("") && //$NON-NLS-1$
-                    (quantifierString.equals(OWLCommandUtils.SOME) || quantifierString.equals(OWLCommandUtils.HAS_VALUE) || quantifierString.equals(OWLCommandUtils.ALL))) {
+                    (quantifierString.equals(OWLCommandUtils.SOME) || quantifierString.equals(OWLCommandUtils.HAS_VALUE) || quantifierString.equals(OWLCommandUtils.ALL) || quantifierString.equals(OWLCommandUtils.HAS_SELF))) {
                 button.setEnabled(false);
             } else {
                 button.setEnabled(true);
@@ -1049,7 +1051,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
      * @see com.ontoprise.ontostudio.owl.gui.properties.BasicOWLEntityPropertyPage#getEntity()
      */
     @Override
-    public OWLEntity getEntity() throws NeOnCoreException {
+    public OWLEntity getOWLObject() throws NeOnCoreException {
         OWLClassExpression desc = getClazzDescription();
         if (desc instanceof OWLEntity) {
             return (OWLEntity) desc;

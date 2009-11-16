@@ -27,7 +27,7 @@ import com.ontoprise.ontostudio.owl.model.visitors.AllVisitorsTests;
     AllVisitorsTests.class,
     AllUtilsTests.class,
     AllUtilFileTests.class,
-    AllHierarchyTests.class,
+    AllHierarchyTests.class
     })
 public class AllTests {
 
