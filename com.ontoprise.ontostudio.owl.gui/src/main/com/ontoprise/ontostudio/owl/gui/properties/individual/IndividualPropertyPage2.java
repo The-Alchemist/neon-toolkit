@@ -105,6 +105,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         super();
     }
 
+    
     @Override
     protected void createMainArea(Composite composite) {
         PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IHelpContextIds.OWL_INDIVIDUAL_VIEW);
@@ -802,7 +803,10 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             public void addPressed() {
                 // add new entry
                 try {
-                    OWLIndividual individual = OWLModelFactory.getOWLDataFactory(_project).getOWLNamedIndividual(OWLUtilities.toURI(_id));
+//                    OWLIndividual individual = _owlModel.get OWLModelFactory.getOWLDataFactory(_project).getOWLNamedIndividual(OWLUtilities.toURI(_id));
+//                    InternalParser parser = new InternalParser(_id, OWLNamespaces.EMPTY_INSTANCE, OWLModelFactory.getOWLDataFactory(_project));
+//                    OWLIndividual individual = parser.parseOWLIndividual();
+                    
                     OWLDataPropertyExpression prop = _manager.parseDataProperty(propertyText.getText(), _owlModel);
 
                     OWLDatatype type;
@@ -824,7 +828,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                         c = factory.getOWLTypedLiteral(valueText.getText(), type);
                     }
 
-                    OWLAxiom newAxiom = factory.getOWLDataPropertyAssertionAxiom(prop, individual, c);
+                    OWLAxiom newAxiom = factory.getOWLDataPropertyAssertionAxiom(prop, (OWLIndividual)getOWLObject(), c);
                     new ApplyChanges(_project, _ontologyUri, new String[] {OWLUtilities.toString(newAxiom)}, new String[0]).run();
                 } catch (NeOnCoreException e1) {
                     handleException(e1, Messages.IndividualPropertyPage2_18, valueText.getShell());

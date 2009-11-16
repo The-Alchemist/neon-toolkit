@@ -22,7 +22,7 @@ import org.neontoolkit.gui.navigator.actions.AbstractRenameHandler;
 import org.neontoolkit.gui.navigator.elements.AbstractOntologyEntity;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem;
+import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement;
@@ -50,7 +50,7 @@ public abstract class AbstractOWLRenameHandler extends AbstractRenameHandler {
             parsedNewId = OWLGUIUtilities.parseUri(newId, ontologyUri, projectName);
             if (entity instanceof ClazzTreeElement) {
                 type = RenameRunnableWithProgressOWL.CLAZZ_TYPE;
-            } else if (entity instanceof IndividualViewItem) {
+            } else if (entity instanceof IIndividualTreeElement) {
                 type = RenameRunnableWithProgressOWL.INDIVIDUAL_TYPE;
             } else if (entity instanceof ObjectPropertyTreeElement) {
                 type = RenameRunnableWithProgressOWL.OBJECT_PROPERTY_TYPE;

@@ -21,9 +21,11 @@ import org.semanticweb.owlapi.model.OWLDataMaxCardinality;
 import org.semanticweb.owlapi.model.OWLDataMinCardinality;
 import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 import org.semanticweb.owlapi.model.OWLDataSomeValuesFrom;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObjectAllValuesFrom;
 import org.semanticweb.owlapi.model.OWLObjectCardinalityRestriction;
 import org.semanticweb.owlapi.model.OWLObjectExactCardinality;
+import org.semanticweb.owlapi.model.OWLObjectHasSelf;
 import org.semanticweb.owlapi.model.OWLObjectHasValue;
 import org.semanticweb.owlapi.model.OWLObjectMaxCardinality;
 import org.semanticweb.owlapi.model.OWLObjectMinCardinality;
@@ -60,7 +62,7 @@ public class RestrictionOnPropertyWriter {
      *         *=means that the value is a string array representing the entity in different serializations [uri, localName, qName]
      * 
      */
-    public static ArrayList<String[]> performRestriction(OWLClassExpression description, OWLNamespaces ns, OWLObjectVisitorEx visitor) {
+    public static ArrayList<String[]> performRestriction(OWLClassExpression description, OWLNamespaces ns, OWLObjectVisitorEx visitor, OWLEntity currentClass) {
         ArrayList<String[]> resultArray = new ArrayList<String[]>();
 
         if (description instanceof OWLObjectSomeValuesFrom) {
@@ -82,6 +84,13 @@ public class RestrictionOnPropertyWriter {
             resultArray.add(new String[] {OWLCommandUtils.HAS_VALUE});
             resultArray.add((String[]) newDesc.getProperty().accept(visitor));
             resultArray.add((String[]) newDesc.getValue().accept(visitor));
+            resultArray.add(null);
+            
+        } else if (description instanceof OWLObjectHasSelf){
+            OWLObjectHasSelf newDesc = (OWLObjectHasSelf) description;
+            resultArray.add(new String[] {OWLCommandUtils.HAS_SELF});
+            resultArray.add((String[]) newDesc.getProperty().accept(visitor));
+            resultArray.add((String[]) currentClass.accept(visitor));
             resultArray.add(null);
 
         } else if (description instanceof OWLObjectCardinalityRestriction) {

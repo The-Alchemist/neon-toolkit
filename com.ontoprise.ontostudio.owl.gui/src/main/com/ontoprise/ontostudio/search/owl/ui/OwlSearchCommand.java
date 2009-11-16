@@ -20,6 +20,7 @@ import org.neontoolkit.core.EntityType;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.NeOnUIPlugin;
+import org.neontoolkit.gui.navigator.ITreeElement;
 import org.neontoolkit.gui.navigator.MTreeView;
 import org.neontoolkit.gui.navigator.TreeProviderManager;
 import org.neontoolkit.search.SearchPlugin;
@@ -41,8 +42,8 @@ import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
 
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
-import com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem;
-import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
+import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
+import com.ontoprise.ontostudio.owl.gui.individualview.IndividualItem;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzHierarchyProvider;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeProvider;
@@ -56,7 +57,10 @@ import com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.Object
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
+import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
+import com.ontoprise.ontostudio.owl.model.util.InternalParser;
+import com.ontoprise.ontostudio.owl.model.util.InternalParserException;
 import com.ontoprise.ontostudio.search.owl.match.AnnotationPropertySearchMatch;
 import com.ontoprise.ontostudio.search.owl.match.AnnotationValuesSearchMatch;
 import com.ontoprise.ontostudio.search.owl.match.ClassSearchMatch;
@@ -199,7 +203,7 @@ public class OwlSearchCommand extends AbstractSearchCommand{
             FieldTypes elementType = element.getType();
 
             if (type.equals(elementType)) {
-                AbstractOwlEntityTreeElement elem = null;
+                ITreeElement elem = null;
                 OWLModel owlModel = null;
                 try {
                     owlModel = OWLModelFactory.getOWLModel(ontology, project);
@@ -230,12 +234,12 @@ public class OwlSearchCommand extends AbstractSearchCommand{
                             break;
                             
                         case INDIVIDUALS:
-                            OWLIndividual indi = factory.getOWLNamedIndividual(OWLUtilities.toURI(element.getEntityUri()));
+                            OWLIndividual indi = new InternalParser(element.getEntityUri(), OWLNamespaces.EMPTY_INSTANCE, factory).parseOWLIndividual();// factory.getOWLNamedIndividual(OWLUtilities.toURI(element.getEntityUri()));
                             Set<OWLClass> classes;
                             try {
                                 classes = OWLModelFactory.getOWLModel(ontology, project).getClasses(element.getEntityUri());
                                 for (OWLClass cl: classes) {
-                                    elem = new IndividualViewItem(indi, cl.getURI().toString(), ontology, project);
+                                    elem = IndividualItem.createNewInstance(indi, cl.getURI().toString(), ontology, project);
                                     classes = OWLModelFactory.getOWLModel(ontology, project).getClasses(OWLUtilities.toString(indi));
                                     List<ClassSearchMatch> classMatchesList = new ArrayList<ClassSearchMatch>();
                                     for (OWLClass c: classes) {
@@ -243,8 +247,8 @@ public class OwlSearchCommand extends AbstractSearchCommand{
                                         classMatchesList.add(classSearchMatch);
                                     }
                                     for (OWLClass c: classes) {
-                                        elem = new IndividualViewItem(indi, c.getURI().toString(), ontology, project);
-                                        add(new Match(new IndividualSearchMatch((IndividualViewItem) elem, classMatchesList.toArray(new ClassSearchMatch[classMatchesList.size()])), 0, getExpression().length()), resultList);
+                                        elem = IndividualItem.createNewInstance(indi, c.getURI().toString(), ontology, project);
+                                        add(new Match(new IndividualSearchMatch((IIndividualTreeElement) elem, classMatchesList.toArray(new ClassSearchMatch[classMatchesList.size()])), 0, getExpression().length()), resultList);
                                     }
                                 }
                             } catch (NeOnCoreException e) {
@@ -271,8 +275,8 @@ public class OwlSearchCommand extends AbstractSearchCommand{
                                         classMatchesList.add(classSearchMatch);
                                     }
                                     for (OWLClass c: clazzes) {
-                                        elem = new IndividualViewItem(individual, c.getURI().toString(), ontology, project);
-                                        add(new Match(new DataPropertyValuesSearchMatch((IndividualViewItem) elem, classMatchesList.toArray(new ClassSearchMatch[classMatchesList.size()]), getExpression(), value, prop), 0, getExpression().length()), resultList);
+                                        elem = IndividualItem.createNewInstance(individual, c.getURI().toString(), ontology, project);
+                                        add(new Match(new DataPropertyValuesSearchMatch((IIndividualTreeElement) elem, classMatchesList.toArray(new ClassSearchMatch[classMatchesList.size()]), getExpression(), value, prop), 0, getExpression().length()), resultList);
                                     }
                                 } catch (NeOnCoreException e) {
                                     SearchPlugin.logError(e.getMessage(), e);
@@ -312,6 +316,8 @@ public class OwlSearchCommand extends AbstractSearchCommand{
                     }
                 } catch (NeOnCoreException e1) {
                     SearchPlugin.logError(e1.getMessage(), e1);
+                } catch (InternalParserException e) {
+                    SearchPlugin.logError(e.getMessage(), e);
                 }
             }
         }
@@ -319,7 +325,7 @@ public class OwlSearchCommand extends AbstractSearchCommand{
     }
 
     private void addSearchResults(OWLAnnotationProperty annotProperty, OWLEntity entity, String annotationValue, String searchString, String ontology, String project, List<Match> resultList) throws NeOnCoreException {
-        AbstractOwlEntityTreeElement elem = null;
+        ITreeElement elem = null;
         if (entity instanceof OWLClass) {
             elem = new ClazzTreeElement(entity, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class));
             add(new Match(new AnnotationValuesSearchMatch((ClazzTreeElement) elem, annotProperty, annotationValue, searchString), 0, getExpression().length()), resultList);
@@ -345,8 +351,8 @@ public class OwlSearchCommand extends AbstractSearchCommand{
                 classMatchesList.add(classSearchMatch);
             }
             for (OWLClass c: clazzes) {
-                elem = new IndividualViewItem((OWLIndividual) entity, c.getURI().toString(), ontology, project);
-                add(new Match(new AnnotationValuesSearchMatch((IndividualViewItem) elem, annotProperty, annotationValue, searchString), 0, getExpression().length()), resultList);
+                elem = IndividualItem.createNewInstance((OWLIndividual) entity, c.getURI().toString(), ontology, project);
+                add(new Match(new AnnotationValuesSearchMatch((IIndividualTreeElement) elem, annotProperty, annotationValue, searchString), 0, getExpression().length()), resultList);
             }
         }
     }

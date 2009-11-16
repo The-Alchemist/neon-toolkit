@@ -21,8 +21,8 @@ import org.neontoolkit.search.ui.NavigatorSearchMatch;
 
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
+import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.individualview.IndividualView;
-import com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem;
 import com.ontoprise.ontostudio.owl.perspectives.OWLPerspective;
 
 /* 
@@ -44,7 +44,7 @@ public class IndividualSearchMatch extends OwlSearchMatch {
     /**
      * @param element
      */
-    public IndividualSearchMatch(IndividualViewItem instance, ClassSearchMatch[] classes) {
+    public IndividualSearchMatch(IIndividualTreeElement instance, ClassSearchMatch[] classes) {
         super(instance);
         _classMatches = classes;
     }

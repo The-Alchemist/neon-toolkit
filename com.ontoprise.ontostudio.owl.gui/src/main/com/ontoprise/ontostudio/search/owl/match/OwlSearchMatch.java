@@ -12,12 +12,13 @@ package com.ontoprise.ontostudio.search.owl.match;
 
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.navigator.ITreeElementPath;
+import org.neontoolkit.gui.navigator.elements.IProjectElement;
 import org.neontoolkit.gui.util.ItemSorter;
 import org.neontoolkit.gui.util.PerspectiveChangeHandler;
 import org.neontoolkit.search.ui.NavigatorSearchMatch;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
-import com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem;
+import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.perspectives.OWLPerspective;
@@ -37,14 +38,14 @@ public abstract class OwlSearchMatch extends NavigatorSearchMatch {
     /**
      * @param element
      */
-    public OwlSearchMatch(AbstractOwlEntityTreeElement element) {
+    public OwlSearchMatch(IProjectElement element) {
         super(element);
     }
 
     @Override
     protected ITreeElementPath[] getPaths() {
         AbstractOwlEntityTreeElement element = (AbstractOwlEntityTreeElement) getMatch();
-        if (element instanceof IndividualViewItem) {
+        if (element instanceof IIndividualTreeElement) {
             return new ITreeElementPath[0];
         }
         if (_paths == null) {

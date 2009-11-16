@@ -234,6 +234,7 @@ public class InternalParserTest {
     @DataPoint public static final OWLAnnotation constantAnnotation0 = _f.getOWLAnnotation(_f.getOWLAnnotationProperty(uri("constantAnnotation")), untypedConstant0);
     @DataPoint public static final OWLAnnotation constantAnnotation1 = _f.getOWLAnnotation(_f.getOWLAnnotationProperty(uri("constantAnnotation")), typedConstant0);
     @DataPoint public static final OWLAnnotation objectAnnotation0 = _f.getOWLAnnotation(_f.getOWLAnnotationProperty(uri("objectAnntotation")), _f.getIRI(uri("iri")));
+    @DataPoint public static final OWLAnnotation objectAnnotation1 = _f.getOWLAnnotation(_f.getOWLAnnotationProperty(uri("objectAnntotation")), IRI.create("http://test.org/path?query"));
     @DataPoint public static final OWLAnnotationProperty annotationProperty0 = _f.getOWLAnnotationProperty(uri("annotationProperty0"));
     @DataPoint public static final OWLAnnotationProperty annotationProperty1 = _f.getOWLAnnotationProperty(uri("annotationProperty1"));
 
@@ -291,6 +292,7 @@ public class InternalParserTest {
     @DataPoint public static final OWLClass owlClass1 = _f.getOWLClass(uri("class1"));
     @DataPoint public static final OWLClass owlClass2 = _f.getOWLClass(uri("class2"));
     @DataPoint public static final OWLClass owlClass3 = _f.getOWLClass(uri("class3"));
+    @DataPoint public static final OWLClass owlClass4 = _f.getOWLClass(IRI.create("http://test.org/class?query"));
     @DataPoint public static final OWLObjectIntersectionOf objectIntersectionOf0 = _f.getOWLObjectIntersectionOf(owlClass0, owlClass1);
     @DataPoint public static final OWLObjectIntersectionOf objectIntersectionOf1 = _f.getOWLObjectIntersectionOf(owlClass0, owlClass1, owlClass2);
     @DataPoint public static final OWLObjectUnionOf objectUnionOf0 = _f.getOWLObjectUnionOf(owlClass0, owlClass1);
@@ -501,6 +503,7 @@ public class InternalParserTest {
     @DataPoint public static final OWLAnnotationAssertionAxiom entityAnnotationAxiom0 = _f.getOWLAnnotationAssertionAxiom(owlClass0.getIRI(), constantAnnotation0);
     @DataPoint public static final OWLAnnotationAssertionAxiom entityAnnotationAxiom1 = _f.getOWLAnnotationAssertionAxiom(owlClass0.getIRI(), constantAnnotation1);
     @DataPoint public static final OWLAnnotationAssertionAxiom entityAnnotationAxiom2 = _f.getOWLAnnotationAssertionAxiom(owlClass0.getIRI(), objectAnnotation0);
+    @DataPoint public static final OWLAnnotationAssertionAxiom entityAnnotationAxiom3 = _f.getOWLAnnotationAssertionAxiom(owlClass0.getIRI(), objectAnnotation1);
     @DataPoint public static final OWLAnnotationAssertionAxiom annotationAxiom0 = _f.getOWLAnnotationAssertionAxiom(iri("annotationAxiom2"), objectAnnotation0);
     @DataPoint public static final OWLAnnotationAssertionAxiom annotationAxiom1 = _f.getOWLAnnotationAssertionAxiom(anonymousIndividual0, objectAnnotation0);
     @DataPoint public static final OWLAnnotationAssertionAxiom annotationAxiom2 = _f.getOWLAnnotationAssertionAxiom(individual0.getIRI(), objectAnnotation0);
@@ -520,6 +523,7 @@ public class InternalParserTest {
     @DataPoint public static final OWLDeclarationAxiom declarationAxiom3 = _f.getOWLDeclarationAxiom(dataProperty0);
     @DataPoint public static final OWLDeclarationAxiom declarationAxiom4 = _f.getOWLDeclarationAxiom(objectProperty0);
     @DataPoint public static final OWLDeclarationAxiom declarationAxiom5 = _f.getOWLDeclarationAxiom(annotationProperty0);
+    @DataPoint public static final OWLDeclarationAxiom declarationAxiom6 = _f.getOWLDeclarationAxiom(owlClass4);
 
    
     @Theory

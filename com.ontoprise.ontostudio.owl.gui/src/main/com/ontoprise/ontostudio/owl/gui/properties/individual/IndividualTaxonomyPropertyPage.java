@@ -47,6 +47,7 @@ import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDifferentIndividualsAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLIndividual;
+import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
 import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
 
@@ -165,9 +166,9 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
                 Set<OWLIndividual> individuals = axiom.getIndividuals();
                 for (OWLIndividual individual: individuals) {
                     IMainPropertyPage mainPage = getMainPage();
-                    OWLEntity entity = null;
+                    OWLObject entity = null;
                     if (mainPage instanceof IndividualPropertyPage2) {
-                        entity = ((IndividualPropertyPage2) mainPage).getEntity();
+                        entity = ((IndividualPropertyPage2) mainPage).getOWLObject();
                     }
                     if (entity != null && !individual.equals(entity)) {
                         Boolean oldLocalValue = localOrImportedMap.get(individual);
@@ -257,9 +258,9 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
                 Set<OWLIndividual> individuals = axiom.getIndividuals();
                 for (OWLIndividual individual: individuals) {
                     IMainPropertyPage mainPage = getMainPage();
-                    OWLEntity entity = null;
+                    OWLObject entity = null;
                     if (mainPage instanceof IndividualPropertyPage2) {
-                        entity = ((IndividualPropertyPage2) mainPage).getEntity();
+                        entity = ((IndividualPropertyPage2) mainPage).getOWLObject();
                     }
                     if (entity != null && !individual.equals(entity)) {
                         Boolean oldLocalValue = localOrImportedMap.get(individual);

@@ -26,11 +26,12 @@ import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.navigator.MTreeView;
 import org.neontoolkit.gui.util.PerspectiveChangeHandler;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
+import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.individualview.IndividualView;
 import com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewContentProvider;
-import com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 import com.ontoprise.ontostudio.owl.perspectives.OWLPerspective;
 
@@ -94,7 +95,7 @@ public class NewIndividualHandler extends AbstractOWLIndividualViewHandler {
         } catch (NeOnCoreException e) {
             OWLPlugin.logError("", e); //$NON-NLS-1$
         }
-        final IndividualViewItem item = contentProvider.createNewEditableItem();
+        final IIndividualTreeElement<OWLNamedIndividual> item = contentProvider.createNewEditableItem();
         treeViewer.refresh();
         _view.prepareItemForEdit(item);
         return null;

@@ -60,6 +60,7 @@ import org.semanticweb.owlapi.model.OWLDataSomeValuesFrom;
 import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLIndividual;
+import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLObjectAllValuesFrom;
 import org.semanticweb.owlapi.model.OWLObjectCardinalityRestriction;
 import org.semanticweb.owlapi.model.OWLObjectComplementOf;
@@ -75,10 +76,9 @@ import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.commands.CreateValidUri;
+import com.ontoprise.ontostudio.owl.gui.individualview.IndividualItem;
 import com.ontoprise.ontostudio.owl.gui.individualview.IndividualView;
 import com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewContentProvider;
-import com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem;
-import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzHierarchyProvider;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeProvider;
@@ -95,8 +95,11 @@ import com.ontoprise.ontostudio.owl.model.OWLConstants;
 import com.ontoprise.ontostudio.owl.model.OWLManchesterProjectFactory;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
+import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.OWLCommandUtils;
+import com.ontoprise.ontostudio.owl.model.util.InternalParser;
+import com.ontoprise.ontostudio.owl.model.util.InternalParserException;
 import com.ontoprise.ontostudio.owl.model.util.OWLAxiomUtils;
 import com.ontoprise.ontostudio.owl.perspectives.OWLPerspective;
 
@@ -118,6 +121,7 @@ public class OWLGUIUtilities {
 	public static final String[] QUANTOR_TYPES = {
 	    OWLCommandUtils.SOME,
 	    OWLCommandUtils.ALL,
+	    OWLCommandUtils.HAS_SELF,
 	    OWLCommandUtils.HAS_VALUE,
 	    OWLCommandUtils.AT_LEAST_MIN,
 	    OWLCommandUtils.AT_MOST_MAX,
@@ -484,7 +488,7 @@ public class OWLGUIUtilities {
         PerspectiveChangeHandler.switchPerspective(OWLPerspective.ID);
         MTreeView navigator = (MTreeView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(MTreeView.ID);
         ITreeDataProvider provider = null;
-        AbstractOwlEntityTreeElement entity = null;
+        ITreeElement treeElement = null;
 
         // clazzes
         provider = TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class);
@@ -495,8 +499,8 @@ public class OWLGUIUtilities {
             throw new RuntimeException(e1);
         }
         OWLClass clazz = factory.getOWLClass(OWLUtilities.toURI(uri));
-        entity = new ClazzTreeElement(clazz, ontologyURI, project, provider);
-        boolean success = doJumpToEntity(entity, navigator);
+        treeElement = new ClazzTreeElement(clazz, ontologyURI, project, provider);
+        boolean success = doJumpToEntity(treeElement, navigator);
         if (success) {
             try {
                 PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(MTreeView.ID);
@@ -507,8 +511,8 @@ public class OWLGUIUtilities {
             // object properties
             provider = TreeProviderManager.getDefault().getProvider(MTreeView.ID, ObjectPropertyHierarchyProvider.class);
             OWLObjectProperty prop = factory.getOWLObjectProperty(OWLUtilities.toURI(uri));
-            entity = new ObjectPropertyTreeElement(prop, ontologyURI, project, provider);
-            success = doJumpToEntity(entity, navigator);
+            treeElement = new ObjectPropertyTreeElement(prop, ontologyURI, project, provider);
+            success = doJumpToEntity(treeElement, navigator);
             if (success) {
                 try {
                     PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(MTreeView.ID);
@@ -519,8 +523,8 @@ public class OWLGUIUtilities {
                 // data properties
                 provider = TreeProviderManager.getDefault().getProvider(MTreeView.ID, DataPropertyHierarchyProvider.class);
                 OWLDataProperty dataProp = factory.getOWLDataProperty(OWLUtilities.toURI(uri));
-                entity = new DataPropertyTreeElement(dataProp, ontologyURI, project, provider);
-                success = doJumpToEntity(entity, navigator);
+                treeElement = new DataPropertyTreeElement(dataProp, ontologyURI, project, provider);
+                success = doJumpToEntity(treeElement, navigator);
                 if (success) {
                     try {
                         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(MTreeView.ID);
@@ -531,8 +535,8 @@ public class OWLGUIUtilities {
                     // annotation properties
                     provider = TreeProviderManager.getDefault().getProvider(MTreeView.ID, AnnotationPropertyHierarchyProvider.class);
                     OWLAnnotationProperty annotProp = factory.getOWLAnnotationProperty(OWLUtilities.toURI(uri));
-                    entity = new AnnotationPropertyTreeElement(annotProp, ontologyURI, project, provider);
-                    success = doJumpToEntity(entity, navigator);
+                    treeElement = new AnnotationPropertyTreeElement(annotProp, ontologyURI, project, provider);
+                    success = doJumpToEntity(treeElement, navigator);
                     if (success) {
                         try {
                             PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(MTreeView.ID);
@@ -543,8 +547,8 @@ public class OWLGUIUtilities {
                         // datatypes
                         provider = TreeProviderManager.getDefault().getProvider(MTreeView.ID, DatatypeProvider.class);
                         OWLDatatype datatype = factory.getOWLDatatype(OWLUtilities.toURI(uri));
-                        entity = new DatatypeTreeElement(datatype, ontologyURI, project, provider);
-                        success = doJumpToEntity(entity, navigator);
+                        treeElement = new DatatypeTreeElement(datatype, ontologyURI, project, provider);
+                        success = doJumpToEntity(treeElement, navigator);
                         if (success) {
                             try {
                                 PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(MTreeView.ID);
@@ -556,7 +560,7 @@ public class OWLGUIUtilities {
                             try {
                                 provider = TreeProviderManager.getDefault().getProvider(MTreeView.ID, IndividualViewContentProvider.class);
                                 Set<OWLClass> clazzes = OWLModelFactory.getOWLModel(ontologyURI, project).getClasses(uri);
-                                OWLIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.toURI(uri));
+                                OWLIndividual individual = new InternalParser(uri, OWLNamespaces.EMPTY_INSTANCE, factory).parseOWLIndividual();// factory.getOWLNamedIndividual(OWLUtilities.toURI(uri));
                                 if (clazzes.size() > 0) {
                                     // FIXME if individual exists for multiple classes, a dialog to select one would be nice
                                     // FIXME also consider individuals of OWL.Thing (displayed if class folder is selected)
@@ -566,11 +570,11 @@ public class OWLGUIUtilities {
                                     doJumpToEntity(clazz1, navigator);
                                     MTreeView ontoNavigator = (MTreeView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(MTreeView.ID);
 
-                                    entity = new IndividualViewItem(individual, firstClazz.getURI().toString(), ontologyURI, project);
+                                    treeElement = IndividualItem.createNewInstance(individual, firstClazz.getURI().toString(), ontologyURI, project);
                                     IViewPart individualView = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(IndividualView.ID);
                                     if (individualView != null) {
                                         ((IndividualView) individualView).selectionChanged(ontoNavigator, new StructuredSelection(clazz1));
-                                        ((IndividualView) individualView).getTreeViewer().setSelection(new StructuredSelection(entity));
+                                        ((IndividualView) individualView).getTreeViewer().setSelection(new StructuredSelection(treeElement));
                                     }
                                     PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(IndividualView.ID);
                                 }
@@ -578,6 +582,9 @@ public class OWLGUIUtilities {
                                 // nothing to do
                             } catch (PartInitException e) {
                                 // nothing to do
+                            } catch (InternalParserException e) {
+                                // nothing to do
+                                e.printStackTrace();
                             }
                         }
                     }
@@ -669,7 +676,7 @@ public class OWLGUIUtilities {
      * @return
      * @throws NeOnCoreException
      */
-    public static String[] getIdArray(OWLEntity entity, String ontologyUri, String projectId) throws NeOnCoreException {
+    public static String[] getIdArray(OWLObject entity, String ontologyUri, String projectId) throws NeOnCoreException {
         return getIdArray(entity, ontologyUri, projectId, false);
     }
 
@@ -684,21 +691,21 @@ public class OWLGUIUtilities {
      * If <code>getAllValues</code> is <code>false</code>, returns an array containing only one value that represents the ID depending on the selected
      * idDisplayStyle.
      * 
-     * @param entity
+     * @param owlObject
      * @param ontologyUri
      * @param projectId
      * @param getAllValues
      * @return
      * @throws NeOnCoreException
      */
-    public static String[] getIdArray(OWLEntity entity, String ontologyUri, String projectId, boolean getAllValues) throws NeOnCoreException {
+    public static String[] getIdArray(OWLObject owlObject, String ontologyUri, String projectId, boolean getAllValues) throws NeOnCoreException {
         if (getAllValues) {
             OWLObjectVisitorEx visitor = OWLPlugin.getDefault().getSyntaxManager().getVisitor(OWLModelFactory.getOWLModel(ontologyUri, projectId));
-            return (String[]) entity.accept(visitor);
+            return (String[]) owlObject.accept(visitor);
         } else {
             int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
             OWLObjectVisitorEx visitor = OWLPlugin.getDefault().getSyntaxManager().getVisitor(OWLModelFactory.getOWLModel(ontologyUri, projectId), idDisplayStyle);
-            return (String[]) entity.accept(visitor);
+            return (String[]) owlObject.accept(visitor);
         }
     }
 

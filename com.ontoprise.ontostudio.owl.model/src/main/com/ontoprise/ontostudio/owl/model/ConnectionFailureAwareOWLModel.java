@@ -22,7 +22,9 @@ import org.neontoolkit.core.project.IOntologyProject;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLAnnotationSubject;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
+import org.semanticweb.owlapi.model.OWLAnonymousIndividual;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLAxiomChange;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -1534,5 +1536,15 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
         } catch (RuntimeException e) {
             throw checkConnectionFailure(e);
         }
+    }
+
+    @Override
+    public Set<OWLAnnotationValue> getAnnotations(OWLAnonymousIndividual owlAnonymousIndividual, String annotationPropertyId) throws NeOnCoreException {
+       return _model.getAnnotations(owlAnonymousIndividual, annotationPropertyId);
+    }
+
+    @Override
+    public Set<LocatedItem<OWLAnnotationAssertionAxiom>> getAnnotationHits(OWLAnnotationSubject annotationSubject) throws NeOnCoreException {
+        return _model.getAnnotationHits(annotationSubject);
     }
 }

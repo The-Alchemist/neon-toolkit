@@ -196,6 +196,7 @@ public class OWLUtilities {
     }
 
     public static String toString(OWLOntologyID id) {
+        if(id.getDefaultDocumentIRI() == null )return null;
         return id.getDefaultDocumentIRI().toURI().toString();
     }
     

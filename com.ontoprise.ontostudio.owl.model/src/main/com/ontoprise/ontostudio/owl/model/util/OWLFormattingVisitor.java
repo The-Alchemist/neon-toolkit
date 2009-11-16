@@ -872,8 +872,10 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     }
     @Override
     public Object visit(SWRLVariable node) {
-        append('?');
+        append("[swrlVariable");
+        append(' ');
         visit(node.getIRI());
+        append(']');
         return null;
     }
     @Override
@@ -1011,7 +1013,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     }
     @Override
     public Object visit(OWLAnonymousIndividual individual) {
-        append(individual.getID().toString());
+        append(individual.getID().getID());
         return null;
     }
 }

@@ -167,7 +167,7 @@ public class RemoveAxiomWizardPage1 extends UserInputWizardPage {
                 info.append(Messages.RemoveAxiomWizardPage1_4); 
             } else {
                 info.append(Messages.RemoveAxiomWizardPage1_5); 
-                info.append(_namespaces.abbreviateAsNamespace(entities.get(0).getURI().toString()));
+                info.append(_namespaces.abbreviateAsNamespace(entities.isEmpty()?"":entities.get(0).getURI().toString())); //$NON-NLS-1$
                 info.append("]"); //$NON-NLS-1$
             }
         } else {

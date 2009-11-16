@@ -22,7 +22,7 @@
                contentProvider="com.ontoprise.ontostudio.owl.visualize.nodes.contentprovider.IndividualNodeContentProvider"
                id="com.ontoprise.ontostudio.owl.visualize.individualNode"
                nodeClass="com.ontoprise.ontostudio.owl.visualize.nodes.IndividualNode"
-               treeElementClass="com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem">
+               treeElementClass="com.ontoprise.ontostudio.owl.gui.individualview.NamedIndividualViewItem">
          </nodeContentProviderDefinition>
          <nodeContentProviderDefinition
                contentProvider="com.ontoprise.ontostudio.owl.visualize.nodes.contentprovider.IndividualObjectPropertyNodeContentProvider"
@@ -56,7 +56,7 @@
                contentProvider="com.ontoprise.ontostudio.owl.visualize.nodes.contentprovider.IndividualNodeContentProvider"
                id="com.ontoprise.ontostudio.owl.visualize.individualNode"
                nodeClass="com.ontoprise.ontostudio.owl.visualize.nodes.IndividualNode"
-               treeElementClass="com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem">
+               treeElementClass="com.ontoprise.ontostudio.owl.gui.individualview.NamedIndividualViewItem">
          </nodeContentProviderDefinition>
          <nodeContentProviderDefinition
                contentProvider="com.ontoprise.ontostudio.owl.visualize.nodes.contentprovider.IndividualObjectPropertyNodeContentProvider"

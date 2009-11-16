@@ -187,7 +187,7 @@ public class IndividualView extends ViewPart implements ISelectionListener {
         }
     }
 
-    public void prepareItemForEdit(IndividualViewItem item) {
+    public void prepareItemForEdit(IIndividualTreeElement item) {
         TreeItem treeItem = getTreeItem(item);
         _viewer.getTree().setFocus();
         _viewer.getTree().setSelection(new TreeItem[] {treeItem});
@@ -206,7 +206,7 @@ public class IndividualView extends ViewPart implements ISelectionListener {
         _treeEditor.setEditor(_text, treeItem);
     }
 
-    private TreeItem getTreeItem(IndividualViewItem individual) {
+    private TreeItem getTreeItem(IIndividualTreeElement individual) {
         TreeItem[] items = _viewer.getTree().getItems();
         for (int i = 0; i < items.length; i++) {
             if (items[i].getData() == individual) {
@@ -292,7 +292,7 @@ public class IndividualView extends ViewPart implements ISelectionListener {
                 if (newURI == null) {
                     success = false;
                 } else {
-                    ((IndividualViewItem) _treeEditor.getItem().getData()).setIndividualId(newURI);
+                    ((IIndividualTreeElement) _treeEditor.getItem().getData()).setIndividualId(newURI);
                 }
             } catch (NeOnCoreException e) {
                 // Call is only needed to attach the entered text to the item

@@ -79,7 +79,7 @@ import com.ontoprise.ontostudio.owl.gui.commands.rename.RenameProjectTest;
     GetAllImportingOntologiesTest.class,
     SyncEventHandlerTest.class,
     RenameAnnotationPropertyTest.class,
-    ImportTest.class,
+    ImportTest.class
 })
 
 public class AllPluginTests {

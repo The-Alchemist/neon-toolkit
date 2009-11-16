@@ -12,30 +12,27 @@ package com.ontoprise.ontostudio.owl.model.commands.annotations;
 
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.OWLAnnotationSubject;
-
-import com.ontoprise.ontostudio.owl.model.OWLUtilities;
+import org.semanticweb.owlapi.model.OWLAnonymousIndividual;
 
 /**
  * @author werner
  * 
  */
-public class GetEntityAnnotationHits extends AbstractGetAnnotationHits {
+public class AddAnonymousIndividualAnnotation extends AbstractAddAnnotation {
 
     /**
      * @param project
      * @param module
      * @param arguments
+     * @throws NeOnCoreException
      */
-    public GetEntityAnnotationHits(String project, String module, String entityUri) {
-        super(project, module, entityUri);
+    public AddAnonymousIndividualAnnotation(String project, String module, OWLAnonymousIndividual subject, String[] newValues) throws NeOnCoreException {
+        super(project, module, subject, newValues);
     }
-
+    
     @Override
-    protected OWLAnnotationSubject getAnnotationSubject() throws NeOnCoreException {
-        String expandedURI = getOwlModel().getNamespaces().expandString((String)getArgument(2));
-        return OWLUtilities.toIRI(expandedURI);
+    protected OWLAnnotationSubject getAnnotationSubject() throws NeOnCoreException{
+        return (OWLAnonymousIndividual)getArgument(2);
     }
-
-
 
 }

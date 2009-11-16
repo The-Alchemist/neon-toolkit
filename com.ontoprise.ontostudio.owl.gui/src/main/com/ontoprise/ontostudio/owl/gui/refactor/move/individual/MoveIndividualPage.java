@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.Label;
 import org.neontoolkit.gui.navigator.TreeProviderManager;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
-import com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem;
+import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyProvider;
 import com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement;
@@ -99,7 +99,7 @@ public class MoveIndividualPage extends ClazzSelectionPage {
      */
     @Override
     public OntologyTreeElement getOntology() {
-        IndividualViewItem[] elems = (IndividualViewItem[]) ((MoveIndividualProcessor) getRefactoring().getAdapter(MoveIndividualProcessor.class)).getElements();
+        IIndividualTreeElement[] elems = (IIndividualTreeElement[]) ((MoveIndividualProcessor) getRefactoring().getAdapter(MoveIndividualProcessor.class)).getElements();
         OntologyTreeElement ontology = new OntologyTreeElement(elems[0].getProjectName(), elems[0].getOntologyUri(), TreeProviderManager.getDefault().getProvider(ClazzSelectionPage.PROVIDER_ID, OntologyProvider.class));
         return ontology;
     }

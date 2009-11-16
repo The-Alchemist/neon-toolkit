@@ -25,8 +25,8 @@ public class IndividualViewLabelProvider extends LabelProvider implements IColor
     private Color _backgroundColor;
 
     public Color getBackground(Object element) {
-        if (element instanceof IndividualViewItem) {
-            IndividualViewItem item = (IndividualViewItem) element;
+        if (element instanceof IIndividualTreeElement) {
+            IIndividualTreeElement item = (IIndividualTreeElement) element;
             if (item.isDirect()) {
                 return null;
             }

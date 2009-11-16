@@ -25,8 +25,8 @@ import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
 
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
+import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.individualview.IndividualView;
-import com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem;
 import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
@@ -54,7 +54,7 @@ public class DataPropertyValuesSearchMatch extends OwlSearchMatch {
 
     private String _searchString;
 
-    public DataPropertyValuesSearchMatch(IndividualViewItem element, ClassSearchMatch[] classes, String searchString, String value, OWLDataPropertyExpression prop) {
+    public DataPropertyValuesSearchMatch(IIndividualTreeElement element, ClassSearchMatch[] classes, String searchString, String value, OWLDataPropertyExpression prop) {
         super(element);
         _classMatches = classes;
         _searchString = searchString;

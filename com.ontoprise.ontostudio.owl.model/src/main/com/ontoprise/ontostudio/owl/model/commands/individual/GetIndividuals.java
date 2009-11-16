@@ -27,7 +27,7 @@ import com.ontoprise.ontostudio.owl.model.commands.OWLOntologyRequestCommand;
  */
 public class GetIndividuals extends OWLOntologyRequestCommand {
 
-    private List<String> _results;
+    protected List<String> _results;
     
     /**
      * @param project

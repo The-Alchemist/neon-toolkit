@@ -50,6 +50,7 @@ public class OWLCommandUtils {
     public static final String INVERSE_FUNCTIONAL = "inverse_functional"; //$NON-NLS-1$
     public static final String SYMMETRIC = "symmetric"; //$NON-NLS-1$
     public static final String TRANSITIVE = "transitive"; //$NON-NLS-1$
+    public static final String HAS_SELF = "HAS_SELF"; //$NON-NLS-1$
 
     public static OWLAxiom createAxiom(String clazzId, String clazzType, String quantor, String propertyId, String range, String quantity, String ontologyId, String project) throws NeOnCoreException {
         OWLModel owlModel = OWLModelFactory.getOWLModel(ontologyId, project);
@@ -103,6 +104,8 @@ public class OWLCommandUtils {
                         desc = factory.getOWLObjectAllValuesFrom((OWLObjectPropertyExpression)property, (OWLClassExpression)propertyRange);
                     } else if (quantor.equals(SOME)) {
                         desc = factory.getOWLObjectSomeValuesFrom((OWLObjectPropertyExpression)property, (OWLClassExpression)propertyRange);
+                    } else if (quantor.equals(HAS_SELF)){
+                        desc = factory.getOWLObjectHasSelf((OWLObjectPropertyExpression)property);
                     } else if (quantity == null || quantity.equals("")) { //$NON-NLS-1$
                         // user has to enter min cardinality first
                         return null;

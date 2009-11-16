@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.neontoolkit.core.natures.OntologyProjectNature;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
-import com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem;
+import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 
 /* 
@@ -49,10 +49,10 @@ public class DeleteIndividualProcessor extends DeleteProcessor {
     public static final String IDENTIFIER = "com.ontoprise.ontostudio.owl.gui.refactor.delete.DeleteIndividualProcessor"; //$NON-NLS-1$
     public static final String OPTION_REMOVE_REFERRING_INSTANCE_PROPERTIES = "DeleteIndividualProcessor.removeReferringInstanceProperties"; //$NON-NLS-1$
 
-    private IndividualViewItem[] _individuals;
+    private IIndividualTreeElement[] _individuals;
     private ClazzTreeElement _clazz;
 
-    public DeleteIndividualProcessor(IndividualViewItem[] instances, ClazzTreeElement clazz) {
+    public DeleteIndividualProcessor(IIndividualTreeElement[] instances, ClazzTreeElement clazz) {
         _individuals = instances;
         _clazz = clazz;
     }

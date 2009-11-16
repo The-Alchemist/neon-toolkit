@@ -20,7 +20,7 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
-import com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem;
+import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 import com.ontoprise.ontostudio.owl.model.commands.individual.MoveIndividual;
 
@@ -36,11 +36,11 @@ import com.ontoprise.ontostudio.owl.model.commands.individual.MoveIndividual;
 
 public class IndividualMoveChange extends Change {
 
-    private IndividualViewItem[] _elements;
+    private IIndividualTreeElement[] _elements;
     private ClazzTreeElement _parent;
     private ClazzTreeElement _target;
 
-    public IndividualMoveChange(IndividualViewItem[] elements, ClazzTreeElement parent, ClazzTreeElement target) {
+    public IndividualMoveChange(IIndividualTreeElement[] elements, ClazzTreeElement parent, ClazzTreeElement target) {
         _elements = elements;
         _parent = parent;
         _target = target;

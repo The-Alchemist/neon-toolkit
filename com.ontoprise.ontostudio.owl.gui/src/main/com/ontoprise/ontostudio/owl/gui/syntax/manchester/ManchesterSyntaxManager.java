@@ -143,7 +143,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
             }
         } catch (ParserException e) {
             if(new DefaultEntityChecker(owlModel).getOWLIndividual(value) != null){
-                throw new InternalNeOnException("Range "+value+" is in individual but a description is expected. \nChoose "+OWLCommandUtils.HAS_VALUE+" as quantifier or a description as range.");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                throw new InternalNeOnException("Range "+value+" is an individual but a description is expected. \nChoose "+OWLCommandUtils.HAS_VALUE+" as quantifier or a description as range.");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             }
             throw new InternalNeOnException(e);
         } catch (IllegalArgumentException e) {
