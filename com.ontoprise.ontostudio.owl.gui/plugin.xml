@@ -577,7 +577,7 @@
       </entityPropertyContributor>
       <entityPropertyContributor
             activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement"
-            class="com.ontoprise.ontostudio.owl.gui.properties.AnnotationsPropertyPage2"
+            class="com.ontoprise.ontostudio.owl.gui.properties.AnnotationPropertyTab"
             id="com.ontoprise.ontostudio.owl.gui.propertyContributorAnnotations2"
             name="%annotationsPropertyPage">
             <subContributorOf
@@ -600,7 +600,7 @@
       <!-- SubPropertyPages of ObjectPropertyPage -->
       <entityPropertyContributor
             activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement"
-            class="com.ontoprise.ontostudio.owl.gui.properties.AnnotationsPropertyPage2"
+            class="com.ontoprise.ontostudio.owl.gui.properties.AnnotationPropertyTab"
             id="com.ontoprise.ontostudio.owl.gui.propertyContributorAnnotations2"
             name="%annotationsPropertyPage">
             <subContributorOf
@@ -630,7 +630,7 @@
       </entityPropertyContributor>
       <entityPropertyContributor
             activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement"
-            class="com.ontoprise.ontostudio.owl.gui.properties.AnnotationsPropertyPage2"
+            class="com.ontoprise.ontostudio.owl.gui.properties.AnnotationPropertyTab"
             id="com.ontoprise.ontostudio.owl.gui.propertyContributorAnnotations2"
             name="%annotationsPropertyPage">
             <subContributorOf
@@ -662,7 +662,7 @@
       
       <entityPropertyContributor
             activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.AnonymousIndividualViewItem"
-            class="com.ontoprise.ontostudio.owl.gui.properties.AnnotationsPropertyPage2"
+            class="com.ontoprise.ontostudio.owl.gui.properties.AnnotationPropertyTab"
             id="com.ontoprise.ontostudio.owl.gui.propertyContributorAnnotations2"
             name="%annotationsPropertyPage">
             <subContributorOf
@@ -671,7 +671,7 @@
       </entityPropertyContributor>
             <entityPropertyContributor
             activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.NamedIndividualViewItem"
-            class="com.ontoprise.ontostudio.owl.gui.properties.AnnotationsPropertyPage2"
+            class="com.ontoprise.ontostudio.owl.gui.properties.AnnotationPropertyTab"
             id="com.ontoprise.ontostudio.owl.gui.propertyContributorAnnotations2"
             name="%annotationsPropertyPage">
             <subContributorOf

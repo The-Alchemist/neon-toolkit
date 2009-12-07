@@ -381,10 +381,10 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
     		layout.marginTop = 0;
     		layout.marginBottom = 5;
         	composite.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
-        	page.createContents(composite);
         	if (page != mainPage) {
         		page.setMainPage(mainPage);
         	}
+            page.createContents(composite);
         }
         return item;
     }
