@@ -266,7 +266,7 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
      * @param imported the imported
      * @param sourceOnto the source onto
      * 
-     * @throws NeOnCoreException the KAO n2 exception
+     * @throws NeOnCoreException the KAON2 exception
      */
     private void handleAnnotationValue(OWLObjectVisitorEx visitor, OWLAnnotationAssertionAxiom annotation, boolean imported, String sourceOnto) throws NeOnCoreException {
         OWLAnnotationProperty annotationProperty = annotation.getAnnotation().getProperty();
@@ -284,6 +284,7 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
 //            createAnnotationsRow(annotation, contents, imported, sourceOnto);
             // TODO: migration
             throw new UnsupportedOperationException("TODO: migration"); //$NON-NLS-1$
+            
         } else if (o instanceof IRI) {
           OWLIndividual individual = _manager.parseIndividual(((IRI)o).toString(), _owlModel);
           String[] indivArray = (String[]) individual.accept(visitor);
@@ -292,6 +293,7 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
           contents.add(new String[] {OWLAxiomUtils.OWL_INDIVIDUAL_LOCAL, OWLAxiomUtils.OWL_INDIVIDUAL});
           contents.add(new String[] {null});
           createAnnotationsRow(annotation, contents, imported, sourceOnto);
+
         } else if (o instanceof OWLLiteral) {
             if (!((OWLLiteral)o).isTyped()) {
                 OWLStringLiteral untypedConstant = (OWLStringLiteral)o;

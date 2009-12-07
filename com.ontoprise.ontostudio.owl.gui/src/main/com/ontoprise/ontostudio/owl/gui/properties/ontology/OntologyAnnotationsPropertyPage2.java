@@ -39,6 +39,7 @@ import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnonymousIndividual;
 import org.semanticweb.owlapi.model.OWLDatatype;
+import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
@@ -63,6 +64,7 @@ import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.OWLCommandUtils;
 import com.ontoprise.ontostudio.owl.model.commands.annotations.AddOntologyAnnotation;
 import com.ontoprise.ontostudio.owl.model.commands.annotations.GetOntologyAnnotations;
+import com.ontoprise.ontostudio.owl.model.util.OWLAxiomUtils;
 
 public class OntologyAnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage {
 
@@ -310,9 +312,18 @@ public class OntologyAnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage 
 //            createAnnotationsRow(prop, OWLUtilities.toString(o), language, dataType, contents);
             // TODO: migration
             throw new UnsupportedOperationException("TODO: migration"); //$NON-NLS-1$
+            
         } else if (o instanceof IRI) {
-            // TODO: migration
-            throw new UnsupportedOperationException("TODO: migration"); //$NON-NLS-1$
+            OWLIndividual individual = _manager.parseIndividual(((IRI)o).toString(), _owlModel);
+            String[] indivArray = (String[]) individual.accept(visitor);
+            String[] typeArray = new String[] {OWLAxiomUtils.OWL_INDIVIDUAL_LOCAL, OWLAxiomUtils.OWL_INDIVIDUAL};
+            
+            contents.add(propArray);
+            contents.add(indivArray);
+            contents.add(typeArray);
+            contents.add(new String[] {null});
+            createAnnotationsRow(prop, OWLGUIUtilities.getEntityLabel(indivArray), null, OWLGUIUtilities.getEntityLabel(typeArray), contents);
+
         } else if (o instanceof OWLLiteral) {
             OWLLiteral constant = (OWLLiteral)o;
             if (!constant.isTyped()) {
@@ -330,12 +341,13 @@ public class OntologyAnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage 
             } else {
                 OWLTypedLiteral typedConstant = (OWLTypedLiteral)o;
                 OWLDatatype datatype = typedConstant.getDatatype();
+                String literal = typedConstant.getLiteral();
 
                 contents.add(propArray);
-                contents.add(new String[] {OWLUtilities.toString(o)});
+                contents.add(new String[] {literal});
                 contents.add((String[]) datatype.accept(visitor));
                 contents.add(new String[] {null});
-                createAnnotationsRow(prop, OWLUtilities.toString(o), language, datatype.getURI().toString(), contents);
+                createAnnotationsRow(prop, literal, language, datatype.getURI().toString(), contents);
             }
         } else {
             throw new IllegalArgumentException(Messages.OntologyAnnotationsPropertyPage2_1 + o);
