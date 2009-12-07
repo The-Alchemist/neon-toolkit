@@ -34,6 +34,7 @@ import org.neontoolkit.core.exception.InternalNeOnException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.core.exception.OntologyAlreadyExistsException;
 import org.neontoolkit.core.project.AbstractOntologyProject;
+import org.neontoolkit.core.util.IRIUtils;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.io.RDFXMLOntologyFormat;
 import org.semanticweb.owlapi.model.AddAxiom;
@@ -79,11 +80,11 @@ import com.ontoprise.ontostudio.owl.model.util.file.UnknownOWLOntologyFormatExce
 public class OWLManchesterProject extends AbstractOntologyProject {
     private static final String DEFAULT_NAMESPACE_PREFIX = "";
     
-    private static void removeOntologies(OWLOntologyManager manager, Set<String> ontologyURIs) {
-        for (String ontologyUri: ontologyURIs) {
+    private static void removeOntologies(OWLOntologyManager manager, Set<OWLOntologyID> ontologyURIs) {
+        for (OWLOntologyID ontologyID: ontologyURIs) {
             try {
-                IRI ontologyIRI = IRI.create(ontologyUri);
-                OWLOntology ontology = manager.getOntology(ontologyIRI);
+                // IRI ontologyIRI = ontologyID.getOntologyIRI(); // TODO: or getDefault... ??? IRI.create(ontologyUri);
+                OWLOntology ontology = manager.getOntology(ontologyID);
                 if (ontology != null) {
                     manager.removeOntology(ontology);
                 }
@@ -458,7 +459,7 @@ public class OWLManchesterProject extends AbstractOntologyProject {
         try {
             List<SimpleIRIMapper> iriMappers = new ArrayList<SimpleIRIMapper>();
             List<IRI> ontologyIRIs = new ArrayList<IRI>();
-            final Map<String,String> owlOntologyUris = new HashMap<String,String>();
+            final Map<OWLOntologyID,String> owlOntologyUris = new HashMap<OWLOntologyID,String>();
             try {
                 if (physicalURIs.length == 1) {
                     // the usual case which can be handled easy and has a performance benefit
@@ -481,7 +482,18 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                     @Override
                     public void finishedLoadingOntology(LoadingFinishedEvent event) {
                         if (event.getException() == null) {
-                            owlOntologyUris.put(OWLUtilities.toString(event.getOntologyID()), event.getPhysicalURI().toString());
+                            if (event.getOntologyID().getOntologyIRI() == null){
+                                OWLOntology onto = _ontologyManager.getOntology(event.getOntologyID());
+                                // Change the null URI into the physicalURI so that NeOn Toolkit is happy.
+                                OWLOntologyID newID = new OWLOntologyID(IRI.create(event.getPhysicalURI()));
+                                try {
+                                    _ontologyManager.applyChange(new SetOntologyID(onto, newID));
+                                    owlOntologyUris.put(newID, event.getPhysicalURI().toString());
+                                } catch (OWLOntologyChangeException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            else owlOntologyUris.put(event.getOntologyID(), event.getPhysicalURI().toString());
                         } else {
                             if (exception.get() == null) {
                                 exception.set(event.getException());
@@ -517,11 +529,17 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                     }
                     Set<String> registeredOntologies = new LinkedHashSet<String>();
                     try {
-                        for (String ontologyUri: owlOntologyUris.keySet()) {
-                            this.addOntology(ontologyUri);
-                            registeredOntologies.add(ontologyUri);
-                            String physicalUri = owlOntologyUris.get(ontologyUri);
-                            _ontologyManager.setPhysicalURIForOntology(getOntology(ontologyUri), URI.create(physicalUri));
+                        for (OWLOntologyID ontologyUri: owlOntologyUris.keySet()) {
+                            if (ontologyUri.getOntologyIRI()==null) {
+                                removeOntologies(_ontologyManager, owlOntologyUris.keySet());
+                                throw new OWLOntologyCreationException("Cannot load an ontology without a URI");
+                            }
+                            else {
+                                this.addOntology(ontologyUri.getOntologyIRI().toString());
+                                registeredOntologies.add(ontologyUri.getOntologyIRI().toString());
+                                String physicalUri = owlOntologyUris.get(ontologyUri);
+                                _ontologyManager.setPhysicalURIForOntology(_ontologyManager.getOntology(ontologyUri), URI.create(physicalUri));
+                            }
                         }
                     } catch (NeOnCoreException e) {
                         unregisterOntologies(registeredOntologies);
@@ -544,8 +562,10 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                     _ontologyManager.removeIRIMapper(simpleIRIMapper);
                 }
             }
-
-            return owlOntologyUris.keySet();
+            Set<String> loadedURIs = new HashSet<String>();
+            for (OWLOntologyID oid : owlOntologyUris.keySet())
+                   loadedURIs.add(oid.getOntologyIRI().toString());
+            return loadedURIs;
         } finally {
             // hack to avoid pending file handles, see issue 12863
             System.gc();

@@ -248,9 +248,11 @@ public class OWLModelFactory {
         	IOntologyProject ontologyProject = getOntologyProject(projectId);
         	Set<OWLModel> result = new LinkedHashSet<OWLModel>();
         	for (String ontologyURI: ontologyProject.getOntologies()) {
-        	    OWLOntology ontology = connection.getOntology(IRI.create(ontologyURI));
-        	    if (ontology != null) {
-        	        result.add(getOWLModel(getOntologyURI(ontology), projectId));
+        	    if (ontologyURI !=null){
+        	        OWLOntology ontology = connection.getOntology(IRI.create(ontologyURI));
+        	        if (ontology != null) {
+        	            result.add(getOWLModel(getOntologyURI(ontology), projectId));
+        	        }
         	    }
         	}
         	return result;
@@ -264,6 +266,7 @@ public class OWLModelFactory {
         }
     }
     
+
     /**
      * Retrieve the {@link OWLDataFactory} for a project.
      * 
