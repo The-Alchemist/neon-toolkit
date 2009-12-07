@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.neontoolkit.gui.navigator.MTreeView;
 
@@ -134,9 +135,14 @@ public class PropertyMoveChange extends Change {
             throw new CoreException(new Status(IStatus.ERROR, OWLPlugin.getDefault().getBundle().getSymbolicName(), IStatus.OK, e.getLocalizedMessage(), e));
         } finally {
             pm.done();
-            MTreeView navigator = (MTreeView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(MTreeView.ID);
-            OWLGUIUtilities.doJumpToEntity(_elements[0], navigator);
-
+            Display.getDefault().syncExec(new Runnable() {
+                @Override
+                public void run() {
+                    MTreeView navigator = (MTreeView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(MTreeView.ID);  // getActivWorkbenchWindom is null (called by non GUI Thread)
+                    OWLGUIUtilities.doJumpToEntity(_elements[0], navigator);     
+                }
+            }
+            );
         }
         return null;
     }
