@@ -209,7 +209,12 @@ public class OWLModelFactory {
             	// create new resources
             	if (model == null) {
                 	try {
-                    	model = new ConnectionFailureAwareOWLModel(new OWLModelCore(manager.getOntology(IRI.create(new URI(ontologyId))), manager, ontologyProject), ontologyProject);
+                    	model = new ConnectionFailureAwareOWLModel(
+                    	            new OWLModelCore(
+                    	                manager.getOntology(IRI.create(new URI(ontologyId))), 
+                    	                manager, 
+                    	                ontologyProject), 
+                    	            ontologyProject);
                 	} catch (UnknownOWLOntologyException e) {
                     	throw new OntologyNotOpenedException(ontologyId);
                 	} catch (URISyntaxException e) {

@@ -116,7 +116,7 @@ public class OWLGUIUtilities {
     private static final String UTF8 = "utf-8"; //$NON-NLS-1$
     private static final String HEX_CHARACTERS = "0123456789ABCDEF"; //$NON-NLS-1$
 
-	private static final int LANGUAGE_SELECT_BOX_WIDTH = 50;
+	public static final int LANGUAGE_SELECT_BOX_WIDTH = 50;
 
 	public static final String[] QUANTOR_TYPES = {
 	    OWLCommandUtils.SOME,

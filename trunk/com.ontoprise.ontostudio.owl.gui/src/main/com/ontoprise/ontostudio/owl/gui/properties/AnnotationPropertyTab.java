@@ -78,7 +78,11 @@ import com.ontoprise.ontostudio.owl.model.commands.annotations.GetAnonymousIndiv
 import com.ontoprise.ontostudio.owl.model.commands.annotations.GetEntityAnnotationHits;
 import com.ontoprise.ontostudio.owl.model.util.OWLAxiomUtils;
 
-public class AnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage implements IImagePropertyPage{
+/**
+ * This class is essentially a copy of AnnotationsPropertyPage2. 
+ * This is not good but due to the current EPV framework I did not manage to unify both into one class :( 
+ */
+public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements IImagePropertyPage{
 
     /*
      * The number of columns for a row (including buttons)
@@ -280,7 +284,6 @@ public class AnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage implemen
 //            createAnnotationsRow(annotation, contents, imported, sourceOnto);
             // TODO: migration
             throw new UnsupportedOperationException("TODO: migration"); //$NON-NLS-1$
-            
         } else if (o instanceof IRI) {
           OWLIndividual individual = _manager.parseIndividual(((IRI)o).toString(), _owlModel);
           String[] indivArray = (String[]) individual.accept(visitor);
@@ -499,8 +502,8 @@ public class AnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage implemen
         formRow.addWidget(propertyText);
         addSimpleWidget(propertyText);
 
-        final StyledText valueText = new StringText(formRow.getParent()).getStyledText();                   // TODO some annotations can also have URIs as values
-//        final StyledText valueText = new IndividualText(formRow.getParent(), _owlModel).getStyledText(); 
+        final StyledText valueText = new StringText(formRow.getParent()).getStyledText(); // TODO some annotations can also have URIs as values
+        //final StyledText valueText = new IndividualText(formRow.getParent(), _owlModel).getStyledText(); // TODO some annotations can also have URIs as values
         formRow.addWidget(valueText);
         addSimpleWidget(valueText);
 
