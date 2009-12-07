@@ -302,17 +302,6 @@
 	 <extension
          point="org.eclipse.ui.popupMenus">
       <!-- Project Actions -->
-      <objectContribution
-            objectClass="com.ontoprise.ontostudio.owl.gui.navigator.project.OWLProjectTreeElement"
-            id="com.ontoprise.ontostudio.owl.gui.navigator.projectActions">
-
-         <action
-               class="com.ontoprise.ontostudio.owl.gui.navigator.project.AddOWLOntologyAction"
-               id="com.ontoprise.ontostudio.gui.navigator.AddOntologyAction"
-               label="%addOntologyLabel"
-               menubarPath="navigator.io">
-         </action>
-      </objectContribution>
       
       <!-- Ontology Actions -->
    
