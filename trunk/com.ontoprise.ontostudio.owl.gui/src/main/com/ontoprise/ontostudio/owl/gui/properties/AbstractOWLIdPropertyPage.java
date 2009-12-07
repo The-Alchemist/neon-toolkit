@@ -18,16 +18,21 @@ import java.util.Set;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
@@ -43,6 +48,7 @@ import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.neontoolkit.gui.properties.AbstractIDPropertyPage;
 import org.neontoolkit.gui.util.PerspectiveChangeHandler;
+//import org.neontoolkit.gui.Messages;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
@@ -107,7 +113,7 @@ public abstract class AbstractOWLIdPropertyPage extends AbstractIDPropertyPage i
         _complexTexts = new ArrayList<DescriptionText>();
         _simpleTexts = new ArrayList<Composite>();
     }
-
+    
     /**
      * Prepare form.
      * 
@@ -127,7 +133,7 @@ public abstract class AbstractOWLIdPropertyPage extends AbstractIDPropertyPage i
         body.setLayout(layout);
         return body;
     }
-
+    
     /**
      * Layout sections.
      */
