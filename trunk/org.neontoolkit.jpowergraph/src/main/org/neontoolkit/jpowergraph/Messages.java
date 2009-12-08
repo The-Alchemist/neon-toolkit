@@ -20,6 +20,8 @@ public class Messages extends NLS {
 
     private static final String BUNDLE_NAME = "org.neontoolkit.jpowergraph.messages"; //$NON-NLS-1$
 
+    public static String LegendControlPanel_0;
+
     public static String OntoPowerGraphContextMenuListener_0;
     public static String OntoPowerGraphContextMenuListener_1;
     public static String NavigationHistoryPainter_0;
@@ -30,6 +32,8 @@ public class Messages extends NLS {
     public static String NavigationHistoryControlPanel_4;
     public static String NavigationHistoryControlPanel_5;
     public static String NavigationHistoryControlPanel_6;
+
+    public static String TooltipControlPanel_0;
 
     static {
         // load message values from bundle file

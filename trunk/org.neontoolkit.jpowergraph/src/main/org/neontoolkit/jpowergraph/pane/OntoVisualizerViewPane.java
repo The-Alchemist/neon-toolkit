@@ -23,9 +23,7 @@ import net.sourceforge.jpowergraph.lens.TranslateLens;
 import net.sourceforge.jpowergraph.lens.ZoomLens;
 import net.sourceforge.jpowergraph.pane.JGraphPane;
 import net.sourceforge.jpowergraph.pane.JGraphScrollPane;
-import net.sourceforge.jpowergraph.viewcontrols.LegendControlPanel;
 import net.sourceforge.jpowergraph.viewcontrols.RotateControlPanel;
-import net.sourceforge.jpowergraph.viewcontrols.TooltipControlPanel;
 import net.sourceforge.jpowergraph.viewcontrols.ZoomControlPanel;
 
 import org.eclipse.swt.SWT;
@@ -34,7 +32,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.neontoolkit.jpowergraph.history.NavigationHistory;
 import org.neontoolkit.jpowergraph.viewcontrols.INavigationListener;
+import org.neontoolkit.jpowergraph.viewcontrols.LegendControlPanel;
 import org.neontoolkit.jpowergraph.viewcontrols.NavigationHistoryControlPanel;
+import org.neontoolkit.jpowergraph.viewcontrols.TooltipControlPanel;
 
 
 /*
@@ -51,9 +51,10 @@ public class OntoVisualizerViewPane extends Composite {
         super(theParent, SWT.NONE);
         _listeners = new EventListenerList();
         GridLayout gridLayout = new GridLayout();
-        gridLayout.numColumns = 10;
+        gridLayout.numColumns = 6;
         gridLayout.marginWidth = 2;
         gridLayout.marginHeight = 4;
+        gridLayout.makeColumnsEqualWidth = false;
         setLayout(gridLayout);
 
         JGraphScrollPane scroll = new JGraphScrollPane(theParent, graphPane, translateLens);
@@ -78,8 +79,11 @@ public class OntoVisualizerViewPane extends Composite {
         
         layoutData = new GridData();
         layoutData.verticalAlignment = GridData.BEGINNING;
+        layoutData.verticalAlignment = GridData.BEGINNING;
+        layoutData.grabExcessHorizontalSpace=false;
+        layoutData.grabExcessVerticalSpace=false;
         c2.setLayoutData(layoutData);
-
+        
         _navigationHistoryControlPanel.setLayoutData(layoutData);
     }
 

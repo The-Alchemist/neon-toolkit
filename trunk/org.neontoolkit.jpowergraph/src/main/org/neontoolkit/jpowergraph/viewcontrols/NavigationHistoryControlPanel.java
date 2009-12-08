@@ -59,7 +59,7 @@ public class NavigationHistoryControlPanel extends Composite {
         Composite container = new Composite(parent, SWT.NONE);
         GridLayout gridLayout = new GridLayout();
         gridLayout.numColumns = 6;
-        gridLayout.marginWidth = 2;
+        gridLayout.marginWidth = 0;
         gridLayout.marginHeight = 0;
         container.setLayout(gridLayout);
 
@@ -126,7 +126,7 @@ public class NavigationHistoryControlPanel extends Composite {
 
         });
         _enableHistory = new Button(container, SWT.CHECK);
-        _enableHistory.setText(Messages.NavigationHistoryControlPanel_4);
+        _enableHistory.setToolTipText(Messages.NavigationHistoryControlPanel_4);
         _enableHistory.setSelection(theHistory.isDrawHistory());
         _enableHistory.addSelectionListener(new SelectionAdapter() {
 
