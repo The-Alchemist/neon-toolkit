@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
@@ -54,7 +55,8 @@ public class RemoveClazzWizardPage1 extends RemoveEntityWizardPage1 {
                 OWLClassExpression subClass = ((OWLSubClassOfAxiom) parentElement).getSubClass();
 
                 if (subClass instanceof OWLClass) {
-                    Set<OWLAxiom> resultList = new LinkedHashSet<OWLAxiom>(owlModel.getReferencingAxioms((OWLClass)subClass));
+                    OWLClass owlClazz = (OWLClass)subClass;
+                    Set<OWLAxiom> resultList = new LinkedHashSet<OWLAxiom>(owlModel.getReferencingAxioms(owlClazz));
                     resultList.remove(parentElement); // remove same axiom
                     List<OWLAxiom> clonedList = new ArrayList<OWLAxiom>();
                     clonedList.addAll(resultList);
@@ -64,6 +66,8 @@ public class RemoveClazzWizardPage1 extends RemoveEntityWizardPage1 {
                             resultList.addAll(individuals);
                         }
                     }
+                    Set<OWLAnnotationAssertionAxiom> annotationAssertionAxioms = owlClazz.getAnnotationAssertionAxioms(owlModel.getOntology());
+                    resultList.addAll(annotationAssertionAxioms);
                     return new ArrayList<OWLAxiom>(resultList);
                 }
                 return null;

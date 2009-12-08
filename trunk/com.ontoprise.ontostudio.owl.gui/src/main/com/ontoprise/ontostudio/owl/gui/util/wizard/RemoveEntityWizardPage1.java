@@ -102,21 +102,25 @@ public class RemoveEntityWizardPage1 extends RemoveAxiomWizardPage1 {
         if (children != null) {
             children.remove(axiom); // remove parent, which is also contained in list
             for (OWLAxiom child: children) {
+                List<OWLAxiom> childList = _children.get(rootAxiom);
+                boolean tryRecursive = false;
+                if (!childListsContain(child)) {
+                    childList.add(child);
+                    tryRecursive = true;
+                }
                 if (child instanceof OWLSubClassOfAxiom) {
                     OWLClassExpression subDesc = ((OWLSubClassOfAxiom)child).getSubClass();
                     OWLClassExpression superDesc = ((OWLSubClassOfAxiom)child).getSuperClass();
+                    
                     for (OWLEntity entity: _entities) {
-                        if (OWLUtilities.toString(superDesc).contains(entity.getURI().toString()) || OWLUtilities.toString(subDesc).contains(entity.getURI().toString())) {
-                            if (!childListsContain(child)) {
+                        //if (OWLUtilities.toString(superDesc).contains(entity.getURI().toString()) || OWLUtilities.toString(subDesc).contains(entity.getURI().toString())) {
+                            if (!OWLUtilities.toString(superDesc).contains(entity.getURI().toString()) && !OWLUtilities.toString(subDesc).contains(entity.getURI().toString()) && tryRecursive) {
                                 recursiveFetchChildren(child, rootAxiom);
                             }
-                        }
+                        //}
                     }
                 }
-                List<OWLAxiom> childList = _children.get(rootAxiom);
-                if (!childListsContain(child)) {
-                    childList.add(child);
-                }
+                
                 _dependentAxioms.add(child);
             }
         }
