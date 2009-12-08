@@ -13,7 +13,11 @@ package org.neontoolkit.gui.navigator.ontology;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.ui.PlatformUI;
 import org.neontoolkit.core.NeOnCorePlugin;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.core.project.IOntologyProject;
@@ -43,11 +47,11 @@ public class SaveOntologyRunnableWithProgress implements IRunnableWithProgress {
         try {
         	monitor.beginTask(Messages.SaveOntologyRunnableWithProgress_0, IProgressMonitor.UNKNOWN);
         	IOntologyProject ontoProject = NeOnCorePlugin.getDefault().getOntologyProject(_project);
-        	ontoProject.saveOntology(_ontologyUri);
-			monitor.done();
+        	ontoProject.saveOntology(_ontologyUri);    
+ 			monitor.done();
 		} catch (NeOnCoreException e) {
 			throw new InvocationTargetException(e);
-		}
+		}		
 	}
 
 }

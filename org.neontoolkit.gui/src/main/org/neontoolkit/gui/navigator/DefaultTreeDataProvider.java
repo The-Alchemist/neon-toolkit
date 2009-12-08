@@ -28,6 +28,7 @@ import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.neontoolkit.gui.navigator.elements.IOntologyElement;
 import org.neontoolkit.gui.navigator.elements.IProjectElement;
+import org.neontoolkit.gui.navigator.ontology.RemoteOntologyCheckWizard;
 import org.neontoolkit.gui.navigator.ontology.SaveOntologyRunnableWithProgress;
 import org.neontoolkit.gui.properties.ProgressMonitorWithExceptionDialog;
 
@@ -301,9 +302,12 @@ public abstract class DefaultTreeDataProvider implements ITreeDataProvider, ISav
 //                    String physicalFileUri = ontologyProject.getResource().getFile(fileName).getLocationURI().toString();
 //                    ontologyProject.setPhysicalUri(ontologyUri, physicalFileUri);
 //                }
-                ProgressMonitorWithExceptionDialog progdialog = new ProgressMonitorWithExceptionDialog(getViewer().getControl().getShell());
-                SaveOntologyRunnableWithProgress runnable = new SaveOntologyRunnableWithProgress(projectName, ontologyUri);
-                progdialog.runWithException(true, false, runnable);
+                RemoteOntologyCheckWizard rocw = new RemoteOntologyCheckWizard(projectName, ontologyUri, getViewer().getControl().getShell());
+                if (rocw.shouldSave()){
+                    ProgressMonitorWithExceptionDialog progdialog = new ProgressMonitorWithExceptionDialog(getViewer().getControl().getShell());
+                    SaveOntologyRunnableWithProgress runnable = new SaveOntologyRunnableWithProgress(projectName, ontologyUri);
+                    progdialog.runWithException(true, false, runnable);
+                }
             } 
 //        } catch (KAON2Exception e) {
 //            NeOnUIPlugin.getDefault().logError("", e); //$NON-NLS-1$

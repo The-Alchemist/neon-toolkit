@@ -50,6 +50,7 @@ import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.core.project.IOntologyProject;
 import org.neontoolkit.core.project.OntologyProjectManager;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
+import org.neontoolkit.gui.navigator.ontology.RemoteOntologyCheckWizard;
 import org.neontoolkit.gui.progress.NotForkedRunnableWithProgress;
 
 /* 
@@ -247,7 +248,9 @@ public class SaveOntologyDialog extends SelectionDialog {
 					try {
 						IOntologyProject ontologyProject =  NeOnCorePlugin.getDefault().getOntologyProject(projectName);
 	        			for (Iterator<String> iter = ontologyUris.iterator(); iter.hasNext();) {
-	        				String ontologyUri = iter.next();                
+	        				String ontologyUri = iter.next();    
+	        				RemoteOntologyCheckWizard rocw = new RemoteOntologyCheckWizard(projectName, ontologyUri, getShell());
+	        				if (rocw.shouldSave())
 		    				try {
 	    		                ontologyProject.saveOntology(ontologyUri);
 	    			        	ontologyProject.getResource().refreshLocal(IResource.DEPTH_INFINITE, null);

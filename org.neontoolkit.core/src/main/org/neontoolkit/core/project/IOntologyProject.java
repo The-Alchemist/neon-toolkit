@@ -369,6 +369,13 @@ public interface IOntologyProject {
     String getPhysicalURIForOntology(String ontologyURI) throws NeOnCoreException;
     
     /**
+     * Change the place where the ontology is located and therefore saved.
+     * 
+     * @param ontologyURI                       The ontology URI.
+     */
+    void setPhysicalURIForOntology(String ontologyURI, String physicalURI) throws NeOnCoreException;
+    
+    /**
      * Get the URIs of all ontologies directly imported by a given ontology.
      * 
      * @param ontologyURI                       URI of the ontology to get the imported ontology URIs from.

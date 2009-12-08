@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.widgets.Display;
@@ -396,7 +397,17 @@ public class OWLManchesterProject extends AbstractOntologyProject {
     @Override
     public void saveOntology(String ontologyUri) throws NeOnCoreException {
         try {
-            new SaveOntology(getName(), ontologyUri).run();
+            URI physicalURI = _ontologyManager.getPhysicalURIForOntology(_ontologyManager.getOntology(IRI.create(ontologyUri)));
+            IProject project = this.getResource();
+            URI projURI = project.getLocationURI();
+            if (!physicalURI.toString().startsWith(projURI.toString())){
+                throw new NeOnCoreException("Ontology not in stored in workspace") {
+                    public String getErrorCode() {
+                        return "SavingRemoteOntology";}};
+            }
+            else new SaveOntology(getName(), ontologyUri).run();
+        } catch(NeOnCoreException e1){
+            throw e1;
         } catch (Exception e) {
             throw new InternalNeOnException(e);
         }
@@ -468,6 +479,9 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                     for (URI physicalURI: physicalURIs) {
                         OWLOntologyInfo ontologyInfo = OWLFileUtilities.getOntologyInfo(physicalURI);
                         String ontologyUri = OWLUtilities.toString(ontologyInfo.getOntologyID());
+                        if (ontologyUri == null){
+                            ontologyUri = physicalURI.toString();
+                        }
                         URI ontologyURI = URI.create(ontologyUri);
                         IRI ontologyIRI = IRI.create(ontologyURI);
                         ontologyIRIs.add(ontologyIRI);
@@ -685,6 +699,11 @@ public class OWLManchesterProject extends AbstractOntologyProject {
     @Override
     public String getPhysicalURIForOntology(String ontologyURI) throws NeOnCoreException {
         return _ontologyManager.getPhysicalURIForOntology(getOntology(ontologyURI)).toString();
+    }
+    
+    @Override
+    public void setPhysicalURIForOntology(String ontologyURI, String physicalURI) throws NeOnCoreException {
+        _ontologyManager.setPhysicalURIForOntology(getOntology(ontologyURI), URI.create(physicalURI));
     }
 
     public String getPhysicalURIForOntology(OWLOntology ontology) {

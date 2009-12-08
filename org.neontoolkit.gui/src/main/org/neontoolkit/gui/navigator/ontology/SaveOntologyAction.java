@@ -11,6 +11,7 @@
 package org.neontoolkit.gui.navigator.ontology;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
@@ -54,7 +55,7 @@ public class SaveOntologyAction implements IObjectActionDelegate {
             Object selectedElement = selectedItems.getFirstElement();
             if (selectedElement instanceof IOntologyElement && selectedElement instanceof IProjectElement) {
                 try {
-                	IOntologyElement ontologyElem = (IOntologyElement) selectedElement;
+                    IOntologyElement ontologyElem = (IOntologyElement) selectedElement;
                 	IProjectElement projectElem = (IProjectElement) selectedElement;
 	                ProgressMonitorWithExceptionDialog progdialog = new ProgressMonitorWithExceptionDialog(_view.getSite().getShell());
 	                SaveOntologyRunnableWithProgress runnable = new SaveOntologyRunnableWithProgress(projectElem.getProjectName(), ontologyElem.getOntologyUri());
@@ -67,7 +68,17 @@ public class SaveOntologyAction implements IObjectActionDelegate {
 	
 	}
 
-	/* (non-Javadoc)
+	/**
+     * @param projectName
+     * @param ontologyUri
+     * @return
+     */
+    private boolean isRemote(String projectName, String ontologyUri) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    /* (non-Javadoc)
 	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {

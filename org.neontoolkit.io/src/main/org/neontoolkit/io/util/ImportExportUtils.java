@@ -174,5 +174,6 @@ public class ImportExportUtils {
     public static String getFileFormatOntologyLanguage(String ontologyFileFormat) {
         return ontologyFileFormat.replaceFirst(".", ""); //$NON-NLS-1$ //$NON-NLS-2$
     }       
+    
 
 }

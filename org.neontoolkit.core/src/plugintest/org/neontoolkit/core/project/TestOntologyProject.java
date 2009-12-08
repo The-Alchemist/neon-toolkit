@@ -201,4 +201,9 @@ public class TestOntologyProject extends AbstractOntologyProject {
     public void removeFromImportedOntologies(String ontologyURI, Set<String> ontologyURIsToImport) throws NeOnCoreException {
         // do nothing
     }
+
+    @Override
+    public void setPhysicalURIForOntology(String ontologyURI, String physicalURI) throws NeOnCoreException {
+        // do nothing
+    }
 }
