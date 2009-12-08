@@ -61,6 +61,7 @@ import org.semanticweb.owlapi.model.OWLObjectCardinalityRestriction;
 import org.semanticweb.owlapi.model.OWLObjectHasSelf;
 import org.semanticweb.owlapi.model.OWLObjectHasValue;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
@@ -758,8 +759,8 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     finalRangeText = new DatatypeText(formRow.getParent(), _owlModel).getStyledText();
                 }
             } else {
-                OWLObjectProperty objProp = manager.parseObjectProperty(input, _owlModel);
-                boolean isObjectProperty = new IsObjectProperty(_project, _ontologyUri, objProp.getURI().toString()).isObjectProperty();
+                OWLObjectPropertyExpression objProp = manager.parseObjectProperty(input, _owlModel);
+                boolean isObjectProperty = new IsObjectProperty(_project, _ontologyUri, OWLUtilities.toString(objProp)).isObjectProperty();
                 if (isObjectProperty) {
                     if (hasValue) {
                         finalRangeText = new IndividualText(formRow.getParent(), _owlModel).getStyledText();

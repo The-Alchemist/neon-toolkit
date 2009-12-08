@@ -48,12 +48,14 @@ import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLObjectPropertyDomainAxiom;
+import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLObjectPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubDataPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
+import org.semanticweb.owlapi.model.OWLSubPropertyChainOfAxiom;
 
 import com.ontoprise.ontostudio.owl.model.event.OWLAxiomListener;
 
@@ -459,6 +461,10 @@ public interface OWLModel {
      */
     public Set<OWLObjectProperty> getSubObjectProperties(String propertyId) throws NeOnCoreException;
 
+    public Set<List<OWLObjectProperty>> getSubPropertyChains(String propertyId) throws NeOnCoreException;
+    
+    public Set<ItemHits<List<OWLObjectPropertyExpression>,OWLSubPropertyChainOfAxiom>> getSubPropertyChainOfHits(String propertyId) throws NeOnCoreException;
+    
     /**
      * returns a list of all direct the subpoperties of passed OWL dataproperty
      * 

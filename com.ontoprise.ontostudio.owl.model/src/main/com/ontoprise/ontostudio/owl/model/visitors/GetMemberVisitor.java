@@ -38,6 +38,7 @@ import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubDataPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
+import org.semanticweb.owlapi.model.OWLSubPropertyChainOfAxiom;
 
 /**
  * A visitor for OWL axioms that returns the items from an axiom for a specific member of the axiom.
@@ -305,6 +306,16 @@ public class GetMemberVisitor extends OWLKAON2VisitorAdapter {
     public Object visit(OWLSubObjectPropertyOfAxiom object) {
         if ("subObjectProperties".equals(_member)) { //$NON-NLS-1$
             return Collections.singleton(object.getSubProperty());
+        } else if ("superObjectProperty".equals(_member)) { //$NON-NLS-1$
+            return object.getSuperProperty();
+        }
+        return super.visit(object);
+    }
+    
+    @Override
+    public Object visit(OWLSubPropertyChainOfAxiom object) {
+        if ("subObjectProperties".equals(_member)) { //$NON-NLS-1$
+            return object.getPropertyChain();
         } else if ("superObjectProperty".equals(_member)) { //$NON-NLS-1$
             return object.getSuperProperty();
         }

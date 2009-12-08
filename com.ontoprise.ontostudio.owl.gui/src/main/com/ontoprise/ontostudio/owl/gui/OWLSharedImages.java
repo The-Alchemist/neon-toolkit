@@ -49,7 +49,7 @@ public final class OWLSharedImages {
     public static final String ONE_OF = "one_of"; //$NON-NLS-1$
     public static final String MIN = "min"; //$NON-NLS-1$
     public static final String MAX = "max"; //$NON-NLS-1$
-    public static final String CARDINALITY = "cardinality"; //$NON-NLS-1$
+    public static final String EXACTLY = "exactly"; //$NON-NLS-1$
     public static final String SOME_VALUES_FROM = "some_values_from"; //$NON-NLS-1$
     public static final String ALL_VALUES_FROM = "all_values_from"; //$NON-NLS-1$
     public static final String HAS_VALUE = "has_value"; //$NON-NLS-1$
@@ -74,7 +74,7 @@ public final class OWLSharedImages {
         registry.put(ONE_OF, create("complexclass", "one_of.gif")); //$NON-NLS-1$ //$NON-NLS-2$
         registry.put(MIN, create("complexclass", "min.gif")); //$NON-NLS-1$ //$NON-NLS-2$
         registry.put(MAX, create("complexclass", "max.gif")); //$NON-NLS-1$ //$NON-NLS-2$
-        registry.put(CARDINALITY, create("complexclass", "cardinality.gif")); //$NON-NLS-1$ //$NON-NLS-2$
+        registry.put(EXACTLY, create("complexclass", "cardinality.gif")); //$NON-NLS-1$ //$NON-NLS-2$
         registry.put(SOME_VALUES_FROM, create("complexclass", "some_values_from.gif")); //$NON-NLS-1$ //$NON-NLS-2$
         registry.put(ALL_VALUES_FROM, create("complexclass", "all_values_from.gif")); //$NON-NLS-1$ //$NON-NLS-2$
         registry.put(HAS_VALUE, create("complexclass", "has_value.gif")); //$NON-NLS-1$ //$NON-NLS-2$

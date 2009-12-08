@@ -56,6 +56,7 @@ import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
 import org.semanticweb.owlapi.model.OWLOntologyChangeException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
@@ -348,9 +349,9 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
         }
     }
 
-    public OWLObjectProperty parseObjectProperty(String value, OWLModel owlModel) throws NeOnCoreException {
+    public OWLObjectPropertyExpression parseObjectProperty(String value, OWLModel owlModel) throws NeOnCoreException {
         try {
-            return (OWLObjectProperty)getManchesterOWLSyntaxEditorParser(owlModel, value).parseObjectPropertyExpression();
+            return getManchesterOWLSyntaxEditorParser(owlModel, value).parseObjectPropertyExpression();
         } catch (ParserException e) {
             throw new InternalNeOnException(e);
         } catch (IllegalArgumentException e) {
@@ -361,6 +362,21 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
             throw e;
         }
     }
+
+    public List<OWLObjectPropertyExpression> parseObjectPropertyChain(String value, OWLModel owlModel) throws NeOnCoreException {
+        try {
+            return getManchesterOWLSyntaxEditorParser(owlModel, value).parseObjectPropertyChain();
+        } catch (ParserException e) {
+            throw new InternalNeOnException(e);
+        } catch (IllegalArgumentException e) {
+            // hack for mapi bug
+            if (e.getCause() instanceof URISyntaxException) {
+                throw new InternalNeOnException(e);
+            }
+            throw e;
+        }
+    }
+
 
     public OWLAnnotationProperty parseAnnotationProperty(String value, OWLModel owlModel) throws NeOnCoreException {
         try {

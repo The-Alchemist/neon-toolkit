@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -44,10 +45,12 @@ import org.semanticweb.owlapi.model.OWLInverseObjectPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
+import org.semanticweb.owlapi.model.OWLSubPropertyChainOfAxiom;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.properties.AbstractOWLIdPropertyPage;
 import com.ontoprise.ontostudio.owl.gui.properties.LocatedAxiom;
+import com.ontoprise.ontostudio.owl.gui.syntax.manchester.ManchesterSyntaxVisitor;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.gui.util.forms.AxiomRowHandler;
 import com.ontoprise.ontostudio.owl.gui.util.forms.EmptyFormRow;
@@ -60,9 +63,11 @@ import com.ontoprise.ontostudio.owl.model.commands.ApplyChanges;
 import com.ontoprise.ontostudio.owl.model.commands.objectproperties.CreateEquivalentObjectProperty;
 import com.ontoprise.ontostudio.owl.model.commands.objectproperties.CreateInverseObjectProperty;
 import com.ontoprise.ontostudio.owl.model.commands.objectproperties.CreateObjectProperty;
+import com.ontoprise.ontostudio.owl.model.commands.objectproperties.CreateSubPropertyChainOf;
 import com.ontoprise.ontostudio.owl.model.commands.objectproperties.GetEquivalentObjectPropertyHits;
 import com.ontoprise.ontostudio.owl.model.commands.objectproperties.GetInverseObjectPropertyHits;
 import com.ontoprise.ontostudio.owl.model.commands.objectproperties.GetSubObjectPropertyHits;
+import com.ontoprise.ontostudio.owl.model.commands.objectproperties.GetSubPropertyChainOfHits;
 import com.ontoprise.ontostudio.owl.model.commands.objectproperties.GetSuperObjectPropertyHits;
 import com.ontoprise.ontostudio.owl.model.util.OWLAxiomUtils;
 import com.ontoprise.ontostudio.owl.model.util.wizard.WizardConstants;
@@ -74,6 +79,7 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
     private static final int SUB = 2;
     private static final int EQUIV = 3;
     private static final int INVERSE = 4;
+    private static final int CHAIN = 5;
 
     /*
      * The number of columns for a row (including buttons)
@@ -85,12 +91,14 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
      */
     private Section _superPropertySection;
     private Section _subPropertySection;
+    private Section _subPropertyChainSection;
     private Section _equivPropertySection;
     private Section _inversePropertySection;
 
-    private Composite _superFormComposite;
-    private Composite _subFormComposite;
-    private Composite _equivFormComposite;
+    private Composite _superPropertyComposite;
+    private Composite _subPropertyComposite;
+    private Composite _subPropertyChainComposite;
+    private Composite _equivPropertyComposite;
     private Composite _inversePropertyComp;
 
     /**
@@ -109,7 +117,8 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
         createSuperPropertyArea(body);
         createSubPropertyArea(body);
         createEquivPropertyArea(body);
-        createInverseDisjointPropertyArea(body);
+        createInversePropertyArea(body);
+        createSubPropertyChainArea(body);
 
         _form.reflow(true);
         return body;
@@ -129,14 +138,14 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
         });
         ColumnLayoutData data = new ColumnLayoutData();
         _superPropertySection.setLayoutData(data);
-        _superFormComposite = _toolkit.createComposite(_superPropertySection, SWT.NONE);
-        _superFormComposite.setLayout(new GridLayout());
-        _toolkit.adapt(_superFormComposite);
-        _superPropertySection.setClient(_superFormComposite);
+        _superPropertyComposite = _toolkit.createComposite(_superPropertySection, SWT.NONE);
+        _superPropertyComposite.setLayout(new GridLayout());
+        _toolkit.adapt(_superPropertyComposite);
+        _superPropertySection.setClient(_superPropertyComposite);
     }
 
     private void initSuperSection(boolean setFocus) {
-        clearComposite(_superFormComposite);
+        clearComposite(_superPropertyComposite);
 
         try {
             String[][] results = new GetSuperObjectPropertyHits(_project, _ontologyUri, _id).getResults();
@@ -148,7 +157,7 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                 boolean isLocal = ontologyUri.equals(_ontologyUri);
 
                 OWLSubObjectPropertyOfAxiom axiom = (OWLSubObjectPropertyOfAxiom) OWLUtilities.axiom(axiomText, _namespaces, _factory);
-                createRow(new LocatedAxiom(axiom, isLocal), axiom.getSuperProperty(), ontologyUri, false, SUPER);
+                createRow(new LocatedAxiom(axiom, isLocal), axiom.getSuperProperty(), null, ontologyUri, false, SUPER);
             }
         } catch (NeOnCoreException e1) {
             handleException(e1, Messages.ClazzPropertyPage2_ErrorRetrievingData, _superPropertySection.getShell());
@@ -156,7 +165,7 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
             handleException(e1, Messages.ClazzPropertyPage2_ErrorRetrievingData, _superPropertySection.getShell());
         }
 
-        Label createNewLabel = new Label(_superFormComposite, SWT.NONE);
+        Label createNewLabel = new Label(_superPropertyComposite, SWT.NONE);
         createNewLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         createNewLabel.setText(Messages.ObjectPropertyPropertyPage2_6);
         Composite activeComposite = createEmptyRow(true, SUPER);
@@ -179,15 +188,36 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
         });
         ColumnLayoutData data = new ColumnLayoutData();
         _subPropertySection.setLayoutData(data);
-        _subFormComposite = _toolkit.createComposite(_subPropertySection, SWT.NONE);
-        _subFormComposite.setLayout(new GridLayout());
-        _toolkit.adapt(_subFormComposite);
-        _subPropertySection.setClient(_subFormComposite);
+        _subPropertyComposite = _toolkit.createComposite(_subPropertySection, SWT.NONE);
+        _subPropertyComposite.setLayout(new GridLayout());
+        _toolkit.adapt(_subPropertyComposite);
+        _subPropertySection.setClient(_subPropertyComposite);
+
+    }
+
+    /**
+     * Create subpropertychain area
+     */
+    private void createSubPropertyChainArea(Composite composite) {
+        _subPropertyChainSection = _toolkit.createSection(composite, Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
+        _subPropertyChainSection.setText(Messages.ObjectPropertyPropertyPage_SubPropertyChains);
+        _subPropertyChainSection.addExpansionListener(new ExpansionAdapter() {
+            @Override
+            public void expansionStateChanged(ExpansionEvent e) {
+                _form.reflow(true);
+            }
+        });
+        ColumnLayoutData data = new ColumnLayoutData();
+        _subPropertyChainSection.setLayoutData(data);
+        _subPropertyChainComposite = _toolkit.createComposite(_subPropertyChainSection, SWT.NONE);
+        _subPropertyChainComposite.setLayout(new GridLayout());
+        _toolkit.adapt(_subPropertyChainComposite);
+        _subPropertyChainSection.setClient(_subPropertyChainComposite);
 
     }
 
     private void initSubSection(boolean setFocus) {
-        clearComposite(_subFormComposite);
+        clearComposite(_subPropertyComposite);
         try {
             String[][] results = new GetSubObjectPropertyHits(_project, _ontologyUri, _id).getResults();
             TreeSet<String[]> sortedSet = getSortedSet(results, SUB);
@@ -198,22 +228,49 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                 boolean isLocal = ontologyUri.equals(_ontologyUri);
 
                 OWLSubObjectPropertyOfAxiom axiom = (OWLSubObjectPropertyOfAxiom) OWLUtilities.axiom(axiomText, _namespaces, _factory);
-//              List<ObjectPropertyExpression> subObjProps = axiom.getSubObjectProperties();
-//              for (ObjectPropertyExpression subObjProp: subObjProps) {
-//                  createRow(new LocatedAxiom(axiom, isLocal), subObjProp, ontologyUri, false, SUB);
-//              }
-                createRow(new LocatedAxiom(axiom, isLocal), axiom.getSubProperty(), ontologyUri, false, SUB);
+
+                createRow(new LocatedAxiom(axiom, isLocal), axiom.getSubProperty(), null, ontologyUri, false, SUB);
             }
         } catch (NeOnCoreException e1) {
-            handleException(e1, Messages.ClazzPropertyPage2_ErrorRetrievingData, _superPropertySection.getShell());
+            handleException(e1, Messages.ClazzPropertyPage2_ErrorRetrievingData, _subPropertyComposite.getShell());
         } catch (CommandException e1) {
-            handleException(e1, Messages.ClazzPropertyPage2_ErrorRetrievingData, _superPropertySection.getShell());
+            handleException(e1, Messages.ClazzPropertyPage2_ErrorRetrievingData, _subPropertyComposite.getShell());
         }
 
-        Label createNewLabel = new Label(_subFormComposite, SWT.NONE);
+        Label createNewLabel = new Label(_subPropertyComposite, SWT.NONE);
         createNewLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         createNewLabel.setText(Messages.ObjectPropertyPropertyPage2_6);
         Composite activeComposite = createEmptyRow(true, SUB);
+        if (setFocus) {
+            activeComposite.setFocus();
+        }
+    }
+
+    private void initSubPropertyChainSection(boolean setFocus) {
+        clearComposite(_subPropertyChainComposite);
+        try {
+            String[][] results = new GetSubPropertyChainOfHits(_project, _ontologyUri, _id).getResults();
+            TreeSet<String[]> sortedSet = getSortedSet(results, SUB);
+            
+            for (String[] result: sortedSet) {
+                String axiomText = result[0];
+                String ontologyUri = result[1];
+                boolean isLocal = ontologyUri.equals(_ontologyUri);
+
+                OWLSubPropertyChainOfAxiom axiom = (OWLSubPropertyChainOfAxiom) OWLUtilities.axiom(axiomText, _namespaces, _factory);
+
+                createRow(new LocatedAxiom(axiom, isLocal), null, axiom.getPropertyChain(), ontologyUri, false, CHAIN);
+            }
+        } catch (NeOnCoreException e1) {
+            handleException(e1, Messages.ClazzPropertyPage2_ErrorRetrievingData, _subPropertyChainComposite.getShell());
+        } catch (CommandException e1) {
+            handleException(e1, Messages.ClazzPropertyPage2_ErrorRetrievingData, _subPropertyChainComposite.getShell());
+        }
+
+        Label createNewLabel = new Label(_subPropertyChainComposite, SWT.NONE);
+        createNewLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        createNewLabel.setText(Messages.ObjectPropertyPropertyPage2_6);
+        Composite activeComposite = createEmptyRow(true, CHAIN);
         if (setFocus) {
             activeComposite.setFocus();
         }
@@ -234,15 +291,15 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
 
         _equivPropertySection.setLayoutData(new ColumnLayoutData());
 
-        _equivFormComposite = _toolkit.createComposite(_equivPropertySection, SWT.NONE);
-        _equivFormComposite.setLayout(new GridLayout());
-        _toolkit.adapt(_equivFormComposite);
-        _equivPropertySection.setClient(_equivFormComposite);
+        _equivPropertyComposite = _toolkit.createComposite(_equivPropertySection, SWT.NONE);
+        _equivPropertyComposite.setLayout(new GridLayout());
+        _toolkit.adapt(_equivPropertyComposite);
+        _equivPropertySection.setClient(_equivPropertyComposite);
 
     }
 
     private void initEquivSection(boolean setFocus) {
-        clearComposite(_equivFormComposite);
+        clearComposite(_equivPropertyComposite);
 
         try {
             String[][] results = new GetEquivalentObjectPropertyHits(_project, _ontologyUri, _id).getResults();
@@ -261,7 +318,7 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                 Set<OWLObjectPropertyExpression> objectProperties = equivObjProps.getProperties();
                 for (OWLObjectPropertyExpression prop: objectProperties) {
                     if (!OWLUtilities.toString(prop).equals(_id)) {
-                        createRow(axiomList, prop, false, ontologyUri, EQUIV);
+                        createRow(axiomList, prop, false, ontologyUri);
                     }
                 }
 
@@ -272,7 +329,7 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
             handleException(e1, Messages.ClazzPropertyPage2_ErrorRetrievingData, _superPropertySection.getShell());
         }
 
-        Label createNewLabel = new Label(_equivFormComposite, SWT.NONE);
+        Label createNewLabel = new Label(_equivPropertyComposite, SWT.NONE);
         createNewLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         createNewLabel.setText(Messages.ObjectPropertyPropertyPage2_5);
         Composite activeComposite = createEmptyRow(true, EQUIV);
@@ -284,7 +341,7 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
     /**
      * Create inverse properties area
      */
-    private void createInverseDisjointPropertyArea(Composite composite) {
+    private void createInversePropertyArea(Composite composite) {
         _inversePropertySection = _toolkit.createSection(composite, Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
         _inversePropertySection.setText(Messages.ObjectPropertyPropertyPage_InverseProperties);
         _inversePropertySection.addExpansionListener(new ExpansionAdapter() {
@@ -321,14 +378,14 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                 }
                 if (!tempList.contains(objectProperty)) {
                     tempList.add(objectProperty);
-                    createRow(new LocatedAxiom(axiom, isLocal), objectProperty, ontologyUri, false, INVERSE);
+                    createRow(new LocatedAxiom(axiom, isLocal), objectProperty, null, ontologyUri, false, INVERSE);
                 }
             }
 
         } catch (NeOnCoreException e1) {
-            handleException(e1, Messages.ClazzPropertyPage2_ErrorRetrievingData, _superPropertySection.getShell());
+            handleException(e1, Messages.ClazzPropertyPage2_ErrorRetrievingData, _inversePropertySection.getShell());
         } catch (CommandException e1) {
-            handleException(e1, Messages.ClazzPropertyPage2_ErrorRetrievingData, _superPropertySection.getShell());
+            handleException(e1, Messages.ClazzPropertyPage2_ErrorRetrievingData, _inversePropertySection.getShell());
         }
 
         Label createNewLabel = new Label(_inversePropertyComp, SWT.NONE);
@@ -347,6 +404,7 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
         initSubSection(false);
         initEquivSection(false);
         initInverseSection(false);
+        initSubPropertyChainSection(false);
 
         layoutSections();
         _form.reflow(true);
@@ -359,21 +417,22 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
         sections.add(_subPropertySection);
         sections.add(_equivPropertySection);
         sections.add(_inversePropertySection);
+        sections.add(_subPropertyChainSection);
         return sections;
     }
 
-    private void createRow(List<LocatedAxiom> axioms, OWLObjectPropertyExpression property, boolean enabled, String sourceOnto, final int mode) throws NeOnCoreException {
+    /**
+     * this is only used for EQUIV
+     * 
+     * @param axioms
+     * @param property
+     * @param enabled
+     * @param sourceOnto
+     * @throws NeOnCoreException
+     */
+    private void createRow(List<LocatedAxiom> axioms, OWLObjectPropertyExpression property, boolean enabled, String sourceOnto) throws NeOnCoreException {
         boolean imported = !sourceOnto.equals(_ontologyUri);
-        Composite parent;
-        if (mode == SUPER) {
-            parent = _superFormComposite;
-        } else if (mode == SUB) {
-            parent = _subFormComposite;
-        } else if (mode == EQUIV) {
-            parent = _equivFormComposite;
-        } else {
-            parent = _inversePropertyComp;
-        }
+        Composite parent = _equivPropertyComposite;
         FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, sourceOnto);
 
         PropertyText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.OBJECT_PROPERTY);
@@ -392,21 +451,10 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                 // save modified entries
                 String value = propertyTextWidget.getText();
                 try {
-                    OWLObjectProperty objectProp = _manager.parseObjectProperty(value, _owlModel);
+                    OWLObjectPropertyExpression objectProp = _manager.parseObjectProperty(value, _owlModel);
                     removePressed();
-                    if (mode == SUPER) {
-                        new CreateObjectProperty(_project, _ontologyUri, _id, OWLUtilities.toString(objectProp)).run();
-                        initSuperSection(false);
-                    } else if (mode == SUB) {
-                        new CreateObjectProperty(_project, _ontologyUri, OWLUtilities.toString(objectProp), _id).run();
-                        initSubSection(false);
-                    } else if (mode == EQUIV) {
-                        new CreateEquivalentObjectProperty(_project, _ontologyUri, _id, OWLUtilities.toString(objectProp)).run();
-                        initEquivSection(false);
-                    } else {
-                        new CreateInverseObjectProperty(_project, _ontologyUri, _id, OWLUtilities.toString(objectProp)).run();
-                        initInverseSection(false);
-                    }
+                    new CreateEquivalentObjectProperty(_project, _ontologyUri, _id, OWLUtilities.toString(objectProp)).run();
+                    initEquivSection(false);
                     layoutSections();
                     _form.reflow(true);
                 } catch (NeOnCoreException k2e) {
@@ -458,27 +506,45 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
         row.init(rowHandler);
     }
 
-    private void createRow(LocatedAxiom locatedAxiom, final OWLObjectPropertyExpression objPropExpr, String ontologyUri, boolean enabled, final int mode) throws NeOnCoreException {
+    private void createRow(LocatedAxiom locatedAxiom, final OWLObjectPropertyExpression objPropExpr, List<OWLObjectPropertyExpression> propertyChain, String ontologyUri, boolean enabled, final int mode) throws NeOnCoreException {
         OWLAxiom axiom = locatedAxiom.getAxiom();
         boolean imported = !locatedAxiom.isLocal();
         Composite parent;
         if (mode == SUPER) {
-            parent = _superFormComposite;
+            parent = _superPropertyComposite;
         } else if (mode == SUB) {
-            parent = _subFormComposite;
+            parent = _subPropertyComposite;
+        } else if (mode == CHAIN) {
+            parent = _subPropertyChainComposite;
         } else if (mode == EQUIV) {
-            parent = _equivFormComposite;
+            parent = _equivPropertyComposite;
         } else {
             parent = _inversePropertyComp;
         }
-        FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri);
+        final FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri);
 
         final StyledText text = new PropertyText(row.getParent(), _owlModel, PropertyText.OBJECT_PROPERTY).getStyledText();
-        final String[] array = getArrayFromDescription(objPropExpr);
-        text.setText(OWLGUIUtilities.getEntityLabel(array));
-        OWLGUIUtilities.enable(text, false);
-        row.addWidget(text);
-
+        final AtomicReference<String[]> array = new AtomicReference<String[]>();
+        switch (mode) {
+            case SUPER:
+            case SUB:
+            case EQUIV:
+            case INVERSE:
+                array.set(getArrayFromDescription(objPropExpr));
+                text.setText(OWLGUIUtilities.getEntityLabel(array.get()));
+                OWLGUIUtilities.enable(text, false);
+                row.addWidget(text);
+                break;
+            case CHAIN:
+                array.set(new ManchesterSyntaxVisitor(_owlModel).visitSubObjectProperyChain(propertyChain));
+                text.setText(OWLGUIUtilities.getEntityLabel(array.get()));
+                OWLGUIUtilities.enable(text, false);
+                row.addWidget(text);
+                break;
+            default:
+                throw new IllegalStateException();
+           }
+        
         AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, new LocatedAxiom(axiom, true)) {
 
             @Override
@@ -486,31 +552,56 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                 // save modified entries
                 String value = text.getText();
                 try {
-                    OWLObjectProperty objectProp = _manager.parseObjectProperty(value, _owlModel);
+                    OWLObjectPropertyExpression objectProp;
+                    String uri = ""; //$NON-NLS-1$
                     remove();
                     if (mode == SUPER) {
+                        objectProp = _manager.parseObjectProperty(value, _owlModel);
                         new CreateObjectProperty(_project, _ontologyUri, _id, OWLUtilities.toString(objectProp)).run();
                         initSubSection(false);
                         initSuperSection(true);
+                        
                     } else if (mode == SUB) {
+                        objectProp = _manager.parseObjectProperty(value, _owlModel);
                         new CreateObjectProperty(_project, _ontologyUri, OWLUtilities.toString(objectProp), _id).run();
                         initSuperSection(false);
                         initSubSection(true);
+                        
+                    } else if (mode == CHAIN) {
+                        List<OWLObjectPropertyExpression> objectPropChain = _manager.parseObjectPropertyChain(value, _owlModel);
+                        array.set(new ManchesterSyntaxVisitor(_owlModel).visitSubObjectProperyChain(objectPropChain));
+                        text.setText(OWLGUIUtilities.getEntityLabel(array.get()));
+                        OWLGUIUtilities.enable(text, false);
+                        row.addWidget(text);
+                        new CreateSubPropertyChainOf(_project, _ontologyUri, OWLUtilities.toString(objectPropChain), _id).run();
+                        initSubPropertyChainSection(true);
+                        
                     } else if (mode == EQUIV) {
-                        if (!objectProp.getURI().toString().equals(_id)) {
+                        objectProp = _manager.parseObjectProperty(value, _owlModel);
+                        if(objectProp instanceof OWLObjectProperty) {
+                            OWLObjectProperty op =(OWLObjectProperty)objectProp;
+                            uri = OWLUtilities.toString(op);
+                        }
+                        if (!uri.equals(_id)) { // also true if uri is still ""
                             new CreateEquivalentObjectProperty(_project, _ontologyUri, _id, OWLUtilities.toString(objectProp)).run();
                             initEquivSection(true);
                         } else {
                             String modeString = Messages.ObjectPropertyTaxonomyPropertyPage_0;
-                            MessageDialog.openWarning(_subFormComposite.getShell(), Messages.DataPropertyPropertyPage2_47, Messages.ObjectPropertyTaxonomyPropertyPage_1 + " " + modeString + Messages.ObjectPropertyTaxonomyPropertyPage_2); //$NON-NLS-1$
+                            MessageDialog.openWarning(_equivPropertyComposite.getShell(), Messages.DataPropertyPropertyPage2_47, Messages.ObjectPropertyTaxonomyPropertyPage_1 + " " + modeString + Messages.ObjectPropertyTaxonomyPropertyPage_2); //$NON-NLS-1$
                         }
+                        
                     } else { // inverse
-                        if (!objectProp.getURI().toString().equals(_id)) {
+                        objectProp = _manager.parseObjectProperty(value, _owlModel);
+                        if(objectProp instanceof OWLObjectProperty) {
+                            OWLObjectProperty op =(OWLObjectProperty)objectProp;
+                            uri = OWLUtilities.toString(op);
+                        }
+                        if (!uri.equals(_id)) { // also true if uri is still ""
                             new CreateInverseObjectProperty(_project, _ontologyUri, _id, OWLUtilities.toString(objectProp)).run();
                             initInverseSection(true);
                         } else {
                             String modeString = Messages.ObjectPropertyTaxonomyPropertyPage_3;
-                            MessageDialog.openWarning(_subFormComposite.getShell(), Messages.DataPropertyPropertyPage2_47, Messages.ObjectPropertyTaxonomyPropertyPage_4 + " " + modeString + Messages.ObjectPropertyTaxonomyPropertyPage_5); //$NON-NLS-1$
+                            MessageDialog.openWarning(_inversePropertyComp.getShell(), Messages.DataPropertyPropertyPage2_47, Messages.ObjectPropertyTaxonomyPropertyPage_4 + " " + modeString + Messages.ObjectPropertyTaxonomyPropertyPage_5); //$NON-NLS-1$
                         }
                     }
 
@@ -560,10 +651,10 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                     return;
                 }
 
-                if (array.length > 1) {
-                    text.setText(array[1]);
+                if (array.get().length > 1) {
+                    text.setText(array.get()[1]);
                 } else {
-                    text.setText(array[0]);
+                    text.setText(array.get()[0]);
                 }
             }
 
@@ -574,11 +665,13 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
     private Composite createEmptyRow(boolean enabled, final int mode) {
         Composite parent;
         if (mode == SUPER) {
-            parent = _superFormComposite;
+            parent = _superPropertyComposite;
         } else if (mode == SUB) {
-            parent = _subFormComposite;
+            parent = _subPropertyComposite;
+        } else if (mode == CHAIN) {
+            parent = _subPropertyChainComposite;
         } else if (mode == EQUIV) {
-            parent = _equivFormComposite;
+            parent = _equivPropertyComposite;
         } else {
             parent = _inversePropertyComp;
         }
@@ -600,34 +693,56 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                 // add new entry
                 try {
                     String value = text.getText();
-                    OWLObjectProperty objectProp = _manager.parseObjectProperty(value, _owlModel);
+                    OWLObjectPropertyExpression objectProp;
+                    String uri = "";
                     switch (mode) {
                         case SUPER:
+                            objectProp = _manager.parseObjectProperty(value, _owlModel);
                             new CreateObjectProperty(_project, _ontologyUri, _id, OWLUtilities.toString(objectProp)).run();
                             initSubSection(false);
                             initSuperSection(true);
                             break;
+                            
                         case SUB:
+                            objectProp = _manager.parseObjectProperty(value, _owlModel);
                             new CreateObjectProperty(_project, _ontologyUri, OWLUtilities.toString(objectProp), _id).run();
                             initSuperSection(false);
                             initSubSection(true);
                             break;
+                            
+                        case CHAIN:
+                            List<OWLObjectPropertyExpression> objectPropChain = _manager.parseObjectPropertyChain(value, _owlModel);
+                            new CreateSubPropertyChainOf(_project, _ontologyUri, OWLUtilities.toString(objectPropChain), _id).run();
+                            initSubPropertyChainSection(false);
+                            break;
+                            
                         case EQUIV:
-                            if (!objectProp.getURI().toString().equals(_id)) {
+                            objectProp = _manager.parseObjectProperty(value, _owlModel);
+                            if(objectProp instanceof OWLObjectProperty) {
+                                OWLObjectProperty op =(OWLObjectProperty)objectProp;
+                                uri = OWLUtilities.toString(op);
+                            }
+                            if (!uri.equals(_id)) { // also true if uri is still ""
                                 new CreateEquivalentObjectProperty(_project, _ontologyUri, _id, OWLUtilities.toString(objectProp)).run();
                                 initEquivSection(true);
                             } else {
                                 String modeString = Messages.ObjectPropertyTaxonomyPropertyPage_0;
-                                MessageDialog.openWarning(_subFormComposite.getShell(), Messages.DataPropertyPropertyPage2_47, Messages.ObjectPropertyTaxonomyPropertyPage_1 + modeString + Messages.ObjectPropertyTaxonomyPropertyPage_2);
+                                MessageDialog.openWarning(_equivPropertyComposite.getShell(), Messages.ObjectPropertyPropertyPage2_45, Messages.ObjectPropertyTaxonomyPropertyPage_1 + modeString + Messages.ObjectPropertyTaxonomyPropertyPage_2);
                             }
                             break;
+                            
                         case INVERSE:
-                            if (!objectProp.getURI().toString().equals(_id)) {
+                            objectProp = _manager.parseObjectProperty(value, _owlModel);
+                            if(objectProp instanceof OWLObjectProperty) {
+                                OWLObjectProperty op =(OWLObjectProperty)objectProp;
+                                uri = OWLUtilities.toString(op);
+                            }
+                            if (!uri.equals(_id)) { // also true if uri is still ""
                                 new CreateInverseObjectProperty(_project, _ontologyUri, _id, OWLUtilities.toString(objectProp)).run();
                                 initInverseSection(true);
                             } else {
                                 String modeString = Messages.ObjectPropertyTaxonomyPropertyPage_3;
-                                MessageDialog.openWarning(_subFormComposite.getShell(), Messages.DataPropertyPropertyPage2_47, Messages.ObjectPropertyTaxonomyPropertyPage_4 + modeString + Messages.ObjectPropertyTaxonomyPropertyPage_5);
+                                MessageDialog.openWarning(_inversePropertyComp.getShell(), Messages.ObjectPropertyPropertyPage2_45, Messages.ObjectPropertyTaxonomyPropertyPage_4 + modeString + Messages.ObjectPropertyTaxonomyPropertyPage_5);
                             }
                             break;
                     }
@@ -674,6 +789,7 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
         initSubSection(false);
         initEquivSection(false);
         initInverseSection(false);
+        initSubPropertyChainSection(false);
 
         layoutSections();
         _form.reflow(true);
@@ -704,6 +820,7 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                                 uri2 = OWLGUIUtilities.getEntityLabel(((OWLObjectProperty) objProp2), ontologyUri2, _project);
                             }
                         }
+                        
                     } else if (mode == SUB) {
                         OWLSubObjectPropertyOfAxiom subObjProp = (OWLSubObjectPropertyOfAxiom) axiom1;
                         OWLObjectPropertyExpression ope = subObjProp.getSubProperty();
@@ -723,6 +840,18 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                                 }
                             }
                         }
+
+                    } else if (mode == CHAIN) {
+//                        OWLSubPropertyChainOfAxiom subObjPropChainAxiom1 = (OWLSubPropertyChainOfAxiom) axiom1;
+//                        List<OWLObjectPropertyExpression> chain1 = subObjPropChainAxiom1.getPropertyChain();
+
+                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0], _namespaces, _factory);
+//                        OWLSubPropertyChainOfAxiom subObjPropChainAxiom2 = (OWLSubPropertyChainOfAxiom) axiom1;
+//                        List<OWLObjectPropertyExpression> chain2 = subObjPropChainAxiom2.getPropertyChain();
+                    
+                        uri1 = OWLUtilities.toString(axiom1);
+                        uri2 = OWLUtilities.toString(axiom2);
+
                     } else if (mode == EQUIV) {
                         OWLEquivalentObjectPropertiesAxiom eop = (OWLEquivalentObjectPropertiesAxiom) axiom1;
                         Set<OWLObjectPropertyExpression> equivalentObjectProps = eop.getProperties();
