@@ -21,7 +21,9 @@ import org.neontoolkit.core.NeOnCorePlugin;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.neontoolkit.io.exception.OntologyImportException;
+import org.neontoolkit.io.util.ImportExportUtils;
 import org.neontoolkit.io.wizard.AbstractImportSelectionPage;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
@@ -97,17 +99,17 @@ public class WebImportOntologyWizard extends FileSystemImportWizard {
     
     public void doFinish(String projectName, URI physicalURL, IProgressMonitor monitor) throws OntologyImportException {
         try {
-			String onto = physicalURL.toURL().toString();
-			OWLManchesterProject omp = (OWLManchesterProject)NeOnCorePlugin.getDefault().getOntologyProject(projectName);
-			omp.importOntologies(new URI[]{physicalURL}, false);
+            OWLManchesterProject omp = (OWLManchesterProject)NeOnCorePlugin.getDefault().getOntologyProject(projectName);
+            String physicalUri = ImportExportUtils.copyOntologyFileToProject(physicalURL.toString(), omp.getName()).toString();                
+            URI physicalURI = URI.create(physicalUri);
+            omp.importOntologies(new URI[]{physicalURI}, false);
 		} catch (OWLOntologyCreationException e) {
 			throw new OntologyImportException(e);
 		} catch (UnknownOWLOntologyFormatException e) {
-			throw new OntologyImportException(e);
-		} catch (MalformedURLException e) {
 			throw new OntologyImportException(e);
 		} catch (NeOnCoreException e) {
 			throw new OntologyImportException(e);
 		}	        
     }
+
 }
