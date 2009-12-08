@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %plugin.name
 Bundle-SymbolicName: com.ontoprise.ontostudio.owl.visualize;singleton:=true
-Bundle-Version: 3.0.0
+Bundle-Version: 2.3.0
 Bundle-Activator: com.ontoprise.ontostudio.owl.visualize.Activator
 Bundle-Localization: plugin
 Bundle-Vendor: %ontoprise

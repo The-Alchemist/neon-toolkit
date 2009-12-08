@@ -3,7 +3,7 @@ Eclipse-RegisterBuddy: dependencies
 Bundle-ManifestVersion: 2
 Bundle-Name: %jpowergraphPlugin
 Bundle-SymbolicName: org.neontoolkit.jpowergraph;singleton:=true
-Bundle-Version: 3.0.0
+Bundle-Version: 2.3.0
 Bundle-Activator: org.neontoolkit.jpowergraph.JpowergraphPlugin
 Bundle-Vendor: %ontoprise
 Bundle-Localization: plugin
