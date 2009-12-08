@@ -47,6 +47,7 @@ public class TooltipControlPanel extends Composite {
         
         showToolTips = new Button(this, SWT.CHECK);
         showToolTips.setToolTipText(Messages.TooltipControlPanel_0);
+        showToolTips.setText(Messages.TooltipControlPanel_0short);
         showToolTips.setSelection(showToolTipsValue);
         showToolTips.setEnabled(tooltipLens != null);
         setSelectedItemFromLens();

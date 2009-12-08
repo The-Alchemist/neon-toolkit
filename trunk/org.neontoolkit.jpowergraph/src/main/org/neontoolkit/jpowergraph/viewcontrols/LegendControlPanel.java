@@ -47,6 +47,7 @@ public class LegendControlPanel extends Composite {
         
         showLegend = new Button(this, SWT.CHECK);
         showLegend.setToolTipText(Messages.LegendControlPanel_0);
+        showLegend.setText(Messages.LegendControlPanel_0short);
         showLegend.setSelection(showLegendValue);
         showLegend.setEnabled(legendLens != null);
         setSelectedItemFromLens();
