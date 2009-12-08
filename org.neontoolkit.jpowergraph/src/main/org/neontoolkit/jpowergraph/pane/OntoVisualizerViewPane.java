@@ -55,7 +55,7 @@ public class OntoVisualizerViewPane extends Composite {
         gridLayout.marginWidth = 2;
         gridLayout.marginHeight = 4;
         gridLayout.makeColumnsEqualWidth = false;
-        setLayout(gridLayout);
+        this.setLayout(gridLayout);
 
         JGraphScrollPane scroll = new JGraphScrollPane(theParent, graphPane, translateLens);
         scroll.setParent(theParent);
@@ -65,7 +65,7 @@ public class OntoVisualizerViewPane extends Composite {
         gridData2.verticalAlignment = GridData.FILL;
         gridData2.grabExcessHorizontalSpace = true;
         gridData2.grabExcessVerticalSpace = true;
-        gridData2.horizontalSpan = gridLayout.numColumns;
+//        gridData2.horizontalSpan = gridLayout.numColumns;
         scroll.setLayoutData(gridData2);
 
         Composite c1 = new ZoomControlPanel(this, theZoomLens);
@@ -73,18 +73,19 @@ public class OntoVisualizerViewPane extends Composite {
         _navigationHistoryControlPanel = new NavigationHistoryControlPanel(this, theHistory);
         new LegendControlPanel(this, theLegendLens);
         new TooltipControlPanel(this, theTooltipLens);
+  
         GridData layoutData = new GridData();
         layoutData.verticalAlignment = GridData.BEGINNING;
+        layoutData.grabExcessHorizontalSpace=false;
+        layoutData.grabExcessVerticalSpace=false;
         c1.setLayoutData(layoutData);
         
         layoutData = new GridData();
-        layoutData.verticalAlignment = GridData.BEGINNING;
         layoutData.verticalAlignment = GridData.BEGINNING;
         layoutData.grabExcessHorizontalSpace=false;
         layoutData.grabExcessVerticalSpace=false;
         c2.setLayoutData(layoutData);
         
-        _navigationHistoryControlPanel.setLayoutData(layoutData);
     }
 
     public void addNavigationListener(INavigationListener listener) {

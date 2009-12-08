@@ -51,34 +51,31 @@ public class NavigationHistoryControlPanel extends Composite {
     public NavigationHistoryControlPanel(Composite parent, final NavigationHistory theHistory) {
         super(parent, SWT.NONE);
         _parent = parent;
-        GridData data = new GridData();
-        data.heightHint = 30;
-        parent.setLayoutData(data);
+
         _back = ImageFactory.get(ImageFactory.BACK_NAV);
         _forth = ImageFactory.get(ImageFactory.FORWARD_NAV);
-        Composite container = new Composite(parent, SWT.NONE);
+        
         GridLayout gridLayout = new GridLayout();
         gridLayout.numColumns = 6;
         gridLayout.marginWidth = 0;
         gridLayout.marginHeight = 0;
-        container.setLayout(gridLayout);
+        this.setLayout(gridLayout);
 
-        _backButton = new Button(container, SWT.PUSH);
+        _backButton = new Button(this, SWT.PUSH);
         _backButton.setImage(_back);
         _backButton.setToolTipText(Messages.NavigationHistoryControlPanel_1);
         _backButton.addSelectionListener(new HistorySelectionAdapter());
 
-        _forthButton = new Button(container, SWT.PUSH);
+        _forthButton = new Button(this, SWT.PUSH);
         _forthButton.addSelectionListener(new HistorySelectionAdapter());
         _forthButton.setImage(_forth);
         _forthButton.setToolTipText(Messages.NavigationHistoryControlPanel_0);
 
-        _searchText = new Text(container, SWT.BORDER);
+        _searchText = new Text(this, SWT.BORDER);
         GridData textData = new GridData();
         textData.widthHint = 150;
         _searchText.setLayoutData(textData);
         _searchText.addFocusListener(new FocusAdapter() {
-
             @Override
             public void focusLost(FocusEvent e) {
             }
@@ -87,46 +84,40 @@ public class NavigationHistoryControlPanel extends Composite {
             public void focusGained(FocusEvent e) {
                 _searchText.selectAll();
             }
-
         });
+        
         _searchText.addKeyListener(new KeyAdapter() {
-
             @Override
             public void keyReleased(final KeyEvent e) {
                 if (e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR) {
                     BusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
-
                         public void run() {
                             search(_searchText.getText());
                         }
-
                     });
-
                 }
             }
-
         });
+        
         _searchText.addMouseListener(new MouseAdapter() {
-
             @Override
             public void mouseUp(MouseEvent e) {
                 _searchText.selectAll();
             }
-
         });
 
-        _searchButton = new Button(container, SWT.PUSH);
+        _searchButton = new Button(this, SWT.PUSH);
         _searchButton.setText(Messages.NavigationHistoryControlPanel_3);
         _searchButton.addSelectionListener(new SelectionAdapter() {
-
             @Override
             public void widgetSelected(SelectionEvent e) {
                 search(_searchText.getText());
             }
-
         });
-        _enableHistory = new Button(container, SWT.CHECK);
+        
+        _enableHistory = new Button(this, SWT.CHECK);
         _enableHistory.setToolTipText(Messages.NavigationHistoryControlPanel_4);
+        _enableHistory.setText(Messages.NavigationHistoryControlPanel_4short);
         _enableHistory.setSelection(theHistory.isDrawHistory());
         _enableHistory.addSelectionListener(new SelectionAdapter() {
 
@@ -141,7 +132,6 @@ public class NavigationHistoryControlPanel extends Composite {
                     ((Button) e.getSource()).getParent().getParent().setCursor(new Cursor(getShell().getDisplay(), SWT.CURSOR_ARROW));
                 }
             }
-
         });
     }
 
