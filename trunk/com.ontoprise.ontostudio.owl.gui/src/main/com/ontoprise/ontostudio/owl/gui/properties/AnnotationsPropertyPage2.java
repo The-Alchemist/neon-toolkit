@@ -3,8 +3,8 @@
  *
  * All rights reserved.
  *
- * This program and the accompanying materials are made available under the
- * Eclipse Public License v1.0 which accompanies this distribution,
+ * This program and the accompanying materials are made available under the 
+ * Eclipse Public License v1.0 which accompanies this distribution, 
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  ******************************************************************************/
 
@@ -78,8 +78,8 @@ import com.ontoprise.ontostudio.owl.model.commands.annotations.GetAnonymousIndiv
 import com.ontoprise.ontostudio.owl.model.commands.annotations.GetEntityAnnotationHits;
 import com.ontoprise.ontostudio.owl.model.util.OWLAxiomUtils;
 
-public class AnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage implements IImagePropertyPage{
-
+public class AnnotationsPropertyPage2 extends AbstractOWLMainIDPropertyPage implements IImagePropertyPage{
+       
     /*
      * The number of columns for a row (including buttons)
      */
@@ -92,21 +92,24 @@ public class AnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage implemen
 
     private Composite _annotationsComp;
 
+   public AnnotationsPropertyPage2() {
+       super();
+   }
+    
     /*
      * (non-Javadoc)
      * 
      * @see com.ontoprise.ontostudio.owl.gui.properties.BasicOWLEntityPropertyPage#createMainArea(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    public Composite createContents(Composite composite) {
+    protected void createMainArea(Composite composite) {
+        PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IHelpContextIds.OWL_ANNOTATION_PROPERTIES_VIEW);
+        super.createMainArea(composite);
         Composite body = prepareForm(composite);
         
-        PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IHelpContextIds.OWL_ANNOTATION_PROPERTIES_VIEW);
-
         createAnnotationsArea(body);
-        _form.reflow(true);
         
-        return body;
+        _form.reflow(true);
     }
 
     /**
@@ -145,8 +148,8 @@ public class AnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage implemen
         try {
             String[][] annotationValueHits;
             
-            if(getMainPage().getSelection().getFirstElement() instanceof AnonymousIndividualViewItem){
-                AnonymousIndividualViewItem individualViewItem = (AnonymousIndividualViewItem)getMainPage().getSelection().getFirstElement();
+            if(getSelection().getFirstElement() instanceof AnonymousIndividualViewItem){
+                AnonymousIndividualViewItem individualViewItem = (AnonymousIndividualViewItem)getSelection().getFirstElement();
                 
                 annotationValueHits = new GetAnonymousIndividualAnnotationHits(_project, _ontologyUri, individualViewItem.getIndividual()).getResults();
             }else{
@@ -664,8 +667,8 @@ public class AnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage implemen
     }
 
     @Override
-    public void refresh() {
-        super.refresh();
+    public void refreshComponents() {
+        super.refreshComponents();
         initAnnotationsSection(false);
 
         layoutSections();
@@ -734,4 +737,11 @@ public class AnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage implemen
     public Image getImage() {
         return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.ANNOTATION_PROPERTY);
     }
+
+    @Override
+    protected String getTitle() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
 }

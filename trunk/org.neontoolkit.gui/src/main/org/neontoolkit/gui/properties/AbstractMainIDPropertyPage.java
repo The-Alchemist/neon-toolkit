@@ -51,6 +51,7 @@ public abstract class AbstractMainIDPropertyPage extends AbstractIDPropertyPage 
     private IWorkbenchPart _part;
     protected IWorkbenchPart _selectedPart;
     
+    
 	/*
 	 * UI components
 	 */
@@ -63,7 +64,7 @@ public abstract class AbstractMainIDPropertyPage extends AbstractIDPropertyPage 
 	protected Composite _localComposite;
 	protected Text _localText;
     protected ScrolledComposite _scrolledComposite;
-    
+       
     /**
 	 * 
 	 */
@@ -141,6 +142,7 @@ public abstract class AbstractMainIDPropertyPage extends AbstractIDPropertyPage 
 		return group;
 	}
 	
+
 	/* (non-Javadoc)
 	 * @see org.neontoolkit.gui.properties.IMainPropertyPage#getPart()
 	 */
@@ -278,13 +280,13 @@ public abstract class AbstractMainIDPropertyPage extends AbstractIDPropertyPage 
         if (_stackLayout != null) {
     		switch (NeOnUIPlugin.getDefault().getIdDisplayStyle()) {
     		case NeOnUIPlugin.DISPLAY_LOCAL:
-    			_stackLayout.topControl = _localComposite;
+    		    _stackLayout.topControl = _localComposite;
     			break;
     		case NeOnUIPlugin.DISPLAY_QNAME:
-    			_stackLayout.topControl = _qNameComposite;
+    		    _stackLayout.topControl = _qNameComposite;
     			break;
     		default:
-    			_stackLayout.topControl = _uriComposite;
+    		    _stackLayout.topControl = _uriComposite;
     			break;
     		}
     		_stackLayout.topControl.getParent().layout();

@@ -34,8 +34,8 @@ import org.osgi.framework.Constants;
  * <li>/com.ontoprise.ontostudio.plugin/about.mappings</li>
  * </ul>
  *
- * @author josp
- * @created 2009.01.20
+ * @author Joerg Spieler
+ * @created 2009-01-20
  */
 public class NeonToolkitStarter implements IStartup {
 
@@ -52,7 +52,7 @@ public class NeonToolkitStarter implements IStartup {
             version = String.valueOf(bundle.getHeaders().get(Constants.BUNDLE_VERSION));
         }
         // e.g. NeOnToolkit 2.3.0-B149
-        System.out.println("Starting '" + productName + "' " + version + "-" + RegisterTypeData.BUILD_ID); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        System.out.println("Starting '" + productName + "' " + version + "-" + RegisterTypeData.BUILD_ID); //$NON-NLS-1$ //$NON-NLS-2$
         // See: /org.neontoolkit.plugin/about.mappings
         System.setProperty("neon.BUILD_ID", RegisterTypeData.BUILD_ID); //$NON-NLS-1$
     }

@@ -11,7 +11,6 @@
 package org.neontoolkit.gui.properties;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.neontoolkit.gui.navigator.elements.IEntityElement;
 import org.neontoolkit.gui.navigator.elements.IOntologyElement;
 import org.neontoolkit.gui.navigator.elements.IProjectElement;
 import org.neontoolkit.gui.navigator.elements.IQualifiedIDElement;

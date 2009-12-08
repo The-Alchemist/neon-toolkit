@@ -111,6 +111,7 @@ import com.ontoprise.ontostudio.owl.model.visitors.GetMemberVisitor;
  * 
  * 
  */
+@SuppressWarnings("nls")
 public class OWLModelCore implements OWLModel {
     private static Logger _log = Logger.getLogger(OWLModelCore.class);
     private static final Map<Class<?>,Class<? extends OWLEntity>> _primaryTypeByHierarchyType = new LinkedHashMap<Class<?>,Class<? extends OWLEntity>>();
@@ -1114,11 +1115,11 @@ public class OWLModelCore implements OWLModel {
         _ontologyProject = ontologyProject;
         _manager = manager;
         if (_manager == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("OWLOntologyManager is null.");
         }
         _ontology = ontology;
         if (_ontology == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("OWLOntology is null.");
         }
         _hierarchyUpdaters = new LinkedHashMap<Class<?>,EntityHierarchyUpdater<?>>();
     }
