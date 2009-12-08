@@ -43,10 +43,10 @@ public abstract class ManchesterSyntaxConstants {
      */
     public static final String MIN = "min"; //$NON-NLS-1$
     public static final String MAX = "max"; //$NON-NLS-1$
-    public static final String CARDINALITY = "cardinality"; //$NON-NLS-1$
     public static final String EXACTLY = "exactly"; //$NON-NLS-1$
-    public static final String AT_LEAST = "atLeast"; //$NON-NLS-1$
-    public static final String AT_MOST = "atMost"; //$NON-NLS-1$
+//    public static final String CARDINALITY = "cardinality"; //$NON-NLS-1$
+//    public static final String AT_LEAST = "atLeast"; //$NON-NLS-1$
+//    public static final String AT_MOST = "atMost"; //$NON-NLS-1$
 
     public static final String SOME_VALUES_FROM = "some"; //$NON-NLS-1$
     public static final String ALL_VALUES_FROM = "only"; //$NON-NLS-1$
@@ -127,6 +127,8 @@ public abstract class ManchesterSyntaxConstants {
 
     public static final String DATAPROPERTY = "DataProperty:"; //$NON-NLS-1$
 
+    public static final String DATATYPE = "Datatype:"; //$NON-NLS-1$
+
     public static final String INDIVIDUAL = "Individual:"; //$NON-NLS-1$
     public static final String TYPES = "Types:"; //$NON-NLS-1$
     public static final String FACTS = "Facts:"; //$NON-NLS-1$
@@ -147,7 +149,7 @@ public abstract class ManchesterSyntaxConstants {
     }
 
     public static String[] getRestrictionKeywords() {
-        return new String[] {MIN, MAX, CARDINALITY, AT_LEAST, AT_MOST, EXACTLY, SOME_VALUES_FROM, ALL_VALUES_FROM, HAS_VALUE, INVERSE_OF, SELF};
+        return new String[] {MIN, MAX, EXACTLY, SOME_VALUES_FROM, ALL_VALUES_FROM, HAS_VALUE, INVERSE_OF, SELF};
     }
 
     public static String[] getBrackets() {

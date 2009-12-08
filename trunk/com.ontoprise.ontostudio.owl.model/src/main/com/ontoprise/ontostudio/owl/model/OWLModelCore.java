@@ -83,6 +83,7 @@ import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubDataPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
+import org.semanticweb.owlapi.model.OWLSubPropertyChainOfAxiom;
 import org.semanticweb.owlapi.model.RemoveAxiom;
 import org.semanticweb.owlapi.model.RemoveOntologyAnnotation;
 import org.semanticweb.owlapi.model.SetOntologyID;
@@ -668,6 +669,18 @@ public class OWLModelCore implements OWLModel {
             return ontology.getObjectSubPropertyAxiomsForSubProperty((OWLObjectPropertyExpression)parameters[0]);
         }
     };
+    private final AxiomRequest<OWLSubPropertyChainOfAxiom> OWLSubPropertyChainOfAxiom_superDescription_Request = new AxiomRequestCore<OWLSubPropertyChainOfAxiom>(AxiomType.SUB_PROPERTY_CHAIN_OF, "superObjectProperty") {
+        @Override
+        protected Iterable<OWLSubPropertyChainOfAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
+            OWLObjectPropertyExpression superProperty = (OWLObjectPropertyExpression)parameters[0];
+            Set<OWLSubPropertyChainOfAxiom> result = new LinkedHashSet<OWLSubPropertyChainOfAxiom>();
+            for (OWLSubPropertyChainOfAxiom axiom: ontology.getAxioms(AxiomType.SUB_PROPERTY_CHAIN_OF)) {
+                if (superProperty.equals(axiom.getSuperProperty()))
+                    result.add(axiom);
+            }
+            return result;
+        }
+    };
     /**
      * Request for <code>OWLAxiom</code>s which contain a at least one <code>OWLEntity</code> from a given set of <code>OWLEntity</code>s.
      */
@@ -945,6 +958,7 @@ public class OWLModelCore implements OWLModel {
     private final ItemCollector<OWLClassExpression,OWLObjectPropertyRangeAxiom> ObjectPropertyRange_range_Collector = new ItemCollectorCore<OWLClassExpression,OWLObjectPropertyRangeAxiom>("range", OWLClassExpression.class);
     private final ItemCollector<OWLIndividual,OWLSameIndividualAxiom> SameIndividual_individuals_Collector = new ItemCollectorCore<OWLIndividual,OWLSameIndividualAxiom>("individuals", OWLIndividual.class);
     private final ItemCollector<OWLObjectPropertyExpression,OWLSubObjectPropertyOfAxiom> SubObjectPropertyOf_subObjectProperties_NamedObjectPropertiesOnly_Collector = new ItemCollectorCore<OWLObjectPropertyExpression,OWLSubObjectPropertyOfAxiom>("subObjectProperties", OWLObjectPropertyExpression.class, OBJECT_PROPERTY_FILTER);
+    private final ItemCollector<List,OWLSubPropertyChainOfAxiom> OWLSubPropertyChainOfAxiom_subObjectProperties_Collector = new ItemCollectorCore<List,OWLSubPropertyChainOfAxiom>("subObjectProperties", List.class);
     private final ItemCollector<OWLObjectPropertyExpression,OWLSubObjectPropertyOfAxiom> SubObjectPropertyOf_superObjectProperty_NamedObjectPropertiesOnly_Collector = new ItemCollectorCore<OWLObjectPropertyExpression,OWLSubObjectPropertyOfAxiom>("superObjectProperty", OWLObjectPropertyExpression.class, OBJECT_PROPERTY_FILTER);
     private final ItemCollector<OWLDataPropertyExpression,OWLSubDataPropertyOfAxiom> SubDataPropertyOf_subDataProperty_NamedDataPropertiesOnly_Collector = new ItemCollectorCore<OWLDataPropertyExpression,OWLSubDataPropertyOfAxiom>("subDataProperty", OWLDataPropertyExpression.class, DATA_PROPERTY_FILTER);
     private final ItemCollector<OWLDataPropertyExpression,OWLSubDataPropertyOfAxiom> SubDataPropertyOf_superDataProperty_NamedDataPropertiesOnly_Collector = new ItemCollectorCore<OWLDataPropertyExpression,OWLSubDataPropertyOfAxiom>("superDataProperty", OWLDataPropertyExpression.class, DATA_PROPERTY_FILTER);
@@ -1656,6 +1670,15 @@ public class OWLModelCore implements OWLModel {
     @Override
     public Set<OWLAnnotationProperty> getRootAnnotationProperties() throws NeOnCoreException {
         return getRootProperties(OWLAnnotationProperty.class, OWLAnnotationProperty.class);
+    }
+
+    public Set<List<OWLObjectProperty>> getSubPropertyChains(String propertyId) throws NeOnCoreException {
+        return Cast.cast(OWLSubPropertyChainOfAxiom_subObjectProperties_Collector.getItems(OWLSubPropertyChainOfAxiom_superDescription_Request, autoBox(objectProperty(propertyId))));
+    }
+    
+    @Override
+    public Set<ItemHits<List<OWLObjectPropertyExpression>,OWLSubPropertyChainOfAxiom>> getSubPropertyChainOfHits(String propertyId) throws NeOnCoreException {
+        return Cast.cast(OWLSubPropertyChainOfAxiom_subObjectProperties_Collector.getItemHits(OWLSubPropertyChainOfAxiom_superDescription_Request, autoBox(objectProperty(propertyId))));
     }
 
     @Override

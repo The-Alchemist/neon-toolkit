@@ -279,10 +279,10 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             public void savePressed() {
                 try {
                     remove();
-                    OWLObjectProperty newProp = _manager.parseObjectProperty(propertyText.getText(), _owlModel);
+                    OWLObjectPropertyExpression newProp = _manager.parseObjectProperty(propertyText.getText(), _owlModel);
                     OWLIndividual targetIndividual = _manager.parseIndividual(valueText.getText(), _owlModel);
 
-                    new CreateObjectPropertyMember(_project, _ontologyUri, _id, newProp.getURI().toString(), OWLUtilities.toString(targetIndividual)).run();
+                    new CreateObjectPropertyMember(_project, _ontologyUri, _id, OWLUtilities.toString(newProp), OWLUtilities.toString(targetIndividual)).run();
                 } catch (NeOnCoreException e1) {
                     handleException(e1, Messages.IndividualPropertyPage2_18, valueText.getShell());
                     propertyText.setFocus();
@@ -347,10 +347,10 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             public void addPressed() {
                 // add new entry
                 try {
-                    OWLObjectProperty newProp = _manager.parseObjectProperty(propertyText.getText(), _owlModel);
+                    OWLObjectPropertyExpression newProp = _manager.parseObjectProperty(propertyText.getText(), _owlModel);
                     OWLIndividual targetIndividual = _manager.parseIndividual(valueText.getText(), _owlModel);
 
-                    new CreateObjectPropertyMember(_project, _ontologyUri, _id, newProp.getURI().toString(), OWLUtilities.toString(targetIndividual)).run();
+                    new CreateObjectPropertyMember(_project, _ontologyUri, _id, OWLUtilities.toString(newProp), OWLUtilities.toString(targetIndividual)).run();
                 } catch (NeOnCoreException k2e) {
                     handleException(k2e, Messages.IndividualPropertyPage2_18, valueText.getShell());
                 } catch (CommandException k2e) {

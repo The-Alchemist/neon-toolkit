@@ -10,6 +10,8 @@
 
 package com.ontoprise.ontostudio.owl.gui.syntax;
 
+import java.util.List;
+
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.text.rules.ITokenScanner;
 import org.neontoolkit.core.exception.NeOnCoreException;
@@ -20,7 +22,7 @@ import org.semanticweb.owlapi.model.OWLDataRange;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLLiteral;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
 
 import com.ontoprise.ontostudio.owl.model.OWLModel;
@@ -120,7 +122,17 @@ public interface ISyntaxManager {
      * @param projectID
      * @return
      */
-    OWLObjectProperty parseObjectProperty(String input, OWLModel owlModel) throws NeOnCoreException;
+    OWLObjectPropertyExpression parseObjectProperty(String input, OWLModel owlModel) throws NeOnCoreException;
+
+    /**
+     * Returns a List of <code>ObjectPropertyExpression</code> object after parsing the input string.
+     * 
+     * @param input
+     * @param ontologyURI
+     * @param projectID
+     * @return
+     */
+    List<OWLObjectPropertyExpression> parseObjectPropertyChain(String input, OWLModel owlModel) throws NeOnCoreException;
 
     /**
      * Returns an <code>OWLAnnotationProperty</code> object after parsing the input string.

@@ -135,7 +135,7 @@ public class DescriptionText extends AbstractOwlTextField {
         // String oneOf = createKeywordLink(ManchesterSyntaxConstants.ONE_OF);
         String minCardinality = createKeywordLink(ManchesterSyntaxConstants.MIN);
         String maxCardinality = createKeywordLink(ManchesterSyntaxConstants.MAX);
-        String cardinality = createKeywordLink(ManchesterSyntaxConstants.CARDINALITY);
+        String cardinality = createKeywordLink(ManchesterSyntaxConstants.EXACTLY);
         String someValuesFrom = createKeywordLink(ManchesterSyntaxConstants.SOME_VALUES_FROM);
         String allValuesFrom = createKeywordLink(ManchesterSyntaxConstants.ALL_VALUES_FROM);
         String hasValue = createKeywordLink(ManchesterSyntaxConstants.HAS_VALUE);
@@ -154,7 +154,7 @@ public class DescriptionText extends AbstractOwlTextField {
         formText.setImage(ManchesterSyntaxConstants.AND, OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.INTERSECTION_OF));
         formText.setImage(ManchesterSyntaxConstants.MIN, OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.MIN));
         formText.setImage(ManchesterSyntaxConstants.MAX, OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.MAX));
-        formText.setImage(ManchesterSyntaxConstants.CARDINALITY, OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.CARDINALITY));
+        formText.setImage(ManchesterSyntaxConstants.EXACTLY, OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.EXACTLY));
         formText.setImage(ManchesterSyntaxConstants.SOME_VALUES_FROM, OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.SOME_VALUES_FROM));
         formText.setImage(ManchesterSyntaxConstants.ALL_VALUES_FROM, OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.ALL_VALUES_FROM));
         formText.setImage(ManchesterSyntaxConstants.HAS_VALUE, OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.HAS_VALUE));

@@ -11,6 +11,7 @@
 package com.ontoprise.ontostudio.owl.gui.syntax.manchester;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.neontoolkit.core.exception.NeOnCoreException;
@@ -18,6 +19,8 @@ import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLAnnotationPropertyDomainAxiom;
+import org.semanticweb.owlapi.model.OWLAnnotationPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLAnonymousIndividual;
 import org.semanticweb.owlapi.model.OWLAsymmetricObjectPropertyAxiom;
@@ -29,6 +32,7 @@ import org.semanticweb.owlapi.model.OWLDataCardinalityRestriction;
 import org.semanticweb.owlapi.model.OWLDataComplementOf;
 import org.semanticweb.owlapi.model.OWLDataExactCardinality;
 import org.semanticweb.owlapi.model.OWLDataHasValue;
+import org.semanticweb.owlapi.model.OWLDataIntersectionOf;
 import org.semanticweb.owlapi.model.OWLDataMaxCardinality;
 import org.semanticweb.owlapi.model.OWLDataMinCardinality;
 import org.semanticweb.owlapi.model.OWLDataOneOf;
@@ -42,6 +46,7 @@ import org.semanticweb.owlapi.model.OWLDataRange;
 import org.semanticweb.owlapi.model.OWLDataSomeValuesFrom;
 import org.semanticweb.owlapi.model.OWLDataUnionOf;
 import org.semanticweb.owlapi.model.OWLDatatype;
+import org.semanticweb.owlapi.model.OWLDatatypeDefinitionAxiom;
 import org.semanticweb.owlapi.model.OWLDatatypeRestriction;
 import org.semanticweb.owlapi.model.OWLDeclarationAxiom;
 import org.semanticweb.owlapi.model.OWLDifferentIndividualsAxiom;
@@ -56,6 +61,7 @@ import org.semanticweb.owlapi.model.OWLEquivalentObjectPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLFacetRestriction;
 import org.semanticweb.owlapi.model.OWLFunctionalDataPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLFunctionalObjectPropertyAxiom;
+import org.semanticweb.owlapi.model.OWLHasKeyAxiom;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLInverseFunctionalObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLInverseObjectPropertiesAxiom;
@@ -88,9 +94,11 @@ import org.semanticweb.owlapi.model.OWLPropertyRange;
 import org.semanticweb.owlapi.model.OWLReflexiveObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
 import org.semanticweb.owlapi.model.OWLStringLiteral;
+import org.semanticweb.owlapi.model.OWLSubAnnotationPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubDataPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
+import org.semanticweb.owlapi.model.OWLSubPropertyChainOfAxiom;
 import org.semanticweb.owlapi.model.OWLSymmetricObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLTransitiveObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLTypedLiteral;
@@ -108,6 +116,8 @@ import com.ontoprise.ontostudio.owl.model.visitors.OWLKAON2VisitorAdapter;
  *      local name 
  *      QName
  *      
+ * cf. http://www.w3.org/TR/owl2-manchester-syntax/ for a complete description of the syntax.
+ * 
  * @author Michael
  */
 public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
@@ -448,14 +458,56 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
         } else if (object instanceof OWLDataMaxCardinality) {
             cardinalityType = ManchesterSyntaxConstants.MAX;
         } else if (object instanceof OWLDataExactCardinality) {
-            cardinalityType = ManchesterSyntaxConstants.CARDINALITY;
+            cardinalityType = ManchesterSyntaxConstants.EXACTLY;
         } else {
             throw new IllegalStateException();
         }
 
         String[] dataProp = (String[]) object.getProperty().accept(this);
 
-        String[] temp = appendArrays(dataProp, addPrefixToArray(cardinalityType, createSingle(cardinality)));
+        String[] temp = appendArrays(dataProp, createSingle(cardinalityType), createSingle(cardinality));
+
+        if (object.getFiller() != null) {
+            return appendArrays(temp, (String[]) object.getFiller().accept(this));
+        } else {
+            return temp;
+        }
+    }
+
+    @Override
+    public String[] visit(OWLDataMaxCardinality object) {
+        String cardinality = ((Integer) object.getCardinality()).toString();
+        String cardinalityType = ManchesterSyntaxConstants.MAX;
+        String[] dataProp = (String[]) object.getProperty().accept(this);
+        String[] temp = appendArrays(dataProp, createSingle(cardinalityType), createSingle(cardinality));
+
+        if (object.getFiller() != null) {
+            return appendArrays(temp, (String[]) object.getFiller().accept(this));
+        } else {
+            return temp;
+        }
+    }
+
+    @Override
+    public String[] visit(OWLDataMinCardinality object) {
+        String cardinality = ((Integer) object.getCardinality()).toString();
+        String cardinalityType = ManchesterSyntaxConstants.MIN;
+        String[] dataProp = (String[]) object.getProperty().accept(this);
+        String[] temp = appendArrays(dataProp, createSingle(cardinalityType), createSingle(cardinality));
+
+        if (object.getFiller() != null) {
+            return appendArrays(temp, (String[]) object.getFiller().accept(this));
+        } else {
+            return temp;
+        }
+    }
+
+    @Override
+    public String[] visit(OWLDataExactCardinality object) {
+        String cardinality = ((Integer) object.getCardinality()).toString();
+        String cardinalityType = ManchesterSyntaxConstants.EXACTLY;
+        String[] dataProp = (String[]) object.getProperty().accept(this);
+        String[] temp = appendArrays(dataProp, createSingle(cardinalityType), createSingle(cardinality));
 
         if (object.getFiller() != null) {
             return appendArrays(temp, (String[]) object.getFiller().accept(this));
@@ -501,7 +553,7 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
         } else if (object instanceof OWLObjectMaxCardinality) {
             cardinalityType = ManchesterSyntaxConstants.MAX;
         } else if (object instanceof OWLObjectExactCardinality) {
-            cardinalityType = ManchesterSyntaxConstants.CARDINALITY;
+            cardinalityType = ManchesterSyntaxConstants.EXACTLY;
         } else {
             throw new IllegalStateException();
         }
@@ -522,6 +574,57 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
     }
 
     @Override
+    public String[] visit(OWLObjectMinCardinality object) {
+        String cardinality = ((Integer) object.getCardinality()).toString();
+        String cardinalityType = ManchesterSyntaxConstants.MIN;
+        String[] objProp = (String[]) object.getProperty().accept(this);
+        String[] temp = appendArrays(objProp, addPrefixToArray(cardinalityType, createSingle(cardinality)));
+
+        if (object.getFiller() != null && !object.getFiller().equals(OWL_CLASS)) {
+            String[] desc = (String[]) object.getFiller().accept(this);
+            desc = bracketArrayIfNeeded(object.getFiller(), "(", desc, ")"); //$NON-NLS-1$ //$NON-NLS-2$
+            return appendArrays(temp, desc);
+
+        } else {
+            return temp;
+        }
+    }
+
+    @Override
+    public String[] visit(OWLObjectMaxCardinality object) {
+        String cardinality = ((Integer) object.getCardinality()).toString();
+        String cardinalityType = ManchesterSyntaxConstants.MAX;
+        String[] objProp = (String[]) object.getProperty().accept(this);
+        String[] temp = appendArrays(objProp, addPrefixToArray(cardinalityType, createSingle(cardinality)));
+
+        if (object.getFiller() != null && !object.getFiller().equals(OWL_CLASS)) {
+            String[] desc = (String[]) object.getFiller().accept(this);
+            desc = bracketArrayIfNeeded(object.getFiller(), "(", desc, ")"); //$NON-NLS-1$ //$NON-NLS-2$
+            return appendArrays(temp, desc);
+
+        } else {
+            return temp;
+        }
+    }
+
+
+    @Override
+    public String[] visit(OWLObjectExactCardinality object) {
+        String cardinality = ((Integer) object.getCardinality()).toString();
+        String cardinalityType = ManchesterSyntaxConstants.EXACTLY;
+        String[] objProp = (String[]) object.getProperty().accept(this);
+        String[] temp = appendArrays(objProp, addPrefixToArray(cardinalityType, createSingle(cardinality)));
+
+        if (object.getFiller() != null && !object.getFiller().equals(OWL_CLASS)) {
+            String[] desc = (String[]) object.getFiller().accept(this);
+            desc = bracketArrayIfNeeded(object.getFiller(), "(", desc, ")"); //$NON-NLS-1$ //$NON-NLS-2$
+            return appendArrays(temp, desc);
+
+        } else {
+            return temp;
+        }
+    }
+    @Override
     public String[] visit(OWLObjectOneOf object) {
         Set<OWLIndividual> descs = object.getIndividuals();
         Iterator<OWLIndividual> iter = descs.iterator();
@@ -539,7 +642,7 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
     public String[] visit(OWLObjectHasSelf object) {
         String[] objProp = (String[]) object.getProperty().accept(this);
 
-        return appendArrays(objProp, createSingle("Self")); //$NON-NLS-1$
+        return appendArrays(objProp, createSingle(ManchesterSyntaxConstants.SELF));
     }
 
     @Override
@@ -650,33 +753,6 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
         return appendArrays(createSingle(ManchesterSyntaxConstants.CLASS), subClass, createSingle(ManchesterSyntaxConstants.SUBCLASSOF), superClass);
     }
     
-    @Override
-    public Object visit(OWLObjectMinCardinality desc) {
-        String[] property = (String[]) desc.getProperty().accept(this);
-        String[] card = createSingle(String.valueOf(desc.getCardinality()));
-        String[] filler = (String[]) desc.getFiller().accept(this);
-        
-        return appendArrays(property, card, filler);
-    }
-    
-    @Override
-    public Object visit(OWLObjectMaxCardinality desc) {
-        String[] property = (String[]) desc.getProperty().accept(this);
-        String[] card = createSingle(String.valueOf(desc.getCardinality()));
-        String[] filler = (String[]) desc.getFiller().accept(this);
-        
-        return appendArrays(property, card, filler);
-    }
-    
-    @Override
-    public Object visit(OWLObjectExactCardinality desc) {
-        String[] property = (String[]) desc.getProperty().accept(this);
-        String[] card = createSingle(String.valueOf(desc.getCardinality()));
-        String[] filler = (String[]) desc.getFiller().accept(this);
-        
-        return appendArrays(property, card, filler);
-    }
-
     @Override
     public Object visit(OWLEquivalentClassesAxiom object) {
         String[] classes = createSingle(ManchesterSyntaxConstants.EQUIVALENTCLASSES);
@@ -845,10 +921,15 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
 
     @Override
     public Object visit(OWLStringLiteral node) {
-        String[] values = createSingle(node.getLiteral());
-        String[] lang = createSingle(node.getLang());
-        // FIXME correct Manchester syntax
-        return appendArrays(values, lang);
+        String[] value = createSingle(quoteLiteral(node.getLiteral()));
+        if(node.getLang()!= null && node.getLang().length() > 0) {
+            String[] lang = createSingle(node.getLang());
+            return appendArrays(value, createSingle("@"), lang); //$NON-NLS-1$
+        } else {
+            return value;
+            
+        }
+
     }
     
     @Override
@@ -904,7 +985,7 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
     }
 
     @Override
-    public Object visit(OWLAnnotation object) {
+    public String[] visit(OWLAnnotation object) {
         return appendArrays((String[]) object.getProperty().accept(this), (String[]) object.getValue().accept(this));
     }
 
@@ -1006,5 +1087,134 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
         String[] functional = createSingle(ManchesterSyntaxConstants.REFLEXIVE);
         String[] propertyUri = (String[]) axiom.getProperty().accept(this);
         return appendArrays(functional, propertyUri);
+    }
+    
+    @Override
+    public String[] visit(OWLSubPropertyChainOfAxiom axiom) {
+        String[] superPropertyUri = (String[] ) axiom.getSuperProperty().accept(this);
+        
+        List<OWLObjectPropertyExpression> chain = axiom.getPropertyChain();
+        String[] chainStrings;
+        
+        chainStrings = visitSubObjectProperyChain(chain);
+
+        return appendArrays(
+                createSingle(ManchesterSyntaxConstants.OBJECTPROPERTY),
+                superPropertyUri,
+                createSingle(ManchesterSyntaxConstants.SUBPROPERTYCHAIN),
+                chainStrings);
+    }
+
+    @Override
+    public Object visit(OWLSubAnnotationPropertyOfAxiom axiom) {
+        String[] property = (String[]) axiom.getSubProperty().accept(this);
+        String[] superProp = (String[]) axiom.getSuperProperty().accept(this);
+
+        return appendArrays(createSingle(ManchesterSyntaxConstants.ANNOTATIONPROPERTY), property, createSingle(ManchesterSyntaxConstants.SUBPROPERTTYOF), superProp);
+    }
+    
+    @Override
+    public Object visit(OWLDataIntersectionOf node) {
+        Set<OWLDataRange> descs = node.getOperands();
+        Iterator<OWLDataRange> iter = descs.iterator();
+        OWLDataRange desc = iter.next();
+        String[] result = (String[]) desc.accept(this);
+
+        result = bracketArrayIfNeeded(desc, "(", result, ")"); //$NON-NLS-1$ //$NON-NLS-2$
+
+        while (iter.hasNext()) {
+            desc = iter.next();
+            String[] temp = (String[]) desc.accept(this);
+
+            temp = bracketArrayIfNeeded(desc, "(", temp, ")"); //$NON-NLS-1$ //$NON-NLS-2$
+
+            result = appendArrays(result, createSingle(ManchesterSyntaxConstants.AND), temp);
+        }
+        return result;    
+    }
+    
+    @Override
+    public Object visit(IRI iri) {
+        return createStandardArray(iri.toString());
+    }
+    
+    @Override
+    public String[] visit(OWLDatatypeDefinitionAxiom axiom) {
+        String[] datatype = (String[]) axiom.getDatatype().accept(this);
+        String[] dataRange = (String[])axiom.getDataRange().accept(this);
+        
+        Set<OWLAnnotation> annotations = axiom.getAnnotations();
+        String[] annotationsString = null;
+        if(annotations != null && annotations.size() > 0) {
+            annotationsString = createSingle(ManchesterSyntaxConstants.ANNOTATIONS);
+            for (OWLAnnotation annot: annotations) {
+                annotationsString = appendArrays(
+                        annotationsString,
+                        (String[])annot.accept(this));
+            }
+            return appendArrays(
+                    createSingle(ManchesterSyntaxConstants.DATATYPE), 
+                    datatype, 
+                    createSingle(ManchesterSyntaxConstants.ANNOTATIONS), 
+                    annotationsString,
+                    createSingle(ManchesterSyntaxConstants.EQUIVALENTTO),
+                    dataRange);
+        } else {
+            return appendArrays(
+                    createSingle(ManchesterSyntaxConstants.DATATYPE), 
+                    datatype, 
+                    createSingle(ManchesterSyntaxConstants.EQUIVALENTTO),
+                    dataRange);
+        }        
+    }
+    
+    
+    @Override
+    public Object visit(OWLAnnotationPropertyDomainAxiom axiom) {
+        String[] property = (String[]) axiom.getProperty().accept(this);
+        String[] desc = (String[]) axiom.getDomain().accept(this);
+
+        return appendArrays(createSingle(ManchesterSyntaxConstants.ANNOTATIONPROPERTY), property, createSingle(ManchesterSyntaxConstants.DOMAIN), desc);
+    }
+    
+    @Override
+    public Object visit(OWLAnnotationPropertyRangeAxiom axiom) {
+        String[] property = (String[]) axiom.getProperty().accept(this);
+        String[] desc = (String[]) axiom.getRange().accept(this);
+
+        return appendArrays(createSingle(ManchesterSyntaxConstants.ANNOTATIONPROPERTY), property, createSingle(ManchesterSyntaxConstants.RANGE), desc);
+    }
+    
+    @Override
+    public Object visit(OWLFacetRestriction node) {
+        // TODO Auto-generated method stub
+        return super.visit(node);
+    }
+    
+    @Override
+    public Object visit(OWLHasKeyAxiom desc) {
+        // TODO Auto-generated method stub
+        return super.visit(desc);
+    }
+    
+    /**
+     * note: this is not an actual visitor.visit method. it is a convenience method.
+     * @param chain
+     * @return
+     */
+    public String[] visitSubObjectProperyChain(List<OWLObjectPropertyExpression> chain) {
+        String[] chainStrings;
+        if(chain.size()>1) {
+            chainStrings = ((String[])chain.get(0).accept(this));
+            for (OWLObjectPropertyExpression propExpr: chain.subList(1, chain.size())) {
+                chainStrings = appendArrays(
+                        chainStrings,
+                        createSingle(ManchesterSyntaxConstants.O),
+                        (String[])propExpr.accept(this));
+            }
+        } else {
+            chainStrings= (String[])chain.get(0).accept(this);
+        }
+        return chainStrings;
     }
 }

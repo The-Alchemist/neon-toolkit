@@ -12,7 +12,9 @@ package com.ontoprise.ontostudio.owl.model;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.neontoolkit.core.exception.InternalNeOnException;
@@ -48,6 +50,7 @@ import org.semanticweb.owlapi.model.OWLObjectHasSelf;
 import org.semanticweb.owlapi.model.OWLObjectHasValue;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyDomainAxiom;
+import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;
@@ -198,6 +201,14 @@ public class OWLUtilities {
     public static String toString(OWLOntologyID id) {
         if(id.getDefaultDocumentIRI() == null ) return null;
         return id.getDefaultDocumentIRI().toURI().toString();
+    }
+    
+    public static List<String> toString(List<OWLObjectPropertyExpression> chain) {
+        List<String> result = new ArrayList<String>();
+        for (OWLObjectPropertyExpression e: chain) {
+            result.add(toString(e));
+        }
+        return result;
     }
     
     public static String toString(OWLObject object) {
