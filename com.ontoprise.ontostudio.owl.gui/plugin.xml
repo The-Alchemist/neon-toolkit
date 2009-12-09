@@ -330,6 +330,16 @@
                toolbarPath="Normal/additions"
                tooltip="%showHideNS">
          </action>
+         <action
+               class="com.ontoprise.ontostudio.owl.gui.actions.ShowNBInstancesActionOWL"
+               icon="icons/common/nb_individuals.gif"
+               id="com.ontoprise.ontostudio.owl.gui.toolbar.nsAction"
+               label="%showHideNBInstances"
+               state="false"
+               style="toggle"
+               toolbarPath="Normal/additions"
+               tooltip="%showHideNBInstances">
+         </action>
       </actionSet>
    </extension>
 <!-- End of Toolbar Actions -->
@@ -1493,6 +1503,12 @@
     viewId="com.ontoprise.ontostudio.owl.views.individualview"
     activityId="ontologyPopulation"
   />
+</extension>
+<extension
+      point="org.eclipse.ui.editorActions">
+</extension>
+<extension
+      point="org.eclipse.ui.actionSets">
 </extension>
 
 
