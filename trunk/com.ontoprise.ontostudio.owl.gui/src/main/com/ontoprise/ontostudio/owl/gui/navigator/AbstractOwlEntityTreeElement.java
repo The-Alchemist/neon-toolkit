@@ -10,11 +10,14 @@
 
 package com.ontoprise.ontostudio.owl.gui.navigator;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.navigator.ITreeDataProvider;
 import org.neontoolkit.gui.navigator.elements.AbstractOntologyEntity;
 import org.semanticweb.owlapi.model.OWLEntity;
 
+import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 
 /**
@@ -67,7 +70,17 @@ public abstract class AbstractOwlEntityTreeElement extends AbstractOntologyEntit
         } catch (NeOnCoreException e) {
             idArray = new String[] {_entity.getURI().toString()};
         }
-        return OWLGUIUtilities.getEntityLabel(idArray);
+        String result = OWLGUIUtilities.getEntityLabel(idArray);
+        IPreferenceStore store = NeOnUIPlugin.getDefault().getPreferenceStore();
+        boolean DISPLAY_NB_INSTANCES = store.getBoolean(OWLPlugin.SHOW_NB_INSTANCES_PREFERENCE);
+        if (DISPLAY_NB_INSTANCES) {
+            // TODO: should find a nicer way to do that, so that the font changes... would require more time though
+            int nbDInstances = OWLGUIUtilities.getNumberOfDirectInstances(_entity, getOntologyUri(), getProjectName());
+            int nbIInstances = OWLGUIUtilities.getNumberOfInDirectInstances(_entity, getOntologyUri(), getProjectName());
+            if (nbIInstances != 0)
+                result+=" "+nbDInstances+"|"+nbIInstances;
+        }
+        return result;
     }
     
     /*
