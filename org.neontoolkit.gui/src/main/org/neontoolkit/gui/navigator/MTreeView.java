@@ -67,7 +67,7 @@ import org.neontoolkit.gui.navigator.elements.IFolderElement;
  * Created on: 21.12.2004
  * Created by: Dirk Wenke
  *
- * Keywords: UI, OntologyNavigator, Navigator
+ * Keywords: UI, OntologyNavigator, Navigator 
  */
 /**
  * This class represents a view to display content in a tree. This tree can dynamically 

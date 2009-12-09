@@ -350,6 +350,123 @@
          	activityId="com.ontoprise.ontostudio.eclipseBookmarks"
          	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
          </categoryActivityBinding>
+         
+         <activity
+         	name="Eclipse Undo"
+         	description="Eclipse Undo"
+         	id="com.ontoprise.ontostudio.eclipseUndo">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUndo"
+         	pattern="org\.eclipse\.ui\.edit\.undo">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUndo"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+         
+         <activity
+         	name="Eclipse Redo"
+         	description="Eclipse Redo"
+         	id="com.ontoprise.ontostudio.eclipseRedo">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseRedo"
+         	pattern="org\.eclipse\.ui\.edit\.redo">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseRedo"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+         
+           <activity
+         	name="Eclipse Navigate Menu"
+         	description="Eclipse Navigate Meny"
+         	id="com.ontoprise.ontostudio.eclipseNavigate">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseNavigate"
+         	pattern="org\.eclipse\.ui\.navigate.*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseNavigate"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+         
+         <!-- not working -->
+          <activity
+         	name="Eclipse Navigate Add Bookmark"
+         	description="Eclipse Add Bookmarck"
+         	id="com.ontoprise.ontostudio.eclipseAddBookmark">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseAddBookmark"
+         	pattern="org\.eclipse\.ui\.edit\.addBookmark">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseAddBookmark"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+         
+         <!-- not working -->
+         <activity
+         	name="Eclipse Find Replace"
+         	description="Eclipse Find Replace"
+         	id="com.ontoprise.ontostudio.eclipseFindReplace">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseFindReplace"
+         	pattern="org\.eclipse\.ui\.edit\.findReplace">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseFindReplace"
+         	categoryId="com.ontoprise.ontostudio.EclipseFindReplace">
+         </categoryActivityBinding>
+         
+         <!-- not working -->
+         <activity
+         	name="Eclipse Open Project"
+         	description="Eclipse Open Project"
+         	id="com.ontoprise.ontostudio.eclipseOpenProject">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseOpenProject"
+         	pattern="org\.eclipse\..*openProject.*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseOpenProject"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+         
+         <!-- not working -->
+         <activity
+         	name="Eclipse Show In"
+         	description="Eclipse ShowIn"
+         	id="com.ontoprise.ontostudio.eclipseShowIn">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseShowIn"
+         	pattern="org\.eclipse\.ui\.navigate\.showIn">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseShowIn"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+         
+         <!-- not working -->
+          <activity
+         	name="Eclipse File Properties"
+         	description="Eclipse File Properties"
+         	id="com.ontoprise.ontostudio.eclipseFileProperties">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseFileProperties"
+         	pattern="org\.eclipse\.ui\.file\.properties">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseFileProperties"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
 
          <activity
          	name="Eclipse Tasks"
@@ -364,8 +481,6 @@
          	activityId="com.ontoprise.ontostudio.eclipseTasks"
          	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
          </categoryActivityBinding>
-
-
 
          <activity
          	name="Eclipse Navigate Show In"
