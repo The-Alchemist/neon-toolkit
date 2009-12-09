@@ -133,7 +133,7 @@
             <visibleWhen
                   checkEnabled="false">
                <reference
-                     definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneAnnotationPropertyOrAnnotationPropertyFolderSelected">
+                     definitionId="com.ontoprise.ontostudio.owl.gui.oneAnnotationPropertyFolderSelected">
                </reference>
             </visibleWhen>
          </command>
@@ -287,7 +287,7 @@
                <visibleWhen
                      checkEnabled="false">
                   <reference
-                        definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneAnnotationPropertyOrAnnotationPropertyFolderSelected">
+                        definitionId="com.ontoprise.ontostudio.owl.gui.oneAnnotationPropertyFolderSelected">
                   </reference>
                </visibleWhen>
             </command>
@@ -1294,6 +1294,19 @@
                   value="com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeTreeElement">
             </instanceof>
          </iterate>
+      </definition>
+      <definition
+            id="com.ontoprise.ontostudio.owl.gui.oneAnnotationPropertyFolderSelected">
+         <and>
+            <count
+                  value="1">
+            </count>
+            <iterate>
+               <instanceof
+                     value="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyFolderTreeElement">
+               </instanceof>
+            </iterate>
+         </and>
       </definition>
    </extension>
 
