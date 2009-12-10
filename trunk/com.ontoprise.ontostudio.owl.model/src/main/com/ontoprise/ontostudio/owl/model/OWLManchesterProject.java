@@ -66,6 +66,7 @@ import org.semanticweb.owlapi.model.UnknownOWLOntologyException;
 import org.semanticweb.owlapi.util.SimpleIRIMapper;
 import org.semanticweb.owlapi.vocab.PrefixOWLOntologyFormat;
 
+import com.ontoprise.ontostudio.owl.model.commands.dataproperties.IsDataProperty;
 import com.ontoprise.ontostudio.owl.model.commands.ontology.CreateOntology;
 import com.ontoprise.ontostudio.owl.model.commands.project.RestoreProject;
 import com.ontoprise.ontostudio.owl.model.commands.project.SaveOntology;
@@ -704,6 +705,7 @@ public class OWLManchesterProject extends AbstractOntologyProject {
     @Override
     public void setPhysicalURIForOntology(String ontologyURI, String physicalURI) throws NeOnCoreException {
         _ontologyManager.setPhysicalURIForOntology(getOntology(ontologyURI), URI.create(physicalURI));
+        // setOntologyDirty(ontologyURI, true);
     }
 
     public String getPhysicalURIForOntology(OWLOntology ontology) {
