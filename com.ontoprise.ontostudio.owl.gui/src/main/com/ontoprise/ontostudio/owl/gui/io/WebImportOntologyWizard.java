@@ -11,19 +11,20 @@
 package com.ontoprise.ontostudio.owl.gui.io;
 
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 import java.net.URI;
+import java.util.Set;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.neontoolkit.core.NeOnCorePlugin;
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.core.project.IOntologyProject;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.neontoolkit.io.exception.OntologyImportException;
-import org.neontoolkit.io.util.ImportExportUtils;
 import org.neontoolkit.io.wizard.AbstractImportSelectionPage;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
@@ -100,9 +101,10 @@ public class WebImportOntologyWizard extends FileSystemImportWizard {
     public void doFinish(String projectName, URI physicalURL, IProgressMonitor monitor) throws OntologyImportException {
         try {
             OWLManchesterProject omp = (OWLManchesterProject)NeOnCorePlugin.getDefault().getOntologyProject(projectName);
-            String physicalUri = ImportExportUtils.copyOntologyFileToProject(physicalURL.toString(), omp.getName()).toString();                
-            URI physicalURI = URI.create(physicalUri);
-            omp.importOntologies(new URI[]{physicalURI}, false);
+            // String physicalUri = ImportExportUtils.copyOntologyFileToProject(physicalURL.toString(), omp.getName()).toString();                
+            // URI physicalURI = URI.create(physicalUri);
+            Set<String> res = omp.importOntologies(new URI[]{physicalURL}, false);
+            if (res.size()!=0) omp.setOntologyDirty(res.iterator().next(), true);
 		} catch (OWLOntologyCreationException e) {
 			throw new OntologyImportException(e);
 		} catch (UnknownOWLOntologyFormatException e) {
@@ -111,5 +113,5 @@ public class WebImportOntologyWizard extends FileSystemImportWizard {
 			throw new OntologyImportException(e);
 		}	        
     }
-
+    
 }
