@@ -20,7 +20,10 @@ import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.InformationAlreadyExistsException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.progress.NotForkedRunnableWithProgress;
+import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
 
 import com.ontoprise.ontostudio.owl.model.Messages;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
@@ -64,15 +67,22 @@ public class RenameRunnableWithProgressOWL extends NotForkedRunnableWithProgress
         try {
             RenameOWLEntity command = null;
             // first check if an entity with the new URI exists in one of the relevant ontologies
-            for (String ontologyUri: _ontologyUris) {
-                Set<OWLEntity> entities = OWLModelFactory.getOWLModel(ontologyUri, _project).getEntity(_newId);
-                for (OWLEntity e: entities) {
-                    if (e.getURI().equals(_newId)) {
-                        throw new InformationAlreadyExistsException(Messages.getString("RenameRunnableWithProgressOWL.2"));  //$NON-NLS-1$
+            
+            if(_type == OBJECT_PROPERTY_TYPE || _type == DATA_PROPERTY_TYPE || _type == ANNOTATION_PROPERTY_TYPE) {
+                for (String ontologyUri: _ontologyUris) {
+                    Set<OWLEntity> entities = OWLModelFactory.getOWLModel(ontologyUri, _project).getEntity(_newId);
+                    for (OWLEntity entity: entities) {
+                        if (entity.getURI().toString().equals(_newId)) {
+                            if((_type == OBJECT_PROPERTY_TYPE && (entity instanceof OWLDataProperty || entity instanceof OWLAnnotationProperty)) ||
+                                (_type == DATA_PROPERTY_TYPE && (entity instanceof OWLObjectProperty || entity instanceof OWLAnnotationProperty)) ||
+                                (_type == ANNOTATION_PROPERTY_TYPE && (entity instanceof OWLObjectProperty || entity instanceof OWLDataProperty))) {
+                                    throw new InformationAlreadyExistsException(Messages.getString("RenameRunnableWithProgressOWL.2"));  //$NON-NLS-1$
+                            }
+                        }
                     }
                 }
-                
             }
+            
             for (String ontologyUri: _ontologyUris) {
                 if (_type == CLAZZ_TYPE) {
                     command = new RenameOWLClazz(_project, ontologyUri, _oldId, _newId);
