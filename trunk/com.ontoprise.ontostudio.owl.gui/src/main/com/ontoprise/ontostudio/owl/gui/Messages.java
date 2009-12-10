@@ -487,6 +487,8 @@ public class Messages extends NLS {
     public static String FileSystemExportWizard_9;
     public static String FileSystemExportWizard_12;
     public static String FileSystemExportWizard_13;
+    public static String NewPropertyHandler_0;
+    public static String NewPropertyHandler_1;
     
 	static {
 		// load message values from bundle file

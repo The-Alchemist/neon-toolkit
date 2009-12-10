@@ -22,6 +22,8 @@ import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.navigator.MTreeView;
 import org.neontoolkit.gui.navigator.actions.AbstractNewHandler;
 import org.neontoolkit.gui.util.PerspectiveChangeHandler;
+import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
@@ -120,12 +122,14 @@ public class NewObjectPropertyHandler extends AbstractNewHandler {
         OWLObjectProperty prop = OWLModelFactory.getOWLDataFactory(projectId).getOWLObjectProperty(OWLUtilities.toURI(newURI));
         Set<OWLEntity> entities = OWLModelFactory.getOWLModel(ontologyId, projectId).getEntity(newURI);
         for (OWLEntity entity: entities) {
-            if (entity.getURI().equals(newURI)) {
-                MessageDialog.openInformation(_view.getSite().getShell(), Messages.NewClazzHandler_0, Messages.NewClazzHandler_1);
-                return false;
+            if (entity.getURI().toString().equals(newURI)) {
+                if(entity instanceof OWLDataProperty || entity instanceof OWLAnnotationProperty) {
+                    MessageDialog.openInformation(_view.getSite().getShell(), Messages.NewPropertyHandler_0, Messages.NewPropertyHandler_1);
+                    return false;
+                }
             }
         }
-        
+
         ObjectPropertyTreeElement data = new ObjectPropertyTreeElement(prop, ontologyId, projectId, element.getProvider());
         item.setData(data);
         item.setText(element.getProvider().getText(data));

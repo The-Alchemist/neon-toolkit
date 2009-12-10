@@ -10,9 +10,6 @@
 
 package com.ontoprise.ontostudio.owl.gui.navigator.clazz;
 
-import java.util.Set;
-
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -130,14 +127,6 @@ public class NewClazzHandler extends AbstractNewHandler {
         }
         
 		OWLEntity clazz = OWLModelFactory.getOWLDataFactory(projectId).getOWLClass(OWLUtilities.toURI(newUri));
-        Set<OWLEntity> entities = OWLModelFactory.getOWLModel(ontologyId, projectId).getEntity(newUri);
-        for (OWLEntity entity: entities) {
-            if (entity.getURI().equals(newUri)) {
-                MessageDialog.openInformation(_view.getSite().getShell(), Messages.NewClazzHandler_0, Messages.NewClazzHandler_1);
-                return false;
-            }
-        }
-
 		ClazzTreeElement data = new ClazzTreeElement(
 				clazz,
 				element.getOntologyUri(), 
