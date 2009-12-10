@@ -1517,12 +1517,4 @@
     activityId="ontologyPopulation"
   />
 </extension>
-<extension
-      point="org.eclipse.ui.editorActions">
-</extension>
-<extension
-      point="org.eclipse.ui.actionSets">
-</extension>
-
-
 </plugin>

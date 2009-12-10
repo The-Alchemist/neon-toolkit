@@ -41,10 +41,14 @@ public class ManchesterSyntaxVisitorIdType extends ManchesterSyntaxVisitor {
             case NeOnUIPlugin.DISPLAY_QNAME:
                 return new String[] {getQName(uri), getQName(uri)};
             case NeOnUIPlugin.DISPLAY_LOCAL:
-                return new String[] {getLocalName(uri), getQName(uri)};
+                if (getLocalName(uri).length() == 0) {
+                    return new String[] {getQName(uri), getQName(uri)};
+                } else {
+                    return new String[] {getLocalName(uri), getQName(uri)};
+                }
             case OWLPlugin.DISPLAY_LANGUAGE:
                 return new String[] {getLabel(uri), getQName(uri)};
-            default: 
+            default:
                 return new String[] {getQName(uri), getQName(uri)};
         }
     }
