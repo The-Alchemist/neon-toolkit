@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.Vector;
 
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -47,11 +46,9 @@ import org.neontoolkit.gui.navigator.ITreeElementPath;
 import org.neontoolkit.gui.navigator.MTreeView;
 import org.neontoolkit.gui.navigator.TreeProviderManager;
 import org.neontoolkit.gui.util.PerspectiveChangeHandler;
-import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataAllValuesFrom;
 import org.semanticweb.owlapi.model.OWLDataCardinalityRestriction;
@@ -75,9 +72,6 @@ import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
 import org.semanticweb.owlapi.model.OWLObjectUnionOf;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
-import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
@@ -98,7 +92,6 @@ import com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.Object
 import com.ontoprise.ontostudio.owl.gui.syntax.ISyntaxManager;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.AbstractOwlTextField;
 import com.ontoprise.ontostudio.owl.model.OWLConstants;
-import com.ontoprise.ontostudio.owl.model.OWLManchesterProject;
 import com.ontoprise.ontostudio.owl.model.OWLManchesterProjectFactory;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
@@ -898,6 +891,4 @@ public class OWLGUIUtilities {
         }
         return 0;
     }
-        
-    
 }

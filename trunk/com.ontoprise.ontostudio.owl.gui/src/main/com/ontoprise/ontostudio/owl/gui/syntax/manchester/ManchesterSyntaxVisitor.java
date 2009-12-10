@@ -170,7 +170,11 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
 
     protected String getQName(String uri) {
         String string = _namespaces.abbreviateAsNamespace(uri);
-        if (_namespaces.getAbbreviationPrefix(uri) == null && uri.equals(string)) {
+        if (string.length()==0) {
+            return getURI(uri);
+        } else if (string.charAt(string.length()-1)==':') {
+            return getURI(uri);
+        } else if (_namespaces.getAbbreviationPrefix(uri) == null && uri.equals(string)) {
             return getURI(uri);
         } else {
             return string;
@@ -224,7 +228,11 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
     }
 
     protected String[] createStandardArray(String uri) {
-        return new String[] {getURI(uri), getLocalName(uri), getQName(uri), getLabel(uri)};
+        if (getLocalName(uri).length() == 0) {
+            return new String[] {getURI(uri), getQName(uri), getQName(uri), getLabel(uri)};
+        } else {
+            return new String[] {getURI(uri), getLocalName(uri), getQName(uri), getLabel(uri)};
+        }
     }
 
     protected String[] createSingle(String value) {
