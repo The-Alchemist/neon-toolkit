@@ -61,6 +61,9 @@ public class OntologyTreeElement extends AbstractOntologyTreeElement implements 
         String result = getOntologyUri();
         if (idDisplayStyle == NeOnUIPlugin.DISPLAY_LOCAL) {
             result = OWLNamespaces.guessLocalName(result);
+            if (result.length() == 0) {
+                result = getOntologyUri();
+            }
         }
         return result;
     }
