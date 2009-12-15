@@ -436,8 +436,8 @@ public interface OWLModel {
     /**
      * returns a list of all OWL ontology annotation properties as defined in http://www.w3.org/TR/owl-ref/#Header In OWL DL we cannot define new ontology
      * annotation properties.
-     * 
      */
+    @Deprecated //in OWL2 there is no difference between annotationPropery and ontologyAnnotationProperty 
     public Set<OWLAnnotationProperty> getAllOntologyAnnotationProperties() throws NeOnCoreException;
 
     /**
@@ -604,6 +604,36 @@ public interface OWLModel {
      */
     public boolean isSymmetric(String propertyId) throws NeOnCoreException;
     public boolean isSymmetric(String propertyId, boolean includeImportedOntologies) throws NeOnCoreException;
+
+    /**
+     * returns TRUE iff the passed OWL object property is asymmetric
+     * 
+     * @param propertyId
+     * @return
+     * @throws NeOnCoreException
+     */
+    public boolean isAsymmetric(String propertyId) throws NeOnCoreException;
+    public boolean isAsymmetric(String propertyId, boolean includeImportedOntologies) throws NeOnCoreException;
+
+    /**
+     * returns TRUE iff the passed OWL object property is reflexive
+     * 
+     * @param propertyId
+     * @return
+     * @throws NeOnCoreException
+     */
+    public boolean isReflexive(String propertyId) throws NeOnCoreException;
+    public boolean isReflexive(String propertyId, boolean includeImportedOntologies) throws NeOnCoreException;
+
+    /**
+     * returns TRUE iff the passed OWL object property is irreflexive
+     * 
+     * @param propertyId
+     * @return
+     * @throws NeOnCoreException
+     */
+    public boolean isIrreflexive(String propertyId) throws NeOnCoreException;
+    public boolean isIrreflexive(String propertyId, boolean includeImportedOntologies) throws NeOnCoreException;
 
     /**
      * Returns the set of descriptions that occur in a ClassMember axiom, where this individual is the individual.

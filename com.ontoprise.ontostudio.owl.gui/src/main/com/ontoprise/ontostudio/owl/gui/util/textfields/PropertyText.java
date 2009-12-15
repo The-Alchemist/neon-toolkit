@@ -33,7 +33,6 @@ public class PropertyText extends AbstractOwlTextField {
     public static final int DATA_PROPERTY = PropertyProposalProvider.DATA_PROPERTY_STYLE;
     public static final int OBJECT_PROPERTY = PropertyProposalProvider.OBJECT_PROPERTY_STYLE;
     public static final int ANNOTATION_PROPERTY = PropertyProposalProvider.ANNOTATION_PROPERTY_STYLE;
-    public static final int ONTOLOGY_ANNOTATION_PROPERTY = PropertyProposalProvider.ONTOLOGY_ANNOTATION_PROPERTY_STYLE;
 
     /**
 	 * 

@@ -273,9 +273,9 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
             String[][] equivalentClassHits = getEquivalentClazzHits();
             TreeSet<String[]> sortedSet = getSortedSet(equivalentClassHits);
 
-            List<String> sourceOntoList = new ArrayList<String>();
-            List<LocatedAxiom> axiomList = new ArrayList<LocatedAxiom>();
             for (String[] hit: sortedSet) {
+                List<String> sourceOntoList = new ArrayList<String>();
+                List<LocatedAxiom> axiomList = new ArrayList<LocatedAxiom>();
                 String axiomText = hit[0];
                 String ontologyUri = hit[1];
                 boolean isLocal = ontologyUri.equals(_ontologyUri);
@@ -343,9 +343,9 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
             String[][] disjointDescriptionHitsArray = getDisjointDescriptionHits();
             TreeSet<String[]> sortedSet = getSortedSet(disjointDescriptionHitsArray);
 
-            List<String> sourceOntoList = new ArrayList<String>();
-            List<LocatedAxiom> axiomList = new ArrayList<LocatedAxiom>();
             for (String[] hit: sortedSet) {
+                List<String> sourceOntoList = new ArrayList<String>();
+                List<LocatedAxiom> axiomList = new ArrayList<LocatedAxiom>();
                 String axiomText = hit[0];
                 String ontologyUri = hit[1];
                 boolean isLocal = ontologyUri.equals(_ontologyUri);
@@ -770,6 +770,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
                         }
                         propertyUri1 = OWLGUIUtilities.getUriForSorting(desc1, _owlModel);
                         propertyUri2 = OWLGUIUtilities.getUriForSorting(desc2, _owlModel);
+                        
                     } else if (axiom1 instanceof OWLDisjointClassesAxiom) {
                         OWLDisjointClassesAxiom clazzes = (OWLDisjointClassesAxiom) axiom1;
                         Set<OWLClassExpression> descs = clazzes.getClassExpressions();
@@ -792,7 +793,6 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
                                 }
                             }
                         }
-
                     }
 
                     int localResult = propertyUri1.compareToIgnoreCase(propertyUri2);

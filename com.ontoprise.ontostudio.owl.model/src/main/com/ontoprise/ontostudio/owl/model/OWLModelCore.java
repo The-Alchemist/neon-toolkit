@@ -582,14 +582,18 @@ public class OWLModelCore implements OWLModel {
             return Cast.cast(ontology.getSymmetricObjectPropertyAxioms((OWLObjectPropertyExpression)parameters[0]));
         }
     };
-    @SuppressWarnings("unused")
+    private final AxiomRequest<OWLObjectPropertyCharacteristicAxiom> OWLAsymmetricObjectPropertyAxiom_property_Request = new AxiomRequestCore<OWLObjectPropertyCharacteristicAxiom>(AxiomType.SYMMETRIC_OBJECT_PROPERTY, "property") {
+        @Override
+        protected Iterable<OWLObjectPropertyCharacteristicAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
+            return Cast.cast(ontology.getAsymmetricObjectPropertyAxioms((OWLObjectPropertyExpression)parameters[0]));
+        }
+    };
     private final AxiomRequest<OWLObjectPropertyCharacteristicAxiom> OWLReflexiveObjectPropertyAxiom_property_Request = new AxiomRequestCore<OWLObjectPropertyCharacteristicAxiom>(AxiomType.REFLEXIVE_OBJECT_PROPERTY, "property") {
         @Override
         protected Iterable<OWLObjectPropertyCharacteristicAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
             return Cast.cast(ontology.getReflexiveObjectPropertyAxioms((OWLObjectPropertyExpression)parameters[0]));
         }
     };
-    @SuppressWarnings("unused")
     private final AxiomRequest<OWLObjectPropertyCharacteristicAxiom> OWLIrreflexiveObjectPropertyAxiom_property_Request = new AxiomRequestCore<OWLObjectPropertyCharacteristicAxiom>(AxiomType.IRREFLEXIVE_OBJECT_PROPERTY, "property") {
         @Override
         protected Iterable<OWLObjectPropertyCharacteristicAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
@@ -1336,7 +1340,7 @@ public class OWLModelCore implements OWLModel {
 
     @SuppressWarnings("unused")
     private boolean isComplexRootDescriptionNoSubClassOfOccurrenceCheck(OWLClassExpression description, Map<OWLClassExpression,Set<OWLSubClassOfAxiom>> consideredAxiomsBySubDescription, Map<OWLClassExpression,Set<OWLSubClassOfAxiom>> consideredAxiomsBySuperDescription) throws NeOnCoreException {
-        // named classes are not commplex...
+        // named classes are not complex...
         if (description instanceof OWLClass) {
             return false;
         }
@@ -1622,11 +1626,7 @@ public class OWLModelCore implements OWLModel {
 
     @Override
     public Set<OWLAnnotationProperty> getAllOntologyAnnotationProperties() throws NeOnCoreException {
-        Set<OWLAnnotationProperty> props = new HashSet<OWLAnnotationProperty>();
-        for (String prop: OntoStudioOWLConstants.OWL_STANDARD_ONTOLOGY_ANNOTATION_PROPERTIES) {
-            props.add(getOWLDataFactory().getOWLAnnotationProperty(OWLUtilities.toURI(prop)));
-        }
-        return props;
+        return getAllAnnotationProperties();
     }
 
     private <E,P extends E> Set<P> getRootProperties(Class<E> type, Class<P> primaryType) throws NeOnCoreException {
@@ -1833,6 +1833,26 @@ public class OWLModelCore implements OWLModel {
     }
 
     @Override
+    public boolean isReflexive(String propertyId) throws NeOnCoreException {
+        return OWLReflexiveObjectPropertyAxiom_property_Request.getAxioms(objectProperty(propertyId)).size() > 0;
+    }
+
+    @Override
+    public boolean isReflexive(String propertyId, boolean includeImported) throws NeOnCoreException {
+        return OWLReflexiveObjectPropertyAxiom_property_Request.getAxioms(includeImported, objectProperty(propertyId)).size() > 0;
+    }
+
+    @Override
+    public boolean isIrreflexive(String propertyId) throws NeOnCoreException {
+        return OWLIrreflexiveObjectPropertyAxiom_property_Request.getAxioms(objectProperty(propertyId)).size() > 0;
+    }
+
+    @Override
+    public boolean isIrreflexive(String propertyId, boolean includeImported) throws NeOnCoreException {
+        return OWLIrreflexiveObjectPropertyAxiom_property_Request.getAxioms(includeImported, objectProperty(propertyId)).size() > 0;
+    }
+
+    @Override
     public boolean isTransitive(String propertyId) throws NeOnCoreException {
         return OWLTransitiveObjectPropertyAxiom_property_Request.getAxioms(objectProperty(propertyId)).size() > 0;
     }
@@ -1850,6 +1870,16 @@ public class OWLModelCore implements OWLModel {
     @Override
     public boolean isSymmetric(String propertyId, boolean includeImported) throws NeOnCoreException {
         return OWLSymmetricObjectPropertyAxiom_property_Request.getAxioms(includeImported, objectProperty(propertyId)).size() > 0;
+    }
+
+    @Override
+    public boolean isAsymmetric(String propertyId) throws NeOnCoreException {
+        return OWLAsymmetricObjectPropertyAxiom_property_Request.getAxioms(objectProperty(propertyId)).size() > 0;
+    }
+
+    @Override
+    public boolean isAsymmetric(String propertyId, boolean includeImported) throws NeOnCoreException {
+        return OWLAsymmetricObjectPropertyAxiom_property_Request.getAxioms(includeImported, objectProperty(propertyId)).size() > 0;
     }
 
     // ///////////////////////////////////////////////////////////////////////

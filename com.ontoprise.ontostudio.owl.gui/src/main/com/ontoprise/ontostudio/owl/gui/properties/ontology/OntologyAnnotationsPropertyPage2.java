@@ -358,7 +358,7 @@ public class OntologyAnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage 
         final FormRow formRow = new FormRow(_toolkit, _annotationsComp, NUM_COLS, false, ""); //$NON-NLS-1$
 
         // text widgets
-        final StyledText propertyText = new PropertyText(formRow.getParent(), _owlModel, PropertyText.ONTOLOGY_ANNOTATION_PROPERTY).getStyledText();
+        final StyledText propertyText = new PropertyText(formRow.getParent(), _owlModel, PropertyText.ANNOTATION_PROPERTY).getStyledText();
         formRow.addWidget(propertyText);
 
         final StyledText valueText = new StringText(formRow.getParent()).getStyledText();

@@ -33,7 +33,7 @@ public class SetPropertyAttribute extends OWLModuleChangeCommand {
      * @param module
      * @param propertyUri
      * @param propertyType Object or DataProperty. use constants {@link OWLCommandUtils#OBJECT_PROP} and {@link OWLCommandUtils#DATA_PROP}.
-     * @param attributeMode functional, inverse_functional, symmetric, transitive. use constants {@link OWLCommandUtils#FUNCTIONAL}, {@link OWLCommandUtils#INVERSE_FUNCTIONAL}, {@link OWLCommandUtils#SYMMETRIC} and {@link OWLCommandUtils#TRANSITIVE}.
+     * @param attributeMode functional, inverse_functional, symmetric, transitive. use constants {@link OWLCommandUtils#FUNCTIONAL}, {@link OWLCommandUtils#INVERSE_FUNCTIONAL}, {@link OWLCommandUtils#SYMMETRIC} and {@link OWLCommandUtils#TRANSITIVE} and more from OWL2
      * @param trueOrFalse
      * @throws NeOnCoreException
      */
@@ -67,6 +67,14 @@ public class SetPropertyAttribute extends OWLModuleChangeCommand {
                     axiom = factory.getOWLInverseFunctionalObjectPropertyAxiom(objectProperty);
                 } else if (attributeMode.equals(OWLCommandUtils.SYMMETRIC)) {
                     axiom = factory.getOWLSymmetricObjectPropertyAxiom(objectProperty);
+                } else if (attributeMode.equals(OWLCommandUtils.REFLEXIVE)) {
+                    axiom = factory.getOWLReflexiveObjectPropertyAxiom(objectProperty);
+                } else if (attributeMode.equals(OWLCommandUtils.IRREFLEXIVE)) {
+                    axiom = factory.getOWLIrreflexiveObjectPropertyAxiom(objectProperty);
+                } else if (attributeMode.equals(OWLCommandUtils.SYMMETRIC)) {
+                    axiom = factory.getOWLSymmetricObjectPropertyAxiom(objectProperty);
+                } else if (attributeMode.equals(OWLCommandUtils.ASYMMETRIC)) {
+                    axiom = factory.getOWLAsymmetricObjectPropertyAxiom(objectProperty);
                 } else if (attributeMode.equals(OWLCommandUtils.TRANSITIVE)) {
                     axiom = factory.getOWLTransitiveObjectPropertyAxiom(objectProperty);
                 } else {

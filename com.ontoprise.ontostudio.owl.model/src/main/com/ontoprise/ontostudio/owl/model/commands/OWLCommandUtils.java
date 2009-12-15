@@ -48,8 +48,12 @@ public class OWLCommandUtils {
 
     public static final String FUNCTIONAL = "functional"; //$NON-NLS-1$
     public static final String INVERSE_FUNCTIONAL = "inverse_functional"; //$NON-NLS-1$
+    public static final String REFLEXIVE = "reflexive"; //$NON-NLS-1$
+    public static final String IRREFLEXIVE = "irreflexive"; //$NON-NLS-1$
     public static final String SYMMETRIC = "symmetric"; //$NON-NLS-1$
+    public static final String ASYMMETRIC = "asymmetric"; //$NON-NLS-1$
     public static final String TRANSITIVE = "transitive"; //$NON-NLS-1$
+
     public static final String HAS_SELF = "HAS_SELF"; //$NON-NLS-1$
 
     public static OWLAxiom createAxiom(String clazzId, String clazzType, String quantor, String propertyId, String range, String quantity, String ontologyId, String project) throws NeOnCoreException {
