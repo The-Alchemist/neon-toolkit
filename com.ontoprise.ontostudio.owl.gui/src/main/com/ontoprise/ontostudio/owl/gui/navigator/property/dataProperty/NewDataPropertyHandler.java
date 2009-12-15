@@ -19,6 +19,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.NeOnUIPlugin;
+import org.neontoolkit.gui.navigator.ITreeDataProvider;
 import org.neontoolkit.gui.navigator.MTreeView;
 import org.neontoolkit.gui.navigator.actions.AbstractNewHandler;
 import org.neontoolkit.gui.util.PerspectiveChangeHandler;
@@ -32,6 +33,7 @@ import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
 import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
+import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.dataproperties.CreateDataProperty;
@@ -53,47 +55,44 @@ public class NewDataPropertyHandler extends AbstractNewHandler {
      */
     @Override
     public Object createNewItem(Object parent) {
-        if (parent instanceof DataPropertyTreeElement) {
-            _parentProperty = (AbstractOwlEntityTreeElement) parent;
-            String newId = Messages.NewDataPropertyAction_0 + System.currentTimeMillis();
+        try {
+            OWLModel owlModel;
+            ITreeDataProvider provider;
+            if (parent instanceof DataPropertyTreeElement) {
+                _parentProperty = (DataPropertyTreeElement) parent;
+                owlModel = OWLModelFactory.getOWLModel(_parentProperty.getOntologyUri(), _parentProperty.getProjectName());
+                provider = _parentProperty.getProvider();
+    
+            } else if (parent instanceof DataPropertyFolderTreeElement) {
+                _parentProperty = null;
+                DataPropertyFolderTreeElement folder = (DataPropertyFolderTreeElement) parent;
+                owlModel = OWLModelFactory.getOWLModel(folder.getOntologyUri(), folder.getProjectName());
+                provider = _view.getExtensionHandler().getProvider("com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyHierarchyProvider"); //$NON-NLS-1$
+    
+            } else {
+                _parentProperty = null;
+                return null;
+            }
+    
             String newUri = ""; //$NON-NLS-1$
+            long timeStamp = System.currentTimeMillis() % 1000;
+            String newId = Messages.NewDataPropertyAction_0 + "prop" + timeStamp; //$NON-NLS-1$
             try {
-                newUri = OWLPlugin.getDefault().getSyntaxManager().parseUri(newId, OWLModelFactory.getOWLModel(_parentProperty.getOntologyUri(), _parentProperty.getProjectName()));
+                if(owlModel.getDefaultNamespace() != null) {
+                    newId = owlModel.getDefaultNamespace() + "prop" + timeStamp; //$NON-NLS-1$
+                }
+                newUri = OWLPlugin.getDefault().getSyntaxManager().parseUri(newId, owlModel);
             } catch (NeOnCoreException e) {
                 newUri = newId;
             }
-            OWLDataProperty prop;
-            try {
-                prop = OWLModelFactory.getOWLDataFactory(_parentProperty.getProjectName()).getOWLDataProperty(OWLUtilities.toURI(newUri));
-            } catch (NeOnCoreException e) {
-                throw new RuntimeException(e);
-            }
-            DataPropertyTreeElement newElement = new DataPropertyTreeElement(prop, _parentProperty.getOntologyUri(), _parentProperty.getProjectName(), _parentProperty.getProvider());
+
+            OWLDataProperty prop = OWLModelFactory.getOWLDataFactory(owlModel.getProjectId()).getOWLDataProperty(OWLUtilities.toURI(newUri));
+            DataPropertyTreeElement newElement = new DataPropertyTreeElement(prop, owlModel.getOntologyURI(), owlModel.getProjectId(), provider);
             return newElement;
-        } else if (parent instanceof DataPropertyFolderTreeElement) {
-            DataPropertyFolderTreeElement folder = (DataPropertyFolderTreeElement) parent;
-            _parentProperty = null;
-            String newId = Messages.NewDataPropertyAction_0 + System.currentTimeMillis();
-            String newUri = ""; //$NON-NLS-1$
-            try {
-                newUri = OWLPlugin.getDefault().getSyntaxManager().parseUri(newId, OWLModelFactory.getOWLModel(folder.getOntologyUri(), folder.getProjectName()));
-            } catch (NeOnCoreException e) {
-                newUri = newId;
-            }
-            OWLDataProperty prop;
-            try {
-                prop = OWLModelFactory.getOWLDataFactory(folder.getProjectName()).getOWLDataProperty(OWLUtilities.toURI(newUri));
-            } catch (NeOnCoreException e) {
-                throw new RuntimeException(e);
-            }
-            DataPropertyTreeElement newElement = new DataPropertyTreeElement(prop, folder.getOntologyUri(), folder.getProjectName(), _view.getExtensionHandler().getProvider("com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyHierarchyProvider")); //$NON-NLS-1$
-            return newElement;
-        } else {
-            _parentProperty = null;
-            return null;
+        } catch (NeOnCoreException e) {
+            throw new RuntimeException(e);
         }
     }
-
     /*
      * (non-Javadoc)
      * 
