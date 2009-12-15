@@ -94,13 +94,19 @@ public class ObjectPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 
     private Button _functionalCheckBox;
     private Button _inverseFunctionalCheckBox;
+    private Button _reflexiveCheckBox;
+    private Button _irreflexiveCheckBox;
     private Button _symmetricCheckBox;
+    private Button _asymmetricCheckBox;
     private Button _transitiveCheckBox;
 
     private Group _importedGroup;
     private Button _importedFunctionalCheckBox;
     private Button _importedInverseFunctionalCheckBox;
+    private Button _importedReflexiveCheckBox;
+    private Button _importedIrreflexiveCheckBox;
     private Button _importedSymmetricCheckBox;
+    private Button _importedAsymmetricCheckBox;
     private Button _importedTransitiveCheckBox;
 
     public ObjectPropertyPropertyPage2() {
@@ -251,89 +257,13 @@ public class ObjectPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         RowLayout layout = new RowLayout(SWT.VERTICAL);
         localGroup.setLayout(layout);
 
-        _functionalCheckBox = new Button(localGroup, SWT.CHECK);
-        _functionalCheckBox.setText(Messages.ObjectPropertyPropertyPage_CheckBoxes_Functional);
-
-        _functionalCheckBox.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                Button button = (Button) e.getSource();
-                boolean selected = button.getSelection();
-                try {
-                    new SetPropertyAttribute(_project, _ontologyUri, _id, OWLCommandUtils.OBJECT_PROP, OWLCommandUtils.FUNCTIONAL, selected).run();
-                } catch (NeOnCoreException k2e) {
-                    handleException(k2e, Messages.ObjectPropertyPropertyPage2_13, button.getShell());
-                } catch (CommandException e1) {
-                    handleException(e1, Messages.ObjectPropertyPropertyPage2_13, button.getShell());
-                }
-                initCheckboxSection();
-                layoutSections();
-                _form.reflow(true);
-            }
-        });
-
-        _inverseFunctionalCheckBox = new Button(localGroup, SWT.CHECK);
-        _inverseFunctionalCheckBox.setText(Messages.ObjectPropertyPropertyPage_CheckBoxes_InverseFunctional);
-
-        _inverseFunctionalCheckBox.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                Button button = (Button) e.getSource();
-                boolean selected = button.getSelection();
-                try {
-                    new SetPropertyAttribute(_project, _ontologyUri, _id, OWLCommandUtils.OBJECT_PROP, OWLCommandUtils.INVERSE_FUNCTIONAL, selected).run();
-                } catch (NeOnCoreException k2e) {
-                    handleException(k2e, Messages.ObjectPropertyPropertyPage2_13, button.getShell());
-                } catch (CommandException e1) {
-                    handleException(e1, Messages.ObjectPropertyPropertyPage2_13, button.getShell());
-                }
-                initCheckboxSection();
-                layoutSections();
-                _form.reflow(true);
-            }
-        });
-
-        _transitiveCheckBox = new Button(localGroup, SWT.CHECK);
-        _transitiveCheckBox.setText(Messages.ObjectPropertyPropertyPage_CheckBoxes_Transitive);
-
-        _transitiveCheckBox.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                Button button = (Button) e.getSource();
-                boolean selected = button.getSelection();
-                try {
-                    new SetPropertyAttribute(_project, _ontologyUri, _id, OWLCommandUtils.OBJECT_PROP, OWLCommandUtils.TRANSITIVE, selected).run();
-                } catch (NeOnCoreException k2e) {
-                    handleException(k2e, Messages.ObjectPropertyPropertyPage2_13, button.getShell());
-                } catch (CommandException k2e) {
-                    handleException(k2e, Messages.ObjectPropertyPropertyPage2_13, button.getShell());
-                }
-                initCheckboxSection();
-                layoutSections();
-                _form.reflow(true);
-            }
-        });
-
-        _symmetricCheckBox = new Button(localGroup, SWT.CHECK);
-        _symmetricCheckBox.setText(Messages.ObjectPropertyPropertyPage_CheckBoxes_Symmetric);
-
-        _symmetricCheckBox.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                Button button = (Button) e.getSource();
-                boolean selected = button.getSelection();
-                try {
-                    new SetPropertyAttribute(_project, _ontologyUri, _id, OWLCommandUtils.OBJECT_PROP, OWLCommandUtils.SYMMETRIC, selected).run();
-                } catch (NeOnCoreException k2e) {
-                    handleException(k2e, Messages.ObjectPropertyPropertyPage2_13, button.getShell());
-                } catch (CommandException k2e) {
-                    handleException(k2e, Messages.ObjectPropertyPropertyPage2_13, button.getShell());
-                }
-                initCheckboxSection();
-                layoutSections();
-                _form.reflow(true);
-            }
-        });
+        createCheckboxFunctional(localGroup);
+        createCheckboxInverseFunctional(localGroup);
+        createCheckboxReflexive(localGroup);
+        createCheckboxIrreflexive(localGroup);
+        createCheckboxSymmetric(localGroup);
+        createCheckboxAsymmetric(localGroup);
+        createCheckboxTransitive(localGroup);
 
         _importedGroup = new Group(comp, SWT.NONE);
         // imported information
@@ -342,21 +272,126 @@ public class ObjectPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         _importedGroup.setLayout(layout);
 
         _importedFunctionalCheckBox = new Button(_importedGroup, SWT.CHECK);
-        _importedFunctionalCheckBox.setEnabled(false);
         _importedFunctionalCheckBox.setText(Messages.ObjectPropertyPropertyPage_CheckBoxes_Functional);
+        _importedFunctionalCheckBox.setEnabled(false);
 
         _importedInverseFunctionalCheckBox = new Button(_importedGroup, SWT.CHECK);
         _importedInverseFunctionalCheckBox.setText(Messages.ObjectPropertyPropertyPage_CheckBoxes_InverseFunctional);
         _importedInverseFunctionalCheckBox.setEnabled(false);
 
+        _importedReflexiveCheckBox = new Button(_importedGroup, SWT.CHECK);
+        _importedReflexiveCheckBox.setText(Messages.ObjectPropertyPropertyPage_CheckBoxes_Reflexive);
+        _importedReflexiveCheckBox.setEnabled(false);
+
+        _importedIrreflexiveCheckBox = new Button(_importedGroup, SWT.CHECK);
+        _importedIrreflexiveCheckBox.setText(Messages.ObjectPropertyPropertyPage_CheckBoxes_Irreflexive);
+        _importedIrreflexiveCheckBox.setEnabled(false);
+
+        _importedSymmetricCheckBox = new Button(_importedGroup, SWT.CHECK);
+        _importedSymmetricCheckBox.setText(Messages.ObjectPropertyPropertyPage_CheckBoxes_Symmetric);
+        _importedSymmetricCheckBox.setEnabled(false);
+
+        _importedAsymmetricCheckBox = new Button(_importedGroup, SWT.CHECK);
+        _importedAsymmetricCheckBox.setText(Messages.ObjectPropertyPropertyPage_CheckBoxes_Asymmetric);
+        _importedAsymmetricCheckBox.setEnabled(false);
+
         _importedTransitiveCheckBox = new Button(_importedGroup, SWT.CHECK);
         _importedTransitiveCheckBox.setText(Messages.ObjectPropertyPropertyPage_CheckBoxes_Transitive);
         _importedTransitiveCheckBox.setEnabled(false);
+    }
 
-        _importedSymmetricCheckBox = new Button(_importedGroup, SWT.CHECK);
-        _importedSymmetricCheckBox.setEnabled(false);
-        _importedSymmetricCheckBox.setText(Messages.ObjectPropertyPropertyPage_CheckBoxes_Symmetric);
+    /**
+     * @param localGroup
+     */
+    private void createCheckboxAsymmetric(Group localGroup) {
+        _asymmetricCheckBox =  createCheckbox(
+                localGroup, 
+                Messages.ObjectPropertyPropertyPage_CheckBoxes_Asymmetric,
+                OWLCommandUtils.ASYMMETRIC);
+    }
+    /**
+     * @param localGroup
+     */
+    private void createCheckboxSymmetric(Group localGroup) {
+        _symmetricCheckBox =  createCheckbox(
+                localGroup, 
+                Messages.ObjectPropertyPropertyPage_CheckBoxes_Symmetric,
+                OWLCommandUtils.SYMMETRIC);
+    }
 
+    /**
+     * @param localGroup
+     */
+    private void createCheckboxTransitive(Group localGroup) {
+        _transitiveCheckBox =  createCheckbox(
+                localGroup, 
+                Messages.ObjectPropertyPropertyPage_CheckBoxes_Transitive,
+                OWLCommandUtils.TRANSITIVE);
+    }
+
+    /**
+     * @param localGroup
+     */
+    private void createCheckboxInverseFunctional(Group localGroup) {
+        _inverseFunctionalCheckBox = createCheckbox(
+                localGroup, 
+                Messages.ObjectPropertyPropertyPage_CheckBoxes_InverseFunctional,
+                OWLCommandUtils.INVERSE_FUNCTIONAL);
+    }
+
+    /**
+     * @param localGroup
+     */
+    private void createCheckboxFunctional(Group localGroup) {
+        _functionalCheckBox = createCheckbox(
+                localGroup, 
+                Messages.ObjectPropertyPropertyPage_CheckBoxes_Functional,
+                OWLCommandUtils.FUNCTIONAL);
+    }
+    
+    private Button createCheckbox(Group localGroup, String label, final String characteristic) {
+        Button y = new Button(localGroup, SWT.CHECK);
+        y.setText(label);
+
+        y.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                Button button = (Button) e.getSource();
+                boolean selected = button.getSelection();
+                try {
+                    new SetPropertyAttribute(_project, _ontologyUri, _id, OWLCommandUtils.OBJECT_PROP, characteristic, selected).run();
+                } catch (NeOnCoreException k2e) {
+                    handleException(k2e, Messages.ObjectPropertyPropertyPage2_13, button.getShell());
+                } catch (CommandException e1) {
+                    handleException(e1, Messages.ObjectPropertyPropertyPage2_13, button.getShell());
+                }
+                initCheckboxSection();
+                layoutSections();
+                _form.reflow(true);
+            }
+        });
+        
+        return y;
+    }
+
+    /**
+     * @param localGroup
+     */
+    private void createCheckboxReflexive(Group localGroup) {
+        _reflexiveCheckBox = createCheckbox(
+                localGroup, 
+                Messages.ObjectPropertyPropertyPage_CheckBoxes_Reflexive,
+                OWLCommandUtils.REFLEXIVE);
+    }
+
+    /**
+     * @param localGroup
+     */
+    private void createCheckboxIrreflexive(Group localGroup) {
+        _irreflexiveCheckBox = createCheckbox(
+                localGroup, 
+                Messages.ObjectPropertyPropertyPage_CheckBoxes_Irreflexive,
+                OWLCommandUtils.IRREFLEXIVE);
     }
 
     @Override
@@ -378,15 +413,21 @@ public class ObjectPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             if (objProp != null) {
                 _functionalCheckBox.setSelection(new GetPropertyAttribute(_project, _ontologyUri, _id, OWLCommandUtils.FUNCTIONAL, false).getAttributeValue());
                 _inverseFunctionalCheckBox.setSelection(new GetPropertyAttribute(_project, _ontologyUri, _id, OWLCommandUtils.INVERSE_FUNCTIONAL, false).getAttributeValue());
-                _transitiveCheckBox.setSelection(new GetPropertyAttribute(_project, _ontologyUri, _id, OWLCommandUtils.TRANSITIVE, false).getAttributeValue());
+                _reflexiveCheckBox.setSelection(new GetPropertyAttribute(_project, _ontologyUri, _id, OWLCommandUtils.REFLEXIVE, false).getAttributeValue());
+                _irreflexiveCheckBox.setSelection(new GetPropertyAttribute(_project, _ontologyUri, _id, OWLCommandUtils.IRREFLEXIVE, false).getAttributeValue());
                 _symmetricCheckBox.setSelection(new GetPropertyAttribute(_project, _ontologyUri, _id, OWLCommandUtils.SYMMETRIC, false).getAttributeValue());
+                _asymmetricCheckBox.setSelection(new GetPropertyAttribute(_project, _ontologyUri, _id, OWLCommandUtils.ASYMMETRIC, false).getAttributeValue());
+                _transitiveCheckBox.setSelection(new GetPropertyAttribute(_project, _ontologyUri, _id, OWLCommandUtils.TRANSITIVE, false).getAttributeValue());
 
                 if (_showImported) {
                     _importedGroup.setVisible(true);
                     _importedFunctionalCheckBox.setSelection(new GetPropertyAttribute(_project, _ontologyUri, _id, OWLCommandUtils.FUNCTIONAL, true).getAttributeValue());
                     _importedInverseFunctionalCheckBox.setSelection(new GetPropertyAttribute(_project, _ontologyUri, _id, OWLCommandUtils.INVERSE_FUNCTIONAL, true).getAttributeValue());
-                    _importedTransitiveCheckBox.setSelection(new GetPropertyAttribute(_project, _ontologyUri, _id, OWLCommandUtils.TRANSITIVE, true).getAttributeValue());
+                    _importedReflexiveCheckBox.setSelection(new GetPropertyAttribute(_project, _ontologyUri, _id, OWLCommandUtils.REFLEXIVE, true).getAttributeValue());
+                    _importedIrreflexiveCheckBox.setSelection(new GetPropertyAttribute(_project, _ontologyUri, _id, OWLCommandUtils.IRREFLEXIVE, true).getAttributeValue());
                     _importedSymmetricCheckBox.setSelection(new GetPropertyAttribute(_project, _ontologyUri, _id, OWLCommandUtils.SYMMETRIC, true).getAttributeValue());
+                    _importedAsymmetricCheckBox.setSelection(new GetPropertyAttribute(_project, _ontologyUri, _id, OWLCommandUtils.ASYMMETRIC, true).getAttributeValue());
+                    _importedTransitiveCheckBox.setSelection(new GetPropertyAttribute(_project, _ontologyUri, _id, OWLCommandUtils.TRANSITIVE, true).getAttributeValue());
                 } else {
                     _importedGroup.setVisible(false);
                 }
@@ -550,6 +591,7 @@ public class ObjectPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 
         initDomainSection(false);
         initRangeSection(false);
+        initCheckboxSection();
 
         layoutSections();
         _form.reflow(true);
@@ -563,7 +605,6 @@ public class ObjectPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
     @Override
     public void dispose() {
         // TODO Auto-generated method stub
-        
     }
 
     private TreeSet<String[]> getSortedSet(String[][] clazzesArray) {

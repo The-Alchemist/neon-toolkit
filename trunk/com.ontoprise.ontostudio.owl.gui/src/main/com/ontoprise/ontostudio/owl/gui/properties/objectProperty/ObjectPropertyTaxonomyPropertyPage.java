@@ -250,8 +250,8 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
         clearComposite(_subPropertyChainComposite);
         try {
             String[][] results = new GetSubPropertyChainOfHits(_project, _ontologyUri, _id).getResults();
-            TreeSet<String[]> sortedSet = getSortedSet(results, SUB);
-            
+            TreeSet<String[]> sortedSet = getSortedSet(results, CHAIN);
+
             for (String[] result: sortedSet) {
                 String axiomText = result[0];
                 String ontologyUri = result[1];

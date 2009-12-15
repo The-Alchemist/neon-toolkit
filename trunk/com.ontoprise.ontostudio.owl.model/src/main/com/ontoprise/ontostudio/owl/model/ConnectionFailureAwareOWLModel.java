@@ -1310,6 +1310,50 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
     }
 
     @Override
+    public boolean isReflexive(String propertyId) throws NeOnCoreException {
+        try {
+            return _model.isReflexive(propertyId);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+
+    @Override
+    public boolean isReflexive(String propertyId, boolean includeImportedOntologies) throws NeOnCoreException {
+        try {
+            return _model.isReflexive(propertyId, includeImportedOntologies);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+
+    @Override
+    public boolean isIrreflexive(String propertyId) throws NeOnCoreException {
+        try {
+            return _model.isIrreflexive(propertyId);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+
+    @Override
+    public boolean isIrreflexive(String propertyId, boolean includeImportedOntologies) throws NeOnCoreException {
+        try {
+            return _model.isIrreflexive(propertyId, includeImportedOntologies);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+
+    @Override
     public boolean isRootClass(OWLClass clazz) throws NeOnCoreException {
         try {
             return _model.isRootClass(clazz);
@@ -1357,6 +1401,28 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
     public boolean isSymmetric(String propertyId, boolean includeImportedOntologies) throws NeOnCoreException {
         try {
             return _model.isSymmetric(propertyId, includeImportedOntologies);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+
+    @Override
+    public boolean isAsymmetric(String propertyId) throws NeOnCoreException {
+        try {
+            return _model.isAsymmetric(propertyId);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+
+    @Override
+    public boolean isAsymmetric(String propertyId, boolean includeImportedOntologies) throws NeOnCoreException {
+        try {
+            return _model.isAsymmetric(propertyId, includeImportedOntologies);
         } catch (NeOnCoreException e) {
             throw checkConnectionFailure(e);
         } catch (RuntimeException e) {

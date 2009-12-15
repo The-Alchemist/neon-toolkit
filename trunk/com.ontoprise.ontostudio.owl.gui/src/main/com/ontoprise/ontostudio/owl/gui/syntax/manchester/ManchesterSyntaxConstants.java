@@ -144,8 +144,13 @@ public abstract class ManchesterSyntaxConstants {
     // "^^"
     // ","
     // ":"
+
     public static String[] getClassConstructorKeywords() {
         return new String[] {OR, AND, NOT};
+    }
+
+    public static String[] getPropertyChainKeyword() {
+        return new String[] {O};
     }
 
     public static String[] getRestrictionKeywords() {
@@ -187,7 +192,6 @@ public abstract class ManchesterSyntaxConstants {
                 SYMMETRIC,
                 ASYMMETRIC,
                 TRANSITIVE,
-                O,
                 TYPES,
                 FACTS,
                 SAMEAS,
@@ -196,6 +200,11 @@ public abstract class ManchesterSyntaxConstants {
 
     public static boolean isClassConstructorKeyword(String keyword) {
         String[] array = getClassConstructorKeywords();
+        return checkKeyword(keyword, array);
+    }
+
+    public static boolean isPropertyChainKeyword(String keyword) {
+        String[] array = getPropertyChainKeyword();
         return checkKeyword(keyword, array);
     }
 

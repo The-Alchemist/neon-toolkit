@@ -85,6 +85,10 @@ public class ManchesterSyntaxContextReader {
             _result = EXPECTCLASS | EXPECTPROPERTY;
             return;
 
+        } else if (ManchesterSyntaxConstants.isPropertyChainKeyword(_lastFullToken)) {
+            _result = EXPECTPROPERTY;
+            return;
+
         } else if (ManchesterSyntaxConstants.isFacetKeyword(_lastFullToken)) {
             _result = EXPECTFACET;
             return;
@@ -177,6 +181,7 @@ public class ManchesterSyntaxContextReader {
         fullTokens.addAll(Arrays.asList(otherTokens));
         fullTokens.addAll(Arrays.asList(ManchesterSyntaxConstants.getBrackets()));
         fullTokens.addAll(Arrays.asList(ManchesterSyntaxConstants.getClassConstructorKeywords()));
+        fullTokens.addAll(Arrays.asList(ManchesterSyntaxConstants.getPropertyChainKeyword()));
         fullTokens.addAll(Arrays.asList(ManchesterSyntaxConstants.getRestrictionKeywords()));
         fullTokens.addAll(Arrays.asList(ManchesterSyntaxConstants.getFacetKeywords()));
         fullTokens.addAll(Arrays.asList(ManchesterSyntaxConstants.getFacets()));

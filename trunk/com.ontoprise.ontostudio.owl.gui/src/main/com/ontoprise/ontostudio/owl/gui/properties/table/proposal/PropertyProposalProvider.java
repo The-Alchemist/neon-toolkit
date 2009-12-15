@@ -34,8 +34,6 @@ public class PropertyProposalProvider extends AbstractOwlProposalProvider {
     public static final int DATA_PROPERTY_STYLE = 2;
     public static final int ANNOTATION_PROPERTY_STYLE = 4;
 
-    public static final int ONTOLOGY_ANNOTATION_PROPERTY_STYLE = 8;
-
     private int _style = ALL_PROPERTY_STYLE;
 
     public PropertyProposalProvider(OWLModel owlModel, int style) {
@@ -49,25 +47,40 @@ public class PropertyProposalProvider extends AbstractOwlProposalProvider {
             List<IContentProposal> objectProposals = new ArrayList<IContentProposal>();
             List<IContentProposal> dataProposals = new ArrayList<IContentProposal>();
             List<IContentProposal> annotProposals = new ArrayList<IContentProposal>();
-            List<IContentProposal> ontoProposals = new ArrayList<IContentProposal>();
 
             Set<OWLObjectProperty> objectProps = new HashSet<OWLObjectProperty>();
             Set<OWLDataProperty> dataProps = new HashSet<OWLDataProperty>();
             Set<OWLAnnotationProperty> annotProps = new HashSet<OWLAnnotationProperty>();
-            Set<OWLAnnotationProperty> ontoProps = new HashSet<OWLAnnotationProperty>();
 
             if ((_style & OBJECT_PROPERTY_STYLE) > 0) {
                 objectProps = _owlModel.getAllObjectProperties(true);
+
+                try {
+                    objectProps.add(_owlModel.getOWLDataFactory().getOWLTopObjectProperty());
+                    objectProps.add(_owlModel.getOWLDataFactory().getOWLBottomObjectProperty());
+                } catch (Exception e) {
+                    //ignore
+                }
+
                 for (OWLObjectProperty prop: objectProps) {
                     String[] array = (String[]) prop.accept(_visitor);
                     if (AbstractOwlProposalProvider.checkProposal(array, contents)) {
                         objectProposals.add(new ObjectPropertyProposal(prop, array, position, _owlModel));
                     }
                 }
+
             }
 
             if ((_style & DATA_PROPERTY_STYLE) > 0) {
                 dataProps = _owlModel.getAllDataProperties(true);
+                
+                try {
+                    dataProps.add(_owlModel.getOWLDataFactory().getOWLTopDataProperty());
+                    dataProps.add(_owlModel.getOWLDataFactory().getOWLBottomDataProperty());
+                } catch (Exception e) {
+                    //ignore
+                }
+
                 for (OWLDataProperty prop: dataProps) {
                     String[] array = (String[]) prop.accept(_visitor);
                     if (AbstractOwlProposalProvider.checkProposal(array, contents)) {
@@ -94,32 +107,12 @@ public class PropertyProposalProvider extends AbstractOwlProposalProvider {
                 }
             }
 
-            if ((_style & ONTOLOGY_ANNOTATION_PROPERTY_STYLE) > 0) {
-                // standard ontology annotation properties
-                ontoProps = _owlModel.getAllOntologyAnnotationProperties();
-                for (OWLAnnotationProperty prop: ontoProps) {
-                    String[] array = (String[]) prop.accept(_visitor);
-                    if (AbstractOwlProposalProvider.checkProposal(array, contents)) {
-                        ontoProposals.add(new AnnotationPropertyProposal(prop, array, position, _owlModel));
-                    }
-                }
-
-                for (OWLAnnotationProperty prop: annotProps) {
-                    String[] array = (String[]) prop.accept(_visitor);
-                    if (AbstractOwlProposalProvider.checkProposal(array, contents)) {
-                        ontoProposals.add(new AnnotationPropertyProposal(prop, array, position, _owlModel));
-                    }
-                }
-            }
-
             Collections.sort(objectProposals, new AlphabeticalProposalComparator<IContentProposal>());
             Collections.sort(dataProposals, new AlphabeticalProposalComparator<IContentProposal>());
             Collections.sort(annotProposals, new AlphabeticalProposalComparator<IContentProposal>());
-            Collections.sort(ontoProposals, new AlphabeticalProposalComparator<IContentProposal>());
             proposals.addAll(objectProposals);
             proposals.addAll(dataProposals);
             proposals.addAll(annotProposals);
-            proposals.addAll(ontoProposals);
         } catch (NeOnCoreException e) {
             // nothing to do
         }

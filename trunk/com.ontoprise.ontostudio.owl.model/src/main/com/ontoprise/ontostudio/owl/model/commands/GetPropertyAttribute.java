@@ -41,8 +41,14 @@ public class GetPropertyAttribute extends OWLOntologyRequestCommand {
                 _trueOrFalse = getOwlModel().isFunctional(propertyUri, includeImports);
             } else if (attributeType.equals(OWLCommandUtils.INVERSE_FUNCTIONAL)) {
                 _trueOrFalse = getOwlModel().isInverseFunctional(propertyUri, includeImports);
+            } else if (attributeType.equals(OWLCommandUtils.REFLEXIVE)) {
+                _trueOrFalse = getOwlModel().isReflexive(propertyUri, includeImports);
+            } else if (attributeType.equals(OWLCommandUtils.IRREFLEXIVE)) {
+                _trueOrFalse = getOwlModel().isIrreflexive(propertyUri, includeImports);
             } else if (attributeType.equals(OWLCommandUtils.SYMMETRIC)) {
                 _trueOrFalse = getOwlModel().isSymmetric(propertyUri, includeImports);
+            } else if (attributeType.equals(OWLCommandUtils.ASYMMETRIC)) {
+                _trueOrFalse = getOwlModel().isAsymmetric(propertyUri, includeImports);
             } else if (attributeType.equals(OWLCommandUtils.TRANSITIVE)) {
                 _trueOrFalse = getOwlModel().isTransitive(propertyUri, includeImports);
             }

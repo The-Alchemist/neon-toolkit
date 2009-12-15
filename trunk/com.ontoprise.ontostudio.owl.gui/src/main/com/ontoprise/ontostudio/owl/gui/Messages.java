@@ -85,8 +85,11 @@ public class Messages extends NLS {
 	public static String ObjectPropertyPropertyPage_Range;
 	public static String ObjectPropertyPropertyPage_CheckBoxes_Functional;
 	public static String ObjectPropertyPropertyPage_CheckBoxes_InverseFunctional;
-	public static String ObjectPropertyPropertyPage_CheckBoxes_Transitive;
-	public static String ObjectPropertyPropertyPage_CheckBoxes_Symmetric;
+    public static String ObjectPropertyPropertyPage_CheckBoxes_Reflexive;
+    public static String ObjectPropertyPropertyPage_CheckBoxes_Irreflexive;
+    public static String ObjectPropertyPropertyPage_CheckBoxes_Transitive;
+    public static String ObjectPropertyPropertyPage_CheckBoxes_Symmetric;
+    public static String ObjectPropertyPropertyPage_CheckBoxes_Asymmetric;
 	public static String ObjectPropertyPropertyPage_EquivalentProperties;
 	public static String ObjectPropertyPropertyPage_SuperProperties;
     public static String ObjectPropertyPropertyPage_SubProperties;

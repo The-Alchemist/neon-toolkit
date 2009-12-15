@@ -474,6 +474,9 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
 
         String[] restrictions = ManchesterSyntaxConstants.getRestrictionKeywords();
         getKeywordRule(restrictions, KEYWORD_TOKEN, rules);
+        
+        String[] o = ManchesterSyntaxConstants.getPropertyChainKeyword();
+        getKeywordRule(o, KEYWORD_TOKEN, rules);
     }
 
     private void createFramesRule(List<IRule> rules) {

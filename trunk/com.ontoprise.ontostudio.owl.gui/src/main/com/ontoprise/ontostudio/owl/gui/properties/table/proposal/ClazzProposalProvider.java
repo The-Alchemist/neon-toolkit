@@ -26,6 +26,7 @@ public class ClazzProposalProvider extends AbstractOwlProposalProvider {
 
     public ClazzProposalProvider(OWLModel owlModel) {
         super(owlModel);
+        
     }
 
     public IContentProposal[] getProposals(String contents, int position) {
@@ -33,6 +34,13 @@ public class ClazzProposalProvider extends AbstractOwlProposalProvider {
 
         try {
             Set<OWLClass> allClasses = _owlModel.getAllClasses(true);
+
+            try {
+                allClasses.add(_owlModel.getOWLDataFactory().getOWLThing());
+                allClasses.add(_owlModel.getOWLDataFactory().getOWLNothing());
+            } catch (Exception e) {
+                //ignore
+            }
 
             for (OWLClass clazz: allClasses) {
                 String[] array = (String[]) clazz.accept(_visitor);

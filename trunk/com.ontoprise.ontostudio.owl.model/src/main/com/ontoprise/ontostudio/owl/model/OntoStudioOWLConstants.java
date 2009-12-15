@@ -32,11 +32,14 @@ public class OntoStudioOWLConstants {
      */
     public static final String OWL_PRIOR_VERSION = OWL_URI + "priorVersion"; //$NON-NLS-1$
     public static final String OWL_VERSION_INFO = OWL_URI + "versionInfo"; //$NON-NLS-1$
-    public static final String OWL_DEFAULT_LANGUAGE = OWL_URI + "defaultLanguage"; //$NON-NLS-1$
     public static final String OWL_BACKWARD_COMPATIBLE_WITH = OWL_URI + "backwardCompatibleWith"; //$NON-NLS-1$
     public static final String OWL_INCOMPATIBLE_WITH = OWL_URI + "incompatibleWith"; //$NON-NLS-1$
+    public static final String OWL_DEPRECATED = OWL_URI + "deprecated"; //$NON-NLS-1$
 
-    public static final Set<String> OWL_STANDARD_ANNOTATION_PROPERTIES = new HashSet<String>(Arrays.asList(new String[] {RDFS_COMMENT, RDFS_LABEL, RDFS_SEE_ALSO, RDFS_IS_DEFINED_BY, OWL_VERSION_INFO}));
+    public static final Set<String> OWL_STANDARD_ANNOTATION_PROPERTIES = new HashSet<String>(Arrays.asList(new String[] {
+            RDFS_COMMENT, RDFS_LABEL, RDFS_SEE_ALSO, RDFS_IS_DEFINED_BY, 
+            OWL_VERSION_INFO, OWL_DEPRECATED, OWL_BACKWARD_COMPATIBLE_WITH, OWL_INCOMPATIBLE_WITH, OWL_PRIOR_VERSION}));
 
-    public static final Set<String> OWL_STANDARD_ONTOLOGY_ANNOTATION_PROPERTIES = new HashSet<String>(Arrays.asList(new String[] {RDFS_LABEL, RDFS_SEE_ALSO, RDFS_IS_DEFINED_BY, OWL_PRIOR_VERSION, OWL_BACKWARD_COMPATIBLE_WITH, OWL_INCOMPATIBLE_WITH}));
+//    public static final Set<String> OWL_STANDARD_ONTOLOGY_ANNOTATION_PROPERTIES = new HashSet<String>(Arrays.asList(new String[] {
+//            RDFS_LABEL, RDFS_SEE_ALSO, RDFS_IS_DEFINED_BY, OWL_PRIOR_VERSION, OWL_BACKWARD_COMPATIBLE_WITH, OWL_INCOMPATIBLE_WITH}));
 }
