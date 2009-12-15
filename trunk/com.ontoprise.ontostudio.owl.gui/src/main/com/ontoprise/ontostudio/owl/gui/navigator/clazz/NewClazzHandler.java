@@ -16,15 +16,18 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.NeOnUIPlugin;
+import org.neontoolkit.gui.navigator.ITreeDataProvider;
 import org.neontoolkit.gui.navigator.MTreeView;
 import org.neontoolkit.gui.navigator.actions.AbstractNewHandler;
 import org.neontoolkit.gui.util.PerspectiveChangeHandler;
+import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
+import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.clazz.CreateRootClazz;
@@ -47,55 +50,45 @@ public class NewClazzHandler extends AbstractNewHandler {
 	 */
 	@Override
     public Object createNewItem(Object parent) {
-		if (parent instanceof ClazzTreeElement) {
-			_parentClazz = (ClazzTreeElement) parent;
-			String newId = Messages.NewClazzAction_0 + System.currentTimeMillis(); 
-			String newUri = ""; //$NON-NLS-1$
-			try {
-				newUri = OWLPlugin.getDefault().getSyntaxManager().parseUri(newId, OWLModelFactory.getOWLModel(_parentClazz.getOntologyUri(), _parentClazz.getProjectName()));
-			} catch (NeOnCoreException e) {
-				newUri = newId;
-			}
-			OWLEntity clazz;
-            try {
-                clazz = OWLModelFactory.getOWLDataFactory(_parentClazz.getProjectName()).getOWLClass(OWLUtilities.toURI(newUri));
-            } catch (NeOnCoreException e) {
-                throw new RuntimeException(e);
+        try {
+            OWLModel owlModel;
+            ITreeDataProvider provider;
+            if (parent instanceof ClazzTreeElement) {
+                _parentClazz = (ClazzTreeElement) parent;
+                owlModel = OWLModelFactory.getOWLModel(_parentClazz.getOntologyUri(), _parentClazz.getProjectName());
+                provider = _parentClazz.getProvider();
+    
+            } else if (parent instanceof ClazzFolderTreeElement) {
+                _parentClazz = null;
+                ClazzFolderTreeElement folder = (ClazzFolderTreeElement) parent;
+                owlModel = OWLModelFactory.getOWLModel(folder.getOntologyUri(), folder.getProjectName());
+                provider = _view.getExtensionHandler().getProvider("com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzHierarchyProvider"); //$NON-NLS-1$
+                
+            } else {
+                _parentClazz = null;
+                return null;
             }
-			ClazzTreeElement newElement = new ClazzTreeElement(
-					clazz, 
-					_parentClazz.getOntologyUri(), 
-					_parentClazz.getProjectName(), 
-					_parentClazz.getProvider());
-			return newElement;
-		} else if (parent instanceof ClazzFolderTreeElement) {
-			ClazzFolderTreeElement folder = (ClazzFolderTreeElement) parent;
-			_parentClazz = null;
-			String newId = Messages.NewClazzAction_0 + System.currentTimeMillis(); 
-			String newUri = ""; //$NON-NLS-1$
-			try {
-				newUri = OWLPlugin.getDefault().getSyntaxManager().parseUri(newId, OWLModelFactory.getOWLModel(folder.getOntologyUri(), folder.getProjectName()));
-			} catch (NeOnCoreException e) {
-				newUri = newId;
-			}
-			OWLEntity clazz;
+    
+            String newUri = ""; //$NON-NLS-1$
+            long timeStamp = System.currentTimeMillis() % 1000;
+            String newId = Messages.NewClazzAction_0 + "class" + timeStamp; //$NON-NLS-1$
             try {
-                clazz = OWLModelFactory.getOWLDataFactory(folder.getProjectName()).getOWLClass(OWLUtilities.toURI(newUri));
+                if(owlModel.getDefaultNamespace() != null) {
+                    newId = owlModel.getDefaultNamespace() + "class" + timeStamp; //$NON-NLS-1$
+                }
+                newUri = OWLPlugin.getDefault().getSyntaxManager().parseUri(newId, owlModel);
             } catch (NeOnCoreException e) {
-                throw new RuntimeException(e);
+                newUri = newId;
             }
-			ClazzTreeElement newElement = new ClazzTreeElement(
-					clazz,
-					folder.getOntologyUri(),
-					folder.getProjectName(),
-					_view.getExtensionHandler().getProvider(
-									"com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzHierarchyProvider")); //$NON-NLS-1$
-			return newElement;
-		} else {
-			_parentClazz = null;
-			return null;
-		}
-	}
+
+            OWLClass clazz = OWLModelFactory.getOWLDataFactory(owlModel.getProjectId()).getOWLClass(OWLUtilities.toURI(newUri));
+            ClazzTreeElement newElement = new ClazzTreeElement(
+                    clazz, owlModel.getOntologyURI(), owlModel.getProjectId(), provider);
+            return newElement;
+        } catch (NeOnCoreException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 	/*
 	 * (non-Javadoc)

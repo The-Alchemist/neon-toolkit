@@ -19,11 +19,11 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.NeOnUIPlugin;
+import org.neontoolkit.gui.navigator.ITreeDataProvider;
 import org.neontoolkit.gui.navigator.MTreeView;
 import org.neontoolkit.gui.navigator.actions.AbstractNewHandler;
 import org.neontoolkit.gui.util.PerspectiveChangeHandler;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
@@ -32,6 +32,7 @@ import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
 import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
+import com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyFolderTreeElement;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
@@ -49,71 +50,51 @@ public class NewAnnotationPropertyHandler extends AbstractNewHandler {
 	private AbstractOwlEntityTreeElement _parentProperty = null;
 	private IWorkbenchWindow _window = null;
 
-	/*
-	 *  (non-Javadoc)
-	 * @see com.ontoprise.ontostudio.gui.navigator.actions.AbstractNewAction#createNewItem(java.lang.Object)
-	 */
-	@Override
+    /*
+     *  (non-Javadoc)
+     * @see com.ontoprise.ontostudio.gui.navigator.actions.AbstractNewAction#createNewItem(java.lang.Object)
+     */
+    @Override
     public Object createNewItem(Object parent) {
-		if (parent instanceof AnnotationPropertyTreeElement) {
-			_parentProperty = (AbstractOwlEntityTreeElement) parent;
-			String newId = Messages.NewAnnotationPropertyAction_0 + System.currentTimeMillis(); 
-			String newUri = ""; //$NON-NLS-1$
-            OWLModel model;
-            try {
-                model = OWLModelFactory.getOWLModel(_parentProperty.getOntologyUri(), _parentProperty.getProjectName());
-            } catch (NeOnCoreException e1) {
-                throw new RuntimeException(e1);
+        try {
+            OWLModel owlModel;
+            ITreeDataProvider provider;
+            if (parent instanceof AnnotationPropertyTreeElement) {
+                _parentProperty = (AnnotationPropertyTreeElement) parent;
+                owlModel = OWLModelFactory.getOWLModel(_parentProperty.getOntologyUri(), _parentProperty.getProjectName());
+                provider = _parentProperty.getProvider();
+    
+            } else if (parent instanceof DataPropertyFolderTreeElement) {
+                _parentProperty = null;
+                DataPropertyFolderTreeElement folder = (DataPropertyFolderTreeElement) parent;
+                owlModel = OWLModelFactory.getOWLModel(folder.getOntologyUri(), folder.getProjectName());
+                provider = _view.getExtensionHandler().getProvider("com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyHierarchyProvider"); //$NON-NLS-1$
+                
+            } else {
+                _parentProperty = null;
+                return null;
             }
-            OWLDataFactory factory;
+    
+            String newUri = ""; //$NON-NLS-1$
+            long timeStamp = System.currentTimeMillis() % 1000;
+            String newId = Messages.NewAnnotationPropertyAction_0 + "prop" + timeStamp; //$NON-NLS-1$
             try {
-                factory = model.getOWLDataFactory();
-            } catch (NeOnCoreException e1) {
-                throw new RuntimeException(e1);
+                if(owlModel.getDefaultNamespace() != null) {
+                    newId = owlModel.getDefaultNamespace() + "prop" + timeStamp; //$NON-NLS-1$
+                }
+                newUri = OWLPlugin.getDefault().getSyntaxManager().parseUri(newId, owlModel);
+            } catch (NeOnCoreException e) {
+                newUri = newId;
             }
-			try {
-                newUri = OWLPlugin.getDefault().getSyntaxManager().parseUri(newId, model);
-			} catch (NeOnCoreException e) {
-				newUri = newId;
-			}
-			OWLAnnotationProperty prop = factory.getOWLAnnotationProperty(OWLUtilities.toURI(newUri));
-			AnnotationPropertyTreeElement newElement = new AnnotationPropertyTreeElement(
-					prop,
-					_parentProperty.getOntologyUri(),
-					_parentProperty.getProjectName(),
-					_parentProperty.getProvider());
-			return newElement;
-		} else if (parent instanceof AnnotationPropertyFolderTreeElement) {
-			AnnotationPropertyFolderTreeElement folder = (AnnotationPropertyFolderTreeElement) parent;
-			_parentProperty = null;
-			String newId = Messages.NewAnnotationPropertyAction_0 + System.currentTimeMillis(); 
-			String newUri = ""; //$NON-NLS-1$
-            OWLModel model;
-            OWLDataFactory factory;
-            try {
-                model = OWLModelFactory.getOWLModel(folder.getOntologyUri(), folder.getProjectName());
-                factory = model.getOWLDataFactory();
-            } catch (NeOnCoreException e1) {
-                throw new RuntimeException(e1);
-            }
-			try {
-				newUri = OWLPlugin.getDefault().getSyntaxManager().parseUri(newId, OWLModelFactory.getOWLModel(folder.getOntologyUri(), folder.getProjectName()));
-			} catch (NeOnCoreException e) {
-				newUri = newId;
-			}
-			OWLAnnotationProperty prop = factory.getOWLAnnotationProperty(OWLUtilities.toURI(newUri));
-			AnnotationPropertyTreeElement newElement = new AnnotationPropertyTreeElement(
-					prop,
-					folder.getOntologyUri(),
-                    folder.getProjectName(),
-					_view.getExtensionHandler().getProvider("com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyHierarchyProvider")); //$NON-NLS-1$
-			return newElement;
-		} else {
-			_parentProperty = null;
-			return null;
-		}
-	}
 
+            OWLAnnotationProperty prop = OWLModelFactory.getOWLDataFactory(owlModel.getProjectId()).getOWLAnnotationProperty(OWLUtilities.toURI(newUri));
+            AnnotationPropertyTreeElement newElement = new AnnotationPropertyTreeElement(
+                    prop, owlModel.getOntologyURI(), owlModel.getProjectId(), provider);
+            return newElement;
+        } catch (NeOnCoreException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 	/* (non-Javadoc)
 	 * @see com.ontoprise.ontostudio.gui.navigator.actions.AbstractNewAction#getImage()

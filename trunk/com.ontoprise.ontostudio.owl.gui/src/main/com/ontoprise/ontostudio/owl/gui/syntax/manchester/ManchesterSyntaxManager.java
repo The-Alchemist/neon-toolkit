@@ -62,6 +62,7 @@ import org.semanticweb.owlapi.model.OWLOntologyChangeException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.vocab.XSDVocabulary;
 
+import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.syntax.ISyntaxManager;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
@@ -74,7 +75,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
 
     private String _syntaxName;
     
-    public static final String RESERVED_NAMESPACE = "http://ontoprise.semanticweb.org/defaultNamespace#"; //$NON-NLS-1$
+    public static final String RESERVED_NAMESPACE = Messages.NewClazzAction_0;
 
     private static IToken NAMESPACE_TOKEN = null;
     private static IToken SPECIAL_CHAR_TOKEN = null;
