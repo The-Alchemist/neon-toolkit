@@ -1101,6 +1101,17 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
     }
 
     @Override
+    public Set<ItemHits<OWLClassExpression,OWLSubClassOfAxiom>> getSuperDescriptionHits(String subClazzUri) throws NeOnCoreException {
+        try {
+            return _model.getSuperDescriptionHits(subClazzUri);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+
+    @Override
     public Set<OWLObjectProperty> getSubObjectProperties(String propertyId) throws NeOnCoreException {
         try {
             return _model.getSubObjectProperties(propertyId);
