@@ -68,8 +68,10 @@ public class NewIndividualHandler extends AbstractOWLIndividualViewHandler {
      */
     @Override
     public void dispose() {
-        ISelectionService service = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
-        service.removeSelectionListener(_selectionListener);
+        if(PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
+            ISelectionService service = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService();
+            service.removeSelectionListener(_selectionListener);
+        }
     }
 
     /*
