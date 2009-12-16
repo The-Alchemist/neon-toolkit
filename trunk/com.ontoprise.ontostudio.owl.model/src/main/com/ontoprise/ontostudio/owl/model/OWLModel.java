@@ -828,6 +828,7 @@ public interface OWLModel {
     Set<ItemHits<OWLClassExpression,OWLInverseObjectPropertiesAxiom>> getInverseObjectPropertyHits(String propertyUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLObjectPropertyRangeAxiom>> getObjectPropertyRangeDescriptionHits(String propertyUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLSubClassOfAxiom>> getSubDescriptionHits(String superClazzUri) throws NeOnCoreException;
+    Set<ItemHits<OWLClassExpression,OWLSubClassOfAxiom>> getSuperDescriptionHits(String subClazzUri) throws NeOnCoreException;
     Set<ItemHits<OWLClass,OWLSubClassOfAxiom>> getSuperClassHits(String superClazzUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLSubObjectPropertyOfAxiom>> getSuperObjectPropertyHits(String propertyUri) throws NeOnCoreException;
     Set<ItemHits<OWLClass,OWLEquivalentClassesAxiom>> getEquivalentClassesHits(String clazzUri) throws NeOnCoreException;

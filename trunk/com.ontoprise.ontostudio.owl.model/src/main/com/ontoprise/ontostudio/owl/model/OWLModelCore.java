@@ -968,6 +968,7 @@ public class OWLModelCore implements OWLModel {
     private final ItemCollector<OWLDataPropertyExpression,OWLSubDataPropertyOfAxiom> SubDataPropertyOf_subDataProperty_NamedDataPropertiesOnly_Collector = new ItemCollectorCore<OWLDataPropertyExpression,OWLSubDataPropertyOfAxiom>("subDataProperty", OWLDataPropertyExpression.class, DATA_PROPERTY_FILTER);
     private final ItemCollector<OWLDataPropertyExpression,OWLSubDataPropertyOfAxiom> SubDataPropertyOf_superDataProperty_NamedDataPropertiesOnly_Collector = new ItemCollectorCore<OWLDataPropertyExpression,OWLSubDataPropertyOfAxiom>("superDataProperty", OWLDataPropertyExpression.class, DATA_PROPERTY_FILTER);
     private final ItemCollector<OWLClassExpression,OWLSubClassOfAxiom> SubClassOf_subDescription_Collector = new ItemCollectorCore<OWLClassExpression,OWLSubClassOfAxiom>("subDescription", OWLClassExpression.class);
+    private final ItemCollector<OWLClassExpression,OWLSubClassOfAxiom> SubClassOf_superDescription_Collector = new ItemCollectorCore<OWLClassExpression,OWLSubClassOfAxiom>("superDescription", OWLClassExpression.class);
     private final ItemCollector<OWLClassExpression,OWLSubClassOfAxiom> SubClassOf_superDescription_RestrictionsOnly_Collector = new ItemCollectorCore<OWLClassExpression,OWLSubClassOfAxiom>("superDescription", OWLClassExpression.class, RESTRICTION_FILTER);
     private final ItemCollector<OWLClassExpression,OWLSubClassOfAxiom> SubClassOf_superDescription_UnnamedNonRestrictionsOnly_Collector = new ItemCollectorCore<OWLClassExpression,OWLSubClassOfAxiom>("superDescription", OWLClassExpression.class, UNNAMED_NON_RESTRICTION_FILTER);
     private final ItemCollector<OWLClassExpression,OWLSubClassOfAxiom> SubClassOf_superDescription_NamedDescriptionsOnly_Collector = new ItemCollectorCore<OWLClassExpression,OWLSubClassOfAxiom>("superDescription", OWLClassExpression.class, NAMED_DESCRIPTION_FILTER);
@@ -1420,6 +1421,11 @@ public class OWLModelCore implements OWLModel {
     @Override
     public Set<ItemHits<OWLClassExpression,OWLSubClassOfAxiom>> getSubDescriptionHits(String classId) throws NeOnCoreException {
         return Cast.cast(SubClassOf_subDescription_Collector.getItemHits(SubClassOf_superDescription_Request, autoBox(owlClass(classId))));
+    }
+
+    @Override
+    public Set<ItemHits<OWLClassExpression,OWLSubClassOfAxiom>> getSuperDescriptionHits(String subClassId) throws NeOnCoreException {
+        return Cast.cast(SubClassOf_superDescription_Collector.getItemHits(SubClassOf_subDescription_Request, autoBox(owlClass(subClassId))));
     }
 
     @Override

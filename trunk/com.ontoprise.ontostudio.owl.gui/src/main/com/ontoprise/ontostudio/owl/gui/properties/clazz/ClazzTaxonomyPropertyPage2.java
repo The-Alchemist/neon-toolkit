@@ -59,6 +59,7 @@ import com.ontoprise.ontostudio.owl.model.commands.clazz.GetDisjointClazzHits;
 import com.ontoprise.ontostudio.owl.model.commands.clazz.GetEquivalentClazzHits;
 import com.ontoprise.ontostudio.owl.model.commands.clazz.GetSubDescriptionHits;
 import com.ontoprise.ontostudio.owl.model.commands.clazz.GetSuperClazzesHits;
+import com.ontoprise.ontostudio.owl.model.commands.clazz.GetSuperDescriptionHits;
 import com.ontoprise.ontostudio.owl.model.util.OWLAxiomUtils;
 
 public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
@@ -211,6 +212,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
         try {
             String[][] subDescriptionHits = getSubDescriptionHits();
             TreeSet<String[]> sortedSet = getSortedSet(subDescriptionHits);
+            
             for (String[] hit: sortedSet) {
                 String axiomText = hit[0];
                 String ontologyUri = hit[1];
@@ -222,9 +224,9 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
                 createSuperOrSubRow(_subClazzesComp, subDescription, locatedAxiom, ontologyUri, false, SUB_MODE);
             }
         } catch (NeOnCoreException e) {
-            handleException(e, Messages.ClazzPropertyPage2_ErrorRetrievingData, _superClazzesComp.getShell());
+            handleException(e, Messages.ClazzPropertyPage2_ErrorRetrievingData, _subClazzesComp.getShell());
         } catch (CommandException e) {
-            handleException(e, Messages.ClazzPropertyPage2_ErrorRetrievingData, _superClazzesComp.getShell());
+            handleException(e, Messages.ClazzPropertyPage2_ErrorRetrievingData, _subClazzesComp.getShell());
         }
         Label createNewLabel = new Label(_subClazzesComp, SWT.NONE);
         createNewLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -236,7 +238,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
     }
 
     protected String[][] getSuperDescriptionHits() throws CommandException {
-        return new GetSuperClazzesHits(_project, _ontologyUri, _id).getResults();
+        return new GetSuperDescriptionHits(_project, _ontologyUri, _id).getResults();
     }
 
     protected String[][] getSubDescriptionHits() throws CommandException {
@@ -400,22 +402,22 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
                     String value = clazzText.getText();
                     String modeString = ""; //$NON-NLS-1$
                     if (mode == SUPER_MODE || mode == EQUIV_MODE || mode == DISJOINT_MODE) {
-                        OWLClassExpression subClazzDesc = getClazzDescription();
-                        OWLClassExpression superClazzDesc = _manager.parseDescription(value, _owlModel);
+                        OWLClassExpression thisClazzDesc = getClazzDescription();
+                        OWLClassExpression thatClazzDesc = _manager.parseDescription(value, _owlModel);
                         switch (mode) {
                             case SUPER_MODE:
-                                newAxiom = factory.getOWLSubClassOfAxiom(subClazzDesc, superClazzDesc);
+                                newAxiom = factory.getOWLSubClassOfAxiom(thisClazzDesc, thatClazzDesc);
                                 break;
                             case EQUIV_MODE:
-                                if (!OWLUtilities.toString(subClazzDesc).equals(OWLUtilities.toString(superClazzDesc))) {
-                                    newAxiom = factory.getOWLEquivalentClassesAxiom(subClazzDesc, superClazzDesc);
+                                if (!OWLUtilities.toString(thisClazzDesc).equals(OWLUtilities.toString(thatClazzDesc))) {
+                                    newAxiom = factory.getOWLEquivalentClassesAxiom(thisClazzDesc, thatClazzDesc);
                                 } else {
                                     modeString = Messages.ClazzTaxonomyPropertyPage2_0;
                                 }
                                 break;
                             case DISJOINT_MODE:
-                                if (!OWLUtilities.toString(subClazzDesc).equals(OWLUtilities.toString(superClazzDesc))) {
-                                    newAxiom = factory.getOWLDisjointClassesAxiom(subClazzDesc, superClazzDesc);
+                                if (!OWLUtilities.toString(thisClazzDesc).equals(OWLUtilities.toString(thatClazzDesc))) {
+                                    newAxiom = factory.getOWLDisjointClassesAxiom(thisClazzDesc, thatClazzDesc);
                                 } else {
                                     modeString = Messages.ClazzTaxonomyPropertyPage2_1;
                                 }
