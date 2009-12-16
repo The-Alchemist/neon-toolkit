@@ -247,6 +247,14 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
         return newArray;
     }
 
+    private String[] addPrefixToArrayNoSpace(String prefix, String[] array) {
+        String[] newArray = new String[array.length];
+        for (int i = 0; i < array.length; i++) {
+            newArray[i] = new StringBuilder(prefix).append(array[i]).toString();
+        }
+        return newArray;
+    }
+
     private String[] appendArrays(String[]... array) {
         int len = array[0].length;
 
@@ -377,31 +385,12 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
     @Override
     public String[] visit(OWLLiteral object) {
         
-        if (!object.isTyped()) {
-            OWLStringLiteral untypedConstant = (OWLStringLiteral)object;
-            String string = untypedConstant.getLiteral();
-            String language = untypedConstant.getLang();
-            if (language != null) {
-                return createSingle(new StringBuilder(quoteLiteral(string)).append("@").append(language).toString()); //$NON-NLS-1$
-            } else {
-                return createSingle(quoteLiteral(string));
-            }
-        } else {
+        if (object.isTyped()) {
             OWLTypedLiteral typedConstant = (OWLTypedLiteral)object;
-            OWLDatatype datatype = typedConstant.getDatatype();
-            if ((OWLConstants.XSD_LONG).equals(datatype.getURI().toString())) {
-                return createSingle(typedConstant.getLiteral());
-            } else if ((OWLConstants.XSD_DOUBLE).equals(datatype.getURI().toString())) {
-                String literal = typedConstant.getLiteral();
-                if (!literal.contains(".") && !literal.contains("E") && !literal.contains("e")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                    literal = literal + ".0"; //$NON-NLS-1$
-                }
-                return createSingle(literal);
-            }
-
-            String literal = typedConstant.getLiteral();
-            String xsdTypeURI = datatype.getURI().toString();
-            return addPrefixToArray(new StringBuilder(quoteLiteral(literal)).append("^^").toString(), createStandardArray(xsdTypeURI)); //$NON-NLS-1$
+            return (String[])visit(typedConstant);
+        } else {
+            OWLStringLiteral untypedConstant = (OWLStringLiteral)object;
+            return (String[])visit(untypedConstant);
         }
     }
 
@@ -929,15 +918,13 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
 
     @Override
     public Object visit(OWLStringLiteral node) {
-        String[] value = createSingle(quoteLiteral(node.getLiteral()));
-        if(node.getLang()!= null && node.getLang().length() > 0) {
-            String[] lang = createSingle(node.getLang());
-            return appendArrays(value, createSingle("@"), lang); //$NON-NLS-1$
+        String value = quoteLiteral(node.getLiteral());
+        String language = node.getLang();
+        if(language != null && language.length() > 0) {
+            return createSingle(new StringBuilder(value).append("@").append(language).toString()); //$NON-NLS-1$
         } else {
-            return value;
-            
+            return createSingle(value);
         }
-
     }
     
     @Override
@@ -1023,11 +1010,21 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
     }
     
     @Override
-    public Object visit(OWLTypedLiteral node) {
-        String[] value = createSingle(node.getLiteral());
-        String[] datatype = (String[]) node.getDatatype().accept(this);
-        
-        return appendArrays(value, datatype);
+    public Object visit(OWLTypedLiteral typedConstant) {
+        OWLDatatype datatype = typedConstant.getDatatype();
+        if ((OWLConstants.XSD_INTEGER).equals(datatype.getURI().toString())) {
+            return createSingle(typedConstant.getLiteral());
+        } else if ((OWLConstants.XSD_DOUBLE).equals(datatype.getURI().toString())) {
+            String literal = typedConstant.getLiteral();
+            if (!literal.contains(".") && !literal.contains("E") && !literal.contains("e")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                literal = literal + ".0"; //$NON-NLS-1$
+            }
+            return createSingle(literal);
+        }
+
+        String literal = typedConstant.getLiteral();
+        String xsdTypeURI = datatype.getURI().toString();
+        return addPrefixToArrayNoSpace(new StringBuilder(quoteLiteral(literal)).append("^^").toString(), createStandardArray(xsdTypeURI)); //$NON-NLS-1$
     }
 
     @Override
