@@ -217,8 +217,14 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
 
         public OWLObjectProperty getOWLObjectProperty(String name) {
             try {
+                IRI iri;
+                try {
+                    iri = getIRI(name);
+                } catch (Exception e) {
+                    return null;
+                }
                 for (OWLModel model: ontologies) {
-                    if (model.getOntology().containsObjectPropertyReference(getIRI(name)) || allowUndeclared) {
+                    if (model.getOntology().containsObjectPropertyReference(iri) || allowUndeclared) {
                         return dataFactory.getOWLObjectProperty(getUri(name));
                     }
                 }
@@ -238,8 +244,14 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
 
         public OWLDataProperty getOWLDataProperty(String name) {
             try {
+                IRI iri;
+                try {
+                    iri = getIRI(name);
+                } catch (Exception e) {
+                    return null;
+                }
                 for (OWLModel model: ontologies) {
-                    if (model.getOntology().containsDataPropertyReference(getIRI(name)) || allowUndeclared) {
+                    if (model.getOntology().containsDataPropertyReference(iri) || allowUndeclared) {
                         return dataFactory.getOWLDataProperty(getUri(name));
                     }
                 }
@@ -255,16 +267,29 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
             //A check if a individuals is in the KB is not necessary, because this 
             //method is only called if HAS_VALUE is selected. Selecting a not existing individual 
             //is allowed.
-            if(getUri(name) != null)
-                return dataFactory.getOWLNamedIndividual(getIRI(name));
-            else
+            if(getUri(name) != null) {
+                IRI iri;
+                try {
+                    iri = getIRI(name);
+                } catch (Exception e) {
+                    return null;
+                }
+                return dataFactory.getOWLNamedIndividual(iri);
+            } else {
                 return null;
+            }
         }
 
         public OWLDatatype getOWLDatatype(String name) {
             try {
+                IRI iri;
+                try {
+                    iri = getIRI(name);
+                } catch (Exception e) {
+                    return null;
+                }
                 for (OWLModel model: ontologies) {
-                    if (model.getOntology().containsDatatypeReference(getIRI(name)) || dataTypeNameMap.containsKey(name) || allowUndeclared) {
+                    if (model.getOntology().containsDatatypeReference(iri) || dataTypeNameMap.containsKey(name) || allowUndeclared) {
                         return dataFactory.getOWLDatatype(getUri(name));
                     }
                 }
@@ -277,8 +302,14 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
 
         public OWLAnnotationProperty getOWLAnnotationProperty(String name) {
             try {
+                IRI iri;
+                try {
+                    iri = getIRI(name);
+                } catch (Exception e) {
+                    return null;
+                }
                 for (OWLModel model: ontologies) {
-                    if (model.getOntology().containsAnnotationPropertyReference(getIRI(name)) || allowUndeclared) {
+                    if (model.getOntology().containsAnnotationPropertyReference(iri) || allowUndeclared) {
                         return dataFactory.getOWLAnnotationProperty(getUri(name));
                     }
                 }
