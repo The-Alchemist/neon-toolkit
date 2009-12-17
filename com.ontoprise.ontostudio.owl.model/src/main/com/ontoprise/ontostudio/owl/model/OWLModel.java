@@ -33,6 +33,7 @@ import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLDataPropertyDomainAxiom;
+import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLDataRange;
 import org.semanticweb.owlapi.model.OWLDatatype;
@@ -52,6 +53,7 @@ import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLObjectPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
+import org.semanticweb.owlapi.model.OWLSubAnnotationPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubDataPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
@@ -483,7 +485,9 @@ public interface OWLModel {
      * @throws NeOnCoreException
      */
     public Set<OWLAnnotationProperty> getSubAnnotationProperties(String propertyId) throws NeOnCoreException;
-
+    public Set<ItemHits<OWLAnnotationProperty,OWLSubAnnotationPropertyOfAxiom>> getSubAnnotationPropertyHits(String propertyId) throws NeOnCoreException;
+    public Set<ItemHits<OWLAnnotationProperty,OWLSubAnnotationPropertyOfAxiom>> getSuperAnnotationPropertyHits(String propertyUri) throws NeOnCoreException;
+    
     /**
      * returns a list of all direct superpoperties of passed OWL object property
      * 
@@ -510,7 +514,7 @@ public interface OWLModel {
      * @throws NeOnCoreException
      */
     public Set<OWLAnnotationProperty> getSuperAnnotationProperties(String propertyId) throws NeOnCoreException;
-
+    
     /**
      * returns a list of all equivalent objectpoperties of passed OWL object property
      * 
@@ -830,11 +834,11 @@ public interface OWLModel {
     Set<ItemHits<OWLClassExpression,OWLSubClassOfAxiom>> getSubDescriptionHits(String superClazzUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLSubClassOfAxiom>> getSuperDescriptionHits(String subClazzUri) throws NeOnCoreException;
     Set<ItemHits<OWLClass,OWLSubClassOfAxiom>> getSuperClassHits(String superClazzUri) throws NeOnCoreException;
-    Set<ItemHits<OWLClassExpression,OWLSubObjectPropertyOfAxiom>> getSuperObjectPropertyHits(String propertyUri) throws NeOnCoreException;
+    Set<ItemHits<OWLObjectPropertyExpression,OWLSubObjectPropertyOfAxiom>> getSuperObjectPropertyHits(String propertyUri) throws NeOnCoreException;
     Set<ItemHits<OWLClass,OWLEquivalentClassesAxiom>> getEquivalentClassesHits(String clazzUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLObjectPropertyDomainAxiom>> getObjectPropertyDomainHits(String propertyUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLEquivalentObjectPropertiesAxiom>> getEquivalentObjectPropertyHits(String propertyUri) throws NeOnCoreException;
-    Set<ItemHits<OWLClassExpression,OWLSubDataPropertyOfAxiom>> getSuperDataPropertyHits(String propertyUri) throws NeOnCoreException;
+    Set<ItemHits<OWLDataPropertyExpression,OWLSubDataPropertyOfAxiom>> getSuperDataPropertyHits(String propertyUri) throws NeOnCoreException;
     boolean isRootObjectProperty(OWLObjectProperty prop) throws NeOnCoreException;
     Set<ItemHits<OWLIndividual,OWLSameIndividualAxiom>> getEquivalentIndividualHits(String individualUri) throws NeOnCoreException;
     Set<LocatedItem<OWLObjectPropertyAssertionAxiom>> getObjectPropertyMemberHits(String individualUri) throws NeOnCoreException;

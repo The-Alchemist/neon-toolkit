@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite.SuiteClasses;
 import org.neontoolkit.core.ParameterizedSuite;
 
+import com.ontoprise.ontostudio.owl.gui.commands.annotationProperty.AnnotationPropertyTaxonomyTest;
 import com.ontoprise.ontostudio.owl.gui.commands.annotationProperty.CreateRemoveAnnotationPropertyTest;
 import com.ontoprise.ontostudio.owl.gui.commands.annotations.AnnotationsTest;
 import com.ontoprise.ontostudio.owl.gui.commands.clazz.CreateEditRemoveRestrictionsTest;
@@ -79,7 +80,8 @@ import com.ontoprise.ontostudio.owl.gui.commands.rename.RenameProjectTest;
     GetAllImportingOntologiesTest.class,
     SyncEventHandlerTest.class,
     RenameAnnotationPropertyTest.class,
-    ImportTest.class
+    ImportTest.class,
+    AnnotationPropertyTaxonomyTest.class,
 })
 
 public class AllPluginTests {

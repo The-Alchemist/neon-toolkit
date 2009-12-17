@@ -194,6 +194,9 @@ public class OWLUtilities {
     public static OWLObjectProperty objectProperty(String unexpandedURI, OWLNamespaces namespaces, OWLDataFactory factory) {
         return factory.getOWLObjectProperty(toURI(namespaces.expandString(unexpandedURI)));
     }
+    public static OWLAnnotationProperty annotationProperty(String unexpandedURI, OWLNamespaces namespaces, OWLDataFactory factory) {
+        return factory.getOWLAnnotationProperty(toURI(namespaces.expandString(unexpandedURI)));
+    }
     public static OWLDataProperty dataProperty(String unexpandedURI, OWLNamespaces namespaces, OWLDataFactory factory) {
         return factory.getOWLDataProperty(toURI(namespaces.expandString(unexpandedURI)));
     }

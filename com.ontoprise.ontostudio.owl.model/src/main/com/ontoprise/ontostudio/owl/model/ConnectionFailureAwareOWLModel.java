@@ -34,6 +34,7 @@ import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLDataPropertyDomainAxiom;
+import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLDataRange;
 import org.semanticweb.owlapi.model.OWLDatatype;
@@ -53,6 +54,7 @@ import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLObjectPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
+import org.semanticweb.owlapi.model.OWLSubAnnotationPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubDataPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
@@ -363,6 +365,7 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public Set<OWLAnnotationProperty> getAllOntologyAnnotationProperties() throws NeOnCoreException {
         try {
@@ -1189,7 +1192,7 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
     }
 
     @Override
-    public Set<ItemHits<OWLClassExpression,OWLSubDataPropertyOfAxiom>> getSuperDataPropertyHits(String propertyUri) throws NeOnCoreException {
+    public Set<ItemHits<OWLDataPropertyExpression,OWLSubDataPropertyOfAxiom>> getSuperDataPropertyHits(String propertyUri) throws NeOnCoreException {
         try {
             return _model.getSuperDataPropertyHits(propertyUri);
         } catch (NeOnCoreException e) {
@@ -1233,7 +1236,7 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
     }
 
     @Override
-    public Set<ItemHits<OWLClassExpression,OWLSubObjectPropertyOfAxiom>> getSuperObjectPropertyHits(String propertyUri) throws NeOnCoreException {
+    public Set<ItemHits<OWLObjectPropertyExpression,OWLSubObjectPropertyOfAxiom>> getSuperObjectPropertyHits(String propertyUri) throws NeOnCoreException {
         try {
             return _model.getSuperObjectPropertyHits(propertyUri);
         } catch (NeOnCoreException e) {
@@ -1619,22 +1622,68 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
 
     @Override
     public Set<OWLAnnotationValue> getAnnotations(OWLAnonymousIndividual owlAnonymousIndividual, String annotationPropertyId) throws NeOnCoreException {
-       return _model.getAnnotations(owlAnonymousIndividual, annotationPropertyId);
+        try {
+            return _model.getAnnotations(owlAnonymousIndividual, annotationPropertyId);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
     }
 
     @Override
     public Set<LocatedItem<OWLAnnotationAssertionAxiom>> getAnnotationHits(OWLAnnotationSubject annotationSubject) throws NeOnCoreException {
-        return _model.getAnnotationHits(annotationSubject);
+        try {
+            return _model.getAnnotationHits(annotationSubject);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
     }
     
     @Override
     public Set<List<OWLObjectProperty>> getSubPropertyChains(String propertyId) throws NeOnCoreException {
-        return _model.getSubPropertyChains(propertyId);
+        try {
+            return _model.getSubPropertyChains(propertyId);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
     }
 
     @Override
     public Set<ItemHits<List<OWLObjectPropertyExpression>,OWLSubPropertyChainOfAxiom>> getSubPropertyChainOfHits(String propertyId) throws NeOnCoreException {
-        return _model.getSubPropertyChainOfHits(propertyId);
+        try {
+            return _model.getSubPropertyChainOfHits(propertyId);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+
+    @Override
+    public Set<ItemHits<OWLAnnotationProperty,OWLSubAnnotationPropertyOfAxiom>> getSubAnnotationPropertyHits(String propertyId) throws NeOnCoreException {
+        try {
+            return _model.getSubAnnotationPropertyHits(propertyId);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+
+    @Override
+    public Set<ItemHits<OWLAnnotationProperty,OWLSubAnnotationPropertyOfAxiom>> getSuperAnnotationPropertyHits(String propertyUri) throws NeOnCoreException {
+        try {
+            return _model.getSuperAnnotationPropertyHits(propertyUri);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
     }
 
 }

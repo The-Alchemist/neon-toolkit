@@ -35,6 +35,7 @@ import org.semanticweb.owlapi.model.OWLObjectPropertyCharacteristicAxiom;
 import org.semanticweb.owlapi.model.OWLObjectPropertyDomainAxiom;
 import org.semanticweb.owlapi.model.OWLObjectPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
+import org.semanticweb.owlapi.model.OWLSubAnnotationPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubDataPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
@@ -307,6 +308,16 @@ public class GetMemberVisitor extends OWLKAON2VisitorAdapter {
         if ("subObjectProperties".equals(_member)) { //$NON-NLS-1$
             return Collections.singleton(object.getSubProperty());
         } else if ("superObjectProperty".equals(_member)) { //$NON-NLS-1$
+            return object.getSuperProperty();
+        }
+        return super.visit(object);
+    }
+
+    @Override
+    public Object visit(OWLSubAnnotationPropertyOfAxiom object) {
+        if ("subAnnotationProperty".equals(_member)) { //$NON-NLS-1$
+            return object.getSubProperty();
+        } else if ("superAnnotationProperty".equals(_member)) { //$NON-NLS-1$
             return object.getSuperProperty();
         }
         return super.visit(object);

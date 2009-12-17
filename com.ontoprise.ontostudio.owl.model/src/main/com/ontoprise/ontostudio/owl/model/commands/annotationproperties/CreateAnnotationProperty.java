@@ -11,11 +11,11 @@
 package com.ontoprise.ontostudio.owl.model.commands.annotationproperties;
 
 import org.neontoolkit.core.command.CommandException;
-import org.neontoolkit.core.exception.InternalNeOnException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLDataFactory;
 
-import com.ontoprise.ontostudio.owl.model.Messages;
+import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.OWLModuleChangeCommand;
 
@@ -27,17 +27,17 @@ public class CreateAnnotationProperty extends OWLModuleChangeCommand {
 
     @Override
     public void doPerform() throws CommandException {
-        String propertyId = (String)getArgument(2);
+        String propertyId = getArgument(2).toString();
         String superPropertyId = (String) (getArgument(3) == null ? null : getArgument(3));
 
         try {
-            OWLAnnotationProperty annotationProperty = getOwlModel().getOWLDataFactory().getOWLAnnotationProperty(OWLUtilities.toURI(propertyId));
-            // OWLAnnotationProperty superAnnotationProperty = OWLUtilities.getAnnotationProperty(OWLUtilities.toURI(superPropertyId));
-
-            if (superPropertyId != null && !superPropertyId.equals("")) { //$NON-NLS-1$
-                throw new InternalNeOnException(Messages.getString("CreateAnnotationProperty.1")); //$NON-NLS-1$
-                // SubAnnotationPropertyOf subProp = KAON2Manager.factory().subAnnotationPropertyOf(annotationProperty, superAnnotationProperty);
-                // OWLModelFactory.getOWLModel(getOntologyId(), getProjectName()).addAxiom(subProp);
+            OWLNamespaces ns = getOwlModel().getNamespaces();
+            OWLDataFactory factory = getOwlModel().getOWLDataFactory();
+            OWLAnnotationProperty annotationProperty = OWLUtilities.annotationProperty(propertyId, ns, factory);
+            
+            if (superPropertyId != null) { 
+                OWLAnnotationProperty superAnnotationProperty = OWLUtilities.annotationProperty(superPropertyId, ns, factory);
+                getOwlModel().addAxiom(factory.getOWLSubAnnotationPropertyOfAxiom(annotationProperty, superAnnotationProperty));
             } else {
                 getOwlModel().addEntity(annotationProperty);
             }
