@@ -17,7 +17,7 @@ import java.util.Set;
 
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
-import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 import org.semanticweb.owlapi.model.OWLSubDataPropertyOfAxiom;
 
 import com.ontoprise.ontostudio.owl.model.ItemHits;
@@ -47,10 +47,10 @@ public class GetSuperDataPropertyHits extends OWLOntologyRequestCommand {
         _results = new ArrayList<String[]>();
         String propertyUri = (String) getArgument(2);
 
-        Set<ItemHits<OWLClassExpression,OWLSubDataPropertyOfAxiom>> results = new HashSet<ItemHits<OWLClassExpression,OWLSubDataPropertyOfAxiom>>();
+        Set<ItemHits<OWLDataPropertyExpression,OWLSubDataPropertyOfAxiom>> results = new HashSet<ItemHits<OWLDataPropertyExpression,OWLSubDataPropertyOfAxiom>>();
         try {
             results = getOwlModel().getSuperDataPropertyHits(propertyUri);
-            for (ItemHits<OWLClassExpression,OWLSubDataPropertyOfAxiom> hit: results) {
+            for (ItemHits<OWLDataPropertyExpression,OWLSubDataPropertyOfAxiom> hit: results) {
                 Set<LocatedItem<OWLSubDataPropertyOfAxiom>> axioms = hit.getAxioms();
                 for (LocatedItem<OWLSubDataPropertyOfAxiom> axiom: axioms) {
                     _results.add(new String[] {OWLUtilities.toString(axiom.getItem()), axiom.getOntologyURI()});

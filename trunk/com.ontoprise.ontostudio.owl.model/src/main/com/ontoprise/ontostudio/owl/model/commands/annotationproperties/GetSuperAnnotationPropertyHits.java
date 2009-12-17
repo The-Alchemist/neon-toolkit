@@ -8,7 +8,7 @@
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  ******************************************************************************/
 
-package com.ontoprise.ontostudio.owl.model.commands.objectproperties;
+package com.ontoprise.ontostudio.owl.model.commands.annotationproperties;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,8 +17,8 @@ import java.util.Set;
 
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
-import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
-import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
+import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLSubAnnotationPropertyOfAxiom;
 
 import com.ontoprise.ontostudio.owl.model.ItemHits;
 import com.ontoprise.ontostudio.owl.model.LocatedItem;
@@ -29,7 +29,7 @@ import com.ontoprise.ontostudio.owl.model.commands.OWLOntologyRequestCommand;
  * @author werner
  * 
  */
-public class GetSuperObjectPropertyHits extends OWLOntologyRequestCommand {
+public class GetSuperAnnotationPropertyHits extends OWLOntologyRequestCommand {
 
     private List<String[]> _results;
 
@@ -38,7 +38,7 @@ public class GetSuperObjectPropertyHits extends OWLOntologyRequestCommand {
      * @param module
      * @param arguments
      */
-    public GetSuperObjectPropertyHits(String project, String module, String propertyUri) {
+    public GetSuperAnnotationPropertyHits(String project, String module, String propertyUri) {
         super(project, module, propertyUri);
     }
 
@@ -47,12 +47,12 @@ public class GetSuperObjectPropertyHits extends OWLOntologyRequestCommand {
         _results = new ArrayList<String[]>();
         String propertyUri = (String) getArgument(2);
 
-        Set<ItemHits<OWLObjectPropertyExpression,OWLSubObjectPropertyOfAxiom>> results = new HashSet<ItemHits<OWLObjectPropertyExpression,OWLSubObjectPropertyOfAxiom>>();
+        Set<ItemHits<OWLAnnotationProperty,OWLSubAnnotationPropertyOfAxiom>> results = new HashSet<ItemHits<OWLAnnotationProperty,OWLSubAnnotationPropertyOfAxiom>>();
         try {
-            results = getOwlModel().getSuperObjectPropertyHits(propertyUri);
-            for (ItemHits<OWLObjectPropertyExpression,OWLSubObjectPropertyOfAxiom> hit: results) {
-                Set<LocatedItem<OWLSubObjectPropertyOfAxiom>> axioms = hit.getAxioms();
-                for (LocatedItem<OWLSubObjectPropertyOfAxiom> axiom: axioms) {
+            results = getOwlModel().getSuperAnnotationPropertyHits(propertyUri);
+            for (ItemHits<OWLAnnotationProperty,OWLSubAnnotationPropertyOfAxiom> hit: results) {
+                Set<LocatedItem<OWLSubAnnotationPropertyOfAxiom>> axioms = hit.getAxioms();
+                for (LocatedItem<OWLSubAnnotationPropertyOfAxiom> axiom: axioms) {
                     _results.add(new String[] {OWLUtilities.toString(axiom.getItem()), axiom.getOntologyURI()});
                 }
             }
