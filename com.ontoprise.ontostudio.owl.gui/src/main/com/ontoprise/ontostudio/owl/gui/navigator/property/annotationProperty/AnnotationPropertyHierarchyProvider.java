@@ -23,6 +23,7 @@ import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.neontoolkit.gui.navigator.DefaultTreeDataProvider;
 import org.neontoolkit.gui.navigator.ITreeElement;
+import org.neontoolkit.gui.navigator.elements.IEntityElement;
 import org.neontoolkit.gui.navigator.elements.IOntologyElement;
 import org.neontoolkit.gui.navigator.elements.IProjectElement;
 import org.neontoolkit.gui.navigator.elements.TreeElementPath;
@@ -30,16 +31,18 @@ import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLDeclarationAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLSubAnnotationPropertyOfAxiom;
 
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
 import com.ontoprise.ontostudio.owl.gui.control.AlphabeticalOWLEntityTreeElementComparator;
+import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLModelPlugin;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.annotationproperties.GetRootAnnotationProperties;
-import com.ontoprise.ontostudio.owl.model.commands.annotationproperties.GetSubAnnotationProperties;
+import com.ontoprise.ontostudio.owl.model.commands.annotationproperties.GetSubAnnotationProperties; //import com.ontoprise.ontostudio.owl.model.commands.dataproperties.GetSubDataProperties;
 import com.ontoprise.ontostudio.owl.model.event.OWLAxiomListener;
 import com.ontoprise.ontostudio.owl.model.event.OWLChangeEvent;
 
@@ -54,6 +57,8 @@ public class AnnotationPropertyHierarchyProvider extends DefaultTreeDataProvider
 
     public boolean _listenersEnabled = true;
     private OWLAxiomListener _axiomListener;
+
+    private OWLModel _owlModel;
 
     protected OWLAxiomListener getAxiomListener() {
         if (_axiomListener == null) {
@@ -123,7 +128,14 @@ public class AnnotationPropertyHierarchyProvider extends DefaultTreeDataProvider
      */
     @Override
     public void dispose() {
-
+        super.dispose();
+        if (_owlModel != null) {
+            try {
+                _owlModel.removeAxiomListener(getAxiomListener());
+            } catch (NeOnCoreException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     /*
@@ -132,8 +144,44 @@ public class AnnotationPropertyHierarchyProvider extends DefaultTreeDataProvider
      * @see com.ontoprise.ontostudio.gui.navigator.ITreeDataProvider#getChildren(com.ontoprise.ontostudio.gui.navigator.ITreeElement, int, int)
      */
     public ITreeElement[] getChildren(ITreeElement parentElement, int topIndex, int amount) {
-        return null;
+        assert parentElement instanceof IOntologyElement;
+        assert parentElement instanceof IEntityElement;
+
+        String projectId = ((IProjectElement) parentElement).getProjectName();
+        String ontologyId = ((IOntologyElement) parentElement).getOntologyUri();
+        try {
+            _owlModel = OWLModelFactory.getOWLModel(ontologyId, projectId);
+        } catch (NeOnCoreException e1) {
+        }
+
+        registerAxiomListener(projectId, ontologyId);
+
+        try {
+            String parentId = ((AbstractOwlEntityTreeElement) parentElement).getId();
+
+            String[] subPropertyUris = new GetSubAnnotationProperties(projectId, ontologyId, parentId).getResults();
+            List<AnnotationPropertyTreeElement> annotationPropNodes = new ArrayList<AnnotationPropertyTreeElement>();
+            int i = 0;
+            for (String annotationPropUri: subPropertyUris) {
+                OWLAnnotationProperty prop = OWLModelFactory.getOWLDataFactory(projectId).getOWLAnnotationProperty(OWLUtilities.toURI(annotationPropUri));
+                annotationPropNodes.add(new AnnotationPropertyTreeElement(prop, ontologyId, projectId, this));
+                i++;
+            }
+            Collections.sort(annotationPropNodes, new AlphabeticalOWLEntityTreeElementComparator<AnnotationPropertyTreeElement>());
+            return annotationPropNodes.toArray(new AnnotationPropertyTreeElement[annotationPropNodes.size()]);
+
+        } catch (CommandException e) {
+            OWLPlugin.logError(e);
+            return new AnnotationPropertyTreeElement[0];
+        } catch (NeOnCoreException e) {
+            OWLPlugin.logError(e);
+            return new AnnotationPropertyTreeElement[0];
+        }
     }
+
+    /*
+     * public ITreeElement[] getChildren(ITreeElement parentElement, int topIndex, int amount) { return null; }
+     */
 
     /*
      * (non-Javadoc)
@@ -142,8 +190,16 @@ public class AnnotationPropertyHierarchyProvider extends DefaultTreeDataProvider
      */
     public int getChildCount(ITreeElement parentElement) {
         // long x = System.currentTimeMillis();
+        assert (parentElement instanceof IOntologyElement);
+        assert (parentElement instanceof IProjectElement);
+
         String projectId = ((IProjectElement) parentElement).getProjectName();
         String ontologyId = ((IOntologyElement) parentElement).getOntologyUri();
+        try {
+            _owlModel = OWLModelFactory.getOWLModel(ontologyId, projectId);
+        } catch (NeOnCoreException e1) {
+        }
+
         registerAxiomListener(projectId, ontologyId);
 
         int annotationPropCount = 0;
@@ -179,6 +235,11 @@ public class AnnotationPropertyHierarchyProvider extends DefaultTreeDataProvider
 
         String projectId = ((IProjectElement) parentElement).getProjectName();
         String ontologyId = ((IOntologyElement) parentElement).getOntologyUri();
+        try {
+            _owlModel = OWLModelFactory.getOWLModel(ontologyId, projectId);
+        } catch (NeOnCoreException e1) {
+        }
+
         registerAxiomListener(projectId, ontologyId);
 
         try {
@@ -294,7 +355,16 @@ public class AnnotationPropertyHierarchyProvider extends DefaultTreeDataProvider
                 if (topOfPath.equals(clazz.getId())) {
                     TreeElementPath clonedPath = (TreeElementPath) currentPath.clone();
                     AnnotationPropertyTreeElement parent = new AnnotationPropertyTreeElement(superProp, clazz.getOntologyUri(), clazz.getProjectName(), this);
-                    currentPath.insert(0, parent);
+                    List<ITreeElement> currentElementList = new ArrayList<ITreeElement>();
+                    ITreeElement[] currentElements = currentPath.toArray();
+                    for (ITreeElement element: currentElements) {
+                        currentElementList.add(element);
+                    }
+                    if (!currentElementList.contains(parent)) {
+                        currentPath.insert(0, parent);
+                    } else {
+                        return true;
+                    }
                     finished = false;
                     if (!paths.contains(currentPath)) {
                         paths.add(currentPath);
@@ -320,11 +390,11 @@ public class AnnotationPropertyHierarchyProvider extends DefaultTreeDataProvider
 
     @SuppressWarnings("unchecked")
     private void registerAxiomListener(String projectId, String ontologyId) {
+        Class[] clazzes = new Class[] {OWLSubAnnotationPropertyOfAxiom.class, OWLAnnotation.class, OWLDeclarationAxiom.class};
         try {
-            Class[] clazzes = new Class[] {OWLAnnotationProperty.class, OWLAnnotation.class, OWLDeclarationAxiom.class};
-            OWLModelFactory.getOWLModel(ontologyId, projectId).addAxiomListener(getAxiomListener(), clazzes);
-        } catch (NeOnCoreException e1) {
-            new NeonToolkitExceptionHandler().handleException(e1);
+            _owlModel.addAxiomListener(getAxiomListener(), clazzes);
+        } catch (NeOnCoreException e) {
+            throw new RuntimeException(e);
         }
     }
 

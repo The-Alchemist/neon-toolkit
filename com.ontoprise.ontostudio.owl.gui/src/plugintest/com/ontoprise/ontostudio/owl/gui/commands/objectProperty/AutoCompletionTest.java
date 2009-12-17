@@ -15,6 +15,7 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.eclipse.jface.fieldassist.IContentProposal;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.ontoprise.ontostudio.owl.gui.commands.AbstractOWLPluginTest;
@@ -41,6 +42,7 @@ public class AutoCompletionTest extends AbstractOWLPluginTest {
     }
 
     @Test
+    @Ignore("14234")
     public void testOPAutocompleteWithImported() throws Exception {
         String op1 = createQualifiedIdentifier("op1", DEFAULT_NS); //$NON-NLS-1$
         String op2 = createQualifiedIdentifier("op2", DEFAULT_NS); //$NON-NLS-1$

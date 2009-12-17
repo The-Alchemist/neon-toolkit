@@ -64,9 +64,9 @@ public class NewAnnotationPropertyHandler extends AbstractNewHandler {
                 owlModel = OWLModelFactory.getOWLModel(_parentProperty.getOntologyUri(), _parentProperty.getProjectName());
                 provider = _parentProperty.getProvider();
     
-            } else if (parent instanceof DataPropertyFolderTreeElement) {
+            } else if (parent instanceof AnnotationPropertyFolderTreeElement) {
                 _parentProperty = null;
-                DataPropertyFolderTreeElement folder = (DataPropertyFolderTreeElement) parent;
+                AnnotationPropertyFolderTreeElement folder = (AnnotationPropertyFolderTreeElement) parent;
                 owlModel = OWLModelFactory.getOWLModel(folder.getOntologyUri(), folder.getProjectName());
                 provider = _view.getExtensionHandler().getProvider("com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyHierarchyProvider"); //$NON-NLS-1$
                 
@@ -138,9 +138,9 @@ public class NewAnnotationPropertyHandler extends AbstractNewHandler {
 
         if (item.getParentItem().getData() instanceof AnnotationPropertyFolderTreeElement) {
             // root property
-            new CreateAnnotationProperty(projectId, ontologyId, newURI, "").run(); //$NON-NLS-1$
+            new CreateAnnotationProperty(projectId, ontologyId, newURI, null).run();
         } else {
-            new CreateAnnotationProperty(projectId, ontologyId, newURI, item.getParentItem().getText()).run();
+            new CreateAnnotationProperty(projectId, ontologyId, newURI, _parentProperty.getId()).run();
         }
         MTreeView navigator = (MTreeView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(MTreeView.ID);
         OWLGUIUtilities.doJumpToEntity(data, navigator);
