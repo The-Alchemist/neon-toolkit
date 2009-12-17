@@ -28,7 +28,7 @@ public class CreateAnnotationProperty extends OWLModuleChangeCommand {
     @Override
     public void doPerform() throws CommandException {
         String propertyId = getArgument(2).toString();
-        String superPropertyId = (String) (getArgument(3) == null ? null : getArgument(3));
+        String superPropertyId = (String) getArgument(3);
 
         try {
             OWLNamespaces ns = getOwlModel().getNamespaces();
