@@ -381,7 +381,7 @@
          
            <activity
          	name="Eclipse Navigate Menu"
-         	description="Eclipse Navigate Meny"
+         	description="Eclipse Navigate Menu"
          	id="com.ontoprise.ontostudio.eclipseNavigate">
          </activity>
          <activityPatternBinding
@@ -539,6 +539,7 @@
          	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
          </categoryActivityBinding>
 
+<!--
          <activity
          	name="Eclipse Team"
          	description="Eclipse Team Functionality"
@@ -552,6 +553,7 @@
          	activityId="com.ontoprise.ontostudio.eclipseTeam"
          	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
          </categoryActivityBinding>
+-->
 
          <activity
          	name="Eclipse New Window"
@@ -752,6 +754,21 @@
          </activityPatternBinding>
          <categoryActivityBinding
          	activityId="com.ontoprise.ontostudio.eclipseResourcePerspective"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+         
+         <activity
+         	name="SaveAsAction"
+         	description="SaveAsAction"
+         	id="com.ontoprise.ontostudio.eclipseSaveAsAction">
+         </activity>
+         
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseSaveAsAction"
+         	pattern="org\.eclipse\.ui\.file\.saveAs">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseSaveAsAction"
          	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
          </categoryActivityBinding>
          

@@ -311,10 +311,11 @@ public class InternalParser {
 
     private OWLIndividual parseIndividual() throws InternalParserException {
         checkTokenType(_tokenizer,StreamTokenizer.TT_WORD);
-        if(_tokenizer.sval.startsWith("_:")) //$NON-NLS-1$
+        if(_tokenizer.sval.startsWith("_:")) { //$NON-NLS-1$
             return parseAnonymousIndividual();
-        else
+        } else {
             return parseNamedIndividual();
+        }
     }
     
     private OWLAnonymousIndividual parseAnonymousIndividual() throws InternalParserException{
