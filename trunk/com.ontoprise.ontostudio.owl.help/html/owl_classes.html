@@ -6,25 +6,27 @@
 </head>
 
 <body class="bodynormal">
+
 <h4>OWL Classes</h4>
+
 <p>Generally speaking, OWL classes can be considered as sets of individuals that share similar characteristics.
 These classes are organized in hierarchies, of which <tt>owl:Thing</tt> is the root class. Every individual
 in the ontology is a member of the class <tt>owl:Thing</tt>. Thus, each class you create is implicitly a subclass
 of <tt>owl:Thing</tt>. A class may be a subclass of more than one parent class. Likewise, an individual may belong
 to more than one class.</p>
 <p>OWL classes are described through so-called class descriptions. A class description describes an OWL class,
-either by a class name or by specifying the class extension of an unnamed anonymous class. OWL distinguishes
-six types of class descriptions:</p>
+either by a class name or by specifying the complex class expression, representing an unnamed anonymous class. 
+OWL distinguishes six types of class descriptions:</p>
 <ul>
 <li>Class identifiers (a URI reference)</li>
 <li>Exhaustive enumeration of individuals that together form the instances of a class
-<hr><b>Note &ndash;</b> The OWL Editor does not support enumerated classes.<hr></li>
 <li>Restrictions</li>
 <li>Intersection of two or more class descriptions</li>
 <li>Union of two or more class descriptions</li>
 <li>Complement of a class description</li>
 </ul> 
-<p>These class descriptions are spread over the following tabs in the Entity Properties panel:</p>
+
+<p>These class descriptions are distributed over the following tabs in the Entity Properties panel:</p>
 <ul>
 <li><b>Class Restrictions.</b> Unnamed classes that are defined based on restrictions on the values for particular
 properties of the class.</li>
@@ -36,7 +38,8 @@ to be annotated with readable labels, comments, or other useful information.</li
 <p><b>Online References</b></p>
 <p>Further information is available at the following Web sites:
 <ul>
-<li><a href="http://www.w3.org/TR/owl-ref/#Class">OWL Web Ontology Language Reference</a> (Chapter 3, "Classes")</li>
+<li><a href="http://www.w3.org/TR/owl2-primer/#Classes.2C_Properties.2C_and_Individuals_.E2.80.93_And_Basic_Modeling_With_Them">The OWL 2 primer about basic classes</a></li>
+<li><a href="http://www.w3.org/TR/owl2-primer/#Advanced_Class_Relationships">The OWL 2 primer about advanced class relationships (esp. Restrictions)</a></li>
 </ul>   
 
 
@@ -56,6 +59,7 @@ in the context of this particular class.</p>
 <li><tt>owl:allValuesFrom</tt> (<tt>ALL</tt>)</li>
 <li><tt>owl:someValuesFrom</tt> (<tt>SOME</tt>)</li>
 <li><tt>owl:hasValue</tt> (<tt>HAS_VALUE</tt>)</li>
+<li><tt>owl:hasSelf</tt> (<tt>HAS_SELF</tt>)</li>
 </ul>
 In addition, OWL provides the following cardinality restrictions:
 <ul>
@@ -64,6 +68,7 @@ In addition, OWL provides the following cardinality restrictions:
 <li><tt>owl:cardinality</tt> (<tt>EXACTLY/CARD</tt>)</li>
 </ul>
 <p><img class="format" src="../images/screenshots/classentprop1.jpg" title="OWL Classes" alt="OWL Classes"></p>
+
 <p>Class restrictions can either be specified as Super Restrictions or Equivalent Restrictions. If you add
 the class restriction in the Super Restriction section, the class under consideration will become a subclass
 of the restriction class (i.e. you define a <i>necessary condition</i> for the class). 
@@ -75,20 +80,21 @@ they always have exactly the same members (i.e. you define a <i>necessary and su
 <ol>
 <li><b>Select a class in the Ontology Navigator.</b><br>
 The class will be displayed in the Entity Properties panel.</li> 
+<li><b>Enter a property.</b><br>
+Enter the property used to restrict the class. You can also use the auto-complete feature of the OWL Editor.</li>
 <li><b>Select a quantifier.</b><br>
-Select the appropriate value constraint or cardinality contraint.</li>
+Select the appropriate value constraint or cardinality constraint.</li>
 <li><b>(Optional) Select a number.</b><br>
 This only applies if you have selected a cardinality constraint.</li> 
-<li><b>Select a property.</b><br>
-Select the property used to restrict the class. You can also use the auto-complete feature of the OWL Editor.</li>
 <li><b>Select a range.</b><br>
 Select the class for which the property under consideration only should have values.</li>
 <li><b>Click Add.</b><br>
 The class restriction will be created. To discard your changes, click Cancel.</li>  
 </ol>
 
-<hr><b>Note &ndash;</b> The ranges of restrictions can be enterd using the Manchester OWL Syntax. For more information, see
+<hr><b>Note &ndash;</b> The ranges of restrictions can be entered using the Manchester OWL Syntax. For more information, see
 <a href="manchester_syntax.html">Manchester Syntax</a>.<hr>
+
 
 <h5>Taxonomy</h5>
 <p>On this tab you can define classes through class axioms. The simplest form of a class axiom is a class description
@@ -117,7 +123,7 @@ The class axioms will be displayed.</li>
 <li><b>Create a class axiom.</b><br>
 In the Create New text box, enter a class name. 
 You can also use the auto-complete feature of the OWL Editor. In addition to simple
-classes you can also enter complex class restrictions using the <a href="manchester_syntax.html">Manchester Syntax</a>.</li> 
+classes you can also enter complex class descriptions using the <a href="manchester_syntax.html">Manchester Syntax</a>.</li> 
 <li><b>Click Add.</b><br>
 The class axiom will be created. To discard your changes, click Cancel.</li>  
 </ol>

@@ -6,7 +6,9 @@
 </head>
 
 <body class="bodynormal">
+
 <h4>Data Properties</h4>
+
 <p>Datatype properties relate individuals to RDF literals or simple types defined in accordance with XML Schema datatypes.
 For example, the datatype property <tt>hasName</tt> might link individuals from the class <tt>Person</tt> to the XML 
 Schema datatype <tt>xsd:string</tt>.</p>
@@ -18,43 +20,42 @@ the domain to RDF literals or XML Schema datatypes.
 <li><b>Annotations.</b> OWL allows properties to be annotated with readable labels, comments, or other useful information.</li> 
 </ul>
 <p>For instructions on how to create a datatype property, see <a href="create_datatype_property.html">Create a Datatype Property</a>.</p>
+
 <p><b>Online References</b></p>
 <p>Further information is available at the following Web sites:</p>
 <ul>
 <li><a href="http://www.w3.org/TR/xmlschema-2/">XML Schema Part 2: Datatypes Second Edition</a></li>
-<li><a href="http://www.w3.org/TR/owl-ref/#Datatype">OWL Web Ontology Language Reference</a> (Chapter 6, "Datatypes")</li>
+<li><a href="http://www.w3.org/TR/2009/REC-owl2-syntax-20091027/#Data_Properties">OWL 2 Recommendation</a></li>
 </ul>
+
+
 <h5>Domain and Range</h5>
 <p>The notions <em>domain</em> and <em>range</em> have meanings inspired by the mathematical uses of these terms. 
 In mathematics, they are used to refer to how a function can be used. The domain of a function is the set of values
 for which it is defined, while the range is the set of values it can take. Similarly in OWL, if you specify a class
 <tt>D</tt> as the domain of the datatype property <tt>P</tt> and <tt>xsd:string</tt> as the range of <tt>P</tt>,
-the informal interpretation of this is that the Property <tt>P</tt> relates values from the class <tt>D</tt> to values
+the informal interpretation of this is that the property <tt>P</tt> relates values from the class <tt>D</tt> to values
 from the XML Schema datatype <tt>xsd:string</tt>.</p>
-<p>Note that the OWL Editor only supports a limited set of XML Schema datatypes. The following datatypes
-are not supported:</p>
-	<ul>
-	<li><tt>xsd:base64Binary</tt></li>
-	<li><tt>xsd:hexBinay</tt></li>
-	<li><tt>xsd:language</tt></li>
-	<li><tt>xsd:token</tt></li>
-	<li><tt>xsd:unsignedLong</tt></li>
-	<li><tt>xsd:duration</tt></li>
-	<li><tt>xsd:gDay</tt></li>
-	<li><tt>xsd:gMonth</tt></li>
-	<li><tt>xsd:gMonthDay</tt></li>
-	<li><tt>xsd:gYear</tt></li>
-	<li><tt>xsd:gYearMonth</tt></li>
-	<li><tt>xsd:time</tt></li>
-	</ul>
-<p>In addition to simple classes you can also enter complex classes in the Domain text box using the 
+<p>In addition to simple classes you can also enter complex classes in the domain text box using the 
 <a href="manchester_syntax.html">Manchester Syntax</a>. Note that selecting multiple domains means that
 the domain of the property is the intersection of the classes.</p>
+
+
+<h5>Characteristics</h5>
 <p>Just as object properties, datatype properties can be declared as "functional". For this purpose, OWL defines
 the built-in class <tt>owl:FunctionalProperty</tt>. A functional property is a property that can have only one
 (unique) value <tt>y</tt> for each instance <tt>x</tt>, that is, there cannot be two distinct values <tt>y1</tt>
 and <tt>y2</tt> such that the pairs <tt>(x,y1)</tt> and <tt>(x,y2)</tt> are both instances of this property.</p>
+
+<p>The Characteristics section contains two "Functional" check boxes. 
+The left one is changeable and represents the assertions of the current ontology.
+The one on the right hand side, labeled transitive closure, cannot be changed and represents also assertions
+that come from imported ontologies.
+</p>
 <p><img class="format" src="../images/screenshots/datapropentprop1.jpg" title="OWL Datatype Property" alt="OWL Datatype Property"></p>
+
+
+
 <h5>Taxonomy</h5>
 <p>On this tab you can specify the characteristics of the datatype property regarding its hierarchy. This includes the
 following settings:</p>
@@ -67,6 +68,9 @@ by the <tt>hasName</tt> property, and return all results that are linked by its 
 have the same property extension.</li>
 </ul> 
 <p><img class="format" src="../images/screenshots/datapropentprop2.jpg" title="OWL Datatype Property" alt="OWL Datatype Property"></p>
+
+
+
 <h5>Annotations</h5>
 <p>Usually, annotations are used to add information to resources of the ontology. They contain useful information such
 as who is the creator or what are the readable labels and comments for single elements of the ontology.</p>

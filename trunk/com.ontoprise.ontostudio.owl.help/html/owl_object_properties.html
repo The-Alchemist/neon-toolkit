@@ -6,7 +6,9 @@
 </head>
 
 <body class="bodynormal">
+
 <h4>Object Properties</h4>
+
 <p>An object property is a binary relation between two individuals that lets you assert general facts about
 the members of classes and specific facts about individuals. Characteristics of a property are defined by
 so-called property axioms. In its simplest form, a property axiom just defines the existence of a property.
@@ -19,23 +21,30 @@ constructs for property axioms:
 and <tt>owl:inverseOf</tt>.</li>
 <li><b>Global cardinality constraints.</b> Represented in OWL by the language constructs <tt>owl:FunctionalProperty</tt>
 and <tt>owl:InverseFunctionalProperty</tt>.</li>
-<li><b>Logical property characteristics.</b> Represented in OWL by the language constructs <tt>owl:SymmetricProperty</tt>
-and <tt>owl:TransitiveProperty</tt>.</li>
+<li><b>Logical property characteristics.</b> Represented in OWL by the language constructs <tt>owl:SymmetricProperty</tt>, 
+<tt>owl:TransitiveProperty</tt> and others.</li>
 </ul>
-These language constructs are spread over the following tabs in the Entity Properties panel:
+
+These language constructs are distributed to the following tabs in the Entity Properties panel:
 <ul>
 <li><b>Domain and Range.</b> Properties may have a domain and a range specified, that is, they link individuals from
 the domain to individuals from the range. In addition, you can add global cardinality constraints as well as logical
-property characteristics.</li>
+property characteristics here.</li>
 <li><b>Taxonomy.</b> Object properties can be organized into a superproperty-subproperty hierarchy, also known as a taxonomy.</li>
 <li><b>Annotations.</b> OWL allows properties to be annotated with readable labels, comments, or other useful information.</li> 
 </ul>
-<p>For instructions on how to create an object property, see <a href="create_object_property.html">Create an Object Property</a>.</p>
+
+<p>For instructions on how to create an object property, 
+see <a href="create_object_property.html">Create an Object Property</a>.</p>
+
 <p><b>Online References</b></p>
 <p>Further information is available at the following Web sites:</p>
 <ul>
-<li><a href="http://www.w3.org/TR/owl-ref/#Property">OWL Web Ontology Language Reference</a> (Chapter 4, "Properties")</li>
+<li><a href="http://www.w3.org/TR/2009/REC-owl2-primer-20091027/#Object_Properties">OWL 2 Primer on Object Properties</a></li>
+<li><a href="http://www.w3.org/TR/2009/REC-owl2-primer-20091027/#Property_Characteristics">OWL 2 Primer on Object Property Characteristics</a></li>
 </ul>  
+
+
 <h5>Domain and Range</h5>
 <p>The notions <em>domain</em> and <em>range</em> have meanings inspired by the mathematical uses of these terms. 
 In mathematics, they are used to refer to how a function can be used. The domain of a function is the set of values
@@ -51,25 +60,64 @@ For example, any individual that uses a property with a given domain can be infe
 the domain class, for the statement <tt>P rdfs:domain D</tt> just means that all things to which <tt>P</tt> is applied can be
 inferred to be a member of class <tt>D</tt>. This, on the other hand, can lead to unexpected classification results and 
 side effects, especially in situations when multiple ontologies may be merged. Therefore, consider not setting any 
-domains and ranges and using local restrictions instead.
+domains and ranges and using local class restrictions instead.
 <hr>
 <p>In addition to simple classes you can also enter complex classes using the <a href="manchester_syntax.html">Manchester Syntax</a>.
 Note that selecting multiple domains means that the domain of the property is the intersection of the classes 
 (and similarly for range).</p>
-<p>In addition, OWL allows the meaning of properties to be enriched through the use of property characteristics.</p> 
+
+
+<h5>Characteristics</h5>
+<p>Additionally, OWL allows the meaning of properties to be enriched through the use of property characteristics.</p> 
 <ul>
-<li><span style="font-weight: bold;">Functional.</span> If a property is functional, for a given individual, there can be at
+<li><span style="font-weight: bold;">Functional.</span> 
+If a property is functional, for a given individual, there can be at
 most one individual that is related to the individual via the property.</li>
-<li><span style="font-weight: bold;">Inverse Functional.</span> If a property is inverse functional, then it means that the
-inverse property is functional. For a given individual, there can be at most one individual related to that individual via the property.</li>
-<li><span style="font-weight: bold;">Transitive.</span> If a property is transitive, and the property relates individual <tt>a</tt> to
-individual <tt>b</tt>, and also individual <tt>b</tt> to individual <tt>c</tt>, then we can infer that individual <tt>a</tt> is 
-related to individual <tt>c</tt> via property <tt>P</tt>.</li>
-<li><span style="font-weight: bold;">Symmetric.</span> If a property <tt>P</tt> is symmetric, and the property relates 
-individual <tt>a</tt> to individual <tt>b</tt>, then individual <tt>b</tt> is also related to individual <tt>a</tt> via 
+
+<li><span style="font-weight: bold;">Inverse Functional.</span> 
+If a property is inverse functional, then it means that the
+inverse property is functional. For a given individual, there can be at most one individual 
+related to that individual via the property.</li>
+
+<li><span style="font-weight: bold;">Reflexive.</span> 
+If a property <tt>P</tt> is reflexive, then we can derive that each individual <tt>a</tt> is related to
+itself via <tt>P</tt>.
+</li>
+
+<li><span style="font-weight: bold;">Irreflexive.</span> 
+If a property <tt>P</tt> is irreflexive, then we can derive that no individual <tt>a</tt> is related to
+itself via <tt>P</tt>.
+</li>
+
+<li><span style="font-weight: bold;">Symmetric.</span> 
+If a property <tt>P</tt> is symmetric, and the property relates 
+individual <tt>a</tt> to individual <tt>b</tt>, 
+then individual <tt>b</tt> is also related to individual <tt>a</tt> via 
 property <tt>P</tt>.</li>
+
+<li><span style="font-weight: bold;">Asymmetric.</span> 
+If a property <tt>P</tt> is asymmetric, and the property relates 
+individual <tt>a</tt> to individual <tt>b</tt>, 
+then individual <tt>b</tt> cannot be related to individual <tt>a</tt> via 
+property <tt>P</tt>.</li>
+
+
+<li><span style="font-weight: bold;">Transitive.</span> 
+If a property <tt>P</tt> is transitive, and the property relates individual <tt>a</tt> to
+individual <tt>b</tt>, and also individual <tt>b</tt> to individual <tt>c</tt>, 
+then we can infer that individual <tt>a</tt> is 
+related to individual <tt>c</tt> via property <tt>P</tt>.</li>
 </ul>
+
+<p>The Characteristics section contains two sets of check boxes. 
+The left set is changeable and represents the assertions of the current ontology.
+The set on the right hand side, labeled transitive closure, cannot be changed and represents also assertions
+that come from imported ontologies.
+</p>
+
 <p><img class="format" src="../images/screenshots/objpropentprop1.jpg" title="OWL Object Property" alt="OWL Object Property"></p>
+
+
 <h5>Taxonomy</h5>
 On this tab you can specify relations to other properties. This includes the following settings:
 <ul>
@@ -82,8 +130,14 @@ have the same property extension.</li>
 <li><b>Inverse Properties.</b> Properties usually have a direction, from domain to range. In practice, it is often useful
 to define relations in both directions: authors write books, books are written by authors. The <tt>owl:inverseOf</tt>
 construct can be used to define such an inverse relation between properties.</li> 
+<li><b>Sub property Chains.</b> OWL 2 introduces the new feature of property chaining, which lets you define
+that the the composition of a sequence of properties is a subproperty of a named property, eg.
+the famous uncle example <tt>hasParent</tt> o <tt>hasBrother</tt> is a subproperty of <tt>hasUncle</tt>. 
 </ul>
 <p><img class="format" src="../images/screenshots/objpropentprop2.jpg" title="OWL Object Property" alt="OWL Object Property"></p>
+
+
+
 <h5>Annotations</h5>
 <p>Usually, annotations are used to add information to resources of the ontology. They contain useful information such
 as who is the creator or what are the readable labels and comments for single elements of the ontology.</p>
