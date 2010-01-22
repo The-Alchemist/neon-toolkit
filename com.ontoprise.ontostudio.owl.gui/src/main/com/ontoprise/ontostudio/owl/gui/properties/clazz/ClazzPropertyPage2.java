@@ -60,7 +60,6 @@ import org.semanticweb.owlapi.model.OWLObjectAllValuesFrom;
 import org.semanticweb.owlapi.model.OWLObjectCardinalityRestriction;
 import org.semanticweb.owlapi.model.OWLObjectHasSelf;
 import org.semanticweb.owlapi.model.OWLObjectHasValue;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
@@ -747,7 +746,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             StyledText finalRangeText = null;
             ISyntaxManager manager = OWLPlugin.getDefault().getSyntaxManager();
             String input = propertyText.getText();
-            if (input.equals("")) { //$NON-NLS-1$
+            if (input.trim().equals("")) { //$NON-NLS-1$
                 return;
             }
             OWLDataProperty prop = manager.parseDataProperty(input, _owlModel);

@@ -253,10 +253,12 @@ public class OWLModelFactory {
         	IOntologyProject ontologyProject = getOntologyProject(projectId);
         	Set<OWLModel> result = new LinkedHashSet<OWLModel>();
         	for (String ontologyURI: ontologyProject.getOntologies()) {
-        	    if (ontologyURI !=null){
+        	    if (ontologyURI != null){
         	        OWLOntology ontology = connection.getOntology(IRI.create(ontologyURI));
         	        if (ontology != null) {
         	            result.add(getOWLModel(getOntologyURI(ontology), projectId));
+        	        } else {
+                        //System.err.println("Ontology is null for ontologyURI <"+ontologyURI+">");
         	        }
         	    }
         	}

@@ -146,6 +146,16 @@ public interface OWLModel {
     public Set<OWLModel> getAllImportedOntologies() throws NeOnCoreException;
 
     /**
+     * @return URIs of directly imported ontologies
+     */
+    public Set<String> getImportedOntologiesURIs() throws NeOnCoreException;
+
+    /**
+     * @return URIs of (also indirectly) imported ontologies
+     */
+    public Set<String> getAllImportedOntologiesURIs() throws NeOnCoreException;
+
+    /**
      * adds an open ontology to the list of imports for this owl ontology
      * 
      * @param newOntology

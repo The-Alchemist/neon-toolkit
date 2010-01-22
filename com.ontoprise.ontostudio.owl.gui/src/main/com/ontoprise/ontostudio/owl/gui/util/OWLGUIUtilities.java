@@ -151,7 +151,7 @@ public class OWLGUIUtilities {
     public static CCombo createLanguageComboBox(Composite parent, boolean enabled) {
         GridData data = new GridData();
 		data.widthHint = LANGUAGE_SELECT_BOX_WIDTH;
-        data.verticalAlignment = SWT.TOP;
+        data.verticalAlignment = SWT.CENTER;
         String[] languages = NeOnUIPlugin.getDefault().getLanguages();
         String[] languageComboContents = new String[languages.length + 1];
         languageComboContents[0] = OWLCommandUtils.EMPTY_LANGUAGE;
@@ -190,12 +190,12 @@ public class OWLGUIUtilities {
 
         GridData data = new GridData();
     	//data.widthHint = BUTTON_WIDTH;
-		data.heightHint = 20;	
+		//data.heightHint = 20;	
 
         data.verticalAlignment = SWT.TOP;
         data.horizontalAlignment = SWT.CENTER;
         data.grabExcessHorizontalSpace = false;
-
+        
         button.setText(label);
         button.setLayoutData(data);
         button.setEnabled(enabled);

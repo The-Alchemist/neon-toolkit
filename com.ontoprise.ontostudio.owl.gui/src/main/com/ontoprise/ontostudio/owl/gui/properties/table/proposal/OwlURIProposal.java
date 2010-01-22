@@ -10,15 +10,21 @@
 
 package com.ontoprise.ontostudio.owl.gui.properties.table.proposal;
 
+import java.util.Set;
+
 import org.eclipse.jface.fieldassist.IContentProposal;
+import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.NeOnUIPlugin;
+import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
+import com.ontoprise.ontostudio.owl.model.OntoStudioOWLConstants;
 
 /**
  * @author mer
@@ -73,13 +79,7 @@ public abstract class OwlURIProposal implements IContentProposal {
         return OWLGUIUtilities.getEntityLabel(_array);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.fieldassist.IContentProposal#getCursorPosition()
-     */
-    /*
-     * (non-Javadoc)
+    /**
      * 
      * @see org.eclipse.jface.fieldassist.IContentProposal#getCursorPosition()
      */
@@ -116,6 +116,20 @@ public abstract class OwlURIProposal implements IContentProposal {
                 sb.append(_array[i] + "\n"); //$NON-NLS-1$
             }
         }
+        try {
+            Set<OWLAnnotationValue> comments = _owlModel.getAnnotations(_entity.getIRI().toString(),OntoStudioOWLConstants.RDFS_COMMENT);
+            if(comments.size()>0) {
+                sb.append("--------------------------------------------------\n"); //$NON-NLS-1$
+            }
+            for (OWLAnnotationValue comment: comments) {
+                if(comment instanceof OWLLiteral) {
+                    sb.append(((OWLLiteral)comment).getLiteral()).append("\n"); //$NON-NLS-1$
+                } 
+            }
+        } catch (NeOnCoreException e) {
+            // ignore
+        }
+        
         return sb.toString();
     }
 

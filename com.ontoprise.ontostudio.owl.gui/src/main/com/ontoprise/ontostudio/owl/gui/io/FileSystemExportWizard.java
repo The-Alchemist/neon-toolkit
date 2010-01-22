@@ -20,6 +20,11 @@ import org.neontoolkit.io.wizard.AbstractExportSelectionPage;
 import org.neontoolkit.io.wizard.AbstractExportWizard;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
+import com.ontoprise.ontostudio.owl.gui.io.filefilters.FunctionalStyleOntologyFileFilter;
+import com.ontoprise.ontostudio.owl.gui.io.filefilters.ManchesterSyntaxOntologyFileFilter;
+import com.ontoprise.ontostudio.owl.gui.io.filefilters.OWL2OntologyFileFilter;
+import com.ontoprise.ontostudio.owl.gui.io.filefilters.OWLXMLOntologyFileFilter;
+import com.ontoprise.ontostudio.owl.gui.io.filefilters.TurtleOntologyFileFilter;
 import com.ontoprise.ontostudio.owl.model.OWLManchesterProjectFactory;
 import com.ontoprise.ontostudio.owl.model.commands.project.SaveOntology;
 
@@ -54,7 +59,7 @@ public class FileSystemExportWizard extends AbstractExportWizard {
                 1);
             monitor.beginTask(Messages.FileSystemExportWizard_4, IProgressMonitor.UNKNOWN);
 //            OntologyFileSystemExport eo = new OntologyFileSystemExport(projectName, ontologyUri, physicalUri,fileFormat);
-            SaveOntology so = new SaveOntology(projectName, ontologyUri, physicalUri);
+            SaveOntology so = new SaveOntology(projectName, ontologyUri, physicalUri, fileFormat);
             so.run();
 //            ImportExportControl control = new ImportExportControl();
 //            control.exportFileSystem(fileFormat, projectName, moduleId, physicalUri);
@@ -144,7 +149,11 @@ public class FileSystemExportWizard extends AbstractExportWizard {
         if(_fileFilters == null) {
             _fileFilters = 
                 new FileFilter[] { 
-                    new OWL2OntologyFileFilter()
+                    new OWL2OntologyFileFilter(),
+                    new OWLXMLOntologyFileFilter(),
+                    new FunctionalStyleOntologyFileFilter(),
+                    new ManchesterSyntaxOntologyFileFilter(),
+                    new TurtleOntologyFileFilter()
                     };
         }
         return _fileFilters;

@@ -326,7 +326,11 @@ public abstract class AbstractExportSelectionPage extends WizardPage {
     	}
     	String projectSelection = _projectCombo.getItem(_projectCombo.getSelectionIndex());
     	int lastIndex = projectSelection.lastIndexOf(" ["); //$NON-NLS-1$
-        return projectSelection.substring(0, lastIndex);
+    	if(lastIndex > -1) {
+    	    return projectSelection.substring(0, lastIndex);
+    	} else {
+            return projectSelection;
+    	}
     }
 
     protected void initControls() {
@@ -335,6 +339,11 @@ public abstract class AbstractExportSelectionPage extends WizardPage {
         reorderFileFilters();
         if (_preselectedOntologyUri != null) {
             _ontoCombo.select(_ontoCombo.indexOf(_preselectedOntologyUri));
+        } else {
+            if(_ontoCombo.getItemCount() > 0) {
+                _ontoCombo.select(0);
+                _preselectedOntologyUri = _ontoCombo.getItem(0);
+            }
         }
         //		if(preselectedFile != null)
         //			setFileInput(preselectedFile);
@@ -418,7 +427,7 @@ public abstract class AbstractExportSelectionPage extends WizardPage {
                 IOntologyProject project = NeOnCorePlugin.getDefault().getOntologyProject(allProjects[i]);
                 String projectOntoLang = getProjectOntologyLanguage(project);
                 if((_supportedProjectLanguages.size() == 0 || _supportedProjectLanguages.contains(projectOntoLang)) && project.getProjectFailure() == null) {
-                    possibleProjects.add(project.toString());
+                    possibleProjects.add(project.getName());
                 }
 			}
         	String[] projects = possibleProjects.toArray(new String[0]);

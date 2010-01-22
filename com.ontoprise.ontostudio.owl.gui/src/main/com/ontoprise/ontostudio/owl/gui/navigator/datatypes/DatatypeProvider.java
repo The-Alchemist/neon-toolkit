@@ -31,6 +31,7 @@ import org.neontoolkit.gui.navigator.elements.IProjectElement;
 import org.neontoolkit.gui.navigator.elements.TreeElementPath;
 import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLDeclarationAxiom;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
@@ -68,7 +69,18 @@ public class DatatypeProvider extends DefaultTreeDataProvider {
                                     MTreeView navigator = (MTreeView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(MTreeView.ID);
                                     StructuredSelection selection = (StructuredSelection) navigator.getTreeViewer().getSelection();
                                     Object selectedElement = selection.getFirstElement();
-                                    if (selectedElement != null && selectedElement instanceof DatatypeTreeElement) {
+                                    boolean refresh = false;
+                                    for (OWLEntity entity: event.getPotentiallyAddedEntities()) {
+                                        if (entity instanceof OWLDatatype) {
+                                            refresh = true;
+                                        }
+                                    }
+                                    for (OWLEntity entity: event.getRemovedEntities()) {
+                                        if (entity instanceof OWLDatatype) {
+                                            refresh = true;
+                                        }
+                                    }
+                                    if (refresh) {
                                         String sourceOntoUri = OWLUtilities.toString(event.getSourceOntology().getOntologyID());
                                         String sourceProject = event.getProjectId();
                                         String projectId = ((IProjectElement) selectedElement).getProjectName();
@@ -78,7 +90,7 @@ public class DatatypeProvider extends DefaultTreeDataProvider {
                                             DatatypeFolderTreeElement objPropFolder = getFolder(sourceOntoUri, projectId);
                                             getViewer().refresh(objPropFolder);
                                             getViewer().setExpandedElements(expandedElements);
-    
+
                                         }
                                     }
                                 }
@@ -278,7 +290,7 @@ public class DatatypeProvider extends DefaultTreeDataProvider {
         return (TreeElementPath[]) paths.toArray(new TreeElementPath[0]);
     }
 
-    private boolean doGetPathElements(List<TreeElementPath> paths, DatatypeTreeElement datatypeTreeElement, Set<OWLDatatype> superProps, boolean finished) throws CloneNotSupportedException,NeOnCoreException {
+    private boolean doGetPathElements(List<TreeElementPath> paths, DatatypeTreeElement datatypeTreeElement, Set<OWLDatatype> superProps, boolean finished) throws CloneNotSupportedException, NeOnCoreException {
         for (int i = 0; i < paths.size(); i++) {
             TreeElementPath currentPath = (TreeElementPath) paths.get(i);
             String topOfPath = ((DatatypeTreeElement) currentPath.get(0)).getId();
@@ -306,7 +318,7 @@ public class DatatypeProvider extends DefaultTreeDataProvider {
     private Image getDatatypeImage() {
         return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.DATATYPE);
     }
-    
+
     private Image getFolderImage() {
         return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.FOLDER);
     }

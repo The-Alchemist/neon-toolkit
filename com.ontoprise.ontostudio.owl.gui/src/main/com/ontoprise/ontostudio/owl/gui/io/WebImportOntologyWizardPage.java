@@ -34,7 +34,14 @@ import org.neontoolkit.io.filter.FileFilter;
 public class WebImportOntologyWizardPage extends FileSystemImportSelectionPage {
 
 	private static String _oldUri;
-	private Text _uri;
+	/**
+     * @param uri the _uri to set
+     */
+    public void setUri(String uri) {
+        _uri.setText(uri);
+    }
+
+    private Text _uri;
 
     public WebImportOntologyWizardPage(FileFilter filter) {
     	super(filter);

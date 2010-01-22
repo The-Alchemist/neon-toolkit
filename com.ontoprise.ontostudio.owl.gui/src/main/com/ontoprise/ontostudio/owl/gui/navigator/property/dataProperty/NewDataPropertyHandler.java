@@ -122,7 +122,7 @@ public class NewDataPropertyHandler extends AbstractNewHandler {
         Set<OWLEntity> entities = OWLModelFactory.getOWLModel(ontologyId, projectId).getEntity(newURI);
         for (OWLEntity entity: entities) {
             if (entity.getURI().toString().equals(newURI)) {
-                if(entity instanceof OWLObjectProperty || entity instanceof OWLAnnotationProperty) {
+                if(entity instanceof OWLObjectProperty) {
                     MessageDialog.openInformation(_view.getSite().getShell(), Messages.NewPropertyHandler_0, Messages.NewPropertyHandler_1);
                     return false;
                 }
