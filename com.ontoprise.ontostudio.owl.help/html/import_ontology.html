@@ -1,46 +1,67 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Import an Ontology</title>
+    <title>How to load an ontology?</title>
     <link rel="stylesheet" type="text/css" href="../css/stylesheet.css">
 </head>
 
 <body class="bodynormal">
-<h4>Import an Ontology</h4>
-<p>To import an ontology, proceed as follows:</p>
+<h4>How to load an ontology?</h4>
+
+<p>To load an ontology into the NeOn Toolkit, proceed as follows:</p>
 <div style="font-weight:bold; line-height: 1.5;">
 <ol>
+
 <li>Select an ontology project.<br>
-<div style="font-weight:normal;">Select an ontology project in the <a href="ontology_navigator.html">Ontology Navigator</a>.</div></li>
+<div style="font-weight:normal;">
+Select an ontology project in the <a href="ontology_navigator.html">Ontology Navigator</a>.</div></li>
+
 <li>Import an ontology.<br>
-<div style="font-weight:normal;">Right-click the ontology project and select Import. The New Ontology dialog opens.</div><br>
-<img src="../images/screenshots/import_ontology_dialog_1.png" title="Import Ontology Dialog" alt="Import Ontology Dialog"><br><br></li>
+<div style="font-weight:normal;">
+Right-click the ontology project and select Import. The New Ontology dialog opens.</div><br>
+
 <li>Select an import source.<br>
-<div style="font-weight:normal;">Open the folder NeOn Toolkit (Ontologies) and select an import source.<br>
+<div style="font-weight:normal;">
+Locate the folder "Ontologies" and select an import source.<br>
 You can choose between the following import methods:
 <ul>
-<li><b>Filesystem.</b> Import an ontology from the filesystem.</li>
-<li><b>WebDAV.</b> Import an ontology via WebDAV (<em>Web-based Distributed Authoring and Versioning</em>),<br>
-which is a set of extensions to the Hypertext Transfer Protocol (HTTP) that allows users to<br>
-collaboratively edit and manage files on remote World Wide Web servers.</li>
+<li><b>Filesystem.</b> Import an OWL2 ontology from the filesystem.</li>
+<li><b>The Web.</b> Import an ontology directly from the Web.</li>
 </ul>
 </div><br>
 <img src="../images/screenshots/import_ontology_dialog_2.png" title="Import Ontology Dialog" alt="Import Ontology Dialog"><br><br></li>
+
 <li>Enter appropriate information.<br>
-<div style="font-weight:normal;">Enter the following information:
+<div style="font-weight:normal;">In case you select the Web import a dialog appears which lets you choose an OWL project to import into
+and lets you enter the URL of the ontology to load.<br><br>
+</div>
+<div style="font-weight:normal;">In case you select the file system import another dialog appears which lets you 
+enter the following information:
 <ul>
 <li><b>To Project.</b> Select the project to which you want to import the ontology.</li>
-<li><b>From File.</b> Select the file you want to import.<br><br></li>
+<li><b>From File.</b> Select the file you want to import. Its best to use the "Browse" button which lets
+you select the file from your file system with a file chooser dialog.<br><br></li>
 </ul>
 </div> 
 <img src="../images/screenshots/import_ontology_dialog_3.png" title="Import Ontology Dialog" alt="Import Ontology Dialog"><br><br></li>
+<div style="font-weight:normal;">
+The file chooser also allows for selecting multiple ontologies at the same time using the Shift and CTRL keys.
+This is a handy mechanism to load ontologies into the NeOn Toolkit which import each other and should not be fetched
+from the web.
+</div> 
+
 <li>Click Finish.<br>
-<div style="font-weight:normal;">The ontology will be imported. To discard your changes, click Cancel.</div><br>
+<div style="font-weight:normal;">
+After returning from the file chooser click on the "Finish" button to load the selected ontology. 
+To not load it, click "Cancel".</div><br>
 <img src="../images/screenshots/import_ontology_dialog_4.png" title="Import Ontology Dialog" alt="Import Ontology Dialog"></li>
 </ol>
 </div>
 <hr>
-<b>Note &ndash;</b> Importing another ontology will also import all of the ontologies that the imported ontology includes.
+<b>Note &ndash;</b> 
+When the loaded ontology uses owl:import statements to import other ontologies, they will
+also be fetched by this mechanism and loaded into memory. If an ontology with the requested ID
+already exists in the project it will not be fetched again.
 <hr>
 </body>
 </html>

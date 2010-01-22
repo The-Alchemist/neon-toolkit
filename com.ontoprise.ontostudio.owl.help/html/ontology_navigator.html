@@ -8,22 +8,42 @@
 <body class="bodynormal">
 <h4>Ontology Navigator</h4>
 <p>The Ontology Navigator displays the different OWL ontology projects and their corresponding ontologies.
-You are able to navigate within the hierarchically arranged elements. Furthermore, you can create, change
-and delete ontology elements. The different possibilities to edit the elements are listed in the appropriate
-context menu.</p> 
+The navigator is a hierarchical structure where each <b>ontology project</b> can hold multiple ontologies, 
+which can refer to each other (via import statements).
+Each <b>ontology</b> contains some folders for the different entity types that exist in OWL. 
+Within these folders the entities are arranged hierarchically. 
+You can create, change, move, copy, and delete ontology elements in the navigator. 
+The different actions possible are listed in the appropriate context menus.</p> 
+
 <p><img class="format" src="../images/screenshots/owl1.jpg" title="OWL navigator" alt="OWL navigator"></p>
-<p>To open the context menu of an element, click on the element using the right mouse button. If an element 
-contains further sub-elements, then a plus sign is displayed on the left side of the element. Please click on this
-plus sign to expand the sub-elements. In order to close the view of the sub-elements, click on the minus sign beside
-the upper element.</p>
-<p>Many nodes that are displayed in this tree can be dragged-and-dropped in order to modify the hierarchical structure
-of the ontology. For example, a class can be moved to a new superclass by simply dragging it to the new location.
+
+<p>
+To open the context menu of an element, click on the element using the right mouse button. 
+If an element contains further sub-elements, then a plus sign is displayed on the left of the element. 
+A click on this plus sign expands the sub-elements. 
+In order to close the view of the sub-elements, click on the minus sign which shows besides the parent element.</p>
+
+<p>
+Many nodes that are displayed in this tree can be dragged-and-dropped in order to modify the hierarchical structure
+of the ontology. 
+For example, a class can be moved to a new superclass by simply dragging it to the new location.
 When holding the Ctrl key and dragging a node then, you will see the mouse cursor change to contain a little "+" icon. 
-When dropping an entity it will not be moved to the new location but it will be <i>copied</i> there, usually resulting
-in additional <tt>subClassOf</tt> or <tt>subPropertyOf</tt> axioms.</p>
-<p>Within an OWL project the Ontology Navigator hosts different types of entities. When selecting one of the nodes,
-the corresponding Entity Property panel will display the details of the recently selected entity. The Ontology Navigator
-hosts the following types of entities:</p> 
+When dropping an entity it will <i>not be moved</i> to the new location but it will be <i>copied</i> there, 
+resulting in additional <tt>subClassOf</tt> or <tt>subPropertyOf</tt> axioms.</p>
+
+<p>
+The Ontology Naviagtor can also give some information about the number of individuals which are contained
+in the ontology for each class. This helps  in the task of locating instances.
+In the screen shot we see that there are 208 instances of the class "self governing countries".
+Its super class "territory" has 232 instances. All of them are inherited from sub-classes and no direct instances.
+With the button with the red "#" icon in the toolbar you can switch this instance-counting on and off, since, 
+for big ontologies this can be time consuming.</p>
+
+<p>
+Within an OWL project the Ontology Navigator hosts different types of entities. 
+When selecting one of the nodes, the corresponding Entity Property panel (in the right part of the screen) 
+will display the details of the recently selected entity. 
+The Ontology Navigator hosts the following types of entities:</p> 
 <ul>
     <li><a href="owl_ontology.html"><b>OWL Ontology</b></a></li>
     <li><a href="owl_classes.html"><b>OWL Class</b></a></li>
@@ -32,55 +52,5 @@ hosts the following types of entities:</p>
     <li><a href="owl_annotation_properties.html"><b>Annotation Property</b></a></li>
     <li><a href="owl_datatypes.html"><b>Datatype</b></a></li>
 </ul>
-
-<br>
-
-<h5>Ontology Visualizer</h5>
-
-<p>
-The "Ontology Graph Visualize View" displays the ontology and all elements of the hierarchy (classes, individuals, object properties) in a graph. 
-You can open the view by selecting "Show in Visualizer" in the context menu of an ontology element or a class element in the tree menu.
-</p>
-
-<p> 
-<img class="format" src="../images/screenshots/owlvisualizer.jpg" title="OWL Visualizer" alt="OWL Visualizer">
-</p>
-
-<b>Functions:</b>
-<ul>
-<li>Display of classes, individuals and inhertitage hierarchy by directed graphs</li>
-<li>Display of object properties, data properties and values by directed graphs</li>
-<li>Zoom function</li>
-<li>Rotation function</li>
-<li>Automatic layout for optimized view of the graph</li>
-</ul>
-<hr>
-<b>Tip &ndash;</b> Left-clicking an element in the Ontology Visualizer will refresh the visualization rendering with 
-the currently selected element becoming its center. By right-clicking an element all of its connections will be appended 
-to the current visualization without shifting the focus to this element.
-<hr>  
-
-<b>Legend:</b>
-
-
-<p>On the left side of the view a legend is displayed.
- Here you can activate or deactivate different ontology 
- entities by selecting the checkboxes. </p>
-<p>You can also enlarge or reduce the view of the graph. This can be achieved by changing the zoom value or by pressing Ctrl + 
-to zoom in and Ctrl - to zoom out.</p>
-<b>Graph elements:</b>
-
-<p>Grey arrows:<br>
-Represent the connection between super and subclasses or super class and ontology root.</p>
-
-<p>Green arrows:<br>
-Represent the connection between individuals and object properties.
-</p>
-<p>Blue arrows:<br>
-Represent the connection between classes and individuals, individuals and object properties, individuals and data properties.
-</p>
-<hr>
-<b>Note &ndash;</b> The appearance of graph elements depends on the ontology language selected (F-Logic, RDF or OWL).
-<hr>  
 </body>
 </html>

@@ -1,50 +1,61 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Create Annotation</title>
+    <title>How to create an Annotation?</title>
     <link rel="stylesheet" type="text/css" href="../css/stylesheet.css">
 </head>
 
 <body class="bodynormal">
-<h4>Create an Annotation</h4>
-<p>Usually, annotations are used to add information to resources of the ontology. They contain useful information such
-as who is the creator or what are the readable labels and comments for single elements of the ontology.</p>
+
+<h4>How to create an Annotation?</h4>
+
+<p>Usually, annotations are used to add information to entities  of the ontology. 
+They contain useful information such as who is the creator or what are the readable labels 
+and comments for single elements of the ontology.</p>
 <p><img class="format" src="../images/screenshots/classentprop3.jpg" title="OWL Classes" alt="OWL Classes"></p>
+
 <p>To create an annotation, proceed as follows:</p>
 <div style="font-weight:bold; line-height: 1.5;">
 <ol>
 <li>Select an entity in the Ontology Navigator or the Individuals panel.<br>
 <div style="font-weight:normal;">The entity will be displayed in the Entity Properties panel.</div></li> 
+
 <li>Go to the Annotations tab.<br>
 <div style="font-weight:normal;">The annotations will be displayed.</div></li>
+
 <li>Create an annotation.<br>
-<div style="font-weight:normal;">In the Create New text boxes, enter appropriate information.<br>
+<div style="font-weight:normal;">The bottom row of this view the is labeled "Create New". 
+Fill in appropriate information in these text boxes. 
 You can also use the auto-complete feature of the OWL Editor.</div>
 <ol style="list-style-type:lower-alpha;">
 <li>Enter an annotation property.<br>
-<div style="font-weight:normal;">OWL provides the following built-in annotation properties:
+<div style="font-weight:normal;">OWL provides a number of built-in annotation properties, e.g.:
 <ul>
-	<li><tt>owl:versionInfo</tt></li>
     <li><tt>rdfs:label</tt></li>
     <li><tt>rdfs:comment</tt></li>
     <li><tt>rdfs:seeAlso</tt></li>
     <li><tt>rdfs:isDefinedBy</tt></li>
+	<li><tt>owl:versionInfo</tt></li>
 </ul>
-In addition, you can also create your own annotation properties.<br>
+In addition, you can also create your own annotation properties.
 For more information, see <a href="owl_annotation_properties.html">Annotation Properties</a>.
 </div>
 </li>
+
 <li>Enter a value for the annotation.</li>
+
 <li>Enter a type for the annotation.<br>
 <div style="font-weight:normal;">The type is either an XML Schema datatype or an RDFS Literal.</div></li>
+
 <li>Select a language code for the annotation.<br>
-<div style="font-weight:normal;">The language code is only available for type <tt>rdfs:Literal</tt>.<br>
-If you select another type, the language code will be removed.<br>
-Likewise, the type will be reset to <tt>rdfs:Literal</tt> once you<br>
+<div style="font-weight:normal;">The language code is only available for type <tt>rdfs:Literal</tt>.
+If you select another type, the language code will be removed.
+Likewise, the type will be reset to <tt>rdfs:Literal</tt> once you 
 select a language code for the annotation.</div>
 </li>
 </ol>
-</li> 
+</li>
+ 
 <li>Click Add.<br>
 <div style="font-weight:normal;">The annotation will be created. To discard your changes, click Cancel.</div></li>  
 </ol>

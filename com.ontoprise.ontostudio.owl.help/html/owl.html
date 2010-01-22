@@ -6,43 +6,34 @@
 </head>
 
 <body class="bodynormal">
+
 <h4>OWL</h4>
+
 <p>The Web Ontology Language OWL is used for publishing and sharing ontologies on the World Wide Web,
-and is endorsed by the World Wide Web Consortium. OWL is considered one of the fundamental technologies underpinning the 
+and is endorsed by the World Wide Web Consortium. 
+OWL 2 was released as a Recommendation in October 2009.
+OWL is considered one of the fundamental technologies underpinning the 
 Semantic Web and is designed for use by applications that need to process the content of information instead of just 
 presenting information to humans. Among other things, OWL facilitates greater expressivity
 than XML, RDF, and RDF Schema (RDF-S) by providing additional vocabulary along with a formal semantics.</p>
-<p>This guide contains a brief and informal description of the OWL language constructs and is meant to serve as a reference
-for users who want to build ontologies using OWL.</p>
+
 <hr>
 <b>Note &ndash; </b>Familiarity with the OWL language specification is recommended to use all features 
-of the OWL Editor. For more information, see the <a href="http://www.w3.org/TR/owl-features/"> OWL Web Ontology 
-Language Overview</a>.
+of the OWL Editor. For more information, see the <a href="http://www.w3.org/TR/2009/REC-owl2-primer-20091027/"> OWL 2 Web Ontology 
+Language Primer</a>. 
+The full set of documents which represent the OWL 2 language definition can be found at the 
+<a href="http://www.w3.org/TR/2009/REC-owl2-primer-20091027/">OWL 2 Working Group page</a> the W3C.
 <hr>
-<p><b>Unsupported Language Constructs</b></p>
-<p>While the OWL Recommendation embraces three sublanguages (OWL Full, OWL DL, and OWL Light) the OWL Editor is restricted to
-the expressiveness defined in OWL DL except the following language constructs:</p>
-<ul>
-<li><b>Enumerated classes.</b> An enumerated class (represented by the <tt>owl:oneOf</tt> property) is a class exhaustively specifying
-its member individuals. Informally, the meaning of an enumerated class is that it contains a fixed list of individuals and no others.</li>
-<li><b>Limited set of XML Schema datatypes.</b> OWL uses most of the built-in XML Schema datatypes plus <tt>rdfs:Literal</tt>. 
-All OWL reasoners are <i>required</i> to support the <tt>xsd:integer</tt> and <tt>xsd:string</tt> datatypes. 
-The OWL Editor also supports most of these datatypes with the following exceptions:
-<ul>
-	<li><tt>xsd:base64Binary</tt></li>
-	<li><tt>xsd:hexBinay</tt></li>
-	<li><tt>xsd:language</tt></li>
-	<li><tt>xsd:token</tt></li>
-	<li><tt>xsd:unsignedLong</tt></li>
-	<li><tt>xsd:duration</tt></li>
-	<li><tt>xsd:gDay</tt></li>
-	<li><tt>xsd:gMonth</tt></li>
-	<li><tt>xsd:gMonthDay</tt></li>
-	<li><tt>xsd:gYear</tt></li>
-	<li><tt>xsd:gYearMonth</tt></li>
-	<li><tt>xsd:time</tt></li>
-	</ul>
-</li>
-</ul>
+
+<p>This guide contains a brief and informal description of the OWL language constructs and is meant to serve as a reference
+for users who want to build ontologies using OWL.</p>
+
+<p>
+The 
+<a href="owl2-features.html">following page</a> 
+we give an overview over all available OWL 2 language features 
+and indicate if an how you can to find, access, and enter them in the NeOn Toolkit.
+</p>
+
 </body>
 </html>
