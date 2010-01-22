@@ -311,7 +311,7 @@ public class NamespacesArea extends AbstractOWLIdPropertyPage {
                         // also disable other default NS checkboxes
                         setCheckboxesEnabled(defaultNsButton, false);
                     } else {
-                        // edit existing entry
+                        // Save: edit existing entry
                         String[] oldValues = (String[]) _tempValue;
                         try {
                             String prefix = prefixText.getText();
@@ -324,7 +324,7 @@ public class NamespacesArea extends AbstractOWLIdPropertyPage {
                             executeChange(new SetNamespacePrefix(_project, _ontologyUri, prefix, ns));
                             if (defaultNsButton.getSelection()) {
                                 setDefaultNamespace(ns);
-                            } else {
+                            } else if (_defaultNamespace!=null && _defaultNamespace.equals(ns)) {
                                 setDefaultNamespace(null);
                             }
                         } catch (NeOnCoreException ce) {

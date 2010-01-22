@@ -138,6 +138,18 @@
             </visibleWhen>
          </command>
          <command
+               commandId="org.neontoolkit.gui.navigator.newCommand"
+               icon="icons/onto/datatype.gif"
+               label="%newDatatypeLabel"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <reference
+                     definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneDatatypeOrDatatypeFolderSelected">
+               </reference>
+            </visibleWhen>
+         </command>
+         <command
                commandId="org.neontoolkit.gui.navigator.newCommand2"
                disabledIcon="icons/onto/newinstance_disabled.gif"
                icon="icons/individualview.gif"
@@ -291,6 +303,18 @@
                   </reference>
                </visibleWhen>
             </command>
+	         <command
+	               commandId="org.neontoolkit.gui.navigator.newCommand"
+	               icon="icons/onto/datatype.gif"
+	               label="%newDatatypeLabel"
+	               style="push">
+	            <visibleWhen
+	                  checkEnabled="false">
+	               <reference
+	                     definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneDatatypeOrDatatypeFolderSelected">
+	               </reference>
+	            </visibleWhen>
+	         </command>
          </toolbar>
       </menuContribution>
    </extension>
@@ -981,6 +1005,15 @@
          </activeWhen>
       </handler>
       <handler
+            class="com.ontoprise.ontostudio.owl.gui.navigator.datatypes.NewDatatypeHandler"
+            commandId="org.neontoolkit.gui.navigator.newCommand">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneDatatypeOrDatatypeFolderSelected">
+            </reference>
+         </activeWhen>
+      </handler>
+      <handler
             class="com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DeleteDatatypeHandler"
             commandId="org.neontoolkit.gui.navigator.deleteCommand">
          <activeWhen>
@@ -1287,6 +1320,24 @@
          </iterate>
       </definition>
       <definition
+            id="com.ontoprise.ontostudio.owl.gui.navigator.oneDatatypeOrDatatypeFolderSelected">
+         <and>
+            <count
+                  value="1">
+            </count>
+            <iterate>
+               <or>
+                  <instanceof
+                        value="com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeTreeElement">
+                  </instanceof>
+                  <instanceof
+                        value="com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeFolderTreeElement">
+                  </instanceof>
+               </or>
+            </iterate>
+         </and>
+      </definition>
+      <definition
             id="com.ontoprise.ontostudio.owl.gui.navigator.nDatatypesSelected">
          <iterate
                ifEmpty="false">
@@ -1422,8 +1473,11 @@
    </extension>
    <extension
          point="org.eclipse.ui.importWizards">
+      <category
+            id="com.ontoprise.ontostudio.owl"
+            name="Ontologies"/>
       <wizard
-            category="com.ontoprise.ontostudio.wizards"
+            category="com.ontoprise.ontostudio.owl"
             class="com.ontoprise.ontostudio.owl.gui.io.FileSystemImportWizard"
             icon="./icons/onto/owlontology.gif"
             id="FileSystem"
@@ -1433,11 +1487,24 @@
             %fileSystemImportWizardDescription
          </description>
       </wizard>
+      <wizard
+            name="Import Ontology from the Web"
+            icon="icons/browser.gif"
+            category="com.ontoprise.ontostudio.owl"
+            class="com.ontoprise.ontostudio.owl.gui.io.WebImportOntologyWizard"
+            id="com.ontoprise.ontostudio.owl.gui.io.WebImportOntologyWizard">
+         <description>
+            Import an ontology from the Web.
+         </description>
+      </wizard>
    </extension>
    <extension
          point="org.eclipse.ui.exportWizards">
+      <category
+            id="com.ontoprise.ontostudio.owl"
+            name="Ontologies"/>
       <wizard
-            category="com.ontoprise.ontostudio.wizards"
+            category="com.ontoprise.ontostudio.owl"
             class="com.ontoprise.ontostudio.owl.gui.io.FileSystemExportWizard"
             icon="./icons/onto/owlontology.gif"
             id="FileSystem"
@@ -1448,6 +1515,8 @@
          </description>
       </wizard>
    </extension>
+   
+   
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
@@ -1471,19 +1540,6 @@
                tooltip="%command.openontology.description">
          </command>
       </menuContribution>
-   </extension>
-   <extension
-         point="org.eclipse.ui.importWizards">
-      <wizard
-            name="Import Ontology from the Web"
-            icon="icons/browser.gif"
-            category="com.ontoprise.ontostudio.wizards"
-            class="com.ontoprise.ontostudio.owl.gui.io.WebImportOntologyWizard"
-            id="com.ontoprise.ontostudio.owl.gui.io.WebImportOntologyWizard">
-         <description>
-            Import an ontology from the Web.
-         </description>
-      </wizard>
    </extension>
 
 

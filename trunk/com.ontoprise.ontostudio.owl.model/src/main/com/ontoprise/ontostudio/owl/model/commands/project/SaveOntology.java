@@ -13,16 +13,22 @@ package com.ontoprise.ontostudio.owl.model.commands.project;
 import java.net.URI;
 import java.util.Iterator;
 
+import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntaxOntologyFormat;
+import org.coode.owlapi.turtle.TurtleOntologyFormat;
 import org.eclipse.core.resources.IResource;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.core.project.IOntologyProject;
 import org.neontoolkit.core.project.OntologyProjectManager;
+import org.semanticweb.owlapi.io.OWLFunctionalSyntaxOntologyFormat;
+import org.semanticweb.owlapi.io.OWLXMLOntologyFormat;
 import org.semanticweb.owlapi.io.RDFXMLOntologyFormat;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.vocab.PrefixOWLOntologyFormat;
 
+import com.ontoprise.ontostudio.owl.model.OWLConstants;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
@@ -31,12 +37,12 @@ import com.ontoprise.ontostudio.owl.model.commands.OWLModuleChangeCommand;
 public class SaveOntology extends OWLModuleChangeCommand {
 
 	public SaveOntology(String project, String ontologyUri) throws NeOnCoreException {
-		this(project, ontologyUri, null);
+		this(project, ontologyUri, null, null);
 	}
 
-	   public SaveOntology(String project, String ontologyUri, String physicalUri) throws NeOnCoreException {
-	        super(project, ontologyUri, physicalUri);
-	    }
+    public SaveOntology(String project, String ontologyUri, String physicalUri, String fileFormat) throws NeOnCoreException {
+        super(project, ontologyUri, physicalUri, fileFormat);
+    }
 
 	@Override
 	protected void doPerform() throws CommandException {
@@ -51,7 +57,10 @@ public class SaveOntology extends OWLModuleChangeCommand {
                 if(physicalUri != null) {
                     physicalURI = URI.create((String) physicalUri);
                 }
-                RDFXMLOntologyFormat ontologyFormat = new RDFXMLOntologyFormat();
+                
+                String fileFormat = (String)getArgument(3);
+                PrefixOWLOntologyFormat ontologyFormat = getOwlOntologyFormat(fileFormat);
+
                 OWLModel model = OWLModelFactory.getOWLModel(getOntology(), getProjectName());
                 OWLNamespaces namespaces = model.getNamespaces();
                 Iterator<String> prefixes = namespaces.prefixes();
@@ -60,6 +69,7 @@ public class SaveOntology extends OWLModuleChangeCommand {
                     String namespace = namespaces.getNamespaceForPrefix(prefix);
                     ontologyFormat.setPrefix(prefix + ":", namespace);
                 }
+                
                 manager.saveOntology(ontology, ontologyFormat, physicalURI);
             }
             project.getResource().refreshLocal(IResource.DEPTH_INFINITE, null);
@@ -70,5 +80,24 @@ public class SaveOntology extends OWLModuleChangeCommand {
             // hack to avoid pending file handles, see issue 12863
             System.gc();
         }
-	}
+    }
+
+	
+    PrefixOWLOntologyFormat getOwlOntologyFormat(String fileFormat) {
+        if((fileFormat == null) || (fileFormat.equals(OWLConstants.OWL_EXTENSION))) {
+            return new RDFXMLOntologyFormat();
+        } else if((fileFormat.equals(OWLConstants.OWLXML_EXTENSION))) {
+            return new OWLXMLOntologyFormat();
+        } else if((fileFormat.equals(OWLConstants.FUNCTIONAL_SYNTAX_EXTENSION))) {
+            return new OWLFunctionalSyntaxOntologyFormat();
+        } else if((fileFormat.equals(OWLConstants.MANCHESTER_SYNTAX_EXTENSION))) {
+            return new ManchesterOWLSyntaxOntologyFormat();
+        } else if((fileFormat.equals(OWLConstants.TURTLE_EXTENSION))) {
+            return new TurtleOntologyFormat();
+        } else {
+            // default
+            return new RDFXMLOntologyFormat();
+        }
+    }
+
 }

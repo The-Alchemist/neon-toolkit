@@ -17,7 +17,6 @@ import java.util.Set;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 
-import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.commands.OWLOntologyRequestCommand;
 
 /**
@@ -41,9 +40,9 @@ public class GetImportedOntologies extends OWLOntologyRequestCommand {
     protected void perform() throws CommandException {
         _results = new ArrayList<String>();
         try {
-            Set<OWLModel> importedOntos = getOwlModel().getImportedOntologies();
-            for (OWLModel o: importedOntos) {
-                _results.add(o.getOntologyURI());
+            Set<String> importedOntos = getOwlModel().getImportedOntologiesURIs();
+            for (String uri: importedOntos) {
+                _results.add(uri);
             }
         } catch (NeOnCoreException e) {
             throw new CommandException(e);

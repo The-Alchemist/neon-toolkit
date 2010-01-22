@@ -63,9 +63,9 @@ public class NewObjectPropertyHandler extends AbstractNewHandler {
                 owlModel = OWLModelFactory.getOWLModel(_parentProperty.getOntologyUri(), _parentProperty.getProjectName());
                 provider = _parentProperty.getProvider();
     
-            } else if (parent instanceof ObjectPropertyTreeElement) {
+            } else if (parent instanceof ObjectPropertyFolderTreeElement) {
                 _parentProperty = null;
-                ObjectPropertyTreeElement folder = (ObjectPropertyTreeElement) parent;
+                ObjectPropertyFolderTreeElement folder = (ObjectPropertyFolderTreeElement) parent;
                 owlModel = OWLModelFactory.getOWLModel(folder.getOntologyUri(), folder.getProjectName());
                 provider = _view.getExtensionHandler().getProvider("com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyHierarchyProvider"); //$NON-NLS-1$
     
@@ -123,7 +123,7 @@ public class NewObjectPropertyHandler extends AbstractNewHandler {
         Set<OWLEntity> entities = OWLModelFactory.getOWLModel(ontologyId, projectId).getEntity(newURI);
         for (OWLEntity entity: entities) {
             if (entity.getURI().toString().equals(newURI)) {
-                if(entity instanceof OWLDataProperty || entity instanceof OWLAnnotationProperty) {
+                if(entity instanceof OWLDataProperty) {
                     MessageDialog.openInformation(_view.getSite().getShell(), Messages.NewPropertyHandler_0, Messages.NewPropertyHandler_1);
                     return false;
                 }

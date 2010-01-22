@@ -37,6 +37,7 @@ import org.neontoolkit.io.wizard.AbstractImportSelectionPage;
 import org.neontoolkit.io.wizard.AbstractImportWizard;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
+import com.ontoprise.ontostudio.owl.gui.io.filefilters.AnyOWL2OntologyFileFilter;
 import com.ontoprise.ontostudio.owl.model.OWLManchesterProjectFactory;
 import com.ontoprise.ontostudio.owl.model.commands.ontology.RemoveOntology;
 
@@ -56,7 +57,7 @@ public class FileSystemImportWizard extends AbstractImportWizard {
 
     public FileSystemImportWizard() {
         super();
-        super.setFileFilter(new OWL2OntologyFileFilter());
+        super.setFileFilter(new AnyOWL2OntologyFileFilter());
         super.setSupportedProjectOntologyLanguage(new OntologyProjectFilter(null, OWLManchesterProjectFactory.FACTORY_ID));
         setWindowTitle(Messages.FileSystemImportWizard_0);
     }

@@ -1113,7 +1113,7 @@ public class OWLModelCore implements OWLModel {
                     ((OWLAxiomListener) aListener[i]).modelChanged(event);
 //                }
             } catch (Exception e) {
-                Logger.getLogger(getClass()).error(Messages.getString("OWLModelCore.0"), e);
+                _log.error(Messages.getString("OWLModelCore.0"), e);
             }
         }
     }
@@ -1129,11 +1129,11 @@ public class OWLModelCore implements OWLModel {
         _ontologyProject = ontologyProject;
         _manager = manager;
         if (_manager == null) {
-            throw new IllegalArgumentException("OWLOntologyManager is null.");
+            throw new IllegalArgumentException(Messages.getString("OWLModelCore.NullOwlManagerError"));
         }
         _ontology = ontology;
         if (_ontology == null) {
-            throw new IllegalArgumentException("OWLOntology is null.");
+            throw new IllegalArgumentException(Messages.getString("OWLModelCore.NullOwlModelError"));
         }
         _hierarchyUpdaters = new LinkedHashMap<Class<?>,EntityHierarchyUpdater<?>>();
     }
@@ -1244,10 +1244,19 @@ public class OWLModelCore implements OWLModel {
     }
 
     @Override
+    public Set<String> getImportedOntologiesURIs() throws NeOnCoreException {
+        return getOntologyProject().getImportedOntologyURIs(getOntologyURI());
+    }
+
+    @Override
     public Set<OWLModel> getAllImportedOntologies() throws NeOnCoreException {
         return getOWLModels(getOntologyProject().getAllImportedOntologyURIs(getOntologyURI()));
     }
 
+    @Override
+    public Set<String> getAllImportedOntologiesURIs() throws NeOnCoreException {
+        return getOntologyProject().getAllImportedOntologyURIs(getOntologyURI());
+    }
 
     @Override
     public Set<OWLModel> getAllImportingOntologies() throws NeOnCoreException {
@@ -1257,7 +1266,18 @@ public class OWLModelCore implements OWLModel {
     private Set<OWLModel> getOWLModels(Set<String> ontologyURIs) throws NeOnCoreException {
         Set<OWLModel> result = new LinkedHashSet<OWLModel>();
         for (String ontology: ontologyURIs) {
-            result.add(OWLModelFactory.getOWLModel(ontology, getProjectId()));
+            try {
+                OWLModel onto = OWLModelFactory.getOWLModel(ontology, getProjectId());
+                if(onto != null) {
+                    result.add(onto);
+                }
+            } catch (RuntimeException e) {
+                if(e.getMessage().equals(Messages.getString("OWLModelCore.NullOwlModelError"))) {
+                    //ignore
+                } else {
+                    throw e;
+                }
+            }
         }
         return result;
     }

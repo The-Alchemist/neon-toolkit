@@ -97,19 +97,17 @@ public class FileSystemExportSelectionPage extends AbstractExportSelectionPage {
 					}
                     fileDialog.setFilterExtensions(extension);
                     fileDialog.setFilterNames(description);
-                    fileDialog.open();
-                    if(fileDialog.getFilterPath().equals("")) { //$NON-NLS-1$
-                        //canceled
+                    String selectedFileAndPath = fileDialog.open();
+                    if(selectedFileAndPath == null) {
                         return;
                     }
-                    String fileName = fileDialog.getFileName();
                     FileFilter usedFileFilter = null;
-                    if (fileName.length() > 0) {
+                    if (selectedFileAndPath.length() > 0) {
                         for (int i = 0; i < _fileFilters.length; i++) {
     						FileFilter fileFilter = _fileFilters[i];
     						String[] ext = fileFilter.getExtensions();
     						for (int j = 0; j < ext.length; j++) {
-	                            if (fileName.endsWith(ext[j])) {
+	                            if (selectedFileAndPath.endsWith(ext[j])) {
 	                                usedFileFilter = fileFilter;
 	                                break;
 	                            }								
@@ -122,10 +120,11 @@ public class FileSystemExportSelectionPage extends AbstractExportSelectionPage {
                         	usedFileFilter = _fileFilters[0];
                         }
                         _fileFilter = usedFileFilter;
-                        if(!fileName.endsWith(usedFileFilter.getDefaultExtension())) {
-                            fileName += usedFileFilter.getDefaultExtension();
+                        if(!selectedFileAndPath.endsWith(usedFileFilter.getDefaultExtension())) {
+                            selectedFileAndPath += usedFileFilter.getDefaultExtension();
                         }
-                        _fileInput.setText(fileDialog.getFilterPath() + System.getProperty("file.separator") + fileName); //$NON-NLS-1$
+//                        _fileInput.setText(fileDialog.getFilterPath() + System.getProperty("file.separator") + fileName); //$NON-NLS-1$
+                        _fileInput.setText(selectedFileAndPath); 
                     }
                 } else {
                     DirectoryDialog dirDialog = new DirectoryDialog(getShell());

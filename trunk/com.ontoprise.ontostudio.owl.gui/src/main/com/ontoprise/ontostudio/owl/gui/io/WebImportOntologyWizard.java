@@ -14,14 +14,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.Set;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.neontoolkit.core.NeOnCorePlugin;
 import org.neontoolkit.core.exception.NeOnCoreException;
-import org.neontoolkit.core.project.IOntologyProject;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.neontoolkit.io.exception.OntologyImportException;
 import org.neontoolkit.io.wizard.AbstractImportSelectionPage;
@@ -46,7 +43,7 @@ public class WebImportOntologyWizard extends FileSystemImportWizard {
 
     @Override
     public AbstractImportSelectionPage getImportSelectionPage() {
-    	_pageSelection = new WebImportOntologyWizardPage(getFileFilter());
+    	_pageSelection = new WebImportOntologyWizardPage(getFileFilter());    	
     	return _pageSelection;
     }
 
@@ -114,4 +111,7 @@ public class WebImportOntologyWizard extends FileSystemImportWizard {
 		}	        
     }
     
+    public void setSelectedOntologyUri(String ontologyUri) {
+        _pageSelection.setUri(ontologyUri);
+    }
 }

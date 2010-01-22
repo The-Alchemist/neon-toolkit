@@ -93,4 +93,12 @@ public interface OWLConstants {
             RDF_XML_LITERAL,
             RDF_TEXT
             )));
+    
+    public static final String OWL_EXTENSION = ".owl"; //$NON-NLS-1$
+    public static final String OWL2_EXTENSION = ".owl2"; //$NON-NLS-1$
+    public static final String RDF_EXTENSION = ".rdf"; //$NON-NLS-1$
+    public static final String OWLXML_EXTENSION = ".owlx"; //$NON-NLS-1$
+    public static final String MANCHESTER_SYNTAX_EXTENSION = ".omn"; //$NON-NLS-1$
+    public static final String FUNCTIONAL_SYNTAX_EXTENSION = ".owl2"; //$NON-NLS-1$
+    public static final String TURTLE_EXTENSION = ".ttl"; //$NON-NLS-1$
 }

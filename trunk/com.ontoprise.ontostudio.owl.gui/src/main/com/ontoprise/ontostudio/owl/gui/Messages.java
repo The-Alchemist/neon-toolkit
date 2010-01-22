@@ -208,6 +208,7 @@ public class Messages extends NLS {
     public static String NewOWLOntologyWizardPage_3;
 	public static String NewDataPropertyAction_0;
 	public static String NewAnnotationPropertyAction_0;
+	public static String NewDatatypeAction_0;
 	public static String RemoveAxiomWizard_0;
 	public static String RemoveAxiomWizard_1;
 	public static String RemoveAxiomWizard_2;

@@ -11,8 +11,10 @@
 package com.ontoprise.ontostudio.owl.model;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,7 +37,6 @@ import org.neontoolkit.core.exception.InternalNeOnException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.core.exception.OntologyAlreadyExistsException;
 import org.neontoolkit.core.project.AbstractOntologyProject;
-import org.neontoolkit.core.util.IRIUtils;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.io.RDFXMLOntologyFormat;
 import org.semanticweb.owlapi.model.AddAxiom;
@@ -79,7 +80,7 @@ import com.ontoprise.ontostudio.owl.model.util.file.UnknownOWLOntologyFormatExce
  * 
  */
 public class OWLManchesterProject extends AbstractOntologyProject {
-    private static final String DEFAULT_NAMESPACE_PREFIX = "";
+    private static final String DEFAULT_NAMESPACE_PREFIX = ""; //$NON-NLS-1$
     
     private static void removeOntologies(OWLOntologyManager manager, Set<OWLOntologyID> ontologyURIs) {
         for (OWLOntologyID ontologyID: ontologyURIs) {
@@ -401,7 +402,7 @@ public class OWLManchesterProject extends AbstractOntologyProject {
             IProject project = this.getResource();
             URI projURI = project.getLocationURI();
             if (!physicalURI.toString().startsWith(projURI.toString())){
-                throw new NeOnCoreException("Ontology not in stored in workspace") {
+                throw new NeOnCoreException("Ontology not stored in workspace") {
                     public String getErrorCode() {
                         return "SavingRemoteOntology";}};
             }
@@ -522,25 +523,48 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                 };
 
                 _ontologyManager.addOntologyLoaderListener(owlOntologyLoaderListener);
+                Set<String> unknownHosts = new HashSet<String>(); 
                 try {
-                    try {
-                        if (physicalURIs.length == 1) {
+                    
+                    if (physicalURIs.length == 1) {
+                        try {
                             _ontologyManager.loadOntologyFromPhysicalURI(physicalURIs[0]);
-                        } else {
-                            for (IRI ontologyIRI: ontologyIRIs) {
+                        } catch (OWLOntologyCreationException e) {
+                            removeOntologies(_ontologyManager, owlOntologyUris.keySet());
+                            throw e;
+                        } catch (RuntimeException e) {
+                            removeOntologies(_ontologyManager, owlOntologyUris.keySet());
+                            throw e;
+                        }
+                        
+                    } else {
+                        for (IRI ontologyIRI: ontologyIRIs) {
+                            try {
                                 _ontologyManager.loadOntology(ontologyIRI);
+                                if (exception.get() != null) {
+                                    throw exception.get();
+                                }
+
+                            } catch (OWLOntologyCreationException e) {
+                                exception.set(null);
+                                if(e.getCause() instanceof UnknownHostException) {
+                                    // try to load (via import) an onto from the web, which is not accessible right now 
+                                    unknownHosts.add(e.getCause().getLocalizedMessage());
+                                } else if(e.getCause() instanceof FileNotFoundException) {
+                                    // try to load (via import) an onto from the web, which does not exist at that position, right now 
+                                    unknownHosts.add(e.getCause().getLocalizedMessage());
+                                } else {
+                                    removeOntologies(_ontologyManager, owlOntologyUris.keySet());
+                                    throw e;
+                                }
+                            } catch (RuntimeException e) {
+                                removeOntologies(_ontologyManager, owlOntologyUris.keySet());
+                                throw e;
                             }
                         }
-                        if (exception.get() != null) {
-                            throw exception.get();
-                        }
-                    } catch (OWLOntologyCreationException e) {
-                        removeOntologies(_ontologyManager, owlOntologyUris.keySet());
-                        throw e;
-                    } catch (RuntimeException e) {
-                        removeOntologies(_ontologyManager, owlOntologyUris.keySet());
-                        throw e;
                     }
+                    
+                    
                     Set<String> registeredOntologies = new LinkedHashSet<String>();
                     try {
                         for (OWLOntologyID ontologyUri: owlOntologyUris.keySet()) {
@@ -570,6 +594,13 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                     }
                 } finally {
                     _ontologyManager.removeOntologyLoaderListener(owlOntologyLoaderListener);
+                    if(unknownHosts.size()>0) {
+                        String s = "Some Ontologies could not be loaded, e.g. from the following hosts:\n"; //$NON-NLS-1$
+                        for (String string: unknownHosts) {
+                            s += "\t"+string; //$NON-NLS-1$
+                        }
+                        throw new RuntimeException(new UnknownHostException(s));
+                    }
                 }
             } finally {
                 for (SimpleIRIMapper simpleIRIMapper: iriMappers) {

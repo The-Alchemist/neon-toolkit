@@ -300,6 +300,17 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
     }
 
     @Override
+    public Set<String> getAllImportedOntologiesURIs() throws NeOnCoreException {
+        try {
+            return _model.getAllImportedOntologiesURIs();
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+
+    @Override
     public Set<OWLModel> getAllImportingOntologies() throws NeOnCoreException {
         try {
             return _model.getAllImportingOntologies();
@@ -777,6 +788,17 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
     public Set<OWLModel> getImportedOntologies() throws NeOnCoreException {
         try {
             return _model.getImportedOntologies();
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+
+    @Override
+    public Set<String> getImportedOntologiesURIs() throws NeOnCoreException {
+        try {
+            return _model.getImportedOntologiesURIs();
         } catch (NeOnCoreException e) {
             throw checkConnectionFailure(e);
         } catch (RuntimeException e) {
