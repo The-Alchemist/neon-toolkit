@@ -31,12 +31,13 @@
       <page
             class="org.neontoolkit.gui.internal.preferences.LanguagePreferencePage"
             id="org.neontoolkit.gui.internal.preferences.LanguagePreferencePage"
-            name="%languagePreferences"/>
+            name="%languagePreferences"
+            category="com.ontoprise.ontostudio.owl.gui.preferences.OWLPreferencePage"/>
       <page
             name="%ontoLanguages"
             class="org.neontoolkit.gui.internal.preferences.OntologyLanguagesPreferencePage"
-            id="org.neontoolkit.gui.internal.preferences.OntologyLanguagesPreferencePage">
-      </page>
+            id="org.neontoolkit.gui.internal.preferences.OntologyLanguagesPreferencePage"
+            category="com.ontoprise.ontostudio.owl.gui.preferences.OWLPreferencePage"/>
    </extension>
 
 <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
@@ -323,4 +324,5 @@
           </and>
        </definition>
     </extension>
+    
 </plugin>

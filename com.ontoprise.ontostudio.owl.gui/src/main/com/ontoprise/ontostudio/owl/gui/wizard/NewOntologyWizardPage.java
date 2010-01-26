@@ -280,4 +280,9 @@ public class NewOntologyWizardPage extends WizardPage {
   		return _namespaceText.getText();
     }
     
+    @Override
+    public void performHelp() {
+        String helpContextId = org.neontoolkit.gui.IHelpContextIds.OWL_CREATE_ONTOLOGY;
+        PlatformUI.getWorkbench().getHelpSystem().displayHelp(helpContextId);
+    }
 }

@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.neontoolkit.core.NeOnCorePlugin;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.core.project.IOntologyProject;
@@ -538,4 +539,9 @@ public abstract class AbstractExportSelectionPage extends WizardPage {
         return fileName;
     }
     
+    @Override
+    public void performHelp() {
+        String helpContextId = org.neontoolkit.gui.IHelpContextIds.OWL_EXPORT_ONTOLOGY;
+        PlatformUI.getWorkbench().getHelpSystem().displayHelp(helpContextId);
+    }
 }

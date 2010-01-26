@@ -1,12 +1,12 @@
 img.navigation {
-	width: 48px;
-	height: 48px;
-	vertical-align: middle;
+	width:48px;
+	height:48px;
+	vertical-align:middle;
 	}
 
 /* Give some space for main div.*/	
 .page-style {
-	text-align: center;
+	text-align:center;
 	margin-top:100px;
 	}
 	

@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.neontoolkit.io.IOPlugin;
 import org.neontoolkit.io.Messages;
 import org.neontoolkit.io.filter.FileFilter;
@@ -341,4 +342,9 @@ public abstract class AbstractImportSelectionPage extends ImportWizardPage {
         return _selectedFileFormat;
     }
     
+    @Override
+    public void performHelp() {
+        String helpContextId = org.neontoolkit.gui.IHelpContextIds.OWL_IMPORT_ONTOLOGY;
+        PlatformUI.getWorkbench().getHelpSystem().displayHelp(helpContextId);
+    }
 }

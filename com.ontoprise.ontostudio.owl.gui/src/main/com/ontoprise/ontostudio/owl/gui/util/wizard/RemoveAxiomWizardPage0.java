@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.neontoolkit.swt.widgets.RadioButtonComposite;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
@@ -104,4 +105,9 @@ public class RemoveAxiomWizardPage0 extends UserInputWizardPage {
         return _deleteMode;
     }
 
+    @Override
+    public void performHelp() {
+        String helpContextId = org.neontoolkit.gui.IHelpContextIds.OWL_DELETE_AN_ENTITY;
+        PlatformUI.getWorkbench().getHelpSystem().displayHelp(helpContextId);
+    }
 }

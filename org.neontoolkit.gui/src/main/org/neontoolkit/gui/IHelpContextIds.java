@@ -62,4 +62,10 @@ public interface IHelpContextIds {
   public static final String OWL_INDIVIDUAL_VIEW = PREFIX_OWL + "OWL_INDIVIDUAL_VIEW";  //$NON-NLS-1$
   public static final String OWL_ANNOTATION_PROPERTIES_VIEW = PREFIX_OWL + "OWL_ANNOTATION_PROPERTIES_VIEW";  //$NON-NLS-1$
   
+  public static final String OWL_CREATE_ONTOLOGY_PROJECT = PREFIX_OWL + "OWL_CREATE_ONTOLOGY_PROJECT"; //$NON-NLS-1$
+  public static final String OWL_CREATE_ONTOLOGY = PREFIX_OWL + "OWL_CREATE_ONTOLOGY"; //$NON-NLS-1$
+  public static final String OWL_IMPORT_ONTOLOGY = PREFIX_OWL + "OWL_IMPORT_ONTOLOGY"; //$NON-NLS-1$
+  public static final String OWL_EXPORT_ONTOLOGY = PREFIX_OWL + "OWL_EXPORT_ONTOLOGY"; //$NON-NLS-1$
+  public static final String OWL_DELETE_AN_ENTITY = PREFIX_OWL + "OWL_DELETE_AN_ENTITY"; //$NON-NLS-1$
+
 }

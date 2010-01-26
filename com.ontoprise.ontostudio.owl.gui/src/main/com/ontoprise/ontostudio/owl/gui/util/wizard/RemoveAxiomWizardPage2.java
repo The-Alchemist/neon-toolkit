@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.PlatformUI;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.semanticweb.owlapi.model.OWLAxiom;
 
@@ -244,5 +245,10 @@ public class RemoveAxiomWizardPage2 extends UserInputWizardPage {
     public void setAxiomsToRemove(List<OWLAxiom> axioms) {
         _axiomsToRemove = axioms;
     }
-
+    
+    @Override
+    public void performHelp() {
+        String helpContextId = org.neontoolkit.gui.IHelpContextIds.OWL_DELETE_AN_ENTITY;//OWL_DELETE_AN_ENTITY;
+        PlatformUI.getWorkbench().getHelpSystem().displayHelp(helpContextId);
+    }
 }

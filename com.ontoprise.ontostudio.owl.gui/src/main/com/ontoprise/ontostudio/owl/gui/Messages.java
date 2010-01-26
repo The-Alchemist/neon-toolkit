@@ -257,6 +257,10 @@ public class Messages extends NLS {
 	public static String RenameModuleAction_2;
 	public static String RenameModuleAction_4;
 	public static String ShowNamespaceActionOWL_0;
+    public static String SourceViewTab_0;
+    public static String SourceViewTab_1;
+    public static String SourceViewTab_2;
+    public static String SourceViewTab_3;
 	public static String PropertyMoveChange_0;
 	public static String PropertyMoveChange_1;
 	public static String PropertyMoveChange_2;
@@ -327,6 +331,15 @@ public class Messages extends NLS {
 	public static String OntologyPropertyPage2_29;
 	public static String OntologyPropertyPage2_30;
 	public static String OntologyPropertyPage2_31;
+    public static String OntologySourceViewTab_0;
+    public static String OntologySourceViewTab_1;
+    public static String OntologySourceViewTab_2;
+    public static String OntologySourceViewTab_3;
+    public static String OntologySourceViewTab_4;
+    public static String OntologySourceViewTab_5;
+    public static String OntologySourceViewTab_6;
+    public static String OntologySourceViewTab_7;
+    public static String OntologySourceViewTab_8;
 	public static String NamespacesArea_1;
 	public static String NamespacesArea_2;
 	public static String NamespacesArea_3;

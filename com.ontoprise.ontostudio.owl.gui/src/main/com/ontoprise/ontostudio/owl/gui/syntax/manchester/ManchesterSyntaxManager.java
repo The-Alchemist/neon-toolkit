@@ -78,25 +78,30 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
     public static final String RESERVED_NAMESPACE = Messages.NewClazzAction_0;
 
     private static IToken NAMESPACE_TOKEN = null;
+    public static IToken URI_TOKEN = null;
+    private static IToken STRING_TOKEN = null;
     private static IToken SPECIAL_CHAR_TOKEN = null;
     private static IToken KEYWORD_TOKEN = null;
     private static IToken FRAMES_SLOT_TOKEN = null;
     private static IToken FRAMES_TOKEN = null;
-    // private static final IToken FACET_TOKEN = new Token(new TextAttribute(Display.getDefault().getSystemColor(SWT.COLOR_DARK_RED), null, SWT.BOLD));
-    // private static final IToken CLASS_TOKEN = new Token(new TextAttribute(Display.getDefault().getSystemColor(SWT.COLOR_DARK_BLUE), null, SWT.BOLD));
+//    private static final IToken FACET_TOKEN = new Token(new TextAttribute(Display.getDefault().getSystemColor(SWT.COLOR_DARK_RED), null, SWT.BOLD));
+//    private static final IToken CLASS_TOKEN = new Token(new TextAttribute(Display.getDefault().getSystemColor(SWT.COLOR_DARK_BLUE), null, SWT.BOLD));
 
     static {
             Display display = Display.getDefault();
-            NAMESPACE_TOKEN = new Token(new TextAttribute(display.getSystemColor(SWT.COLOR_BLUE), null, SWT.NONE));
-            SPECIAL_CHAR_TOKEN = new Token(new TextAttribute(display.getSystemColor(SWT.COLOR_MAGENTA), null, SWT.BOLD));
-            KEYWORD_TOKEN = new Token(new TextAttribute(display.getSystemColor(SWT.COLOR_DARK_MAGENTA), null, SWT.BOLD));
-            FRAMES_SLOT_TOKEN = new Token(new TextAttribute(display.getSystemColor(SWT.COLOR_DARK_MAGENTA), null, SWT.ITALIC));
-            FRAMES_TOKEN = new Token(new TextAttribute(display.getSystemColor(SWT.COLOR_DARK_MAGENTA), null, SWT.BOLD | SWT.ITALIC));
+            NAMESPACE_TOKEN     = new Token(new TextAttribute(display.getSystemColor(SWT.COLOR_BLUE), null, SWT.NONE));
+            URI_TOKEN           = new Token(new TextAttribute(display.getSystemColor(SWT.COLOR_BLUE), null, SWT.NONE));
+            STRING_TOKEN        = new Token(new TextAttribute(display.getSystemColor(SWT.COLOR_DARK_GREEN), null, SWT.NONE));
+            SPECIAL_CHAR_TOKEN  = new Token(new TextAttribute(display.getSystemColor(SWT.COLOR_MAGENTA), null, SWT.BOLD));
+            KEYWORD_TOKEN       = new Token(new TextAttribute(display.getSystemColor(SWT.COLOR_DARK_MAGENTA), null, SWT.BOLD));
+            FRAMES_SLOT_TOKEN   = new Token(new TextAttribute(display.getSystemColor(SWT.COLOR_DARK_MAGENTA), null, SWT.ITALIC));
+            FRAMES_TOKEN        = new Token(new TextAttribute(display.getSystemColor(SWT.COLOR_DARK_MAGENTA), null, SWT.BOLD | SWT.ITALIC));
     }
-    
+
+    String[] WS = {" ", "\t", "\n", "\r", ","}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+
     //Saves a scanner for each namespace. This prevent a reload every time a user types a character.
     private Map<OWLNamespaces, RuleBasedScanner> scanners = new HashMap<OWLNamespaces,RuleBasedScanner>();
-
 
     public ManchesterSyntaxManager() {
     }
@@ -123,6 +128,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
                 expandedValue += IRIUtils.TURTLE_IRI_CLOSE;
             }
             return new ManchesterOWLSyntaxEditorParser(owlModel.getOWLDataFactory(), expandedValue).parseIRI().toString();
+
         } catch (ParserException e) {
             throw new InternalNeOnException(e);
         } catch (IllegalArgumentException e) {
@@ -155,7 +161,6 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
             }
             throw e;
         }
-
     }
 
     private class DefaultEntityChecker implements OWLEntityChecker {
@@ -431,6 +436,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
         if(scanner == null){
             List<IRule> rules = new ArrayList<IRule>();
             createUriRule(rules);
+            createQuotedStringRule(rules);
             createBracketRule(rules);
             createFacetRule(rules);
             createQNameRule(rules, namespaces);
@@ -496,7 +502,6 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
         getKeywordRule(keywords, KEYWORD_TOKEN, rules);
 
         // NOT can also be at the start of the description, thus a leading WS is not required
-        String[] WS = {" ", "\t", "\n", "\r"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         for (String end: WS) {
             rules.add(new KeywordPatternRule(ManchesterSyntaxConstants.NOT + end, KEYWORD_TOKEN, (char) 0, true));
         }
@@ -524,7 +529,11 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
     }
 
     private void createUriRule(List<IRule> rules) {
-        rules.add(new PatternRule(IRIUtils.TURTLE_IRI_OPEN, IRIUtils.TURTLE_IRI_CLOSE, NAMESPACE_TOKEN, (char) 0, true)); 
+        rules.add(new PatternRule(IRIUtils.TURTLE_IRI_OPEN, IRIUtils.TURTLE_IRI_CLOSE, URI_TOKEN, (char) 0, true)); 
+    }
+
+    private void createQuotedStringRule(List<IRule> rules) {
+        rules.add(new PatternRule("\"", "\"", STRING_TOKEN, '\\', false)); 
     }
 
     private void createQNameRule(List<IRule> rules, OWLNamespaces namespaces) {
@@ -539,7 +548,6 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
     private void getKeywordRule(String[] keywords, IToken token, List<IRule> rules) {
         for (int i = 0; i < keywords.length; i++) {
 
-            String[] WS = {" ", "\t", "\n", "\r"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             for (String start: WS) {
                 for (String end: WS) {
                     rules.add(new KeywordPatternRule(start + keywords[i] + end, token, (char) 0, true));
