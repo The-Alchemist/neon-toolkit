@@ -44,6 +44,36 @@
       <topic href="html/owl_datatypes.html" label="Datatypes" />
    </context>   
    
+    <context id="OWL_CREATE_ONTOLOGY_PROJECT" title="Ontology Project">
+       <description>How to create an OWL Project</description>
+      <topic href="html/create_owl_project.html" label="Create an Ontology Project" />
+    </context>
+    
+    <context id="OWL_CREATE_ONTOLOGY" title="Ontology">
+       <description>How to create an Ontology</description>
+       <topic href="html/create_ontology.html" label="Create an Ontology"/>
+       <topic href="html/create_class.html" label="Create a Class"/>
+       <topic href="html/create_object_property.html" label="Create an Object Property"/>
+       <topic href="html/create_datatype_property.html" label="Create a Datatype Property"/>
+       <topic href="html/create_annotation_property.html" label="Create an Annotation Property"/>
+       <topic href="html/create_annotation.html" label="Create an Annotation"/>
+    </context>
+    
+    <context id="OWL_IMPORT_ONTOLOGY" title="Import an Ontology">
+       <description>How to load an ontology</description>
+       <topic href="html/import_ontology.html" label="Import an Ontology"/>
+    </context>
+    
+    <context id="OWL_EXPORT_ONTOLOGY" title="Export an Ontology">
+       <description>How to save an Ontology</description>
+       <topic href="html/export_ontology.html" label="Export an Ontology"/>
+    </context>
+    
+    <context id="OWL_DELETE_AN_ENTITY" title="Delete an Entity">
+       <description>How to delete an Entity</description>
+       <topic href="html/delete_resource.html" label="Delete an Entity"/>
+    </context>
+    
   <!-- 
     <context id="">
       <description></description>

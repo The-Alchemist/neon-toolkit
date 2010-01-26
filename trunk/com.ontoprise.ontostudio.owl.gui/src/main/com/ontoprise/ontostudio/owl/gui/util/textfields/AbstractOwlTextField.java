@@ -301,6 +301,10 @@ public abstract class AbstractOwlTextField {
                         selectedText = oldText + selectedText;
                     }
                 }
+                selectedText = selectedText.trim();
+                if(selectedText.endsWith(",")) {
+                    selectedText = selectedText.substring(0, selectedText.length()-1);
+                }
                 return selectedText;
             }
         }

@@ -13,23 +13,26 @@
            id="org.neontoolkit.ontovisualize2.OntoVisualizerView2"
            name="%ontologyGraphVisualizeView2"/>
   </extension>
+
   <extension
         point="org.eclipse.ui.preferencePages">
      <page
            class="org.neontoolkit.ontovisualize.preferences.OntoVisualizerPreferencePage"
            id="org.neontoolkit.ontovisualize2.preferences.OntoVisualizerPreferencePage"
-           name="%ontovisualizePreferences"/>
+           name="%ontovisualizePreferences"
+           category="com.ontoprise.ontostudio.owl.gui.preferences.OWLPreferencePage"/>
   </extension>
+  
   <extension 
   	point="org.eclipse.ui.perspectiveExtensions">
   	<perspectiveExtension
-  		targetID="com.ontoprise.ontostudio.perspectives.Schema">
+  		targetID="com.ontoprise.ontostudio.owl.perspectives.OWLPerspective">
   		<view
           closeable="true"
           id="org.neontoolkit.ontovisualize2.OntoVisualizerView2"
           moveable="true"
           relationship="stack"
-          relative="com.ontoprise.ontostudio.views.propertiesview"
+          relative="org.neontoolkit.gui.views.propertiesview"
           visible="false"/>
   	</perspectiveExtension>
   </extension>

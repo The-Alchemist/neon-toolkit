@@ -24,7 +24,7 @@
 	         name="Ontology Imports Graph">
             <subContributorOf
             	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorOWLModules2"
-            	priority="0.1" />
+            	priority="999" />
 	   </entityPropertyContributor>
 	</extension>
 

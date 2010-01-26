@@ -29,8 +29,8 @@ public class AxiomText extends AbstractOwlTextField {
     public static final int WIDTH_MORE_COLS = 200;
 
     /**
-	 * 
-	 */
+     * 
+     */
     public AxiomText(Composite parent, OWLModel owlModel, int cols) {
         super(parent, owlModel);
 
@@ -40,6 +40,21 @@ public class AxiomText extends AbstractOwlTextField {
         data.horizontalAlignment = SWT.FILL;
         data.grabExcessHorizontalSpace = false;
 
+        createTextWidget(parent, data, true, true);
+    }
+
+    /**
+     * 
+     */
+    public AxiomText(Composite parent, OWLModel owlModel) {
+        super(parent, owlModel);
+
+        GridData data = new GridData();
+        data.verticalAlignment = SWT.FILL;
+        data.horizontalAlignment = SWT.FILL;
+        data.grabExcessHorizontalSpace = true;
+        data.grabExcessVerticalSpace = true;
+        
         createTextWidget(parent, data, true, true);
     }
 }

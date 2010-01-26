@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.PlatformUI;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
@@ -279,5 +280,11 @@ public class RemoveAxiomWizardPage1 extends UserInputWizardPage {
         text.setLayoutData(data);
         text.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
         return text;
+    }
+    
+    @Override
+    public void performHelp() {
+        String helpContextId = org.neontoolkit.gui.IHelpContextIds.OWL_DELETE_AN_ENTITY;  //OWL_DELETE_AN_ENTITY;
+        PlatformUI.getWorkbench().getHelpSystem().displayHelp(helpContextId);
     }
 }

@@ -37,44 +37,44 @@ public class OWLNamespaces implements Serializable {
     private static final long serialVersionUID=-158185482289831766L;
 
     /** The prefix identifying the default namespace. */
-    public static final String DEFAULT_NAMESPACE_PREFIX = "";
+    public static final String DEFAULT_NAMESPACE_PREFIX = ""; //$NON-NLS-1$
     /** The namespace for OWL ontologies. */
-    public static final String OWL_NS="http://www.w3.org/2002/07/owl#";
+    public static final String OWL_NS="http://www.w3.org/2002/07/owl#"; //$NON-NLS-1$
     /** The namespace for OWL 1.1 ontologies. */
-    public static final String OWL_1_1_NS="http://www.w3.org/2006/12/owl11#";
+    public static final String OWL_1_1_NS="http://www.w3.org/2006/12/owl11#"; //$NON-NLS-1$
     /** The namespace for OWL XML syntax. */
-    public static final String OWLX_NS="http://www.w3.org/2003/05/owl-xml#";
+    public static final String OWLX_NS="http://www.w3.org/2003/05/owl-xml#"; //$NON-NLS-1$
     /** The namespace for OWL 1.1 XML syntax. */
-    public static final String OWL_1_1_XML_NS="http://www.w3.org/2006/12/owl11-xml#";
+    public static final String OWL_1_1_XML_NS="http://www.w3.org/2006/12/owl11-xml#"; //$NON-NLS-1$
     /** The namespace for XSD datatypes. */
-    public static final String XSD_NS="http://www.w3.org/2001/XMLSchema#";
+    public static final String XSD_NS="http://www.w3.org/2001/XMLSchema#"; //$NON-NLS-1$
     /** The namespace for RDF elements. */
-    public static final String RDF_NS="http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+    public static final String RDF_NS="http://www.w3.org/1999/02/22-rdf-syntax-ns#"; //$NON-NLS-1$
     /** The namespace for RDFS elements. */
-    public static final String RDFS_NS="http://www.w3.org/2000/01/rdf-schema#";
+    public static final String RDFS_NS="http://www.w3.org/2000/01/rdf-schema#"; //$NON-NLS-1$
     /** The namespace for SWRL elements. */
-    public static final String SWRL_NS="http://www.w3.org/2003/11/swrl#";
+    public static final String SWRL_NS="http://www.w3.org/2003/11/swrl#"; //$NON-NLS-1$
     /** The namespace for SWRL built-ins. */
-    public static final String SWRLB_NS="http://www.w3.org/2003/11/swrlb#";
+    public static final String SWRLB_NS="http://www.w3.org/2003/11/swrlb#"; //$NON-NLS-1$
     /** The namespace for SWRL XML syntax elements. */
-    public static final String SWRLX_NS="http://www.w3.org/2003/11/swrlx#";
+    public static final String SWRLX_NS="http://www.w3.org/2003/11/swrlx#"; //$NON-NLS-1$
     /** The namespaces for RULE-ML syntax elements. */
-    public static final String RULEML_NS="http://www.w3.org/2003/11/ruleml#";
+    public static final String RULEML_NS="http://www.w3.org/2003/11/ruleml#"; //$NON-NLS-1$
     /** The namespaces for KAON2 elements. */
-    public static final String KAON2_NS="http://kaon2.semanticweb.org/internal#";
+    public static final String KAON2_NS="http://kaon2.semanticweb.org/internal#"; //$NON-NLS-1$
     /** The map of well-known namespaces and prefixes. */
     protected static final Map<String,String> s_wellKnownNamespaces=new TreeMap<String,String>();
     static {
-        s_wellKnownNamespaces.put("owl",OWL_NS);
-        s_wellKnownNamespaces.put("owlx",OWLX_NS);
-        s_wellKnownNamespaces.put("xsd",XSD_NS);
-        s_wellKnownNamespaces.put("rdf",RDF_NS);
-        s_wellKnownNamespaces.put("rdfs",RDFS_NS);
-        s_wellKnownNamespaces.put("swrl",SWRL_NS);
-        s_wellKnownNamespaces.put("swrlb",SWRLB_NS);
-        s_wellKnownNamespaces.put("swrlx",SWRLX_NS);
-        s_wellKnownNamespaces.put("ruleml",RULEML_NS);
-        s_wellKnownNamespaces.put("kaon2",KAON2_NS);
+        s_wellKnownNamespaces.put("owl",OWL_NS); //$NON-NLS-1$
+        s_wellKnownNamespaces.put("owlx",OWLX_NS); //$NON-NLS-1$
+        s_wellKnownNamespaces.put("xsd",XSD_NS); //$NON-NLS-1$
+        s_wellKnownNamespaces.put("rdf",RDF_NS); //$NON-NLS-1$
+        s_wellKnownNamespaces.put("rdfs",RDFS_NS); //$NON-NLS-1$
+        s_wellKnownNamespaces.put("swrl",SWRL_NS); //$NON-NLS-1$
+        s_wellKnownNamespaces.put("swrlb",SWRLB_NS); //$NON-NLS-1$
+        s_wellKnownNamespaces.put("swrlx",SWRLX_NS); //$NON-NLS-1$
+        s_wellKnownNamespaces.put("ruleml",RULEML_NS); //$NON-NLS-1$
+        s_wellKnownNamespaces.put("kaon2",KAON2_NS); //$NON-NLS-1$
     }
     /** 
      * The inverse set of well-known namespaces and prefixes. 
@@ -87,9 +87,9 @@ public class OWLNamespaces implements Serializable {
         }
     }
     
-    private static final String[] ILLEGAL_FOR_OWL = {"lt", "gt", "amp", "apos", "quot"};
-    private static final String[] ILLEGAL_FOR_FLOGIC = {"rule", "query", "and", "or", "not", "is", "forall", "exists"};
-    private static final String[] ILLEGAL_FOR_FLOGIC2 = {"is", "if", "then", "else", "and", "or", "not", "forall", "exist", "mod"};
+    private static final String[] ILLEGAL_FOR_OWL = {"lt", "gt", "amp", "apos", "quot"};  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    private static final String[] ILLEGAL_FOR_FLOGIC = {"rule", "query", "and", "or", "not", "is", "forall", "exists"};    //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
+    private static final String[] ILLEGAL_FOR_FLOGIC2 = {"is", "if", "then", "else", "and", "or", "not", "forall", "exist", "mod"};        //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$//$NON-NLS-6$//$NON-NLS-7$//$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
     /** The set of reserved namespaces and prefixes. */
     protected static final Set<String> s_reservedPrefixes = new HashSet<String>();
     static {
@@ -339,7 +339,7 @@ public class OWLNamespaces implements Serializable {
         if (prefix==null)
             return namespace+localName;
         else
-            return prefix+":"+localName;
+            return prefix+":"+localName; //$NON-NLS-1$
     }
     /**
      * Abbreviates given URI into the form prefix:local_name if possible.
@@ -368,7 +368,7 @@ public class OWLNamespaces implements Serializable {
         if (prefix==null)
             return namespace+localName;
         else
-            return prefix+":"+localName;
+            return prefix+":"+localName; //$NON-NLS-1$
     }
     /**
      * Abbreviates given URI into the form &prefix;local_name if possible.
@@ -397,7 +397,7 @@ public class OWLNamespaces implements Serializable {
         if (prefix==null)
             return namespace+localName;
         else
-            return "&"+prefix+";"+localName;
+            return "&"+prefix+";"+localName;  //$NON-NLS-1$//$NON-NLS-2$
     }
     /**
      * Attempts to expand given string (either of the form prefix:local_name or of the form &prefix;local_name) into an URI.

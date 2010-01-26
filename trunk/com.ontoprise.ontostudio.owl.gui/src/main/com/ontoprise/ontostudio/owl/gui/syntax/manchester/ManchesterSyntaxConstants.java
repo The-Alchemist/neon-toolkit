@@ -112,7 +112,7 @@ public abstract class ManchesterSyntaxConstants {
     public static final String RANGE = "Range:"; //$NON-NLS-1$
     public static final String CHARACTERISTIC = "Characteristics:"; //$NON-NLS-1$
     public static final String SUBPROPERTTYOF = "SubPropertyOf:"; //$NON-NLS-1$
-    public static final String INVERSES = "Inverses:"; //$NON-NLS-1$
+    public static final String INVERSES = "InverseOf:"; //$NON-NLS-1$
     public static final String SUBPROPERTYCHAIN = "SubPropertyChain:"; //$NON-NLS-1$
 
     public static final String FUNCTIONAL = "Functional"; //$NON-NLS-1$
@@ -135,7 +135,7 @@ public abstract class ManchesterSyntaxConstants {
     public static final String SAMEAS = "SameAs:"; //$NON-NLS-1$
     public static final String DIFFERENTFROM = "DifferentFrom:"; //$NON-NLS-1$
 
-    public static final String ANNOTATIONPROPERTY = "OWLAnnotationProperty:"; //$NON-NLS-1$
+    public static final String ANNOTATIONPROPERTY = "AnnotationProperty:"; //$NON-NLS-1$
 
     /*
      * Other
@@ -170,11 +170,24 @@ public abstract class ManchesterSyntaxConstants {
     }
 
     public static String[] getFramesKeywords() {
-        return new String[] {ONTOLOGY, NAMESPACE, IMPORT, CLASS, OBJECTPROPERTY, DATAPROPERTY, INDIVIDUAL, EQUIVALENTCLASSES, DISJOINTCLASSES, EQUIVALENTOBJECTPROPERTIES, EQUIVALENTDATAPROPERTIES, EQUIVALENTDATAPROPERTIES, DISJOINTDATAPROPERTIES, SAMEINDIVIDUAL, DIFFERENTINDIVIDUALS};
+        return new String[] {ONTOLOGY, 
+                CLASS, 
+                OBJECTPROPERTY, 
+                DATAPROPERTY, 
+                ANNOTATIONPROPERTY, 
+                INDIVIDUAL, 
+                DATATYPE,
+                EQUIVALENTCLASSES, DISJOINTCLASSES, 
+                EQUIVALENTOBJECTPROPERTIES, DISJOINTOBJECTPROPERTIES, 
+                EQUIVALENTDATAPROPERTIES, DISJOINTDATAPROPERTIES, 
+                SAMEINDIVIDUAL, DIFFERENTINDIVIDUALS};
     }
 
     public static String[] getFrameSlotKeywords() {
-        return new String[] {ANNOTATIONS,
+        return new String[] {
+                NAMESPACE, 
+                IMPORT, 
+                ANNOTATIONS,
                 SUBCLASSOF,
                 EQUIVALENTTO,
                 DISJOINTWITH,

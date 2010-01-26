@@ -3,6 +3,18 @@
 <plugin>
    <extension-point id="syntaxDefinition" name="%syntaxManagerDescription" schema="schema/syntaxDefinition.exsd"/>
 
+<!-- TODO add a handler like this
+      <handler
+			class="com.ontoprise.ontostudio.search.owl.ui.FindReferencesHandler"
+            commandId="com.ontoprise.ontostudio.search.owl.ui.findReferencesCommand">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneEntitySelected">
+            </reference>
+         </activeWhen>
+      </handler>
+-->
+
 <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
 <!--+++++++++++++++++++++++++ PERSPECTIVES ++++++++++++++++++++++++++++++++-->
 <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
@@ -53,8 +65,7 @@
             class="com.ontoprise.ontostudio.owl.gui.preferences.OWLPreferencePage"
             id="com.ontoprise.ontostudio.owl.gui.preferences.OWLPreferencePage">
       </page>
-   </extension>
-
+	</extension>
 
 <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
 <!--+++++++++++++++++++++++++    VIEWS    +++++++++++++++++++++++++++++++++-->
@@ -71,8 +82,9 @@
             icon="icons/individualview.gif"
             id="com.ontoprise.ontostudio.owl.views.individualview"
             name="%individualView"/>
-  
 	</extension>
+
+
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
@@ -163,7 +175,6 @@
                </reference>
             </visibleWhen>
          </command>
-
       </menuContribution>
       <menuContribution
             locationURI="popup:navigator.refactor?after=additions">
@@ -597,6 +608,15 @@
             	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorOWLModules2"
             	priority="900" />
       </entityPropertyContributor>
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.ontology.OntologySourceViewTab"
+            id="com.ontoprise.ontostudio.owl.gui.properties.ontology.OntologySourceViewTab"
+            name="%TextViewTab">
+            <subContributorOf
+            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorOWLModules2"
+            	priority="899" />
+      </entityPropertyContributor>
 
 
       <!-- SubPropertyPages of ClazzPropertyPage -->
@@ -618,6 +638,15 @@
             	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorClazzes2"
             	priority="900" />
       </entityPropertyContributor>
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab"
+            id="com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab"
+            name="%TextViewTab">
+            <subContributorOf
+            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorClazzes2"
+            	priority="899" />
+      </entityPropertyContributor>
      
 
       <!-- SubPropertyPages of ComplexClazzesPropertyPage -->
@@ -631,6 +660,7 @@
             	priority="909" />
       </entityPropertyContributor>
 
+
       <!-- SubPropertyPages of ObjectPropertyPage -->
       <entityPropertyContributor
             activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement"
@@ -640,6 +670,15 @@
             <subContributorOf
             	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorObjectProperty2"
             	priority="900" />
+      </entityPropertyContributor>
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab"
+            id="com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab"
+            name="%TextViewTab">
+            <subContributorOf
+            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorObjectProperty2"
+            	priority="899" />
       </entityPropertyContributor>
       <entityPropertyContributor
             activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement"
@@ -671,20 +710,44 @@
                 superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorDataProperty2"
                 priority="900" />
       </entityPropertyContributor>
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab"
+            id="com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab"
+            name="%TextViewTab">
+            <subContributorOf
+                superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorDataProperty2"
+                priority="899" />
+      </entityPropertyContributor>
+
+
+      <!-- SubPropertyPages of AnnotationProperty PropertyPage -->
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab"
+            id="com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab"
+            name="%TextViewTab">
+            <subContributorOf
+                superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorAnnotationProperty"
+                priority="899" />
+      </entityPropertyContributor>
+
+
+      <!-- SubPropertyPages of Datatype PropertyPage -->
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab"
+            id="com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab"
+            name="%TextViewTab">
+            <subContributorOf
+                superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorDatatype"
+                priority="899" />
+      </entityPropertyContributor>
 
 
       <!-- SubPropertyPages of IndividualPropertyPage -->
       <!-- activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem"-->
       <entityPropertyContributor
-            activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.AnonymousIndividualViewItem"
-            class="com.ontoprise.ontostudio.owl.gui.properties.individual.IndividualTaxonomyPropertyPage"
-            id="com.ontoprise.ontostudio.owl.gui.propertyContributorIndividualTaxonomy"
-            name="%taxonomyPropertyPage">
-            <subContributorOf
-            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorAnonymousIndividual2"
-            	priority="910" />
-      </entityPropertyContributor>
-      <entityPropertyContributor
             activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.NamedIndividualViewItem"
             class="com.ontoprise.ontostudio.owl.gui.properties.individual.IndividualTaxonomyPropertyPage"
             id="com.ontoprise.ontostudio.owl.gui.propertyContributorIndividualTaxonomy"
@@ -693,17 +756,7 @@
             	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorNamedIndividual2"
             	priority="910" />
       </entityPropertyContributor>
-      
       <entityPropertyContributor
-            activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.AnonymousIndividualViewItem"
-            class="com.ontoprise.ontostudio.owl.gui.properties.AnnotationPropertyTab"
-            id="com.ontoprise.ontostudio.owl.gui.propertyContributorAnnotations2"
-            name="%annotationsPropertyPage">
-            <subContributorOf
-            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorAnonymousIndividual2"
-            	priority="900" />
-      </entityPropertyContributor>
-            <entityPropertyContributor
             activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.NamedIndividualViewItem"
             class="com.ontoprise.ontostudio.owl.gui.properties.AnnotationPropertyTab"
             id="com.ontoprise.ontostudio.owl.gui.propertyContributorAnnotations2"
@@ -711,8 +764,37 @@
             <subContributorOf
             	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorNamedIndividual2"
             	priority="900" />
+      </entityPropertyContributor>
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.NamedIndividualViewItem"
+            class="com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab"
+            id="com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab"
+            name="%TextViewTab">
+            <subContributorOf
+            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorNamedIndividual2"
+            	priority="899" />
       </entityPropertyContributor>
 
+      
+       <!-- SubPropertyPages of *anonymous* IndividualPropertyPage -->
+       <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.AnonymousIndividualViewItem"
+            class="com.ontoprise.ontostudio.owl.gui.properties.individual.IndividualTaxonomyPropertyPage"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorIndividualTaxonomy"
+            name="%taxonomyPropertyPage">
+            <subContributorOf
+            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorAnonymousIndividual2"
+            	priority="910" />
+      </entityPropertyContributor>
+       <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.AnonymousIndividualViewItem"
+            class="com.ontoprise.ontostudio.owl.gui.properties.AnnotationPropertyTab"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorAnnotations2"
+            name="%annotationsPropertyPage">
+            <subContributorOf
+            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorAnonymousIndividual2"
+            	priority="900" />
+      </entityPropertyContributor>
    </extension>
 
 
@@ -1359,6 +1441,37 @@
             </iterate>
          </and>
       </definition>
+  	  <definition
+            id="com.ontoprise.ontostudio.owl.gui.navigator.oneEntitySelected">
+         <and>
+            <count
+                  value="1">
+            </count>
+            <iterate>
+               <or>
+                  <instanceof
+                        value="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement">
+                  </instanceof>
+                  <instanceof
+                        value="com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeTreeElement">
+                  </instanceof>
+                  <instanceof
+                        value="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement">
+                  </instanceof>
+                  <instanceof
+                        value="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement">
+                  </instanceof>
+                  <instanceof
+                        value="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement">
+                  </instanceof>
+                  <instanceof
+                        value="com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement">
+                  </instanceof>
+               </or>
+            </iterate>
+         </and>
+      </definition>
+      
    </extension>
 
 <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->

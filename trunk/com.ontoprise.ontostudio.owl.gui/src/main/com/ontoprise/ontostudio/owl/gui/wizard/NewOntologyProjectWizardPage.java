@@ -25,6 +25,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.neontoolkit.gui.navigator.project.ProjectNameValidator;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
@@ -128,5 +129,11 @@ public class NewOntologyProjectWizardPage extends WizardPage {
             }
         }
         setProjectName(projectName);
+    }
+    
+    @Override
+    public void performHelp() {
+        String helpContextId = org.neontoolkit.gui.IHelpContextIds.OWL_CREATE_ONTOLOGY_PROJECT;
+        PlatformUI.getWorkbench().getHelpSystem().displayHelp(helpContextId);
     }
 }

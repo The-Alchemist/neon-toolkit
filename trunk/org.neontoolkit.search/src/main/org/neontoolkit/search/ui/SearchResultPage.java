@@ -37,6 +37,8 @@ import org.neontoolkit.search.Messages;
  */
 public class SearchResultPage extends AbstractTextSearchViewPage implements ISearchResultPage {
 
+    public static final String ID = "org.neontoolkit.search.ui.SearchResultPage"; //$NON-NLS-1$
+
 	private SearchTableContentProvider _contentProvider;
 	private SearchTableLabelProvider _labelProvider;
 	private int _currentPathIndex = 0;
