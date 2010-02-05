@@ -46,6 +46,10 @@ import com.ontoprise.ontostudio.owl.gui.util.textfields.AxiomText;
  */
 public class SourceViewTab extends AbstractOWLIdPropertyPage implements IImagePropertyPage{
 
+    /**
+     * 
+     */
+    private static final int MAX_NUMBER_OF_AXIOMS = 1000;
     /*
      * JFace Forms variables
      */
@@ -224,8 +228,22 @@ public class SourceViewTab extends AbstractOWLIdPropertyPage implements IImagePr
         StringWriter writer = new StringWriter();
         
         Collection<OWLAxiom> axioms = _owlModel.getAxioms((OWLEntity)owlEntity, showImports);
-        SortedSet<OWLAxiom> sortedAxioms = new TreeSet<OWLAxiom>(axioms);
+        SortedSet<OWLAxiom> sortedAxioms; 
 
+        int size = axioms.size();
+        if(size <= MAX_NUMBER_OF_AXIOMS) {
+            sortedAxioms = new TreeSet<OWLAxiom>(axioms);
+        } else {
+            sortedAxioms = new TreeSet<OWLAxiom>();
+            int i=0;
+            for (OWLAxiom owlAxiom: axioms) {
+                sortedAxioms.add(owlAxiom);
+                if(++i > MAX_NUMBER_OF_AXIOMS){
+                    break;
+                }
+            }
+            axioms = null;
+        }
         
         boolean first = true;
         for (OWLAxiom owlAxiom: sortedAxioms) {
@@ -233,6 +251,10 @@ public class SourceViewTab extends AbstractOWLIdPropertyPage implements IImagePr
                 writer.append("\n"); //$NON-NLS-1$
             } else {
                 first = false;
+                if(size > MAX_NUMBER_OF_AXIOMS) {
+                    writer.append("// There are "+size+" axioms for this entity.\n");  //$NON-NLS-1$//$NON-NLS-2$
+                    writer.append("// Only the first "+MAX_NUMBER_OF_AXIOMS+" axioms will be listed here.\n\n"); //$NON-NLS-1$ //$NON-NLS-2$
+                }
             }
             
             ManchesterOWLSyntaxObjectRenderer r = new ManchesterOWLSyntaxObjectRenderer(writer, entityShortFormProvider);

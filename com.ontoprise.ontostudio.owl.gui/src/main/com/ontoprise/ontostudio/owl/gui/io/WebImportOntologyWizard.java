@@ -100,7 +100,7 @@ public class WebImportOntologyWizard extends FileSystemImportWizard {
             OWLManchesterProject omp = (OWLManchesterProject)NeOnCorePlugin.getDefault().getOntologyProject(projectName);
             // String physicalUri = ImportExportUtils.copyOntologyFileToProject(physicalURL.toString(), omp.getName()).toString();                
             // URI physicalURI = URI.create(physicalUri);
-            Set<String> res = omp.importOntologies(new URI[]{physicalURL}, false);
+            Set<String> res = omp.importOntologies(new URI[]{physicalURL}, false, monitor);
             if (res.size()!=0) omp.setOntologyDirty(res.iterator().next(), true);
 		} catch (OWLOntologyCreationException e) {
 			throw new OntologyImportException(e);

@@ -27,6 +27,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -104,6 +105,8 @@ import com.ontoprise.ontostudio.owl.model.util.OWLAxiomUtils;
 import com.ontoprise.ontostudio.owl.perspectives.OWLPerspective;
 
 public class OWLGUIUtilities {
+    
+    public static final Color COLOR_FOR_IMPORTED_AXIOMS = new Color(null, 176, 196, 222);
 
     public static final String BUTTON_LABEL_ADD = Messages.OWLGUIUtilities_0;
     public static final String BUTTON_LABEL_REMOVE = Messages.OWLGUIUtilities_1;
@@ -151,7 +154,7 @@ public class OWLGUIUtilities {
     public static CCombo createLanguageComboBox(Composite parent, boolean enabled) {
         GridData data = new GridData();
 		data.widthHint = LANGUAGE_SELECT_BOX_WIDTH;
-        data.verticalAlignment = SWT.CENTER;
+        data.verticalAlignment = SWT.TOP;
         String[] languages = NeOnUIPlugin.getDefault().getLanguages();
         String[] languageComboContents = new String[languages.length + 1];
         languageComboContents[0] = OWLCommandUtils.EMPTY_LANGUAGE;

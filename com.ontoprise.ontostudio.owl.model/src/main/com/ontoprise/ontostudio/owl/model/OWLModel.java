@@ -18,9 +18,12 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.core.project.IOntologyProject;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLAnnotationPropertyDomainAxiom;
+import org.semanticweb.owlapi.model.OWLAnnotationPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationSubject;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLAnonymousIndividual;
@@ -388,6 +391,42 @@ public interface OWLModel {
      * @throws NeOnCoreException
      */
     public Set<OWLIndividual> getAllIndividuals(String classId) throws NeOnCoreException;
+
+    /**
+     * returns a list of all properties that have the passed class as domain
+     * 
+     * @param classId
+     * @param ontologyId
+     * @param projectId
+     * @return
+     * @throws NeOnCoreException
+     */
+    public Set<OWLAnnotationProperty> getAnnotationPropertiesForDomain(String classId) throws NeOnCoreException; 
+    public Set<ItemHits<OWLAnnotationProperty,OWLAnnotationPropertyDomainAxiom>> getAnnotationPropertiesForDomainHits(String classId) throws NeOnCoreException;
+
+    /**
+     * returns a list of all properties that have the passed class as domain
+     * 
+     * @param classId
+     * @param ontologyId
+     * @param projectId
+     * @return
+     * @throws NeOnCoreException
+     */
+    public Set<OWLDataProperty> getDataPropertiesForDomain(String classId) throws NeOnCoreException;
+    public Set<ItemHits<OWLDataProperty,OWLDataPropertyDomainAxiom>> getDataPropertiesForDomainHits(String classId) throws NeOnCoreException;
+
+    /**
+     * returns a list of all properties that have the passed class as domain
+     * 
+     * @param classId
+     * @param ontologyId
+     * @param projectId
+     * @return
+     * @throws NeOnCoreException
+     */
+    public Set<OWLObjectProperty> getObjectPropertiesForDomain(String classId) throws NeOnCoreException;
+    public Set<ItemHits<OWLObjectProperty,OWLObjectPropertyDomainAxiom>> getObjectPropertiesForDomainHits(String classId) throws NeOnCoreException;
 
     /**
      * Returns a list of all complex classes that do not have named classes as subclasses and are root descriptions.<br/>
@@ -857,6 +896,9 @@ public interface OWLModel {
     Set<ItemHits<OWLDataProperty,OWLSubDataPropertyOfAxiom>> getSubDataPropertyHits(String propertyUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLSubClassOfAxiom>> getSuperRestrictionHits(String superClazzUri) throws NeOnCoreException;
     
+    Set<ItemHits<IRI,OWLAnnotationPropertyDomainAxiom>> getAnnotationPropertyDomainHits(String propertyUri) throws NeOnCoreException;
+    Set<ItemHits<IRI,OWLAnnotationPropertyRangeAxiom>> getAnnotationPropertyRangeHits(String propertyUri) throws NeOnCoreException;
+
     OWLDataFactory getOWLDataFactory() throws NeOnCoreException;
     String getOntologyURI() throws NeOnCoreException;
     void applyChanges(List<OWLAxiomChange> changes) throws NeOnCoreException;

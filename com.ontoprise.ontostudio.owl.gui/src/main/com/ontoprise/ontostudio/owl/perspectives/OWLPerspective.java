@@ -30,8 +30,10 @@ public class OWLPerspective implements IPerspectiveFactory {
 
         // Add shown views
         layout.addShowViewShortcut(OWLPlugin.OWL_ONTOLOGY_NAVIGATOR);
+        layout.addShowViewShortcut(MTreeView.ID);
         layout.addShowViewShortcut(IndividualView.ID);
         layout.addShowViewShortcut(EntityPropertiesView.ID);
+        layout.addShowViewShortcut("org.eclipse.help.ui.HelpView"); //$NON-NLS-1$
 
         layout.addActionSet(OWLPlugin.TOOLBARACTIONS);
 
@@ -49,7 +51,7 @@ public class OWLPerspective implements IPerspectiveFactory {
         IFolderLayout right = layout.createFolder("right", IPageLayout.RIGHT, 0.25f, MTreeView.ID); //$NON-NLS-1$
         right.addView(EntityPropertiesView.ID);
 
-        IFolderLayout bottom = layout.createFolder("bottom", IPageLayout.BOTTOM, 0.5f, MTreeView.ID); //$NON-NLS-1$
+        IFolderLayout bottom = layout.createFolder("bottom", IPageLayout.BOTTOM, 0.7f, MTreeView.ID); //$NON-NLS-1$
         bottom.addView(IndividualView.ID);
     }
 

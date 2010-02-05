@@ -15,6 +15,7 @@ import java.util.Iterator;
 
 import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntaxOntologyFormat;
 import org.coode.owlapi.turtle.TurtleOntologyFormat;
+import org.coode.xml.XMLWriterPreferences;
 import org.eclipse.core.resources.IResource;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
@@ -67,9 +68,13 @@ public class SaveOntology extends OWLModuleChangeCommand {
                 while (prefixes.hasNext()) {
                     String prefix = prefixes.next();
                     String namespace = namespaces.getNamespaceForPrefix(prefix);
-                    ontologyFormat.setPrefix(prefix + ":", namespace);
+                    if("".equals(prefix)) { //$NON-NLS-1$
+                        ontologyFormat.setDefaultPrefix(namespace);
+                    } else {
+                        ontologyFormat.setPrefix(prefix, namespace);
+                    }
                 }
-                
+                XMLWriterPreferences.getInstance().setUseNamespaceEntities(true);
                 manager.saveOntology(ontology, ontologyFormat, physicalURI);
             }
             project.getResource().refreshLocal(IResource.DEPTH_INFINITE, null);
@@ -84,7 +89,9 @@ public class SaveOntology extends OWLModuleChangeCommand {
 
 	
     PrefixOWLOntologyFormat getOwlOntologyFormat(String fileFormat) {
-        if((fileFormat == null) || (fileFormat.equals(OWLConstants.OWL_EXTENSION))) {
+        if(fileFormat == null) {
+            return new RDFXMLOntologyFormat();
+        } else if (fileFormat.equals(OWLConstants.OWL_EXTENSION)) {
             return new RDFXMLOntologyFormat();
         } else if((fileFormat.equals(OWLConstants.OWLXML_EXTENSION))) {
             return new OWLXMLOntologyFormat();

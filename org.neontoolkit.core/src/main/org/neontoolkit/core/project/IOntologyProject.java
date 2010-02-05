@@ -18,6 +18,7 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.core.exception.ProjectFailureException;
@@ -452,4 +453,10 @@ public interface IOntologyProject {
      * @param ontologyURIsToImport              The ontology URIs to be removed from the import.
      */
     void removeFromImportedOntologies(String ontologyURI, Set<String> ontologyURIsToImport) throws NeOnCoreException;
+
+    /**
+     * @param monitor
+     * @throws NeOnCoreException
+     */
+    void restoreProject(IProgressMonitor monitor) throws NeOnCoreException;
 }

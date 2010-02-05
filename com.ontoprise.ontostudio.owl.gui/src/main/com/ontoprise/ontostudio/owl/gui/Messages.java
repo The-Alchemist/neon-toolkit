@@ -172,6 +172,7 @@ public class Messages extends NLS {
 	public static String AnnotationsPropertyPage2_AnnotationProperty;
 	public static String AnnotationsPropertyPage2_Value;
 	public static String AnnotationsPropertyPage2_Type;
+	public static String AnnotationsPropertyPage2_ErrorRetrievingData;
 	public static String ObjectPropertyDeleteChange_0;
 	public static String ObjectPropertyDeleteChange_2;
 	public static String DataPropertyDeleteChange_0;
@@ -506,8 +507,15 @@ public class Messages extends NLS {
     public static String FileSystemExportWizard_13;
     public static String NewPropertyHandler_0;
     public static String NewPropertyHandler_1;
-    
-	static {
+    public static String AnnotationPropertyPropertyPage_Domain;
+    public static String AnnotationPropertyPropertyPage_Range;
+    public static String AnnotationPropertyPropertyPage_ErrorRetrievingData;
+    public static String AnnotationPropertyPropertyPage_0;
+    public static String AnnotationPropertyPropertyPage_1;
+    public static String AnnotationPropertyPropertyPage_IntersectionOfRange;
+    public static String AnnotationPropertyPropertyPage_IntersectionOfDomain;
+        
+    static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}

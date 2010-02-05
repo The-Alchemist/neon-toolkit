@@ -13,6 +13,8 @@ package com.ontoprise.ontostudio.owl.model.visitors;
 import java.util.Collections;
 
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLAnnotationPropertyDomainAxiom;
+import org.semanticweb.owlapi.model.OWLAnnotationPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLDataPropertyCharacteristicAxiom;
@@ -89,6 +91,25 @@ public class GetMemberVisitor extends OWLKAON2VisitorAdapter {
         }
         return super.visit(object);
     }
+
+    @Override
+    public Object visit(OWLAnnotationPropertyDomainAxiom axiom) {
+        if ("annotationProperty".equals(_member)) { //$NON-NLS-1$
+            return axiom.getProperty();
+        } else if ("domain".equals(_member)) { //$NON-NLS-1$
+            return axiom.getDomain();
+        }
+        return super.visit(axiom);
+    }
+
+    @Override
+    public Object visit(OWLAnnotationPropertyRangeAxiom axiom) {
+        if ("annotationProperty".equals(_member)) { //$NON-NLS-1$
+            return axiom.getProperty();
+        } else if ("range".equals(_member)) { //$NON-NLS-1$
+            return axiom.getRange();
+        }
+        return super.visit(axiom);    }
 
     @Override
     public Object visit(OWLDataPropertyAssertionAxiom object) {

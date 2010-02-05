@@ -11,7 +11,6 @@
 package com.ontoprise.ontostudio.owl.model;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
@@ -30,7 +29,9 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.widgets.Display;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.InternalNeOnException;
@@ -387,6 +388,15 @@ public class OWLManchesterProject extends AbstractOntologyProject {
     }
 
     @Override
+    public void restoreProject(IProgressMonitor monitor) throws NeOnCoreException {
+        try {
+            new RestoreProject(getName(), monitor).run();
+        } catch (CommandException e) {
+            throw new InternalNeOnException(e);
+        }
+    }
+
+    @Override
     public void restoreProject() throws NeOnCoreException {
         try {
             new RestoreProject(getName()).run();
@@ -394,7 +404,7 @@ public class OWLManchesterProject extends AbstractOntologyProject {
             throw new InternalNeOnException(e);
         }
     }
-
+    
     @Override
     public void saveOntology(String ontologyUri) throws NeOnCoreException {
         try {
@@ -467,8 +477,14 @@ public class OWLManchesterProject extends AbstractOntologyProject {
         fireAddRemoveEvent(EventTypes.ONTOLOGY_REMOVED, ontologyURI);
     }
     
-    public Set<String> importOntologies(URI[] physicalURIs, boolean restoringFromWorkspace) throws UnknownOWLOntologyFormatException, OWLOntologyCreationException, NeOnCoreException {
+    public Set<String> importOntologies(URI[] physicalURIs, boolean restoringFromWorkspace, IProgressMonitor monitor) throws UnknownOWLOntologyFormatException, OWLOntologyCreationException, NeOnCoreException {
         try {
+            if (monitor == null){
+                monitor = new NullProgressMonitor();
+            }
+
+            monitor.subTask("Checking ontologies ..."); //$NON-NLS-1$ 
+
             List<SimpleIRIMapper> iriMappers = new ArrayList<SimpleIRIMapper>();
             List<IRI> ontologyIRIs = new ArrayList<IRI>();
             final Map<OWLOntologyID,String> owlOntologyUris = new HashMap<OWLOntologyID,String>();
@@ -477,7 +493,10 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                     // the usual case which can be handled easy and has a performance benefit
                     // we do not need a mapper but just open the ontology by its physical uri
                 } else {
+                    int count=0;
                     for (URI physicalURI: physicalURIs) {
+                        monitor.subTask("Checking ontology: "+physicalURI+"  ("+(++count)+"/"+ physicalURIs.length+")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+                        
                         OWLOntologyInfo ontologyInfo = OWLFileUtilities.getOntologyInfo(physicalURI);
                         String ontologyUri = OWLUtilities.toString(ontologyInfo.getOntologyID());
                         if (ontologyUri == null){
@@ -527,6 +546,7 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                 try {
                     
                     if (physicalURIs.length == 1) {
+                        monitor.subTask("Loading ontology "+physicalURIs[0]); //$NON-NLS-1$
                         try {
                             _ontologyManager.loadOntologyFromPhysicalURI(physicalURIs[0]);
                         } catch (OWLOntologyCreationException e) {
@@ -538,25 +558,35 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                         }
                         
                     } else {
+                        int count=0;
                         for (IRI ontologyIRI: ontologyIRIs) {
                             try {
+                                monitor.subTask("Loading ontology: "+ ontologyIRI +"  ("+(++count)+"/"+ ontologyIRIs.size()+")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
                                 _ontologyManager.loadOntology(ontologyIRI);
                                 if (exception.get() != null) {
                                     throw exception.get();
                                 }
 
                             } catch (OWLOntologyCreationException e) {
+                                Logger.getLogger(OWLManchesterProject.class).error(e);
                                 exception.set(null);
-                                if(e.getCause() instanceof UnknownHostException) {
-                                    // try to load (via import) an onto from the web, which is not accessible right now 
-                                    unknownHosts.add(e.getCause().getLocalizedMessage());
-                                } else if(e.getCause() instanceof FileNotFoundException) {
-                                    // try to load (via import) an onto from the web, which does not exist at that position, right now 
+                                if(e.getCause()!=null) {
                                     unknownHosts.add(e.getCause().getLocalizedMessage());
                                 } else {
-                                    removeOntologies(_ontologyManager, owlOntologyUris.keySet());
-                                    throw e;
+                                    unknownHosts.add(e.getLocalizedMessage());
                                 }
+//                                if(e.getCause() instanceof UnknownHostException) {
+//                                    // try to load (via import) an onto from the web, which is not accessible right now 
+//                                    unknownHosts.add(e.getCause().getLocalizedMessage());
+//                                } else if(e.getCause() instanceof FileNotFoundException) {
+//                                    // try to load (via import) an onto from the web, which does not exist at that position, right now 
+//                                    unknownHosts.add(e.getCause().getLocalizedMessage());
+//                                } else if(e.getCause() instanceof UnparsableOntologyException) {
+//                                    unknownHosts.add(e.getCause().getLocalizedMessage());
+//                                } else {
+//                                    removeOntologies(_ontologyManager, owlOntologyUris.keySet());
+//                                    throw e;
+//                                }
                             } catch (RuntimeException e) {
                                 removeOntologies(_ontologyManager, owlOntologyUris.keySet());
                                 throw e;
@@ -570,7 +600,7 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                         for (OWLOntologyID ontologyUri: owlOntologyUris.keySet()) {
                             if (ontologyUri.getOntologyIRI()==null) {
                                 removeOntologies(_ontologyManager, owlOntologyUris.keySet());
-                                throw new OWLOntologyCreationException("Cannot load an ontology without a URI");
+                                throw new OWLOntologyCreationException("Cannot load an ontology without a URI"); //$NON-NLS-1$
                             }
                             else {
                                 this.addOntology(ontologyUri.getOntologyIRI().toString());
@@ -595,9 +625,9 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                 } finally {
                     _ontologyManager.removeOntologyLoaderListener(owlOntologyLoaderListener);
                     if(unknownHosts.size()>0) {
-                        String s = "Some Ontologies could not be loaded, e.g. from the following hosts:\n"; //$NON-NLS-1$
+                        String s = "Some Ontologies could not be loaded, e.g.:"; //$NON-NLS-1$
                         for (String string: unknownHosts) {
-                            s += "\t"+string; //$NON-NLS-1$
+                            s += "\n\t"+string; //$NON-NLS-1$
                         }
                         throw new RuntimeException(new UnknownHostException(s));
                     }

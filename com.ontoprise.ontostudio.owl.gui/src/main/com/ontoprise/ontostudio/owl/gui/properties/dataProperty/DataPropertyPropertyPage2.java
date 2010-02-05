@@ -114,6 +114,52 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         _form.reflow(true);
     }
 
+    @Override
+    protected List<Section> getSections() {
+        List<Section> sections = new ArrayList<Section>();
+        sections.add(_domainSection);
+        sections.add(_rangeSection);
+        sections.add(_functionalSection);
+        return sections;
+    }
+
+    @Override
+    public void refreshComponents() {
+        super.refreshComponents();
+
+        initDomainSection(false);
+        initRangeSection(false);
+        initCheckboxSection();
+
+        // closeToolBar();
+        layoutSections();
+        _form.reflow(true);
+    }
+    
+    @Override
+    public void updateComponents() {
+        super.updateComponents();
+
+        initDomainSection(false);
+        initRangeSection(false);
+
+        layoutSections();
+        _form.reflow(true);
+    }
+
+    @Override
+    public Image getImage() {
+        return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.DATA_PROPERTY);
+    }
+
+    @Override
+    public void dispose() {
+        IWorkbenchPage page = OWLPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        if (_partListener != null && page != null) {
+            page.removePartListener(_partListener);
+        }
+    }
+    
     /**
      * Create domain area
      */
@@ -147,9 +193,9 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 String axiomText = domain[0];
                 String ontologyUri = domain[1];
                 boolean isLocal = ontologyUri.equals(_ontologyUri);
-                OWLDataPropertyDomainAxiom objectPropertyDomain = (OWLDataPropertyDomainAxiom) OWLUtilities.axiom(axiomText, _namespaces, _factory);
+                OWLDataPropertyDomainAxiom dataPropertyDomain = (OWLDataPropertyDomainAxiom) OWLUtilities.axiom(axiomText, _namespaces, _factory);
 
-                createRow(new LocatedAxiom(objectPropertyDomain, isLocal), ontologyUri, false, DOMAIN);
+                createRow(new LocatedAxiom(dataPropertyDomain, isLocal), ontologyUri, false, DOMAIN);
             }
         } catch (NeOnCoreException e1) {
             handleException(e1, Messages.ClazzPropertyPage2_ErrorRetrievingData, _domainSection.getShell());
@@ -274,18 +320,7 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         _importedFunctionalCheckBox.setEnabled(false);
     }
 
-    @Override
-    public void refreshComponents() {
-        super.refreshComponents();
 
-        initDomainSection(false);
-        initRangeSection(false);
-        initCheckboxSection();
-
-        // closeToolBar();
-        layoutSections();
-        _form.reflow(true);
-    }
 
     private void initCheckboxSection() {
         try {
@@ -300,15 +335,6 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         } catch (CommandException e) {
             handleException(e, Messages.ClazzPropertyPage2_ErrorRetrievingData, _domainSection.getShell());
         }
-    }
-
-    @Override
-    protected List<Section> getSections() {
-        List<Section> sections = new ArrayList<Section>();
-        sections.add(_domainSection);
-        sections.add(_rangeSection);
-        sections.add(_functionalSection);
-        return sections;
     }
 
     private void createRow(LocatedAxiom locatedAxiom, String ontologyUri, boolean enabled, final int mode) throws NeOnCoreException {
@@ -475,29 +501,6 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         return text;
     }
 
-    @Override
-    public void updateComponents() {
-        super.updateComponents();
-
-        initDomainSection(false);
-        initRangeSection(false);
-
-        layoutSections();
-        _form.reflow(true);
-    }
-
-    @Override
-    public Image getImage() {
-        return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.DATA_PROPERTY);
-    }
-
-    @Override
-    public void dispose() {
-        IWorkbenchPage page = OWLPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        if (_partListener != null && page != null) {
-            page.removePartListener(_partListener);
-        }
-    }
 
     private TreeSet<String[]> getSortedSet(String[][] clazzesArray) {
         Set<String[]> unsortedSet = new HashSet<String[]>();
@@ -509,8 +512,8 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     String ontologyUri1 = o1[1];
                     String ontologyUri2 = o2[1];
                     OWLAxiom axiom1 = (OWLAxiom) OWLUtilities.axiom(o1[0], _namespaces, _factory);
-                    String uri1 = ""; //$NON-NLS-1$
-                    String uri2 = ""; //$NON-NLS-1$
+                    String uri1 = "";  //$NON-NLS-1$
+                    String uri2 = "";  //$NON-NLS-1$
                     if (axiom1 instanceof OWLDataPropertyDomainAxiom) {
                         OWLDataPropertyDomainAxiom domain = (OWLDataPropertyDomainAxiom) axiom1;
                         OWLClassExpression desc1 = domain.getDomain();
