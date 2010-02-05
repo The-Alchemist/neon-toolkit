@@ -160,6 +160,8 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
                 throw new InternalNeOnException(e);
             }
             throw e;
+        } catch (NullPointerException e) {
+            throw new InternalNeOnException(e);
         }
     }
 

@@ -20,26 +20,4 @@
       </viewPage>
    </extension>
 
-<!--
-  id="org.neontoolkit.search.ui.SearchResultPage"
-  id="org.eclipse.search.SearchResultView"
-  id="org.eclipse.search.ui.views.SearchView"
--->
-
-  <extension 
-  	point="org.eclipse.ui.perspectiveExtensions">
-  	<perspectiveExtension
-  		targetID="com.ontoprise.ontostudio.owl.perspectives.OWLPerspective">
-  		<view
-          closeable="true"
-  		  id="org.eclipse.search.SearchResultView"
-          moveable="true"
-          ratio="0.8"
-          relationship="bottom"
-          relative="org.neontoolkit.gui.views.propertiesview"
-          visible="false"/>
-  	</perspectiveExtension>
-  </extension>
-
-
 </plugin>

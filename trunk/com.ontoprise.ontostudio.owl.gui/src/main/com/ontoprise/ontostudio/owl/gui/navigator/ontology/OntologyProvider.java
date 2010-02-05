@@ -233,12 +233,13 @@ public class OntologyProvider extends DefaultTreeDataProvider {
                     OntologyTreeElement temp = new OntologyTreeElement(projectId, onto.getOntologyURI(), this);
                     ontoNodes.add(temp);
                 }
+                
                 Collections.sort(ontoNodes, new Comparator<OntologyTreeElement>() {
-
                     public int compare(OntologyTreeElement o1, OntologyTreeElement o2) {
                         return o1.toString().compareToIgnoreCase(o2.toString());
                     }
                 });
+
                 return ontoNodes.toArray(new OntologyTreeElement[0]);
 
             } catch (NeOnCoreException e) {

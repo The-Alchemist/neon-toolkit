@@ -37,15 +37,13 @@ import org.neontoolkit.search.Messages;
  */
 public class SearchResultPage extends AbstractTextSearchViewPage implements ISearchResultPage {
 
-    public static final String ID = "org.neontoolkit.search.ui.SearchResultPage"; //$NON-NLS-1$
-
 	private SearchTableContentProvider _contentProvider;
 	private SearchTableLabelProvider _labelProvider;
 	private int _currentPathIndex = 0;
 	
 	private IPropertyChangeListener _propertyChangeListener = new IPropertyChangeListener() {
 
-        //Listenes to the events that change the namespace and display
+        // Listens to the events that change the namespace and display
         // language settings
         public void propertyChange(PropertyChangeEvent event) {
             if (event.getProperty().equals(NeOnUIPlugin.ID_DISPLAY_PREFERENCE)) {

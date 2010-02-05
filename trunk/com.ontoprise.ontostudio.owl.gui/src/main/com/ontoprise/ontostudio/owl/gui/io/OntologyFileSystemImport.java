@@ -87,7 +87,7 @@ public class OntologyFileSystemImport extends AbstractOntologyImportCommand {
         if(physicalURIsToImport.size() > 0) {
             try {
                 importedOntologyUris.addAll(
-                        ((OWLManchesterProject) ontologyProject).importOntologies(physicalURIsToImport.toArray(new URI[0]), false));
+                        ((OWLManchesterProject) ontologyProject).importOntologies(physicalURIsToImport.toArray(new URI[0]), false, getProgressMonitor()));
             } catch (Exception e) {
                 List<String> physicalUrisToImport = new ArrayList<String>();
                 for (URI uri: physicalURIsToImport) {

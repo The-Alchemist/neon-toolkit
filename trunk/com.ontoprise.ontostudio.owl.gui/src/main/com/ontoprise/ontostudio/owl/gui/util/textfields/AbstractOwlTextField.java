@@ -371,6 +371,7 @@ public abstract class AbstractOwlTextField {
         _adapter.setAutoActivationCharacters("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMONPQRSTUVWXYZ".toCharArray()); //$NON-NLS-1$
         _adapter.setLabelProvider(new DefaultOWLProposalLabelProvider());
         _adapter.setProposalAcceptanceStyle(acceptanceStyle);
+        _adapter.setPropagateKeys(false);
     }
 
     private ISyntaxManager getSyntaxManager() {

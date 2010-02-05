@@ -82,6 +82,12 @@
             icon="icons/individualview.gif"
             id="com.ontoprise.ontostudio.owl.views.individualview"
             name="%individualView"/>
+      <view
+            category="com.ontoprise.ontostudio.owl.views"
+            class="com.ontoprise.ontostudio.owl.gui.domainview.DomainView"
+            icon="icons/domain.gif"
+            id="com.ontoprise.ontostudio.owl.views.domainview"
+            name="%DomainView"/>
 	</extension>
 
 
@@ -568,7 +574,7 @@
       <!-- AnnotationProperty PropertyPage -->
       <entityPropertyContributor
             activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement"
-            class="com.ontoprise.ontostudio.owl.gui.properties.AnnotationsPropertyPage2"
+            class="com.ontoprise.ontostudio.owl.gui.properties.annotationProperty.AnnotationPropertyPage2"
             id="com.ontoprise.ontostudio.owl.gui.propertyContributorAnnotationProperty"
             name="%AnnotationPropertyPropertyPage"/>
 
@@ -731,7 +737,15 @@
                 superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorAnnotationProperty"
                 priority="899" />
       </entityPropertyContributor>
-
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.AnnotationPropertyTab"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorAnnotations2"
+            name="%annotationsPropertyPage">
+            <subContributorOf
+                superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorAnnotationProperty"
+            	priority="900" />
+      </entityPropertyContributor>
 
       <!-- SubPropertyPages of Datatype PropertyPage -->
       <entityPropertyContributor
@@ -742,6 +756,15 @@
             <subContributorOf
                 superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorDatatype"
                 priority="899" />
+      </entityPropertyContributor>
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.AnnotationPropertyTab"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorAnnotations2"
+            name="%annotationsPropertyPage">
+            <subContributorOf
+                superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorDatatype"
+            	priority="900" />
       </entityPropertyContributor>
 
 
@@ -1655,6 +1678,34 @@
       </menuContribution>
    </extension>
 
+  <extension 
+  	point="org.eclipse.ui.perspectiveExtensions">
+  	<perspectiveExtension
+  		targetID="com.ontoprise.ontostudio.owl.perspectives.OWLPerspective">
+  		<view
+          closeable="true"
+          id="com.ontoprise.ontostudio.owl.views.domainview"
+          moveable="true"
+          relationship="stack"
+          relative="com.ontoprise.ontostudio.owl.views.individualview"
+          visible="true"/>
+  	</perspectiveExtension>
+  </extension>
+
+  <extension 
+  	point="org.eclipse.ui.perspectiveExtensions">
+  	<perspectiveExtension
+  		targetID="com.ontoprise.ontostudio.owl.perspectives.OWLPerspective">
+  		<view
+          closeable="true"
+  			id="org.eclipse.search.ui.views.SearchView"
+          moveable="true"
+          ratio="0.8"
+          relationship="bottom"
+          relative="org.neontoolkit.gui.views.propertiesview"
+          visible="false"/>
+  	</perspectiveExtension>
+  </extension>
 
 <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
 <!-- additional extension of the gOntt plugin for the NeOn project         -->

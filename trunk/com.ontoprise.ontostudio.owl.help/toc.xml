@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?NLS TYPE="org.eclipse.help.toc"?>
 
-<toc label="The OWL Perspective" href="html/owl_editor.html">
+<toc href="html/owl_editor.html" label="The OWL Perspective" topic="html/owl_editor.html">
 		<topic label="The OWL Language" href="html/owl.html"></topic>
 		<topic label="OWL 2 Language Features" href="html/owl2-features.html"></topic>
 		<topic href="html/user_interface_overview.html" label="User Interface Overview">

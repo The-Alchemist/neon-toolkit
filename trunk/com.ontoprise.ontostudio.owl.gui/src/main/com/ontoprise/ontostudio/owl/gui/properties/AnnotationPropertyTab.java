@@ -151,11 +151,12 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
             
             if(getMainPage().getSelection().getFirstElement() instanceof AnonymousIndividualViewItem){
                 AnonymousIndividualViewItem individualViewItem = (AnonymousIndividualViewItem)getMainPage().getSelection().getFirstElement();
-                
                 annotationValueHits = new GetAnonymousIndividualAnnotationHits(_project, _ontologyUri, individualViewItem.getIndividual()).getResults();
-            }else{
+            
+            } else{
                 annotationValueHits = new GetEntityAnnotationHits(_project, _ontologyUri, _id).getResults();    
             }
+            
             TreeSet<String[]> sortedSet = getSortedSet(annotationValueHits);
             
             createAnnotationRowTitles(_annotationsComp, annotationValueHits.length > 0);
@@ -166,11 +167,9 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
                 handleAnnotationValue(visitor, axiom, imported, ontologyUri);
             }
         } catch (NeOnCoreException e1) {
-            handleException(e1, Messages.ClazzPropertyPage2_ErrorRetrievingData, _annotationsComp.getShell());
-            return;
+            handleException(e1, Messages.AnnotationsPropertyPage2_ErrorRetrievingData, _annotationsComp.getShell());
         } catch (CommandException e) {
-            handleException(e, Messages.ClazzPropertyPage2_ErrorRetrievingData, _annotationsComp.getShell());
-            return;
+            handleException(e, Messages.AnnotationsPropertyPage2_ErrorRetrievingData, _annotationsComp.getShell());
         }
 
         Label createNewLabel = new Label(_annotationsComp, SWT.NONE);
@@ -324,13 +323,14 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
     /**
      * Creates the annotations row.
      * 
-     * @param descriptions a list of length 4 that contains the property, the value, the type and the language. Each element is a String Array consisting of
-     *            uri, label, qname. type and language can be empty.
-     * @param annotation the annotation
+     * @param descriptions a list of length 4 that contains the property, the value, the type and the language. 
+     *        Each element is a String Array consisting of uri, label, qname. 
+     *        type and language can be empty.
+     * @param annotation the annotation axiom
      * @param imported the imported
      * @param sourceOnto the source onto
      * 
-     * @throws NeOnCoreException the KAO n2 exception
+     * @throws NeOnCoreException 
      */
     private void createAnnotationsRow(OWLAnnotationAssertionAxiom annotation, ArrayList<String[]> descriptions, boolean imported, String sourceOnto) throws NeOnCoreException {
         boolean isLocal = !imported;
@@ -421,8 +421,8 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
             public void savePressed() {
                 try {
                     String[] values = getNewValues(propertyTextWidget, valueTextWidget, typeTextWidget, languageCombo);
-
                     new EditEntityAnnotation(_project, _ontologyUri, _id, OWLUtilities.toString(getAxiom()), values).run();
+                    
                 } catch (NeOnCoreException k2e) {
                     handleException(k2e, Messages.AnnotationsPropertyPage2_15, propertyTextWidget.getShell());
                     propertyTextWidget.setFocus();
@@ -533,7 +533,7 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
                     if(getMainPage().getSelection().getFirstElement() instanceof AnonymousIndividualViewItem){
                         AnonymousIndividualViewItem individualViewItem = (AnonymousIndividualViewItem)getMainPage().getSelection().getFirstElement();
                         new AddAnonymousIndividualAnnotation(_project, _ontologyUri, individualViewItem.getIndividual(), newValues).run();
-                    }else{
+                    } else {
                         new AddEntityAnnotation(_project, _ontologyUri, _id, newValues).run();
                     }
                 } catch (NeOnCoreException k2e) {

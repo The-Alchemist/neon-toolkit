@@ -176,12 +176,6 @@ public class FileSystemImportSelectionPage extends AbstractImportSelectionPage {
         PlatformUI.getWorkbench().getHelpSystem().setHelp(parent ,IHelpContextIds.FILE_SYSTEM_IMPORT);    
     }
 
-    @Override
-    public void performHelp() {
-      PlatformUI.getWorkbench().getHelpSystem().displayHelp(org.neontoolkit.gui.IHelpContextIds.FILE_SYSTEM_IMPORT);
-    }
-
-
     protected String browse() {
         // check whether extension is specified
         // if not -> directory import

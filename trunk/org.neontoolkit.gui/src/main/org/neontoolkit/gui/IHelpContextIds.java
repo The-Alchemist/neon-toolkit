@@ -54,6 +54,7 @@ public interface IHelpContextIds {
   public static final String RDF_INSTANCES_VIEW = PREFIX + "RDF_INSTANCES_VIEW";  //$NON-NLS-1$
   
   public static final String INDIVIDUALS_VIEW = PREFIX_OWL + "INDIVIDUALS_VIEW";  //$NON-NLS-1$
+  public static final String DOMAIN_VIEW = PREFIX_OWL + "DOMAIN_VIEW";  //$NON-NLS-1$
   public static final String OWL_SEARCH = PREFIX_OWL + "OWL_SEARCH";  //$NON-NLS-1$
   public static final String OWL_ONTOLOGY_VIEW = PREFIX_OWL + "OWL_ONTOLOGY_VIEW";  //$NON-NLS-1$
   public static final String OWL_CLASSES_VIEW = PREFIX_OWL + "OWL_CLASSES_VIEW";  //$NON-NLS-1$

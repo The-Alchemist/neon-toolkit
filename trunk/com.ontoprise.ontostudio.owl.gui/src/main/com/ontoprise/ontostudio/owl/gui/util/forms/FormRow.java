@@ -15,7 +15,6 @@ import java.util.List;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -123,7 +122,7 @@ public class FormRow extends AbstractFormRow {
 
         });
         if (_imported) {
-            getParent().setBackground(new Color(null, 176, 196, 222));
+            getParent().setBackground(OWLGUIUtilities.COLOR_FOR_IMPORTED_AXIOMS);
             getParent().setToolTipText(Messages.FormRow_1 + _sourceOnto);
 
             _editButton.setEnabled(false);

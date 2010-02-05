@@ -43,7 +43,7 @@ public class ImportTest extends AbstractOWLPluginTest {
         String[] ontologies = project.getOntologies();
         Set<String> availableOntologies = project.getAvailableOntologyURIs();
         try {
-            ((OWLManchesterProject)project).importOntologies(new URI[] {getFile("resources/testfiles/OWL/ontologyWithNonExistingImport.owl").toURI()}, false); //$NON-NLS-1$
+            ((OWLManchesterProject)project).importOntologies(new URI[] {getFile("resources/testfiles/OWL/ontologyWithNonExistingImport.owl").toURI()}, false, null); //$NON-NLS-1$
         } catch (Exception e) {
             assertTrue(true);
         }

@@ -54,7 +54,7 @@ public abstract class AbstractOwlEntityTreeElement extends AbstractOntologyEntit
     
     @Override
     public boolean isImported() {
-        return false;
+        return super.isImported();
     }
 
     /*

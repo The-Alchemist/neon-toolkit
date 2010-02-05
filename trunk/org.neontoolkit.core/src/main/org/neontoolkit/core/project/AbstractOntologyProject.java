@@ -30,6 +30,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ListenerList;
 import org.neontoolkit.core.Messages;
 import org.neontoolkit.core.NeOnCorePlugin;
@@ -371,7 +372,7 @@ public abstract class AbstractOntologyProject implements IOntologyProject {
                 uriList.add(resource.getLocationURI());
             }
         }
-        return uriList.toArray(new URI[0]);
+        return uriList.toArray(new URI[uriList.size()]);
     }
     
     public String getNewOntologyFilenameFromURI(String uri, String fileExtension) {
@@ -411,5 +412,9 @@ public abstract class AbstractOntologyProject implements IOntologyProject {
     public String toString() {
         return getName() + " [" + getOntologyLanguage() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
     }
-
+    
+    @Override
+    public void restoreProject(IProgressMonitor monitor) throws NeOnCoreException {
+        restoreProject();
+    }
 }

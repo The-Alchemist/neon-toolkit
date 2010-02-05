@@ -11,6 +11,7 @@
 package com.ontoprise.ontostudio.owl.model;
 
 import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -39,6 +40,8 @@ import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLAnnotationPropertyDomainAxiom;
+import org.semanticweb.owlapi.model.OWLAnnotationPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationSubject;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLAnonymousIndividual;
@@ -330,7 +333,7 @@ public class OWLModelCore implements OWLModel {
     private class AxiomRequestCore<A extends OWLAxiom> implements AxiomRequest<A> {
         /** The runtime type information about the axiom type for the 'native' request. */
         private org.semanticweb.owlapi.model.AxiomType<? extends OWLAxiom> _requestedAxiomType;
-        /** The filter to apply on the result of the 'navtive' request. */
+        /** The filter to apply on the result of the 'native' request. */
         private Filter<A> _filter;
         /** The (identifiers of the) conditions to set for the 'native' request. */
         private Collection<String> _conditions;
@@ -382,7 +385,8 @@ public class OWLModelCore implements OWLModel {
         public Set<LocatedItem<A>> getLocatedAxioms(boolean includeImportedOntologies, Object... parameters) throws NeOnCoreException {
             try {
                 Set<LocatedItem<A>> result = new HashSet<LocatedItem<A>>();
-                for (OWLModel model: getRelevantOntologies(includeImportedOntologies)) {
+                Set<OWLModel> relevantOntologies = getRelevantOntologies(includeImportedOntologies);
+                for (OWLModel model: relevantOntologies) {
                     for (A axiom: getAxioms(model.getOntology(), parameters)) {
                         if (_filter == null || _filter.matches(axiom)) {
                             result.add(new LocatedItemCore<A>(axiom, model.getOntologyURI()));
@@ -460,6 +464,19 @@ public class OWLModelCore implements OWLModel {
             return ontology.getDataPropertyDomainAxioms((OWLDataProperty)parameters[0]);
         }
     }; 
+    private final AxiomRequest<OWLDataPropertyDomainAxiom> DataPropertyDomain_domain_Request = new AxiomRequestCore<OWLDataPropertyDomainAxiom>(AxiomType.DATA_PROPERTY_DOMAIN, "domain") {
+        @Override
+        protected Iterable<OWLDataPropertyDomainAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
+            OWLClassExpression clazz = (OWLClassExpression)parameters[0];
+            Set<OWLDataPropertyDomainAxiom> result = new LinkedHashSet<OWLDataPropertyDomainAxiom>();
+            for (OWLDataPropertyDomainAxiom axiom: ontology.getAxioms(AxiomType.DATA_PROPERTY_DOMAIN)) {
+                if (clazz.equals(axiom.getDomain())) {
+                    result.add(axiom);
+                }
+            }
+            return result;
+        }
+    }; 
     private final AxiomRequest<OWLDataPropertyAssertionAxiom> DataPropertyMember_dataProperty_sourceIndividual_Request = new AxiomRequestCore<OWLDataPropertyAssertionAxiom>(AxiomType.DATA_PROPERTY_ASSERTION, "dataProperty", "sourceIndividual") {
         @Override
         protected Iterable<OWLDataPropertyAssertionAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
@@ -514,6 +531,21 @@ public class OWLModelCore implements OWLModel {
             return result;
         }
     };
+    private final AxiomRequest<OWLAnnotationPropertyDomainAxiom> AnnotationPropertyDomain_domain_Request = new AxiomRequestCore<OWLAnnotationPropertyDomainAxiom>(AxiomType.ANNOTATION_PROPERTY_DOMAIN, "domain") {
+        @Override
+        protected Iterable<OWLAnnotationPropertyDomainAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
+            Set<OWLAnnotationPropertyDomainAxiom> result = new LinkedHashSet<OWLAnnotationPropertyDomainAxiom>();
+            if(parameters[0] instanceof OWLClass) {
+                URI clazz = ((OWLClass)parameters[0]).getURI();
+                for (OWLAnnotationPropertyDomainAxiom axiom: ontology.getAxioms(AxiomType.ANNOTATION_PROPERTY_DOMAIN)) {
+                    if (clazz.equals(axiom.getDomain().toURI())) {
+                        result.add(axiom);
+                    }
+                }
+            }
+            return result;
+        }
+    }; 
     private final AxiomRequest<OWLAnnotationAssertionAxiom> EntityAnnotation_entity_Request = new AxiomRequestCore<OWLAnnotationAssertionAxiom>(AxiomType.ANNOTATION_ASSERTION, "entity") {
         @Override
         protected Iterable<OWLAnnotationAssertionAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
@@ -620,6 +652,19 @@ public class OWLModelCore implements OWLModel {
             return ontology.getObjectPropertyDomainAxioms((OWLObjectPropertyExpression)parameters[0]);
         }
     };
+    private final AxiomRequest<OWLObjectPropertyDomainAxiom> ObjectPropertyDomain_domain_Request = new AxiomRequestCore<OWLObjectPropertyDomainAxiom>(AxiomType.OBJECT_PROPERTY_DOMAIN, "domain") {
+        @Override
+        protected Iterable<OWLObjectPropertyDomainAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
+            OWLClassExpression clazz = (OWLClassExpression)parameters[0];
+            Set<OWLObjectPropertyDomainAxiom> result = new LinkedHashSet<OWLObjectPropertyDomainAxiom>();
+            for (OWLObjectPropertyDomainAxiom axiom: ontology.getAxioms(AxiomType.OBJECT_PROPERTY_DOMAIN)) {
+                if (clazz.equals(axiom.getDomain())) {
+                    result.add(axiom);
+                }
+            }
+            return result;
+        }
+    }; 
     private final AxiomRequest<OWLObjectPropertyAssertionAxiom> ObjectPropertyMember_objectProperty_sourceIndividual_Request = new AxiomRequestCore<OWLObjectPropertyAssertionAxiom>(AxiomType.OBJECT_PROPERTY_ASSERTION, "objectProperty", "sourceIndividual") {
         @Override
         protected Iterable<OWLObjectPropertyAssertionAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
@@ -645,6 +690,20 @@ public class OWLModelCore implements OWLModel {
             return ontology.getObjectPropertyRangeAxioms((OWLObjectPropertyExpression)parameters[0]);
         }
     };
+
+    private final AxiomRequest<OWLAnnotationPropertyRangeAxiom> AnnotationPropertyRange_annotationProperty_Request = new AxiomRequestCore<OWLAnnotationPropertyRangeAxiom>(AxiomType.ANNOTATION_PROPERTY_RANGE, "annotationProperty") {
+        @Override
+        protected Iterable<OWLAnnotationPropertyRangeAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
+            return ontology.getAnnotationPropertyRangeAxioms((OWLAnnotationProperty)parameters[0]);
+        }
+    };
+    private final AxiomRequest<OWLAnnotationPropertyDomainAxiom> AnnotationPropertyDomain_annotationProperty_Request = new AxiomRequestCore<OWLAnnotationPropertyDomainAxiom>(AxiomType.ANNOTATION_PROPERTY_DOMAIN, "annotationProperty") {
+        @Override
+        protected Iterable<OWLAnnotationPropertyDomainAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
+            return ontology.getAnnotationPropertyDomainAxioms((OWLAnnotationProperty)parameters[0]);
+        }
+    };
+    
     private final AxiomRequest<OWLSameIndividualAxiom> SameIndividual_individuals_Request = new AxiomRequestCore<OWLSameIndividualAxiom>(AxiomType.SAME_INDIVIDUAL, "individuals") {
         @Override
         protected Iterable<OWLSameIndividualAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
@@ -968,6 +1027,9 @@ public class OWLModelCore implements OWLModel {
     private final ItemCollector<OWLObjectPropertyExpression,OWLInverseObjectPropertiesAxiom> InverseObjectProperties_namedSecond_Collector = new ItemCollectorCore<OWLObjectPropertyExpression,OWLInverseObjectPropertiesAxiom>("second", OWLObjectPropertyExpression.class, OBJECT_PROPERTY_FILTER);
     private final ItemCollector<OWLClassExpression,OWLObjectPropertyDomainAxiom> ObjectPropertyDomain_domain_Collector = new ItemCollectorCore<OWLClassExpression,OWLObjectPropertyDomainAxiom>("domain", OWLClassExpression.class);
     private final ItemCollector<OWLClassExpression,OWLObjectPropertyRangeAxiom> ObjectPropertyRange_range_Collector = new ItemCollectorCore<OWLClassExpression,OWLObjectPropertyRangeAxiom>("range", OWLClassExpression.class);
+    private final ItemCollector<IRI,OWLAnnotationPropertyDomainAxiom> AnnotationPropertyDomain_domain_Collector = new ItemCollectorCore<IRI,OWLAnnotationPropertyDomainAxiom>("domain", IRI.class);
+    private final ItemCollector<IRI,OWLAnnotationPropertyRangeAxiom> AnnotationPropertyRange_range_Collector = new ItemCollectorCore<IRI,OWLAnnotationPropertyRangeAxiom>("range", IRI.class);
+
     private final ItemCollector<OWLIndividual,OWLSameIndividualAxiom> SameIndividual_individuals_Collector = new ItemCollectorCore<OWLIndividual,OWLSameIndividualAxiom>("individuals", OWLIndividual.class);
     private final ItemCollector<OWLObjectPropertyExpression,OWLSubObjectPropertyOfAxiom> SubObjectPropertyOf_subObjectProperties_NamedObjectPropertiesOnly_Collector = new ItemCollectorCore<OWLObjectPropertyExpression,OWLSubObjectPropertyOfAxiom>("subObjectProperties", OWLObjectPropertyExpression.class, OBJECT_PROPERTY_FILTER);
     private final ItemCollector<List,OWLSubPropertyChainOfAxiom> OWLSubPropertyChainOfAxiom_subObjectProperties_Collector = new ItemCollectorCore<List,OWLSubPropertyChainOfAxiom>("subObjectProperties", List.class);
@@ -981,6 +1043,10 @@ public class OWLModelCore implements OWLModel {
     private final ItemCollector<OWLClassExpression,OWLSubClassOfAxiom> SubClassOf_superDescription_RestrictionsOnly_Collector = new ItemCollectorCore<OWLClassExpression,OWLSubClassOfAxiom>("superDescription", OWLClassExpression.class, RESTRICTION_FILTER);
     private final ItemCollector<OWLClassExpression,OWLSubClassOfAxiom> SubClassOf_superDescription_UnnamedNonRestrictionsOnly_Collector = new ItemCollectorCore<OWLClassExpression,OWLSubClassOfAxiom>("superDescription", OWLClassExpression.class, UNNAMED_NON_RESTRICTION_FILTER);
     private final ItemCollector<OWLClassExpression,OWLSubClassOfAxiom> SubClassOf_superDescription_NamedDescriptionsOnly_Collector = new ItemCollectorCore<OWLClassExpression,OWLSubClassOfAxiom>("superDescription", OWLClassExpression.class, NAMED_DESCRIPTION_FILTER);
+
+    private final ItemCollector<OWLDataProperty,OWLDataPropertyDomainAxiom> DataPropertyDomain_property_Collector = new ItemCollectorCore<OWLDataProperty,OWLDataPropertyDomainAxiom>("dataProperty", OWLDataProperty.class);
+    private final ItemCollector<OWLObjectProperty,OWLObjectPropertyDomainAxiom> ObjectPropertyDomain_property_Collector = new ItemCollectorCore<OWLObjectProperty,OWLObjectPropertyDomainAxiom>("objectProperty", OWLObjectProperty.class);
+    private final ItemCollector<OWLAnnotationProperty,OWLAnnotationPropertyDomainAxiom> AnnotationPropertyDomain_property_Collector = new ItemCollectorCore<OWLAnnotationProperty,OWLAnnotationPropertyDomainAxiom>("annotationProperty", OWLAnnotationProperty.class);
 
     /** A map of <code>ItemCollectorVisitor</code> indexed by the member name for which they collect items. */
     private final Map<String,GetMemberVisitor> _itemCollectorVisitors = new HashMap<String,GetMemberVisitor>();
@@ -1804,6 +1870,60 @@ public class OWLModelCore implements OWLModel {
         return domains;
     }
 
+    @Override
+    public Set<OWLAnnotationProperty> getAnnotationPropertiesForDomain(String classId) throws NeOnCoreException {
+        Set<OWLAnnotationProperty> properties =
+            AnnotationPropertyDomain_property_Collector.getItems(AnnotationPropertyDomain_domain_Request, autoBox(owlClass(classId)));
+        return properties;            
+    }
+
+    @Override
+    public Set<ItemHits<OWLAnnotationProperty,OWLAnnotationPropertyDomainAxiom>> getAnnotationPropertiesForDomainHits(String classId) throws NeOnCoreException {
+        Set<ItemHits<OWLAnnotationProperty,OWLAnnotationPropertyDomainAxiom>> properties =
+            AnnotationPropertyDomain_property_Collector.getItemHits(AnnotationPropertyDomain_domain_Request, autoBox(owlClass(classId)));
+        return properties;            
+    }
+
+    @Override
+    public Set<ItemHits<IRI,OWLAnnotationPropertyDomainAxiom>> getAnnotationPropertyDomainHits(String propertyId) throws NeOnCoreException {
+        Set<ItemHits<IRI,OWLAnnotationPropertyDomainAxiom>> domains = AnnotationPropertyDomain_domain_Collector.getItemHits(AnnotationPropertyDomain_annotationProperty_Request, autoBox(annotationProperty(propertyId)));
+        return domains;
+    }
+
+    @Override
+    public Set<ItemHits<IRI,OWLAnnotationPropertyRangeAxiom>> getAnnotationPropertyRangeHits(String propertyId) throws NeOnCoreException {
+        Set<ItemHits<IRI,OWLAnnotationPropertyRangeAxiom>> ranges = AnnotationPropertyRange_range_Collector.getItemHits(AnnotationPropertyRange_annotationProperty_Request, autoBox(annotationProperty(propertyId)));
+        return ranges;
+    }
+
+    @Override
+    public Set<OWLDataProperty> getDataPropertiesForDomain(String classId) throws NeOnCoreException{
+        Set<OWLDataProperty> properties =
+            DataPropertyDomain_property_Collector.getItems(DataPropertyDomain_domain_Request, autoBox(owlClass(classId)));
+        return properties;            
+    }
+    
+    @Override
+    public Set<ItemHits<OWLDataProperty,OWLDataPropertyDomainAxiom>> getDataPropertiesForDomainHits(String classId) throws NeOnCoreException {
+        Set<ItemHits<OWLDataProperty,OWLDataPropertyDomainAxiom>> properties =
+            DataPropertyDomain_property_Collector.getItemHits(DataPropertyDomain_domain_Request, autoBox(owlClass(classId)));
+        return properties;            
+    }
+    
+    @Override
+    public Set<OWLObjectProperty> getObjectPropertiesForDomain(String classId) throws NeOnCoreException{
+        Set<OWLObjectProperty> properties =
+            ObjectPropertyDomain_property_Collector.getItems(ObjectPropertyDomain_domain_Request, autoBox(owlClass(classId)));
+        return properties;            
+    }
+
+    @Override
+    public Set<ItemHits<OWLObjectProperty,OWLObjectPropertyDomainAxiom>> getObjectPropertiesForDomainHits(String classId) throws NeOnCoreException {
+        Set<ItemHits<OWLObjectProperty,OWLObjectPropertyDomainAxiom>> properties =
+            ObjectPropertyDomain_property_Collector.getItemHits(ObjectPropertyDomain_domain_Request, autoBox(owlClass(classId)));
+        return properties;            
+    }
+    
     @Override
     public Set<ItemHits<OWLClassExpression,OWLObjectPropertyDomainAxiom>> getObjectPropertyDomainHits(String propertyId) throws NeOnCoreException {
         // TODO (tkr 20080409): make this a bit nicer by making an entity request for propertyId and iteration over the result
