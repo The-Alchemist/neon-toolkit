@@ -17,7 +17,6 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.SharedImages;
 import org.neontoolkit.core.NeOnCorePlugin;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
@@ -29,6 +28,7 @@ import org.neontoolkit.gui.navigator.elements.TreeElementPath;
 import org.neontoolkit.gui.navigator.project.AbstractOntologyProjectProvider;
 
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
+import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.model.OWLManchesterProjectFactory;
 
@@ -115,7 +115,7 @@ public class OWLOntologyProjectProvider extends AbstractOntologyProjectProvider 
 	 */
 	@Override
 	public Image getImage(ITreeElement element) {		
-		return getLabelProvider().getImage(NeOnCorePlugin.getDefault().getProject(element.toString()));
+	    return getLabelProvider().getImage(NeOnCorePlugin.getDefault().getProject(element.toString()));
 	}
 	
     @Override
@@ -125,7 +125,8 @@ public class OWLOntologyProjectProvider extends AbstractOntologyProjectProvider 
                 @Override
                 public Image getImage(Object element) {
                     return (element instanceof IProject) 
-                            ? PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(SharedImages.IMG_OBJ_PROJECT).createImage()
+                            ? OWLPlugin.getDefault().getImageRegistry().getDescriptor(OWLSharedImages.PROJECT).createImage()
+//                            ? PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(SharedImages.IMG_OBJ_PROJECT).createImage()
                             : null;
 //                  return (element instanceof IProject) ? OntoStudioImages.get(OntoStudioImages.PROJECT) : null;
                 }

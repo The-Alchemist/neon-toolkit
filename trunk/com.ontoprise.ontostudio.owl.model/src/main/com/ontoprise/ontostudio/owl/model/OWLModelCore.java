@@ -2457,19 +2457,25 @@ public class OWLModelCore implements OWLModel {
     
     @Override
     public Set<OWLAxiom> getReferencingAxioms(OWLEntity owlEntity) {
-        return _ontology.getReferencingAxioms(owlEntity);
+        return getReferencingAxioms(owlEntity, false);
     }
  
-    public Set<OWLAxiom> getReferencingAxioms(OWLAnonymousIndividual anonymousIndividual) {
-        return _ontology.getReferencingAxioms(anonymousIndividual);
+    @Override
+    public Set<OWLAxiom> getReferencingAxioms(OWLEntity owlEntity, boolean includeImported) {
+        return _ontology.getReferencingAxioms(owlEntity, includeImported);
     }
-     
+ 
     @Override
     public Set<OWLAxiom> getReferencingAxioms(OWLIndividual individual) throws NeOnCoreException {
+        return getReferencingAxioms(individual, false);
+    }
+
+    @Override
+    public Set<OWLAxiom> getReferencingAxioms(OWLIndividual individual, boolean includeImported) throws NeOnCoreException {
         if (individual instanceof OWLAnonymousIndividual) {
-            return getReferencingAxioms((OWLAnonymousIndividual)individual);
+            return _ontology.getReferencingAxioms((OWLAnonymousIndividual)individual);
         }
-        return getReferencingAxioms((OWLEntity)individual);
+        return _ontology.getReferencingAxioms((OWLEntity)individual, includeImported);
     }
 
     @Override
@@ -2508,5 +2514,25 @@ public class OWLModelCore implements OWLModel {
                 }
             }
         }
+    }
+
+    @Override
+    public Set<OWLAnnotationAssertionAxiom> getAllAnnotationAxioms() throws NeOnCoreException {
+            return _ontology.getAxioms(AxiomType.ANNOTATION_ASSERTION);
+    }
+
+    @Override
+    public Set<OWLAnnotationAssertionAxiom> getAllAnnotationAxioms(boolean includeImported) throws NeOnCoreException {
+            return _ontology.getAxioms(AxiomType.ANNOTATION_ASSERTION, includeImported);
+    }
+
+    @Override
+    public Set<OWLDataPropertyAssertionAxiom> getAllDataPropertyAssertionAxioms() throws NeOnCoreException {
+        return _ontology.getAxioms(AxiomType.DATA_PROPERTY_ASSERTION);
+    }
+
+    @Override
+    public Set<OWLDataPropertyAssertionAxiom> getAllDataPropertyAssertionAxioms(boolean includeImported) throws NeOnCoreException {
+        return _ontology.getAxioms(AxiomType.DATA_PROPERTY_ASSERTION, includeImported);
     }
 }

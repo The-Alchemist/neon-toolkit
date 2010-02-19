@@ -514,6 +514,7 @@ public class Messages extends NLS {
     public static String AnnotationPropertyPropertyPage_1;
     public static String AnnotationPropertyPropertyPage_IntersectionOfRange;
     public static String AnnotationPropertyPropertyPage_IntersectionOfDomain;
+    public static String ObjectPropertyPropertyPage_SubPropertyChains_tooltip;
         
     static {
 		// load message values from bundle file

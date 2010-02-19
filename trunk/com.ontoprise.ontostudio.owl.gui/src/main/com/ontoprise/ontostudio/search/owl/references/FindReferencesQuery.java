@@ -8,38 +8,27 @@
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  ******************************************************************************/
 
-package com.ontoprise.ontostudio.search.owl.ui;
+package com.ontoprise.ontostudio.search.owl.references;
 
 import org.neontoolkit.search.command.AbstractSearchCommand;
 import org.neontoolkit.search.ui.AbstractSearchQuery;
+import org.semanticweb.owlapi.model.OWLEntity;
 
-/* 
- * Created on 04.04.2008
- * @author Dirk Wenke
- *
- * Function:
- * Keywords:
- */
-/**
- * Type comment
- */
-public class OwlSearchQuery extends AbstractSearchQuery {
+public class FindReferencesQuery extends AbstractSearchQuery {
 
-    private boolean _caseSensitive;
+    private OWLEntity _entity;
 
     /**
-     * @param searchString
-     * @param string
-     * @param searchFlags
-     * @param projects
+     * @param entity to search for
+     * @param project in which to search
      */
-    public OwlSearchQuery(String searchString, boolean caseSensitive, int searchFlags, String[] projects) {
-        super(searchString, searchFlags, projects);
-        _caseSensitive = caseSensitive;
+    public FindReferencesQuery(OWLEntity entity, String project) {
+        super(entity.getURI().toString(), 0, new String[]{project});
+        _entity = entity;
     }
 
     @Override
     protected AbstractSearchCommand getSearchCommand(String project) {
-        return new OwlSearchCommand(project, _expression, _searchFlags, _caseSensitive);
+        return new FindReferencesCommand(_entity, project);
     }
 }

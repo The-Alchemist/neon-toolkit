@@ -19,7 +19,7 @@ import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.navigator.ITreeElement;
 import org.neontoolkit.gui.util.PerspectiveChangeHandler;
 import org.neontoolkit.search.SearchPlugin;
-import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
 
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
@@ -37,31 +37,15 @@ import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.perspectives.OWLPerspective;
 
-/* 
- * Created on: 18.04.2005
- * Created by: Dirk Wenke
- *
- * Function:
- * Keywords:
- *
- */
-/**
- * @author Dirk Wenke
- */
-
-public class AnnotationValuesSearchMatch extends OwlSearchMatch {
+public class AxiomSearchMatch extends OwlSearchMatch {
 
     private IndividualView _individualView;
 
-    private String _value;
-    private String _searchString;
-    private OWLAnnotationProperty _property;
+    private OWLAxiom _axiom;
 
-    public AnnotationValuesSearchMatch(ITreeElement element, OWLAnnotationProperty annotProperty, String annotationValue, String searchString) {
+    public AxiomSearchMatch(ITreeElement element, OWLAxiom axiom) {
         super(element);
-        _value = annotationValue;
-        _searchString = searchString;
-        _property = annotProperty;
+        _axiom = axiom;
     }
 
     /*
@@ -119,42 +103,28 @@ public class AnnotationValuesSearchMatch extends OwlSearchMatch {
     @SuppressWarnings("unchecked")
     @Override
     public String toString() {
-        int L = 20;
         AbstractOwlEntityTreeElement element = (AbstractOwlEntityTreeElement) getMatch();
 
-        String subject = "Obj"; //$NON-NLS-1$
-        String prop = "P"; //$NON-NLS-1$
+        String subject = ""; //$NON-NLS-1$
+        String axiomString = ""; //$NON-NLS-1$
+        String projectName = ""; //$NON-NLS-1$
+        String ontology = ""; //$NON-NLS-1$
 
         try {
-            OWLModel owlModel = OWLModelFactory.getOWLModel(element.getOntologyUri(), element.getProjectName());
-            int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
-            OWLObjectVisitorEx visitor = OWLPlugin.getDefault().getSyntaxManager().getVisitor(owlModel, idDisplayStyle);
-            prop = OWLGUIUtilities.getEntityLabel((String[]) _property.accept(visitor));
-            subject = OWLGUIUtilities.getEntityLabel((String[]) element.getEntity().accept(visitor));
+            if(element != null) {
+                OWLModel owlModel = OWLModelFactory.getOWLModel(element.getOntologyUri(), element.getProjectName());
+                int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
+                OWLObjectVisitorEx visitor = OWLPlugin.getDefault().getSyntaxManager().getVisitor(owlModel, idDisplayStyle);
+                subject = OWLGUIUtilities.getEntityLabel((String[]) element.getEntity().accept(visitor));
+                axiomString = OWLGUIUtilities.getEntityLabel((String[]) _axiom.accept(visitor));
+                projectName = element.getProjectName();
+                ontology = element.getOntologyUri();
+                return subject + ": " + axiomString + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_0 + ontology + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_1 + projectName + "]  "; //$NON-NLS-1$ //$NON-NLS-2$
+            }
         } catch (NeOnCoreException e) {
             // nothing to do
         }
-
-        String value = ""; //$NON-NLS-1$
-        int index = _value.indexOf(_searchString);
-        if(index == -1) {
-            String v2 =_value.toLowerCase();
-            String s2 = _searchString.toLowerCase();
-            index = v2.indexOf(s2);
-        }
-        int end = 0;
-        if (index > L) {
-            end = Math.min(index + L, _value.length());
-            value = "..." + _value.substring(index - L, end); //$NON-NLS-1$
-        } else if (index > -1){
-            end = Math.min(index + 2*L, _value.length());
-            value = _value.substring(0, end);
-        }
-        if(end != _value.length()) {
-            value += "..."; //$NON-NLS-1$
-        }
-        
-        return subject + ": " + prop +" = "+ value + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_0 + element.getOntologyUri() + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_1 + element.getProjectName() + "]  "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$    }
+        return _axiom.toString();
     }
 
     /*
@@ -171,4 +141,20 @@ public class AnnotationValuesSearchMatch extends OwlSearchMatch {
             super.setFocus();
         }
     }
+    
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof AxiomSearchMatch)) {
+            return false;
+        }
+        AxiomSearchMatch that = (AxiomSearchMatch) object;
+        
+        return this._axiom.equals(that._axiom);
+    }
+
+    @Override
+    public int hashCode() {
+        return _axiom.hashCode();
+    }
+
 }

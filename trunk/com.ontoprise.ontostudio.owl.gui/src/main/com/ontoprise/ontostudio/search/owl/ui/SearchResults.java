@@ -13,7 +13,8 @@ package com.ontoprise.ontostudio.search.owl.ui;
 import java.util.List;
 
 
-/**Simple reimplementation of com.ontoprise.indexer.owl.SearchResults to be independent of datamodel
+/**
+ * Simple reimplementation of com.ontoprise.indexer.owl.SearchResults to be independent of datamodel
  * @author janiko
  *
  */
@@ -61,16 +62,5 @@ public class SearchResults {
      */
     public List<SearchElement> getResults() {
         return _resultList;
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof SearchResults) {
-            SearchResults sr = (SearchResults) obj;
-            return _start == sr._start
-                && _totalCount == sr._totalCount
-                && _resultList.equals(sr._resultList);
-        }
-        return false;
     }
 }

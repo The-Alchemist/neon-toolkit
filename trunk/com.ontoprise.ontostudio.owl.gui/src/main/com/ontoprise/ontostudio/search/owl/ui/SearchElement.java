@@ -10,15 +10,18 @@
 
 package com.ontoprise.ontostudio.search.owl.ui;
 
+import org.semanticweb.owlapi.model.OWLAxiom;
+
 import com.ontoprise.ontostudio.search.owl.ui.OwlSearchCommand.FieldTypes;
 
 
-/**Simple reimplementation of com.ontoprise.indexer.owl.SearchElement to be independent of datamodel
+/**
+ * Simple reimplementation of com.ontoprise.indexer.owl.SearchElement to be independent of datamodel
  * @author janiko
  *
  */
 public class SearchElement implements Comparable<SearchElement> {
-	private String _axiom;
+	private OWLAxiom _axiom;
 	private String _ontologyUri;
     private String _entityUri;
     private String _valueString;
@@ -30,7 +33,7 @@ public class SearchElement implements Comparable<SearchElement> {
     /**
 	 * 
 	 */
-	public SearchElement(String ontologyUri, String axiom, FieldTypes type, String entityUri, String value) {
+	public SearchElement(String ontologyUri, OWLAxiom axiom, FieldTypes type, String entityUri, String value) {
 		_ontologyUri = ontologyUri;
 		_axiom = axiom;
 		_type = type;
@@ -41,7 +44,7 @@ public class SearchElement implements Comparable<SearchElement> {
 	/**
      * @return axiom that was hit 
      */
-    public String getAxiom() {
+    public OWLAxiom getAxiom() {
         return _axiom;
     }
     
@@ -75,44 +78,66 @@ public class SearchElement implements Comparable<SearchElement> {
     
     
     public int compareTo(SearchElement that) {
-    	int ontoComp = this._ontologyUri.compareTo(that._ontologyUri);
-    	if(ontoComp != 0) {
-    		return ontoComp;
-    	}
-     
-    	if(this._entityUri != null && that._entityUri != null) {
-        	int entityComp = this._entityUri.compareTo(that._entityUri);
-        	if(entityComp != 0) {
-        		return entityComp;
-        	}
-    	}
-    	
-    	int axiomComp = this._axiom.compareTo(that._axiom);
-    	if(axiomComp != 0) {
-    		return axiomComp;
-    	}
-    	
-        return _axiom.toString().compareToIgnoreCase(that._axiom.toString());
+        
+        if(this._type != null && that._type != null) {
+            int typeComp = this._type.compareTo(that._type);
+            if(typeComp != 0) {
+                return typeComp;
+            }
+        }
+        
+        if(this._entityUri != null && that._entityUri != null) {
+            int entityComp = this._entityUri.compareTo(that._entityUri);
+            if(entityComp != 0) {
+                return entityComp;
+            }
+        }
+        
+        if(this._valueString != null && that._valueString != null) {
+            int valueComp = this._valueString.compareTo(that._valueString);
+            if(valueComp != 0) {
+                return valueComp;
+            }
+        }
+        
+        if(this._axiom != null && that._axiom != null) {
+            int axiomComp = this._axiom.compareTo(that._axiom);
+            if(axiomComp != 0) {
+                return axiomComp;
+            }
+        }
+
+        int ontoComp = this._ontologyUri.compareTo(that._ontologyUri);
+        if(ontoComp != 0) {
+            return ontoComp;
+        }
+        
+        return 0;
     }
     
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof SearchElement) {
-            SearchElement se = (SearchElement) obj;
-            return safeEquals(_axiom, se._axiom)
-                && safeEquals(_ontologyUri, se._ontologyUri)
-                && safeEquals(_entityUri, se._entityUri)
-                && safeEquals(_valueString, se._valueString)
-                && _type == se._type;
+    public boolean equals(Object thatObject) {
+        if (thatObject instanceof SearchElement) {
+            SearchElement that = (SearchElement) thatObject;
+            return safeEquals(_axiom, that._axiom)
+                && safeEquals(_ontologyUri, that._ontologyUri)
+                && safeEquals(_entityUri, that._entityUri)
+                && safeEquals(_valueString, that._valueString)
+                && _type == that._type;
         }
         return false;
     }
     
-    private static boolean safeEquals(String a, String b) {
+    private static boolean safeEquals(Object a, Object b) {
         if (a == null || b == null) {
             return a == b;
         } else {
             return a.equals(b);
         }
+    }
+    
+    @Override
+    public int hashCode() {
+        return (_type+_entityUri+_valueString+_axiom+_ontologyUri).hashCode();
     }
 }

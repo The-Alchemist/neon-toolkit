@@ -35,7 +35,7 @@ public final class OWLSharedImages {
     public static final String ANNOTATION_PROPERTY = "annotation_property"; //$NON-NLS-1$
     public static final String DATATYPE = "datatype"; //$NON-NLS-1$
     public static final String INDIVIDUAL = "individual"; //$NON-NLS-1$
-    public static final String PROJECT = "ontoprj_obj"; //$NON-NLS-1$
+    public static final String PROJECT = "project"; //$NON-NLS-1$
     public static final String PROJECT_ERROR = "ontoprj_obj_error"; //$NON-NLS-1$
     public static final String FOLDER = "folder"; //$NON-NLS-1$
     public static final String EMPTY = "empty"; //$NON-NLS-1$
@@ -62,7 +62,7 @@ public final class OWLSharedImages {
         registry.put(OBJECT_PROPERTY, create("onto", "object_property.gif")); //$NON-NLS-1$ //$NON-NLS-2$
         registry.put(ANNOTATION_PROPERTY, create("onto", "annotation_property.gif")); //$NON-NLS-1$ //$NON-NLS-2$
         registry.put(DATA_PROPERTY, create("onto", "data_property.gif")); //$NON-NLS-1$ //$NON-NLS-2$
-        registry.put(PROJECT, create("onto", "ontoprj_obj.gif")); //$NON-NLS-1$ //$NON-NLS-2$
+        registry.put(PROJECT, create("onto", "project.gif")); //$NON-NLS-1$ //$NON-NLS-2$
         registry.put(PROJECT_ERROR, create("onto", "ontoprj_obj_error.gif")); //$NON-NLS-1$ //$NON-NLS-2$
         registry.put(FOLDER, create("onto", "folder.gif")); //$NON-NLS-1$ //$NON-NLS-2$
         registry.put(DATATYPE, create("onto", "datatype.gif")); //$NON-NLS-1$ //$NON-NLS-2$
