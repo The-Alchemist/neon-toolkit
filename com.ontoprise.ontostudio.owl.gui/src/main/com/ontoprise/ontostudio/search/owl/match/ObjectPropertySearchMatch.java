@@ -23,9 +23,6 @@ import com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyTreeElement;
  * Function:
  * Keywords:
  */
-/**
- * Type comment
- */
 public class ObjectPropertySearchMatch extends OwlSearchMatch {
 
     /**

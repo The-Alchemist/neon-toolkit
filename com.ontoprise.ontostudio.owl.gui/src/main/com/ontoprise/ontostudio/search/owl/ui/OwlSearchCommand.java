@@ -27,8 +27,6 @@ import org.neontoolkit.search.SearchPlugin;
 import org.neontoolkit.search.command.AbstractSearchCommand;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-import org.semanticweb.owlapi.model.OWLAnnotationSubject;
-import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataProperty;
@@ -37,9 +35,9 @@ import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLIndividual;
-import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
@@ -48,6 +46,7 @@ import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzHierarchyProvider;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeProvider;
 import com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeTreeElement;
+import com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyHierarchyProvider;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyHierarchyProvider;
@@ -74,7 +73,7 @@ import com.ontoprise.ontostudio.search.owl.match.ObjectPropertySearchMatch;
  * @author janiko
  *
  */
-public class OwlSearchCommand extends AbstractSearchCommand{
+public class OwlSearchCommand extends AbstractSearchCommand {
 
 
     private int _searchFlags;
@@ -165,241 +164,190 @@ public class OwlSearchCommand extends AbstractSearchCommand{
             _results = getOWLResults(getProject(), getFieldTypes());
         } catch (NeOnCoreException e) {
             throw new CommandException(e);
-        }
-              
+        }         
     }
     
 
-    public Match[] getOWLResults(String project, Set<FieldTypes> types) throws NeOnCoreException {
-
-        List<Match> searchResults = new ArrayList<Match>();
+    private Match[] getOWLResults(String project, Set<FieldTypes> types) throws NeOnCoreException {
+        List<Match> matches = new ArrayList<Match>();
+        
         for (OWLModel owlModel: OWLModelFactory.getOWLModels(project)) {
-            
-            //XXX Temporary simple solution until the owl lucene indexer is mirgrated 
             SimpleOwlSearchHelper searchHelper = new SimpleOwlSearchHelper(owlModel);
-//            OwlSearchHelper searchHelper = new OwlSearchHelper(owlModel.getConnection());
-            
             String searchExpression = getExpression();
             
-            SearchResults results;
-            results = searchHelper.search(owlModel.getOntologyURI(), types, searchExpression, true, isCaseSensitive(), 0, 9999);
-            
-            List<SearchElement> resultElements = results.getResults();
-            for (SearchElement result: resultElements) {
-                addSearchMatches(project, owlModel.getOntologyURI(), result, searchResults);
+            SearchResults results = searchHelper.search(owlModel.getOntologyURI(), types, searchExpression, false, isCaseSensitive(), 0, 999);
+            for (SearchElement result: results.getResults()) {
+                addSearchMatches(project, result, matches);
             }
-
-        }
-        if (searchResults.size() > 0) {
-            OWLGUIUtilities.removeDuplicate(searchResults);
         }
 
-        return searchResults.toArray(new Match[0]);
+        OWLGUIUtilities.removeDuplicate(matches);
+        
+        return matches.toArray(new Match[matches.size()]);
     }
 
-    private void addSearchMatches(String project, String ontology, SearchElement element, List<Match> resultList) {
-        Set<FieldTypes> types = getFieldTypes();
-        for (FieldTypes type: types) {
-            FieldTypes elementType = element.getType();
+    @SuppressWarnings("unchecked")
+    private void addSearchMatches(String project, SearchElement element, List<Match> resultList) {
+        FieldTypes elementType = element.getType();
+        String ontology = element.getOntologyUri(); 
+        OWLModel owlModel = null;
+        
+        try {
+            owlModel = OWLModelFactory.getOWLModel(ontology, project);
+            OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(project);
 
-            if (type.equals(elementType)) {
-                ITreeElement elem = null;
-                OWLModel owlModel = null;
-                try {
-                    owlModel = OWLModelFactory.getOWLModel(ontology, project);
-                    OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(project);
-                    switch (type) {
-                        case CLASSES:
-                            OWLClass clazz = factory.getOWLClass(OWLUtilities.toURI(element.getEntityUri()));
-                            elem = new ClazzTreeElement(clazz, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class));
-                            add(new Match(new ClassSearchMatch((ClazzTreeElement) elem), 0, getExpression().length()), resultList);
-                            break;
-                            
-                        case ANNOTATION_PROPERTIES:
-                            OWLAnnotationProperty annotProp = factory.getOWLAnnotationProperty(OWLUtilities.toURI(element.getEntityUri()));
-                            elem = new AnnotationPropertyTreeElement(annotProp, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, AnnotationPropertyHierarchyProvider.class));
-                            add(new Match(new AnnotationPropertySearchMatch((AnnotationPropertyTreeElement) elem), 0, getExpression().length()), resultList);
-                            break;
-                            
-                        case DATA_PROPERTIES:
-                            OWLDataProperty dataProp = factory.getOWLDataProperty(OWLUtilities.toURI(element.getEntityUri()));
-                            elem = new DataPropertyTreeElement(dataProp, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, DataPropertyHierarchyProvider.class));
-                            add(new Match(new DataPropertySearchMatch((DataPropertyTreeElement) elem), 0, getExpression().length()), resultList);
-                            break;
-                            
-                        case OBJECT_PROPERTIES:
-                            OWLObjectProperty objectProp = factory.getOWLObjectProperty(OWLUtilities.toURI(element.getEntityUri()));
-                            elem = new ObjectPropertyTreeElement(objectProp, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ObjectPropertyHierarchyProvider.class));
-                            add(new Match(new ObjectPropertySearchMatch((ObjectPropertyTreeElement) elem), 0, getExpression().length()), resultList);
-                            break;
-                            
-                        case INDIVIDUALS:
-                            OWLIndividual indi = new InternalParser(element.getEntityUri(), OWLNamespaces.EMPTY_INSTANCE, factory).parseOWLIndividual();// factory.getOWLNamedIndividual(OWLUtilities.toURI(element.getEntityUri()));
-                            Set<OWLClass> classes;
-                            try {
-                                classes = OWLModelFactory.getOWLModel(ontology, project).getClasses(element.getEntityUri());
-                                for (OWLClass cl: classes) {
-                                    elem = IndividualItem.createNewInstance(indi, cl.getURI().toString(), ontology, project);
-                                    classes = OWLModelFactory.getOWLModel(ontology, project).getClasses(OWLUtilities.toString(indi));
-                                    List<ClassSearchMatch> classMatchesList = new ArrayList<ClassSearchMatch>();
-                                    for (OWLClass c: classes) {
-                                        ClassSearchMatch classSearchMatch = new ClassSearchMatch(new ClazzTreeElement(c, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class)));
-                                        classMatchesList.add(classSearchMatch);
-                                    }
-                                    for (OWLClass c: classes) {
-                                        elem = IndividualItem.createNewInstance(indi, c.getURI().toString(), ontology, project);
-                                        add(new Match(new IndividualSearchMatch((IIndividualTreeElement) elem, classMatchesList.toArray(new ClassSearchMatch[classMatchesList.size()])), 0, getExpression().length()), resultList);
-                                    }
-                                }
-                            } catch (NeOnCoreException e) {
-                                SearchPlugin.logError(e.getMessage(), e);
-                            }
-                            break;
-                            
-                        case DATA_PROPERTY_VALUES:
-                            String axiomString = element.getAxiom();
-                            OWLAxiom axiom = OWLUtilities.axiom(axiomString, owlModel.getNamespaces(), owlModel.getOWLDataFactory());
-                            if (axiom instanceof OWLDataPropertyAssertionAxiom) {
-                                OWLDataPropertyAssertionAxiom member = (OWLDataPropertyAssertionAxiom) axiom;
-                                OWLIndividual individual = member.getSubject();
-                                OWLDataPropertyExpression prop = member.getProperty();
-                                int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
-                                OWLObjectVisitorEx visitor = OWLPlugin.getDefault().getSyntaxManager().getVisitor(owlModel, idDisplayStyle);
-                                String value = OWLGUIUtilities.getEntityLabel((String[]) member.getObject().accept(visitor));
-                                Set<OWLClass> clazzes;
-                                try {
-                                    clazzes = owlModel.getClasses(OWLUtilities.toString(individual));
-                                    List<ClassSearchMatch> classMatchesList = new ArrayList<ClassSearchMatch>();
-                                    for (OWLClass c: clazzes) {
-                                        ClassSearchMatch classSearchMatch = new ClassSearchMatch(new ClazzTreeElement(c, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class)));
-                                        classMatchesList.add(classSearchMatch);
-                                    }
-                                    for (OWLClass c: clazzes) {
-                                        elem = IndividualItem.createNewInstance(individual, c.getURI().toString(), ontology, project);
-                                        add(new Match(new DataPropertyValuesSearchMatch((IIndividualTreeElement) elem, classMatchesList.toArray(new ClassSearchMatch[classMatchesList.size()]), getExpression(), value, prop), 0, getExpression().length()), resultList);
-                                    }
-                                } catch (NeOnCoreException e) {
-                                    SearchPlugin.logError(e.getMessage(), e);
-                                }
-                            }
-                            break;
-                            
-                        case ANNOTATION_VALUES:
-                            String axiomStr = element.getAxiom();
-                            OWLAxiom a = OWLUtilities.axiom(axiomStr, owlModel.getNamespaces(), owlModel.getOWLDataFactory());
-                            if (a instanceof OWLAnnotationAssertionAxiom) {
-                                OWLAnnotationAssertionAxiom annot = (OWLAnnotationAssertionAxiom) a;
-                                OWLAnnotationSubject entity = annot.getSubject();
-                                if (!(entity instanceof OWLEntity)) {
-                                    // TODO: migration
-                                    throw new UnsupportedOperationException("TODO: migration"); //$NON-NLS-1$
-                                }
-                                OWLAnnotationProperty prop = annot.getAnnotation().getProperty();
-                                OWLObject annotationValue = annot.getAnnotation().getValue();
-                                StringBuffer buffer = new StringBuffer();
-                                OWLUtilities.toString(annotationValue, buffer, owlModel.getNamespaces());
-                                addSearchResults(prop, (OWLEntity)entity, buffer.toString(), getExpression(), ontology, project, resultList);
-                            }
-                            break;
-
-                        case DATATYPES:
-                            OWLDatatype datatype = factory.getOWLDatatype(OWLUtilities.toURI(element.getEntityUri()));
-                            elem = new DatatypeTreeElement(datatype, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, DatatypeProvider.class));
-                            add(new Match(new DatatypeSearchMatch((DatatypeTreeElement) elem), 0, getExpression().length()), resultList);
-                            break;
-                            
-                        case ONTOLOGY:
-                            break;
-                            
-                        default:
-                            break;
+            ITreeElement elem = null;
+            switch (elementType) {
+                case CLASSES:
+                    OWLClass clazz = factory.getOWLClass(OWLUtilities.toURI(element.getEntityUri()));
+                    elem = new ClazzTreeElement(clazz, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class));
+                    add(new Match(new ClassSearchMatch((ClazzTreeElement) elem), 0, getExpression().length()), resultList);
+                    break;
+                    
+                case ANNOTATION_PROPERTIES:
+                    OWLAnnotationProperty annotProp = factory.getOWLAnnotationProperty(OWLUtilities.toURI(element.getEntityUri()));
+                    elem = new AnnotationPropertyTreeElement(annotProp, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, AnnotationPropertyHierarchyProvider.class));
+                    add(new Match(new AnnotationPropertySearchMatch((AnnotationPropertyTreeElement) elem), 0, getExpression().length()), resultList);
+                    break;
+                    
+                case DATA_PROPERTIES:
+                    OWLDataProperty dataProp = factory.getOWLDataProperty(OWLUtilities.toURI(element.getEntityUri()));
+                    elem = new DataPropertyTreeElement(dataProp, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, DataPropertyHierarchyProvider.class));
+                    add(new Match(new DataPropertySearchMatch((DataPropertyTreeElement) elem), 0, getExpression().length()), resultList);
+                    break;
+                    
+                case OBJECT_PROPERTIES:
+                    OWLObjectProperty objectProp = factory.getOWLObjectProperty(OWLUtilities.toURI(element.getEntityUri()));
+                    elem = new ObjectPropertyTreeElement(objectProp, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ObjectPropertyHierarchyProvider.class));
+                    add(new Match(new ObjectPropertySearchMatch((ObjectPropertyTreeElement) elem), 0, getExpression().length()), resultList);
+                    break;
+                    
+                case INDIVIDUALS:
+                    OWLIndividual indi = new InternalParser(element.getEntityUri(), OWLNamespaces.EMPTY_INSTANCE, factory).parseOWLIndividual();// factory.getOWLNamedIndividual(OWLUtilities.toURI(element.getEntityUri()));
+                    Set<OWLClass> classes;
+                    try {
+                        classes = OWLModelFactory.getOWLModel(ontology, project).getClasses(OWLUtilities.toString(indi));
+                        ClassSearchMatch classMatch = null;
+                        for (OWLClass c: classes) {
+                            classMatch = new ClassSearchMatch(new ClazzTreeElement(c, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class)));
+                            elem = IndividualItem.createNewInstance(indi, c.getURI().toString(), ontology, project);
+                            add(new Match(new IndividualSearchMatch((IIndividualTreeElement) elem, classMatch), 0, getExpression().length()), resultList);
+                            break; // only add the match once
+                        }
+                    } catch (NeOnCoreException e) {
+                        SearchPlugin.logError(e.getMessage(), e);
                     }
-                } catch (NeOnCoreException e1) {
-                    SearchPlugin.logError(e1.getMessage(), e1);
-                } catch (InternalParserException e) {
-                    SearchPlugin.logError(e.getMessage(), e);
+                    break;
+                    
+                case DATA_PROPERTY_VALUES:
+                    {
+                        OWLDataPropertyAssertionAxiom axiom = (OWLDataPropertyAssertionAxiom)element.getAxiom();
+                        OWLIndividual subject = axiom.getSubject();
+                        OWLDataPropertyExpression prop = axiom.getProperty();
+
+                        classes = OWLModelFactory.getOWLModel(ontology, project).getClasses(OWLUtilities.toString(subject));
+                        ClassSearchMatch classMatch = null;
+                        for (OWLClass c: classes) {
+                            classMatch = new ClassSearchMatch(new ClazzTreeElement(c, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class)));
+                            elem = IndividualItem.createNewInstance(subject, c.getURI().toString(), ontology, project);
+
+                            int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
+                            OWLObjectVisitorEx visitor = OWLPlugin.getDefault().getSyntaxManager().getVisitor(owlModel, idDisplayStyle);
+                            String value = OWLGUIUtilities.getEntityLabel((String[]) axiom.getObject().accept(visitor));
+
+                            add(new Match(
+                                    new DataPropertyValuesSearchMatch((IIndividualTreeElement) elem, classMatch, getExpression(), value, prop), 
+                                    0, getExpression().length()), 
+                                resultList);
+
+                            break; // only add the match once
+                        }
+                        
+                        break;
+                    }
+                    
+                case ANNOTATION_VALUES:
+                {
+                    OWLAnnotationAssertionAxiom axiom = (OWLAnnotationAssertionAxiom)element.getAxiom();
+                    OWLEntity subject = owlModel.getEntity(axiom.getSubject().toString()).iterator().next();
+                    OWLAnnotationProperty prop = axiom.getProperty();
+
+                    elem = findTypeForEntity(subject, ontology, project);
+
+                    int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
+                    OWLObjectVisitorEx visitor = OWLPlugin.getDefault().getSyntaxManager().getVisitor(owlModel, idDisplayStyle);
+                    String value = OWLGUIUtilities.getEntityLabel((String[]) axiom.getValue().accept(visitor));
+                    
+                    add(new Match(
+                            new AnnotationValuesSearchMatch(elem, prop, value, getExpression()), 
+                            0, getExpression().length()), 
+                        resultList);
+                    break;
+                    }
+                    
+                case DATATYPES:
+                    OWLDatatype datatype = factory.getOWLDatatype(OWLUtilities.toURI(element.getEntityUri()));
+                    elem = new DatatypeTreeElement(datatype, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, DatatypeProvider.class));
+                    add(new Match(new DatatypeSearchMatch((DatatypeTreeElement) elem), 0, getExpression().length()), resultList);
+                    break;
+                    
+                case ONTOLOGY:
+                    break;
+                    
+                default:
+                    break;
+            }
+        } catch (NeOnCoreException e1) {
+            SearchPlugin.logError(e1.getMessage(), e1);
+        } catch (InternalParserException e) {
+            SearchPlugin.logError(e.getMessage(), e);
+        }
+    }
+
+    private void add(Match match, List<Match> matches) {
+        if (!matches.contains(match)) {
+            matches.add(match);
+        }
+    }
+
+    /**
+     * @param entity
+     * @return
+     */
+    private ITreeElement findTypeForEntity(OWLEntity entity, String ontology, String project) {
+        if(entity instanceof OWLClass) {
+            return new ClazzTreeElement((OWLClass)entity, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class));
+            
+        } else if(entity instanceof OWLDataProperty) {
+            return new DataPropertyTreeElement((OWLDataProperty)entity, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, DataPropertyHierarchyProvider.class));
+
+        } else if(entity instanceof OWLObjectProperty) {
+            return new ObjectPropertyTreeElement((OWLObjectProperty)entity, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ObjectPropertyHierarchyProvider.class));
+        
+        } else if(entity instanceof OWLAnnotationProperty) {
+            return new AnnotationPropertyTreeElement((OWLAnnotationProperty)entity, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, AnnotationPropertyHierarchyProvider.class));
+        
+        } else if(entity instanceof OWLIndividual) {
+
+            Set<OWLClass> classes;
+            try {
+                classes = OWLModelFactory.getOWLModel(ontology, project).getClasses(OWLUtilities.toString(entity));
+//                ClassSearchMatch classMatch = null;
+                for (OWLClass c: classes) {
+//                    classMatch = new ClassSearchMatch(new ClazzTreeElement(c, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class)));
+                    return IndividualItem.createNewInstance((OWLIndividual)entity, c.getURI().toString(), ontology, project);
                 }
+            } catch (NeOnCoreException e) {
+                SearchPlugin.logError(e.getMessage(), e);
             }
-        }
-
-    }
-
-    private void addSearchResults(OWLAnnotationProperty annotProperty, OWLEntity entity, String annotationValue, String searchString, String ontology, String project, List<Match> resultList) throws NeOnCoreException {
-        ITreeElement elem = null;
-        if (entity instanceof OWLClass) {
-            elem = new ClazzTreeElement(entity, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class));
-            add(new Match(new AnnotationValuesSearchMatch((ClazzTreeElement) elem, annotProperty, annotationValue, searchString), 0, getExpression().length()), resultList);
-
-        } else if (entity instanceof OWLObjectProperty) {
-            elem = new ObjectPropertyTreeElement(entity, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ObjectPropertyHierarchyProvider.class));
-            add(new Match(new AnnotationValuesSearchMatch((ObjectPropertyTreeElement) elem, annotProperty, annotationValue, searchString), 0, getExpression().length()), resultList);
         
-        } else if (entity instanceof OWLDataProperty) {
-            elem = new DataPropertyTreeElement(entity, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, DataPropertyHierarchyProvider.class));
-            add(new Match(new AnnotationValuesSearchMatch((DataPropertyTreeElement) elem, annotProperty, annotationValue, searchString), 0, getExpression().length()), resultList);
+        } else if(entity instanceof OWLDatatype) {
+            return new DatatypeTreeElement((OWLDatatype)entity, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, DatatypeProvider.class));
         
-        } else if (entity instanceof OWLAnnotationProperty) {
-            elem = new AnnotationPropertyTreeElement(entity, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, AnnotationPropertyHierarchyProvider.class));
-            add(new Match(new AnnotationValuesSearchMatch((AnnotationPropertyTreeElement) elem, annotProperty, annotationValue, searchString), 0, getExpression().length()), resultList);
+        } else if(entity instanceof OWLOntology) {
+            return new OntologyTreeElement(project, ontology, TreeProviderManager.getDefault().getProvider(MTreeView.ID, DatatypeProvider.class));
+        } 
         
-        } else if (entity instanceof OWLIndividual) {
-            Set<OWLClass> clazzes = OWLModelFactory.getOWLModel(ontology, project).getClasses(entity.getURI().toString());
-
-            List<ClassSearchMatch> classMatchesList = new ArrayList<ClassSearchMatch>();
-            for (OWLClass c: clazzes) {
-                ClassSearchMatch classSearchMatch = new ClassSearchMatch(new ClazzTreeElement(c, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class)));
-                classMatchesList.add(classSearchMatch);
-            }
-            for (OWLClass c: clazzes) {
-                elem = IndividualItem.createNewInstance((OWLIndividual) entity, c.getURI().toString(), ontology, project);
-                add(new Match(new AnnotationValuesSearchMatch((IIndividualTreeElement) elem, annotProperty, annotationValue, searchString), 0, getExpression().length()), resultList);
-            }
-        }
+        return new OntologyTreeElement(project, ontology, TreeProviderManager.getDefault().getProvider(MTreeView.ID, DatatypeProvider.class));
     }
-
-    private void add(Match match, List<Match> resultList) {
-        if (!resultList.contains(match)) {
-            resultList.add(match);
-        }
-    }
-
-//    @Override
-//    public ISearchResult getSearchResult() {
-//        if (_searchResult == null) {
-//            _searchResult = new SearchResult(this);
-//        }
-//        return _searchResult;
-//    }
-
-//    @Override
-//    public IStatus run(IProgressMonitor monitor) {
-//        final SearchResult textResult = (SearchResult) getSearchResult();
-//        textResult.removeAll();
-//        // Don't need to pass in working copies in 3.0 here
-//
-//        Set<FieldTypes> transformedTypes = getFieldTypes();
-//
-//        int work = _projects.length;
-//        monitor.beginTask(com.ontoprise.ontostudio.owl.gui.Messages.OwlSearchQuery_0, work); 
-//        for (String project: _projects) {
-//            List<Object> addedMatches = new ArrayList<Object>();
-//            try {
-//                Match[] matches = getOWLResults(project, transformedTypes);
-//                for (Match match: matches) {
-//                    Object element = match.getElement();
-//                    if (!addedMatches.contains(element)) {
-//                        textResult.addMatch(match);
-//                        addedMatches.add(element);
-//                    }
-//                }
-//            } catch (Exception e) {
-//                SearchPlugin.logError("", e); //$NON-NLS-1$
-//            } finally {
-//                monitor.worked(1);
-//            }
-//        }
-//        String message = Messages.AbstractSearchQuery_3;
-//        MessageFormat.format(message, new Object[] {new Integer(textResult.getMatchCount())});
-//        return new Status(IStatus.OK, SearchPlugin.getDefault().getBundle().getSymbolicName(), 0, message, null);
-//    }
 }

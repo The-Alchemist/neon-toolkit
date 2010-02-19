@@ -38,32 +38,19 @@ import com.ontoprise.ontostudio.owl.perspectives.OWLPerspective;
  */
 
 public class IndividualSearchMatch extends OwlSearchMatch {
-    private static IndividualView _individualView;
-    private ClassSearchMatch[] _classMatches;
-
+    private IndividualView _individualView;
+    private ClassSearchMatch _classMatch;
+    
     /**
      * @param element
      */
-    public IndividualSearchMatch(IIndividualTreeElement instance, ClassSearchMatch[] classes) {
+    @SuppressWarnings("unchecked")
+    public IndividualSearchMatch(IIndividualTreeElement instance, ClassSearchMatch classMatch) {
         super(instance);
-        _classMatches = classes;
+        _classMatch = classMatch;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ontoprise.ontostudio.search.flogic.match.SearchMatch#getOccurenceCount()
-     */
-    @Override
-    public int getOccurenceCount() {
-        int count = 0;
-        for (int i = 0; i < _classMatches.length; i++) {
-            count += _classMatches[i].getOccurenceCount();
-        }
-        return count;
-    }
-
-    protected static IndividualView getInstanceView() {
+    protected IndividualView getInstanceView() {
         if (_individualView == null) {
             try {
                 _individualView = (IndividualView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(IndividualView.ID);
@@ -82,14 +69,10 @@ public class IndividualSearchMatch extends OwlSearchMatch {
     @Override
     public void show(int index) {
         PerspectiveChangeHandler.switchPerspective(OWLPerspective.ID);
-        int i = 0;
-        while (index >= _classMatches[i].getOccurenceCount()) {
-            index -= _classMatches[i].getOccurenceCount();
-            i++;
-        }
-        _classMatches[i].show(index);
         if (getInstanceView() != null) {
-            _individualView.selectionChanged(NavigatorSearchMatch.getNavigator(), new StructuredSelection(_classMatches[i].getMatch()));
+            _individualView.selectionChanged(
+                    NavigatorSearchMatch.getNavigator(), 
+                    new StructuredSelection(_classMatch.getMatch()));
             _individualView.getTreeViewer().setSelection(new StructuredSelection(getMatch()));
         }
     }

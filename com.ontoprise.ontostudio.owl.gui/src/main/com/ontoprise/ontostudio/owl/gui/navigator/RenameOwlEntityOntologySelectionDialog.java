@@ -122,7 +122,10 @@ public class RenameOwlEntityOntologySelectionDialog extends Dialog {
                     b.setSelection(true);
                     b.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
                     _checkboxList.add(b);
-                    allOntologiesInProject.remove(allOntologiesInProject.indexOf(ontologyUri));
+                    //can be that is also imported ontology, so it has been already removed from allOntologiesInProject 
+                    if (allOntologiesInProject.contains(ontologyUri)){
+                        allOntologiesInProject.remove(allOntologiesInProject.indexOf(ontologyUri));
+                    }
                 }
                 new Label(comp, SWT.NONE);
             }

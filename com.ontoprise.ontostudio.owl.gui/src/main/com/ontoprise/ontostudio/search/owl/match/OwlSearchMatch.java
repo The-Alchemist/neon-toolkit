@@ -11,8 +11,8 @@
 package com.ontoprise.ontostudio.search.owl.match;
 
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.gui.navigator.ITreeElement;
 import org.neontoolkit.gui.navigator.ITreeElementPath;
-import org.neontoolkit.gui.navigator.elements.IProjectElement;
 import org.neontoolkit.gui.util.ItemSorter;
 import org.neontoolkit.gui.util.PerspectiveChangeHandler;
 import org.neontoolkit.search.ui.NavigatorSearchMatch;
@@ -38,10 +38,11 @@ public abstract class OwlSearchMatch extends NavigatorSearchMatch {
     /**
      * @param element
      */
-    public OwlSearchMatch(IProjectElement element) {
+    public OwlSearchMatch(ITreeElement element) {
         super(element);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected ITreeElementPath[] getPaths() {
         AbstractOwlEntityTreeElement element = (AbstractOwlEntityTreeElement) getMatch();
@@ -100,5 +101,10 @@ public abstract class OwlSearchMatch extends NavigatorSearchMatch {
     @Override
     public int hashCode() {
         return getId().hashCode();
+    }
+    
+    @Override
+    public int getOccurenceCount() {
+        return 1;
     }
 }

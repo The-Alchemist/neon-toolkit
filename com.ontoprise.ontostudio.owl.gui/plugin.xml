@@ -3,18 +3,6 @@
 <plugin>
    <extension-point id="syntaxDefinition" name="%syntaxManagerDescription" schema="schema/syntaxDefinition.exsd"/>
 
-<!-- TODO add a handler like this
-      <handler
-			class="com.ontoprise.ontostudio.search.owl.ui.FindReferencesHandler"
-            commandId="com.ontoprise.ontostudio.search.owl.ui.findReferencesCommand">
-         <activeWhen>
-            <reference
-                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneEntitySelected">
-            </reference>
-         </activeWhen>
-      </handler>
--->
-
 <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
 <!--+++++++++++++++++++++++++ PERSPECTIVES ++++++++++++++++++++++++++++++++-->
 <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
@@ -72,18 +60,20 @@
 <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
    <extension
          point="org.eclipse.ui.views">
+<!--
       <category
             name="%owlViews"
             id="com.ontoprise.ontostudio.owl.views">
       </category>
+-->
       <view
-            category="com.ontoprise.ontostudio.owl.views"
+            category="org.neontoolkit.gui.views.general"
             class="com.ontoprise.ontostudio.owl.gui.individualview.IndividualView"
             icon="icons/individualview.gif"
             id="com.ontoprise.ontostudio.owl.views.individualview"
             name="%individualView"/>
       <view
-            category="com.ontoprise.ontostudio.owl.views"
+            category="org.neontoolkit.gui.views.general"
             class="com.ontoprise.ontostudio.owl.gui.domainview.DomainView"
             icon="icons/domain.gif"
             id="com.ontoprise.ontostudio.owl.views.domainview"
@@ -219,54 +209,12 @@
          </command>
       </menuContribution>
       <menuContribution
-            locationURI="com.ontoprise.ontostudio.owl.gui.menuContribution2">
-      </menuContribution>
-   </extension>
-   
-   <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            locationURI="popup:com.ontoprise.ontostudio.owl.views.individualview?after=individuals.new">
+            locationURI="popup:org.neontoolkit.gui.views.navigator?after=navigator.refactor">
          <command
-               commandId="com.ontoprise.ontostudio.owl.individuals.newIndividualCommand"
-               disabledIcon="icons/onto/newinstance_disabled.gif"
-               icon="icons/individualview.gif"
-               label="%newIndividualLabel"
-               style="push"
-               tooltip="%createNewIndividualLabel">
-            <visibleWhen
-                  checkEnabled="true">
-            </visibleWhen>
+			   commandId="com.ontoprise.ontostudio.owl.gui.navigator.findReferencesCommand"
+               label="%findReferencesLabel"
+               style="push">
          </command>
-      </menuContribution>
-      <menuContribution
-            locationURI="popup:com.ontoprise.ontostudio.owl.views.individualview?after=individuals.ccp">
-         <command
-               commandId="com.ontoprise.ontostudio.owl.individuals.deleteIndividualCommand"
-               icon="icons/common/delete.gif"
-               label="%command.label.0"
-               style="push"
-               tooltip="%command.tooltip.0">
-         </command>
-      </menuContribution>
-      <menuContribution
-            locationURI="popup:com.ontoprise.ontostudio.owl.views.individualview?after=individuals.refGroup">
-            <command
-                  commandId="org.neontoolkit.gui.navigator.renameCommand"
-                  label="%command.label.1"
-                  style="push"
-                  tooltip="%command.tooltip.1">
-            </command>
-         <menu
-               id="individuals.refactorGroup1"
-               label="%menu.label.0">
-            <command
-                  commandId="com.ontoprise.ontostudio.owl.individuals.moveIndividual"
-                  label="%command.label.2"
-                  style="push"
-                  tooltip="%command.tooltip.2">
-            </command>
-         </menu>
       </menuContribution>
       <menuContribution
             locationURI="toolbar:org.eclipse.ui.main.toolbar">
@@ -320,19 +268,71 @@
                   </reference>
                </visibleWhen>
             </command>
-	         <command
-	               commandId="org.neontoolkit.gui.navigator.newCommand"
-	               icon="icons/onto/datatype.gif"
-	               label="%newDatatypeLabel"
-	               style="push">
-	            <visibleWhen
-	                  checkEnabled="false">
-	               <reference
-	                     definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneDatatypeOrDatatypeFolderSelected">
-	               </reference>
-	            </visibleWhen>
-	         </command>
+            <command
+                  commandId="org.neontoolkit.gui.navigator.newCommand"
+                  icon="icons/onto/datatype.gif"
+                  label="%newDatatypeLabel"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <reference
+                        definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneDatatypeOrDatatypeFolderSelected">
+                  </reference>
+               </visibleWhen>
+            </command>
          </toolbar>
+      </menuContribution>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:com.ontoprise.ontostudio.owl.views.individualview?after=individuals.new">
+         <command
+               commandId="com.ontoprise.ontostudio.owl.individuals.newIndividualCommand"
+               disabledIcon="icons/onto/newinstance_disabled.gif"
+               icon="icons/individualview.gif"
+               label="%newIndividualLabel"
+               style="push"
+               tooltip="%createNewIndividualLabel">
+            <visibleWhen
+                  checkEnabled="true">
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:com.ontoprise.ontostudio.owl.views.individualview?after=individuals.ccp">
+         <command
+               commandId="com.ontoprise.ontostudio.owl.individuals.deleteIndividualCommand"
+               icon="icons/common/delete.gif"
+               label="%command.label.0"
+               style="push"
+               tooltip="%command.tooltip.0">
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:com.ontoprise.ontostudio.owl.views.individualview?after=individuals.refGroup">
+            <command
+                  commandId="org.neontoolkit.gui.navigator.renameCommand"
+                  label="%command.label.1"
+                  style="push"
+                  tooltip="%command.tooltip.1">
+            </command>
+         <menu
+               id="individuals.refactorGroup1"
+               label="%menu.label.0">
+            <command
+                  commandId="com.ontoprise.ontostudio.owl.individuals.moveIndividual"
+                  label="%command.label.2"
+                  style="push"
+                  tooltip="%command.tooltip.2">
+            </command>
+         </menu>
+         <command
+               commandId="com.ontoprise.ontostudio.owl.gui.navigator.findReferencesCommand"
+               label="%findReferencesLabel"
+               style="push">
+         </command>
       </menuContribution>
    </extension>
 
@@ -340,19 +340,6 @@
 <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
 <!--+++++++++++++++++++++++++   ACTIONS   +++++++++++++++++++++++++++++++++-->
 <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
-	 <extension
-         point="org.eclipse.ui.popupMenus">
-      <!-- Project Actions -->
-      
-      <!-- Ontology Actions -->
-   
-      <!-- Class Folder Actions -->
-      
-      <!-- Class Actions -->
-      
-      <!-- Property Actions -->
-      
-</extension>
 <!-- End of SchemaView Actions -->
 
 <!-- Toolbar Actions -->
@@ -374,7 +361,7 @@
          <action
                class="com.ontoprise.ontostudio.owl.gui.actions.ShowNBInstancesActionOWL"
                icon="icons/common/nb_individuals.gif"
-               id="com.ontoprise.ontostudio.owl.gui.toolbar.nsAction"
+               id="com.ontoprise.ontostudio.owl.gui.toolbar.showNBInstancesAction"
                label="%showHideNBInstances"
                state="false"
                style="toggle"
@@ -1144,6 +1131,16 @@
             class="com.ontoprise.ontostudio.owl.gui.io.actions.LoadOntologyFromWebHandler"
             commandId="org.neontoolkit.gui.menu.file.loadOntologyFromWebCommand">
       </handler>
+       <!--     class="com.ontoprise.ontostudio.owl.gui.navigator.clazz.NewClazzHandler" !-->
+      <handler
+            class="com.ontoprise.ontostudio.search.owl.references.FindReferencesHandler"
+			commandId="com.ontoprise.ontostudio.owl.gui.navigator.findReferencesCommand">
+         <activeWhen>
+            <reference
+	              definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneEntitySelected">
+            </reference>
+         </activeWhen> 
+      </handler>
    </extension>
 
    <extension
@@ -1546,6 +1543,11 @@
             id="org.neontoolkit.gui.menu.file.loadOntologyFromWebCommand"
             name="%command.loadontologyfromweb.label">
       </command>
+      <command
+            description="%findReferencesDescription"
+			id="com.ontoprise.ontostudio.owl.gui.navigator.findReferencesCommand"
+            name="%findReferencesLabel">
+      </command>
    </extension>
 <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
 <!--+++++++++++++++++++++++++++++ KEY BINDINGS ++++++++++++++++++++++++++++-->
@@ -1706,6 +1708,16 @@
           visible="false"/>
   	</perspectiveExtension>
   </extension>
+
+   <extension
+         point="org.eclipse.search.searchResultViewPages">
+      <viewPage
+            class="org.neontoolkit.search.ui.SearchResultPage"
+            icon="icons/csearch_obj.GIF"
+            id="org.neontoolkit.search.ui.SearchResultPage"
+            searchResultClass="org.neontoolkit.search.ui.SearchResult">
+      </viewPage>
+   </extension>
 
 <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
 <!-- additional extension of the gOntt plugin for the NeOn project         -->

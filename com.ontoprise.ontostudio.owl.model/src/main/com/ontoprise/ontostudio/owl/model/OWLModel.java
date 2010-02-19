@@ -899,6 +899,12 @@ public interface OWLModel {
     Set<ItemHits<IRI,OWLAnnotationPropertyDomainAxiom>> getAnnotationPropertyDomainHits(String propertyUri) throws NeOnCoreException;
     Set<ItemHits<IRI,OWLAnnotationPropertyRangeAxiom>> getAnnotationPropertyRangeHits(String propertyUri) throws NeOnCoreException;
 
+    Set<OWLAnnotationAssertionAxiom> getAllAnnotationAxioms() throws NeOnCoreException;
+    Set<OWLAnnotationAssertionAxiom> getAllAnnotationAxioms(boolean includeImported) throws NeOnCoreException;
+
+    Set<OWLDataPropertyAssertionAxiom> getAllDataPropertyAssertionAxioms() throws NeOnCoreException;
+    Set<OWLDataPropertyAssertionAxiom> getAllDataPropertyAssertionAxioms(boolean includeImported) throws NeOnCoreException;
+
     OWLDataFactory getOWLDataFactory() throws NeOnCoreException;
     String getOntologyURI() throws NeOnCoreException;
     void applyChanges(List<OWLAxiomChange> changes) throws NeOnCoreException;
@@ -906,11 +912,13 @@ public interface OWLModel {
     void removeAnnotation(OWLAnnotation annotation) throws NeOnCoreException;
     boolean containsAxiom(OWLAxiom axiom, boolean includeImportedOntologies) throws NeOnCoreException;
     Set<OWLAxiom> getReferencingAxioms(OWLEntity owlEntity) throws NeOnCoreException;
+    Set<OWLAxiom> getReferencingAxioms(OWLEntity owlEntity, boolean includeImported) throws NeOnCoreException;
     Set<OWLAxiom> getReferencingAxioms(OWLIndividual individual) throws NeOnCoreException;
+    Set<OWLAxiom> getReferencingAxioms(OWLIndividual individual, boolean includeImported) throws NeOnCoreException;
     String getPhysicalURI() throws NeOnCoreException;
     OWLAxiomChange getAddAxiom(OWLAxiom axiom) throws NeOnCoreException;
     OWLAxiomChange getRemoveAxiom(OWLAxiom axiom) throws NeOnCoreException;
-    
+
     OWLOntology getOntology() throws NeOnCoreException;
     
     /**

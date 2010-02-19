@@ -41,8 +41,9 @@ import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.AxiomText;
 
 /**
- * This class is essentially a copy of AnnotationsPropertyPage2. 
- * This is not good but due to the current EPV framework I did not manage to unify both into one class :( 
+ * This class shows the source text of an entity, i.e. a frame-like representation of it in Manchester Syntax.
+ *  
+ * @author mer
  */
 public class SourceViewTab extends AbstractOWLIdPropertyPage implements IImagePropertyPage{
 

@@ -1074,9 +1074,31 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
     }
 
     @Override
+    public Set<OWLAxiom> getReferencingAxioms(OWLEntity owlEntity, boolean includeImported) throws NeOnCoreException {
+        try {
+            return _model.getReferencingAxioms(owlEntity, includeImported);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+ 
+    @Override
     public Set<OWLAxiom> getReferencingAxioms(OWLIndividual individual) throws NeOnCoreException {
         try {
             return _model.getReferencingAxioms(individual);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+
+    @Override
+    public Set<OWLAxiom> getReferencingAxioms(OWLIndividual individual, boolean includeImported) throws NeOnCoreException {
+        try {
+            return _model.getReferencingAxioms(individual, includeImported);
         } catch (NeOnCoreException e) {
             throw checkConnectionFailure(e);
         } catch (RuntimeException e) {
@@ -1798,5 +1820,47 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
             throw checkConnectionFailure(e);
         }
     }
+
+    @Override
+    public Set<OWLAnnotationAssertionAxiom> getAllAnnotationAxioms() throws NeOnCoreException {
+        try {
+            return _model.getAllAnnotationAxioms();
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+
+    @Override
+    public Set<OWLAnnotationAssertionAxiom> getAllAnnotationAxioms(boolean includeImported) throws NeOnCoreException {
+        try {
+            return _model.getAllAnnotationAxioms(includeImported);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+
+    @Override
+    public Set<OWLDataPropertyAssertionAxiom> getAllDataPropertyAssertionAxioms() throws NeOnCoreException {
+        try {
+            return _model.getAllDataPropertyAssertionAxioms();
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }    }
+
+    @Override
+    public Set<OWLDataPropertyAssertionAxiom> getAllDataPropertyAssertionAxioms(boolean includeImported) throws NeOnCoreException {
+        try {
+            return _model.getAllDataPropertyAssertionAxioms(includeImported);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }    }
 
 }

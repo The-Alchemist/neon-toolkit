@@ -49,7 +49,7 @@ import com.ontoprise.ontostudio.owl.model.commands.ontology.RemoveOntology;
  */
 
 /**
- * Import Wizard to select an (ontology-)file from the filesystem
+ * Import Wizard to select an (ontology-)file from the file system
  */
 public class FileSystemImportWizard extends AbstractImportWizard {
 

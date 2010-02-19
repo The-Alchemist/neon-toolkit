@@ -199,21 +199,22 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
      * Create subpropertychain area
      */
     private void createSubPropertyChainArea(Composite composite) {
-        _subPropertyChainSection = _toolkit.createSection(composite, Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
+        _subPropertyChainSection = _toolkit.createSection(composite, Section.DESCRIPTION |Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
         _subPropertyChainSection.setText(Messages.ObjectPropertyPropertyPage_SubPropertyChains);
+        _subPropertyChainSection.setDescription(Messages.ObjectPropertyPropertyPage_SubPropertyChains_tooltip);
         _subPropertyChainSection.addExpansionListener(new ExpansionAdapter() {
             @Override
             public void expansionStateChanged(ExpansionEvent e) {
                 _form.reflow(true);
             }
         });
+
         ColumnLayoutData data = new ColumnLayoutData();
         _subPropertyChainSection.setLayoutData(data);
         _subPropertyChainComposite = _toolkit.createComposite(_subPropertyChainSection, SWT.NONE);
         _subPropertyChainComposite.setLayout(new GridLayout());
         _toolkit.adapt(_subPropertyChainComposite);
         _subPropertyChainSection.setClient(_subPropertyChainComposite);
-
     }
 
     private void initSubSection(boolean setFocus) {
@@ -535,12 +536,14 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                 OWLGUIUtilities.enable(text, false);
                 row.addWidget(text);
                 break;
+
             case CHAIN:
                 array.set(new ManchesterSyntaxVisitor(_owlModel).visitSubObjectProperyChain(propertyChain));
                 text.setText(OWLGUIUtilities.getEntityLabel(array.get()));
                 OWLGUIUtilities.enable(text, false);
                 row.addWidget(text);
                 break;
+            
             default:
                 throw new IllegalStateException();
            }
@@ -680,7 +683,7 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
         final StyledText text = new PropertyText(row.getParent(), _owlModel, PropertyText.OBJECT_PROPERTY).getStyledText();
         row.addWidget(text);
         addSimpleWidget(text);
-
+        
         AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, null) {
 
             @Override
