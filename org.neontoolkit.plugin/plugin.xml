@@ -583,6 +583,7 @@
          	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
          </categoryActivityBinding>
 
+<!-- Do not deactivate CheatSheets
          <activity
          	name="Eclipse UI Cheatsheets"
          	description="Eclipse UI Cheatsheets"
@@ -596,6 +597,7 @@
          	activityId="com.ontoprise.ontostudio.eclipseUI.cheatSheets"
          	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
          </categoryActivityBinding>
+-->
 
          <activity
          	name="Eclipse UI Editors"

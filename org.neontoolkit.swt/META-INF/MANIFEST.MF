@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Ontoprise swt components
 Bundle-SymbolicName: org.neontoolkit.swt
-Bundle-Version: 2.3.0
+Bundle-Version: 2.3.1
 Bundle-Vendor: ontoprise GmbH
 Bundle-ClassPath: neontoolkit-swt.jar
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.5.0",

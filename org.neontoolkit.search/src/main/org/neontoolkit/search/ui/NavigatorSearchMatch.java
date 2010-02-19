@@ -14,11 +14,11 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.neontoolkit.gui.navigator.ITreeElement;
 import org.neontoolkit.gui.navigator.ITreeElementPath;
 import org.neontoolkit.gui.navigator.MTreeView;
 import org.neontoolkit.gui.navigator.elements.AbstractOntologyEntity;
 import org.neontoolkit.gui.navigator.elements.AbstractOntologyTreeElement;
-import org.neontoolkit.gui.navigator.elements.IProjectElement;
 import org.neontoolkit.gui.properties.EntityPropertiesView;
 import org.neontoolkit.gui.util.ItemSorter;
 import org.neontoolkit.search.Messages;
@@ -42,7 +42,7 @@ public abstract class NavigatorSearchMatch extends SearchMatch {
 	protected static MTreeView _navigator;
 	protected static EntityPropertiesView _entityPropertyView;
 
-	public NavigatorSearchMatch(IProjectElement element) {
+	public NavigatorSearchMatch(ITreeElement element) {
 		super(element);
 	}
 
