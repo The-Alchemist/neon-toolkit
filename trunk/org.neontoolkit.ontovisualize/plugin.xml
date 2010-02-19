@@ -7,7 +7,7 @@
         point="org.eclipse.ui.views">
      <view
            allowMultiple="false"
-           category="com.ontoprise.ontostudio.flogic.ui.views"
+           category="org.neontoolkit.gui.views.general"
            class="org.neontoolkit.ontovisualize.gui.OntoVisualizerView"
            icon="icons/Graph.gif"
            id="org.neontoolkit.ontovisualize2.OntoVisualizerView2"

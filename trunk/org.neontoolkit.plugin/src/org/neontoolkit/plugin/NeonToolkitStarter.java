@@ -10,6 +10,10 @@
 
 package org.neontoolkit.plugin;
 
+import java.net.URL;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.IStartup;
@@ -40,6 +44,7 @@ import org.osgi.framework.Constants;
 public class NeonToolkitStarter implements IStartup {
 
     public void earlyStartup() {
+        setupLog4j();
         String productName = null;
         IProduct product = Platform.getProduct();
         if (product != null) {
@@ -52,8 +57,20 @@ public class NeonToolkitStarter implements IStartup {
             version = String.valueOf(bundle.getHeaders().get(Constants.BUNDLE_VERSION));
         }
         // e.g. NeOnToolkit 2.3.0-B149
-        System.out.println("Starting '" + productName + "' " + version + "-" + RegisterTypeData.BUILD_ID); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        String message = String.format("Starting '%s' %s-%s", productName, version, RegisterTypeData.BUILD_ID); //$NON-NLS-1$
+        Logger.getLogger("NeonToolkit").info(message); //$NON-NLS-1$
         // See: /org.neontoolkit.plugin/about.mappings
         System.setProperty("neon.BUILD_ID", RegisterTypeData.BUILD_ID); //$NON-NLS-1$
+    }
+
+    private static void setupLog4j() {
+        URL installUrl = null;
+        try {
+            URL installUrlOriginal = Platform.getInstallLocation().getURL();
+            installUrl = new URL(installUrlOriginal.toString().replaceAll(" ", "%20")); //$NON-NLS-1$//$NON-NLS-2$
+            PropertyConfigurator.configure(new URL(installUrl, "log4j.properties")); //$NON-NLS-1$
+        } catch (Exception e) {
+            System.err.println("Problems setting log4j.properties (" + installUrl + "): " + e); //$NON-NLS-1$ //$NON-NLS-2$
+        }
     }
 }

@@ -3,7 +3,7 @@ Eclipse-RegisterBuddy: dependencies
 Bundle-ManifestVersion: 2
 Bundle-Name: %ontovisualizePlugin
 Bundle-SymbolicName: org.neontoolkit.ontovisualize;singleton:=true
-Bundle-Version: 2.3.0
+Bundle-Version: 2.3.1
 Bundle-ClassPath: neontoolkit-ontovisualize.jar
 Bundle-Activator: org.neontoolkit.ontovisualize.OntovisualizePlugin
 Bundle-Vendor: %ontoprise
@@ -20,6 +20,6 @@ Require-Bundle: com.ontoprise.ontostudio.dependencies,
  org.eclipse.ui,
  org.neontoolkit.core,
  org.neontoolkit.jpowergraph,
- org.neontoolkit.gui;bundle-version="2.3.0"
+ org.neontoolkit.gui;bundle-version="2.3.1"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
