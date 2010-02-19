@@ -101,7 +101,7 @@
 		name="%viewCategoryKnowledgeAcquisistion"/>
 	<category
 		id="org.neontoolkit.plugin.Management"
-		name="%Management"/>
+		name="%viewCategoryManage"/>
    </extension>
 
 <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
