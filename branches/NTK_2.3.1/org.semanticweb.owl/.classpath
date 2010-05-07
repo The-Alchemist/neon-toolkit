@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry exported="true" kind="lib" path="lib/owlapi/org.semanticweb.owlapi_3.0.0.v1310.jar" sourcepath="lib_src/owlapi/org.semanticweb.owlapi.source_3.0.0.v1310.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
