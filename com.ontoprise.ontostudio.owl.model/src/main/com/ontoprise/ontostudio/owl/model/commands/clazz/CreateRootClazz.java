@@ -29,7 +29,7 @@ public class CreateRootClazz extends OWLModuleChangeCommand {
         String subClazzId = getArgument(2).toString();
 
         try {
-            OWLEntity owlClazz = OWLModelFactory.getOWLDataFactory(getProjectName()).getOWLClass(OWLUtilities.toURI(subClazzId));
+            OWLEntity owlClazz = OWLModelFactory.getOWLDataFactory(getProjectName()).getOWLClass(OWLUtilities.toIRI(subClazzId));
 
             getOwlModel().addEntity(owlClazz);
         } catch (NeOnCoreException e) {

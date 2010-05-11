@@ -45,7 +45,7 @@ public class GetSubObjectProperties extends OWLOntologyRequestCommand {
             subObjectProperties = getOwlModel().getSubObjectProperties(propertyId);
             _result = new ArrayList<String>();
             for (OWLObjectProperty op: subObjectProperties) {
-                _result.add(op.getURI().toString());
+                _result.add(op.getIRI().toString());
             }
         } catch (NeOnCoreException e) {
             throw new CommandException(e);

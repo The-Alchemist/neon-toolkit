@@ -22,7 +22,7 @@ public class AbstractOWLNode extends LabelImageNode {
     private OWLEntity _entity;
 
     public AbstractOWLNode(OWLEntity entity, String ontologyUri, String projectId, boolean isRootNode) {
-        super(entity.getURI().toString(), ontologyUri, projectId, isRootNode);
+        super(entity.getIRI().toString(), ontologyUri, projectId, isRootNode);
         _entity = entity;
     }
 
@@ -38,7 +38,7 @@ public class AbstractOWLNode extends LabelImageNode {
         try {
             return OWLGUIUtilities.getEntityLabel(_entity, getOntologyId(), getProjectId());
         } catch (NeOnCoreException e) {
-            return _entity.getURI().toString();
+            return _entity.getIRI().toString();
         }
     }
 

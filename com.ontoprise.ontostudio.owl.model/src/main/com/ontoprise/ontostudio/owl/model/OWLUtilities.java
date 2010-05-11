@@ -14,6 +14,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -43,6 +44,7 @@ import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
 import org.semanticweb.owlapi.model.OWLEquivalentDataPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLObjectAllValuesFrom;
 import org.semanticweb.owlapi.model.OWLObjectCardinalityRestriction;
@@ -64,30 +66,22 @@ import com.ontoprise.ontostudio.owl.model.util.InternalParserException;
 import com.ontoprise.ontostudio.owl.model.util.OWLFormattingVisitor;
 
 public class OWLUtilities {
-    private static final URI SWRL_RULE_IRI_URI = URI.create("http://www.semanticweb.org/owlapi#iri"); //$NON-NLS-1$
-    private static final URI OWL_THING_URI;
+    private static final IRI SWRL_RULE_IRI_IRI = IRI.create("http://www.semanticweb.org/owlapi#iri"); //$NON-NLS-1$
+    private static final IRI OWL_THING_URI;
     static {
-        try {
-            OWL_THING_URI = new URI(OWLConstants.OWL_THING_URI);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
+        OWL_THING_URI = IRI.create(OWLConstants.OWL_THING_URI);
     }
-    private static final URI OWL_NOTHING_URI;
+    private static final IRI OWL_NOTHING_URI;
     static {
-        try {
-            OWL_NOTHING_URI = new URI(OWLConstants.OWL_NOTHING_URI);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
+        OWL_NOTHING_URI = IRI.create(OWLConstants.OWL_NOTHING_URI);
     }
     
     public static boolean isOWLThing(OWLClassExpression description) {
-        return description instanceof OWLClass && OWL_THING_URI.equals(((OWLClass)description).getURI());
+        return description instanceof OWLClass && OWL_THING_URI.equals(((OWLClass)description).getIRI());
     }
 
     public static boolean isOWLNothing(OWLClassExpression description) {
-        return description instanceof OWLClass && OWL_NOTHING_URI.equals(((OWLClass)description).getURI());
+        return description instanceof OWLClass && OWL_NOTHING_URI.equals(((OWLClass)description).getIRI());
     }
     
     /**
@@ -189,16 +183,16 @@ public class OWLUtilities {
     }
     
     public static OWLIndividual individual(String unexpandedURI, OWLNamespaces namespaces, OWLDataFactory factory) {
-        return factory.getOWLNamedIndividual(toURI(namespaces.expandString(unexpandedURI)));
+        return factory.getOWLNamedIndividual(toIRI(namespaces.expandString(unexpandedURI)));
     }
     public static OWLObjectProperty objectProperty(String unexpandedURI, OWLNamespaces namespaces, OWLDataFactory factory) {
-        return factory.getOWLObjectProperty(toURI(namespaces.expandString(unexpandedURI)));
+        return factory.getOWLObjectProperty(toIRI(namespaces.expandString(unexpandedURI)));
     }
     public static OWLAnnotationProperty annotationProperty(String unexpandedURI, OWLNamespaces namespaces, OWLDataFactory factory) {
-        return factory.getOWLAnnotationProperty(toURI(namespaces.expandString(unexpandedURI)));
+        return factory.getOWLAnnotationProperty(toIRI(namespaces.expandString(unexpandedURI)));
     }
     public static OWLDataProperty dataProperty(String unexpandedURI, OWLNamespaces namespaces, OWLDataFactory factory) {
-        return factory.getOWLDataProperty(toURI(namespaces.expandString(unexpandedURI)));
+        return factory.getOWLDataProperty(toIRI(namespaces.expandString(unexpandedURI)));
     }
 
     public static String toString(OWLOntologyID id) {
@@ -414,19 +408,26 @@ public class OWLUtilities {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public static <E extends OWLEntity> Set<E> getReferencedEntities(OWLOntology ontology, Class<E> entityType) {
         if (OWLEntity.class.equals(entityType)) {
-            return Cast.cast(ontology.getReferencedEntities());
+            Set<E> result = new LinkedHashSet<E>();
+            ((Set)result).addAll(getReferencedEntities(ontology, OWLClass.class));
+            ((Set)result).addAll(getReferencedEntities(ontology, OWLDataProperty.class));
+            ((Set)result).addAll(getReferencedEntities(ontology, OWLNamedIndividual.class));
+            ((Set)result).addAll(getReferencedEntities(ontology, OWLObjectProperty.class));
+            ((Set)result).addAll(getReferencedEntities(ontology, OWLAnnotationProperty.class));
+            return result;
         } else if (OWLClass.class.equals(entityType)) {
-            return Cast.cast(ontology.getReferencedClasses());
+            return Cast.cast(ontology.getClassesInSignature());
         } else if (OWLDataProperty.class.equals(entityType)) {
-            return Cast.cast(ontology.getReferencedDataProperties());
-        } else if (OWLIndividual.class.equals(entityType)) {
-            return Cast.cast(ontology.getReferencedIndividuals());
+            return Cast.cast(ontology.getDataPropertiesInSignature());
+        } else if (OWLNamedIndividual.class.equals(entityType)) {
+            return Cast.cast(ontology.getIndividualsInSignature());
         } else if (OWLObjectProperty.class.equals(entityType)) {
-            return Cast.cast(ontology.getReferencedObjectProperties());
+            return Cast.cast(ontology.getObjectPropertiesInSignature());
         } else if (OWLAnnotationProperty.class.equals(entityType)) {
-            return Cast.cast(ontology.getReferencedAnnotationProperties());
+            return Cast.cast(ontology.getAnnotationPropertiesInSignature());
         } else {
             throw new UnsupportedOperationException();
         }
@@ -434,7 +435,7 @@ public class OWLUtilities {
     
     public static IRI getIRI(SWRLRule rule) {
         for (OWLAnnotation a: rule.getAnnotations()) {
-            if (SWRL_RULE_IRI_URI.equals(a.getProperty().getURI())) {
+            if (SWRL_RULE_IRI_IRI.equals(a.getProperty().getIRI())) {
                 if (a.getValue() instanceof OWLStringLiteral) {
                     String literal = ((OWLStringLiteral)a.getValue()).getLiteral();
                     if (literal != null && literal.startsWith("<") && literal.endsWith(">")) { //$NON-NLS-1$ //$NON-NLS-2$

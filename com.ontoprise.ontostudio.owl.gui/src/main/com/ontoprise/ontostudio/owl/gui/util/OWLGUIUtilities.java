@@ -501,7 +501,7 @@ public class OWLGUIUtilities {
         } catch (NeOnCoreException e1) {
             throw new RuntimeException(e1);
         }
-        OWLClass clazz = factory.getOWLClass(OWLUtilities.toURI(uri));
+        OWLClass clazz = factory.getOWLClass(OWLUtilities.toIRI(uri));
         treeElement = new ClazzTreeElement(clazz, ontologyURI, project, provider);
         boolean success = doJumpToEntity(treeElement, navigator);
         if (success) {
@@ -513,7 +513,7 @@ public class OWLGUIUtilities {
         } else {
             // object properties
             provider = TreeProviderManager.getDefault().getProvider(MTreeView.ID, ObjectPropertyHierarchyProvider.class);
-            OWLObjectProperty prop = factory.getOWLObjectProperty(OWLUtilities.toURI(uri));
+            OWLObjectProperty prop = factory.getOWLObjectProperty(OWLUtilities.toIRI(uri));
             treeElement = new ObjectPropertyTreeElement(prop, ontologyURI, project, provider);
             success = doJumpToEntity(treeElement, navigator);
             if (success) {
@@ -525,7 +525,7 @@ public class OWLGUIUtilities {
             } else {
                 // data properties
                 provider = TreeProviderManager.getDefault().getProvider(MTreeView.ID, DataPropertyHierarchyProvider.class);
-                OWLDataProperty dataProp = factory.getOWLDataProperty(OWLUtilities.toURI(uri));
+                OWLDataProperty dataProp = factory.getOWLDataProperty(OWLUtilities.toIRI(uri));
                 treeElement = new DataPropertyTreeElement(dataProp, ontologyURI, project, provider);
                 success = doJumpToEntity(treeElement, navigator);
                 if (success) {
@@ -537,7 +537,7 @@ public class OWLGUIUtilities {
                 } else {
                     // annotation properties
                     provider = TreeProviderManager.getDefault().getProvider(MTreeView.ID, AnnotationPropertyHierarchyProvider.class);
-                    OWLAnnotationProperty annotProp = factory.getOWLAnnotationProperty(OWLUtilities.toURI(uri));
+                    OWLAnnotationProperty annotProp = factory.getOWLAnnotationProperty(OWLUtilities.toIRI(uri));
                     treeElement = new AnnotationPropertyTreeElement(annotProp, ontologyURI, project, provider);
                     success = doJumpToEntity(treeElement, navigator);
                     if (success) {
@@ -549,7 +549,7 @@ public class OWLGUIUtilities {
                     } else {
                         // datatypes
                         provider = TreeProviderManager.getDefault().getProvider(MTreeView.ID, DatatypeProvider.class);
-                        OWLDatatype datatype = factory.getOWLDatatype(OWLUtilities.toURI(uri));
+                        OWLDatatype datatype = factory.getOWLDatatype(OWLUtilities.toIRI(uri));
                         treeElement = new DatatypeTreeElement(datatype, ontologyURI, project, provider);
                         success = doJumpToEntity(treeElement, navigator);
                         if (success) {
@@ -563,7 +563,7 @@ public class OWLGUIUtilities {
                             try {
                                 provider = TreeProviderManager.getDefault().getProvider(MTreeView.ID, IndividualViewContentProvider.class);
                                 Set<OWLClass> clazzes = OWLModelFactory.getOWLModel(ontologyURI, project).getClasses(uri);
-                                OWLIndividual individual = new InternalParser(uri, OWLNamespaces.EMPTY_INSTANCE, factory).parseOWLIndividual();// factory.getOWLNamedIndividual(OWLUtilities.toURI(uri));
+                                OWLIndividual individual = new InternalParser(uri, OWLNamespaces.EMPTY_INSTANCE, factory).parseOWLIndividual();// factory.getOWLNamedIndividual(OWLUtilities.toIRI(uri));
                                 if (clazzes.size() > 0) {
                                     // FIXME if individual exists for multiple classes, a dialog to select one would be nice
                                     // FIXME also consider individuals of OWL.Thing (displayed if class folder is selected)
@@ -573,7 +573,7 @@ public class OWLGUIUtilities {
                                     doJumpToEntity(clazz1, navigator);
                                     MTreeView ontoNavigator = (MTreeView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(MTreeView.ID);
 
-                                    treeElement = IndividualItem.createNewInstance(individual, firstClazz.getURI().toString(), ontologyURI, project);
+                                    treeElement = IndividualItem.createNewInstance(individual, firstClazz.getIRI().toString(), ontologyURI, project);
                                     IViewPart individualView = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(IndividualView.ID);
                                     if (individualView != null) {
                                         ((IndividualView) individualView).selectionChanged(ontoNavigator, new StructuredSelection(clazz1));
@@ -629,7 +629,7 @@ public class OWLGUIUtilities {
      */
     private static String[] getRdfsLiteral(OWLModel owlModel) {
         try {
-            String[] idArray = OWLGUIUtilities.getIdArray((OWLDatatype) owlModel.getOWLDataFactory().getOWLDatatype(OWLUtilities.toURI(OWLConstants.RDFS_LITERAL)), owlModel.getOntologyURI(), owlModel.getProjectId());
+            String[] idArray = OWLGUIUtilities.getIdArray((OWLDatatype) owlModel.getOWLDataFactory().getOWLDatatype(OWLUtilities.toIRI(OWLConstants.RDFS_LITERAL)), owlModel.getOntologyURI(), owlModel.getProjectId());
             return idArray;
         } catch (NeOnCoreException e) {
             return new String[]{"Literal", OWLConstants.RDFS_LITERAL}; //$NON-NLS-1$
@@ -720,7 +720,7 @@ public class OWLGUIUtilities {
     public static List<OWLAxiom> getDependentAxioms(OWLAxiom oldAxiom, List<OWLAxiom> list, List<OWLEntity> entities, List<String> uris, String projectId) {
         if (entities.size() > 0) {
             for (OWLEntity e: entities) {
-                OWLAxiom newAxiom = OWLAxiomUtils.createNewAxiom(oldAxiom, e.getURI().toString(), projectId);
+                OWLAxiom newAxiom = OWLAxiomUtils.createNewAxiom(oldAxiom, e.getIRI().toString(), projectId);
                 if (newAxiom != null && !newAxiom.equals(oldAxiom)) {
                     list.add(newAxiom);
                 }
@@ -758,7 +758,7 @@ public class OWLGUIUtilities {
         if (desc instanceof OWLClass) {
             OWLClass clazz = (OWLClass)desc;
             resultArray = (String[]) clazz.accept(visitor);
-            result = clazz.getURI().toString();
+            result = clazz.getIRI().toString();
         } else if (desc instanceof OWLDataAllValuesFrom) {
             OWLDataAllValuesFrom dataAll = (OWLDataAllValuesFrom) desc;
             resultArray = (String[]) dataAll.getProperty().accept(visitor);

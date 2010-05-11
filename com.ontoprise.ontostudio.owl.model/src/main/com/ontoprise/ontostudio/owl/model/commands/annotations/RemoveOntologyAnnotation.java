@@ -50,12 +50,12 @@ public class RemoveOntologyAnnotation extends OWLModuleChangeCommand {
             String expandedRange = namespaces.expandString(datatype);
 
             OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(getProjectName());
-            OWLAnnotationProperty annotProp = factory.getOWLAnnotationProperty(OWLUtilities.toURI(annotationPropertyText));
+            OWLAnnotationProperty annotProp = factory.getOWLAnnotationProperty(OWLUtilities.toIRI(annotationPropertyText));
 
             OWLLiteral c = null;
             if (language.equals(OWLCommandUtils.EMPTY_LANGUAGE)) {
                 expandedRange = namespaces.expandString(datatype);
-                c = factory.getOWLTypedLiteral(annotationValueText, factory.getOWLDatatype(OWLUtilities.toURI(expandedRange)));
+                c = factory.getOWLTypedLiteral(annotationValueText, factory.getOWLDatatype(OWLUtilities.toIRI(expandedRange)));
             } else {
                 c = factory.getOWLStringLiteral(annotationValueText, language);
             }

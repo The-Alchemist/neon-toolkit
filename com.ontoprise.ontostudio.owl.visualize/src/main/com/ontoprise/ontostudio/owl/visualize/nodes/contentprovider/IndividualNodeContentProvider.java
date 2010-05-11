@@ -84,8 +84,8 @@ public class IndividualNodeContentProvider extends AbstractNodeContentProvider {
 
     private void addInstances(String projectId, String moduleId, List<LabelImageNode> nodes, List<OntoStudioDefaultEdge> edges, OWLEntity clazz, int hierarchyLevel) throws NeOnCoreException {
         try {
-            String[] individualUris = new GetIndividuals(projectId, moduleId, clazz.getURI().toString()).getResults();
-            LabelImageNode clazzNode = getNode(clazz.getURI().toString(), moduleId, projectId, VisualizerConfiguration.CLAZZ_TYPE, _ontologyLanguage);
+            String[] individualUris = new GetIndividuals(projectId, moduleId, clazz.getIRI().toString()).getResults();
+            LabelImageNode clazzNode = getNode(clazz.getIRI().toString(), moduleId, projectId, VisualizerConfiguration.CLAZZ_TYPE, _ontologyLanguage);
             if (individualUris.length > 100) {
                 // show an error message and don't display instances if there are more than 100
                 MessageDialog.openInformation(new Shell(), Messages.OntoVisualizerView2_27, Messages.OntoVisualizerView2_29 + Messages.OntoVisualizerView2_2 + individualUris.length + Messages.OntoVisualizerView2_1);

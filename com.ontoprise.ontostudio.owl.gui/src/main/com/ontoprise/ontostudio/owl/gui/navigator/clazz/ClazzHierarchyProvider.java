@@ -215,20 +215,30 @@ public class ClazzHierarchyProvider extends DefaultTreeDataProvider {
 
         String projectId = ((IProjectElement) parentElement).getProjectName();
         String ontologyId = ((IOntologyElement) parentElement).getOntologyUri();
-        String parentId = ((AbstractOwlEntityTreeElement) parentElement).getId();
 
         try {
             _owlModel = OWLModelFactory.getOWLModel(ontologyId, projectId);
             registerListeners(projectId, ontologyId);
         } catch (NeOnCoreException e1) {
+            // ignore
         }
+        
+//        int clazzCount = 0;
+//        try {
+//            if (parentElement instanceof ClazzFolderTreeElement) {
+//                clazzCount = new GetRootClazzes(projectId, ontologyId).getResultCount();
+//            } else if (parentElement instanceof ClazzTreeElement) {
+//                String parentId = ((AbstractOwlEntityTreeElement) parentElement).getId();
+//                clazzCount = new GetSubClazzes(projectId, ontologyId, parentId).getResultCount();
+//            }
+//        } catch (CommandException e) {
+//            new NeonToolkitExceptionHandler().handleException(e);
+//        }        
         try {
-            // long x = System.currentTimeMillis();
+            String parentId = ((AbstractOwlEntityTreeElement) parentElement).getId();
             String[] subClazzUris = new GetSubClazzes(projectId, ontologyId, parentId).getResults();
-            // long y = System.currentTimeMillis();
-            //            _log.debug("###PERFORMANCE### - Time for fetching subclasses of " + parentId + ": " + (y - x)); //$NON-NLS-1$ //$NON-NLS-2$
             ArrayList<ClazzTreeElement> clazzNodesList = new ArrayList<ClazzTreeElement>();
-            int i = 0;
+            
             for (String clazzUri: subClazzUris) {
                 ClazzTreeElement cte = null;
                 if (clazzUri.equals(OWLConstants.OWL_THING_URI)) {
@@ -239,11 +249,10 @@ public class ClazzHierarchyProvider extends DefaultTreeDataProvider {
                         clazzNodesList.add(cte);
                     }
                 } else {
-                    OWLClass clazz = OWLModelFactory.getOWLDataFactory(projectId).getOWLClass(OWLUtilities.toURI(clazzUri));
+                    OWLClass clazz = OWLModelFactory.getOWLDataFactory(projectId).getOWLClass(OWLUtilities.toIRI(clazzUri));
                     cte = new ClazzTreeElement(clazz, ontologyId, projectId, this);
                     clazzNodesList.add(cte);
                 }
-                i++;
             }
             Collections.sort(clazzNodesList, new AlphabeticalOWLEntityTreeElementComparator<ClazzTreeElement>());
             return clazzNodesList.toArray(new ClazzTreeElement[clazzNodesList.size()]);
@@ -281,10 +290,9 @@ public class ClazzHierarchyProvider extends DefaultTreeDataProvider {
      * @see com.ontoprise.ontostudio.gui.navigator.ITreeDataProvider#getChildCount(com.ontoprise.ontostudio.gui.navigator.ITreeElement)
      */
     public int getChildCount(ITreeElement parentElement) {
-        // long x = System.currentTimeMillis();
-
         assert (parentElement instanceof IOntologyElement);
         assert (parentElement instanceof IProjectElement);
+
         String projectId = ((IProjectElement) parentElement).getProjectName();
         String ontologyId = ((IOntologyElement) parentElement).getOntologyUri();
 
@@ -292,24 +300,21 @@ public class ClazzHierarchyProvider extends DefaultTreeDataProvider {
             _owlModel = OWLModelFactory.getOWLModel(ontologyId, projectId);
             registerListeners(projectId, ontologyId);
         } catch (NeOnCoreException e1) {
+            // ignore
         }
+        
         int clazzCount = 0;
 
-        String id = "unknownId"; //$NON-NLS-1$
         try {
             if (parentElement instanceof ClazzFolderTreeElement) {
                 clazzCount = new GetRootClazzes(projectId, ontologyId).getResultCount();
-                id = "Classes Folder"; //$NON-NLS-1$
             } else if (parentElement instanceof ClazzTreeElement) {
-                id = ((AbstractOwlEntityTreeElement) parentElement).getId();
-                clazzCount = new GetSubClazzes(projectId, ontologyId, id).getResultCount();
+                String parentId = ((AbstractOwlEntityTreeElement) parentElement).getId();
+                clazzCount = new GetSubClazzes(projectId, ontologyId, parentId).getResultCount();
             }
         } catch (CommandException e) {
             new NeonToolkitExceptionHandler().handleException(e);
         }
-
-        // long y = System.currentTimeMillis();
-        //        _log.debug("###PERFORMANCE### - Time getChildCount with " + id + ": " + (y - x)); //$NON-NLS-1$ //$NON-NLS-2$
 
         return clazzCount;
     }
@@ -334,35 +339,17 @@ public class ClazzHierarchyProvider extends DefaultTreeDataProvider {
         ArrayList<ClazzTreeElement> clazzNodesList = new ArrayList<ClazzTreeElement>();
 
         try {
-            OWLDataFactory factory = _owlModel.getOWLDataFactory();
-            // long x = System.currentTimeMillis();
             String[] rootClazzUris = new GetRootClazzes(projectId, ontologyId).getResults();
-            // long y = System.currentTimeMillis();
-            //            _log.debug("###PERFORMANCE### - Time for fetching root classes: " + (y-x)); //$NON-NLS-1$
-
             List<OWLClass> rootClazzes = new ArrayList<OWLClass>();
-            // x = System.currentTimeMillis();
+
             for (String uri: rootClazzUris) {
-                rootClazzes.add(OWLModelFactory.getOWLDataFactory(projectId).getOWLClass(OWLUtilities.toURI(uri)));
+                rootClazzes.add(OWLModelFactory.getOWLDataFactory(projectId).getOWLClass(OWLUtilities.toIRI(uri)));
             }
-            // y = System.currentTimeMillis();
-            //            _log.debug("###PERFORMANCE### - Time for transforming from strings to OwlClasses: " + (y - x)); //$NON-NLS-1$
 
-            // x = System.currentTimeMillis();
             for (OWLClass clazz: rootClazzes) {
-                String uri = clazz.getURI().toString();
-
-                ClazzTreeElement cte = null;
-                // we don' t want to display OWL:Thing, so we have to shift all its subclasses one level higher
-                if (uri.equals(factory.getOWLThing())) {
-                    throw new UnsupportedOperationException("OWLModel is expected not to return owl:Thing as root class."); //$NON-NLS-1$
-                } else {
-                    cte = new ClazzTreeElement(clazz, ontologyId, projectId, this);
-                    clazzNodesList.add(cte);
-                }
+                ClazzTreeElement cte = new ClazzTreeElement(clazz, ontologyId, projectId, this);
+                clazzNodesList.add(cte);
             }
-            // y = System.currentTimeMillis();
-            //            _log.debug("###PERFORMANCE### - Time for creating tree elements: " + (y - x)); //$NON-NLS-1$
 
         } catch (NeOnCoreException e) {
             new NeonToolkitExceptionHandler().handleException(e);
@@ -371,11 +358,8 @@ public class ClazzHierarchyProvider extends DefaultTreeDataProvider {
             new NeonToolkitExceptionHandler().handleException(e);
             return new ITreeElement[0];
         }
-        // long x = System.currentTimeMillis();
-        Collections.sort(clazzNodesList, new AlphabeticalOWLEntityTreeElementComparator<ClazzTreeElement>());
-        // long y = System.currentTimeMillis();
 
-        //        _log.debug("###PERFORMANCE### - Time for sorting: " + (y - x)); //$NON-NLS-1$
+        Collections.sort(clazzNodesList, new AlphabeticalOWLEntityTreeElementComparator<ClazzTreeElement>());
         return clazzNodesList.toArray(new ClazzTreeElement[clazzNodesList.size()]);
     }
 
@@ -469,7 +453,7 @@ public class ClazzHierarchyProvider extends DefaultTreeDataProvider {
             TreeElementPath currentPath = (TreeElementPath) paths.get(i);
             String topOfPath = ((ClazzTreeElement) currentPath.get(0)).getId();
             for (OWLClass superClazz: superClazzes) {
-                Set<OWLClass> localSuperClazzes = OWLModelFactory.getOWLModel(clazz.getOntologyUri(), clazz.getProjectName()).getSuperClassesInClassHierarchy(superClazz.getURI().toString());
+                Set<OWLClass> localSuperClazzes = OWLModelFactory.getOWLModel(clazz.getOntologyUri(), clazz.getProjectName()).getSuperClassesInClassHierarchy(superClazz.getIRI().toString());
                 if (topOfPath.equals(clazz.getId())) {
                     TreeElementPath clonedPath = (TreeElementPath) currentPath.clone();
                     ClazzTreeElement parent = new ClazzTreeElement(superClazz, clazz.getOntologyUri(), clazz.getProjectName(), this);

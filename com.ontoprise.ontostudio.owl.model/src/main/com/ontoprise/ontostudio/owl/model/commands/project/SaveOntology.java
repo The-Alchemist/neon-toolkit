@@ -54,9 +54,9 @@ public class SaveOntology extends OWLModuleChangeCommand {
             OWLOntologyManager manager = project.getAdapter(OWLOntologyManager.class);
             OWLOntology ontology = manager.getOntology(IRI.create(getOntology()));
             if (ontology != null) {
-                URI physicalURI = manager.getPhysicalURIForOntology(ontology);
+                IRI physicalURI = manager.getOntologyDocumentIRI(ontology);
                 if(physicalUri != null) {
-                    physicalURI = URI.create((String) physicalUri);
+                    physicalURI = IRI.create((String) physicalUri);
                 }
                 
                 String fileFormat = (String)getArgument(3);

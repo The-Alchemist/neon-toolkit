@@ -87,7 +87,7 @@ public class NewAnnotationPropertyHandler extends AbstractNewHandler {
                 newUri = newId;
             }
 
-            OWLAnnotationProperty prop = OWLModelFactory.getOWLDataFactory(owlModel.getProjectId()).getOWLAnnotationProperty(OWLUtilities.toURI(newUri));
+            OWLAnnotationProperty prop = OWLModelFactory.getOWLDataFactory(owlModel.getProjectId()).getOWLAnnotationProperty(OWLUtilities.toIRI(newUri));
             AnnotationPropertyTreeElement newElement = new AnnotationPropertyTreeElement(
                     prop, owlModel.getOntologyURI(), owlModel.getProjectId(), provider);
             return newElement;
@@ -117,7 +117,7 @@ public class NewAnnotationPropertyHandler extends AbstractNewHandler {
             return false;
         }
         
-		OWLAnnotationProperty prop = OWLModelFactory.getOWLDataFactory(projectId).getOWLAnnotationProperty(OWLUtilities.toURI(newURI));
+		OWLAnnotationProperty prop = OWLModelFactory.getOWLDataFactory(projectId).getOWLAnnotationProperty(OWLUtilities.toIRI(newURI));
 
 		AnnotationPropertyTreeElement data = new AnnotationPropertyTreeElement( 
 				prop, 

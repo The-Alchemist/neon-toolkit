@@ -35,7 +35,7 @@ public class GetRootAnnotationProperties extends OWLOntologyRequestCommand {
             rootAnnotationProperties = getOwlModel().getRootAnnotationProperties();
             _results = new ArrayList<String>();
             for (OWLAnnotationProperty op: rootAnnotationProperties) {
-                _results.add(op.getURI().toString());
+                _results.add(op.getIRI().toString());
             }
         } catch (NeOnCoreException e) {
             throw new CommandException(e);

@@ -49,7 +49,7 @@ public class RemoveObjectProperty extends OWLModuleChangeCommand {
 
             if (superPropertyId == null) {
                 // FIXME this should never be used, would lead to a loss of data as delEntity removes all axioms containing that entity
-                OWLObjectProperty objectProperty = OWLModelFactory.getOWLDataFactory(getProjectName()).getOWLObjectProperty(OWLUtilities.toURI(subPropertyId));
+                OWLObjectProperty objectProperty = OWLModelFactory.getOWLDataFactory(getProjectName()).getOWLObjectProperty(OWLUtilities.toIRI(subPropertyId));
                 getOwlModel().delEntity(objectProperty, null);
             } else {
                 getOwlModel().removeAxiom(factory.getOWLSubObjectPropertyOfAxiom(OWLUtilities.objectProperty(subPropertyId, ns, factory), OWLUtilities.objectProperty(superPropertyId, ns, factory)));

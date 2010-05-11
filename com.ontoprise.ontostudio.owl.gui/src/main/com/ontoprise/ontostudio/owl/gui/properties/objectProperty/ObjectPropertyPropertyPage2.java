@@ -409,7 +409,7 @@ public class ObjectPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 
     private void initCheckboxSection() {
         try {
-            OWLObjectProperty objProp = OWLModelFactory.getOWLDataFactory(_project).getOWLObjectProperty(OWLUtilities.toURI(_id));
+            OWLObjectProperty objProp = OWLModelFactory.getOWLDataFactory(_project).getOWLObjectProperty(OWLUtilities.toIRI(_id));
             if (objProp != null) {
                 _functionalCheckBox.setSelection(new GetPropertyAttribute(_project, _ontologyUri, _id, OWLCommandUtils.FUNCTIONAL, false).getAttributeValue());
                 _inverseFunctionalCheckBox.setSelection(new GetPropertyAttribute(_project, _ontologyUri, _id, OWLCommandUtils.INVERSE_FUNCTIONAL, false).getAttributeValue());

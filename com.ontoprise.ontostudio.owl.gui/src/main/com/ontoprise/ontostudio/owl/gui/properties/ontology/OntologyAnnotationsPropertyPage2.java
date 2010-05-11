@@ -326,7 +326,7 @@ public class OntologyAnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage 
 
         } else if (o instanceof OWLLiteral) {
             OWLLiteral constant = (OWLLiteral)o;
-            if (!constant.isTyped()) {
+            if (!constant.isOWLTypedLiteral()) {
                 OWLStringLiteral untypedConstant = (OWLStringLiteral)o;
                 String literal = untypedConstant.getLiteral();
                 language = untypedConstant.getLang();
@@ -334,7 +334,7 @@ public class OntologyAnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage 
 
                 contents.add(propArray);
                 contents.add(new String[] {literal});
-                contents.add((String[]) OWLModelFactory.getOWLDataFactory(_project).getOWLDatatype(OWLUtilities.toURI(dataType)).accept(visitor));
+                contents.add((String[]) OWLModelFactory.getOWLDataFactory(_project).getOWLDatatype(OWLUtilities.toIRI(dataType)).accept(visitor));
                 contents.add(new String[] {language});
                 createAnnotationsRow(prop, literal, language, dataType, contents);
 
@@ -347,7 +347,7 @@ public class OntologyAnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage 
                 contents.add(new String[] {literal});
                 contents.add((String[]) datatype.accept(visitor));
                 contents.add(new String[] {null});
-                createAnnotationsRow(prop, literal, language, datatype.getURI().toString(), contents);
+                createAnnotationsRow(prop, literal, language, datatype.getIRI().toString(), contents);
             }
         } else {
             throw new IllegalArgumentException(Messages.OntologyAnnotationsPropertyPage2_1 + o);
@@ -415,7 +415,7 @@ public class OntologyAnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage 
             OWLGUIUtilities.enable(languageCombo, false);
         }
 
-        OntologyAnnotationRowHandler rowHandler = new OntologyAnnotationRowHandler(this, _owlModel, prop.getURI().toString(), annotationValueText, language, datatype) {
+        OntologyAnnotationRowHandler rowHandler = new OntologyAnnotationRowHandler(this, _owlModel, prop.getIRI().toString(), annotationValueText, language, datatype) {
 
             @Override
             public void savePressed() {

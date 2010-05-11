@@ -81,7 +81,7 @@ public class NewDatatypeHandler extends AbstractNewHandler {
                 newUri = newId;
             }
 
-            OWLDatatype datatype = OWLModelFactory.getOWLDataFactory(owlModel.getProjectId()).getOWLDatatype(OWLUtilities.toURI(newUri));
+            OWLDatatype datatype = OWLModelFactory.getOWLDataFactory(owlModel.getProjectId()).getOWLDatatype(OWLUtilities.toIRI(newUri));
             DatatypeTreeElement newElement = new DatatypeTreeElement(
                     datatype, owlModel.getOntologyURI(), owlModel.getProjectId(), provider);
             return newElement;
@@ -119,7 +119,7 @@ public class NewDatatypeHandler extends AbstractNewHandler {
             return false;
         }
         
-		OWLDatatype datatype = OWLModelFactory.getOWLDataFactory(projectId).getOWLDatatype(OWLUtilities.toURI(newUri));
+		OWLDatatype datatype = OWLModelFactory.getOWLDataFactory(projectId).getOWLDatatype(OWLUtilities.toIRI(newUri));
 		DatatypeTreeElement data = new DatatypeTreeElement(
 				datatype,
 				element.getOntologyUri(), 

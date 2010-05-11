@@ -154,7 +154,7 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
         }
         _namespaces = ns;
         try {
-            OWL_CLASS = OWLModelFactory.getOWLDataFactory(getProjectId()).getOWLClass(OWLUtilities.toURI(OWLConstants.OWL_THING_URI));
+            OWL_CLASS = OWLModelFactory.getOWLDataFactory(getProjectId()).getOWLClass(OWLUtilities.toIRI(OWLConstants.OWL_THING_URI));
         } catch (NeOnCoreException e) {
             throw new RuntimeException(e);
         }
@@ -331,7 +331,7 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
 
     @Override
     public Object visit(OWLNamedIndividual object) {
-        String uri = object.getURI().toString();
+        String uri = object.getIRI().toString();
         return createStandardArray(uri);
     }
     
@@ -348,31 +348,31 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
     
     @Override
     public String[] visit(OWLDataProperty object) {
-        String uri = object.getURI().toString();
+        String uri = object.getIRI().toString();
         return createStandardArray(uri);
     }
 
     @Override
     public String[] visit(OWLObjectProperty object) {
-        String uri = object.getURI().toString();
+        String uri = object.getIRI().toString();
         return createStandardArray(uri);
     }
 
     @Override
     public String[] visit(OWLAnnotationProperty object) {
-        String uri = object.getURI().toString();
+        String uri = object.getIRI().toString();
         return createStandardArray(uri);
     }
 
     @Override
     public String[] visit(OWLDatatype object) {
-        String uri = object.getURI().toString();
+        String uri = object.getIRI().toString();
         return createStandardArray(uri);
     }
 
     @Override
     public String[] visit(OWLClass object) {
-        String uri = object.getURI().toString();
+        String uri = object.getIRI().toString();
         return createStandardArray(uri);
     }
 
@@ -385,7 +385,7 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
     @Override
     public String[] visit(OWLLiteral object) {
         
-        if (object.isTyped()) {
+        if (object.isOWLTypedLiteral()) {
             OWLTypedLiteral typedConstant = (OWLTypedLiteral)object;
             return (String[])visit(typedConstant);
         } else {
@@ -1012,9 +1012,9 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
     @Override
     public Object visit(OWLTypedLiteral typedConstant) {
         OWLDatatype datatype = typedConstant.getDatatype();
-        if ((OWLConstants.XSD_INTEGER).equals(datatype.getURI().toString())) {
+        if ((OWLConstants.XSD_INTEGER).equals(datatype.getIRI().toString())) {
             return createSingle(typedConstant.getLiteral());
-        } else if ((OWLConstants.XSD_DOUBLE).equals(datatype.getURI().toString())) {
+        } else if ((OWLConstants.XSD_DOUBLE).equals(datatype.getIRI().toString())) {
             String literal = typedConstant.getLiteral();
             if (!literal.contains(".") && !literal.contains("E") && !literal.contains("e")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 literal = literal + ".0"; //$NON-NLS-1$
@@ -1023,7 +1023,7 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
         }
 
         String literal = typedConstant.getLiteral();
-        String xsdTypeURI = datatype.getURI().toString();
+        String xsdTypeURI = datatype.getIRI().toString();
         return addPrefixToArrayNoSpace(new StringBuilder(quoteLiteral(literal)).append("^^").toString(), createStandardArray(xsdTypeURI)); //$NON-NLS-1$
     }
 

@@ -30,7 +30,7 @@ public abstract class AbstractOwlEntityTreeElement extends AbstractOntologyEntit
     private OWLEntity _entity;
 
     public AbstractOwlEntityTreeElement(OWLEntity entity, String ontologyURI, String projectName, ITreeDataProvider provider) {
-        super(projectName, ontologyURI, entity.getURI().toString(), provider);
+        super(projectName, ontologyURI, entity.getIRI().toString(), provider);
         _entity = entity;
     }
 
@@ -42,7 +42,7 @@ public abstract class AbstractOwlEntityTreeElement extends AbstractOntologyEntit
     @Override
     public String getId() {
         if (_entity != null) {
-            return _entity.getURI().toString();
+            return _entity.getIRI().toString();
         } else {
             return _uri;
         }
@@ -68,7 +68,7 @@ public abstract class AbstractOwlEntityTreeElement extends AbstractOntologyEntit
         try {
             idArray = OWLGUIUtilities.getIdArray(_entity, getOntologyUri(), getProjectName());
         } catch (NeOnCoreException e) {
-            idArray = new String[] {_entity.getURI().toString()};
+            idArray = new String[] {_entity.getIRI().toString()};
         }
         String result = OWLGUIUtilities.getEntityLabel(idArray);
         IPreferenceStore store = NeOnUIPlugin.getDefault().getPreferenceStore();
@@ -98,7 +98,7 @@ public abstract class AbstractOwlEntityTreeElement extends AbstractOntologyEntit
             if (_entity == null) {
                 equal = that._entity == null; 
             } else {
-                equal = equal(_entity.getURI().toString(), that._entity.getURI().toString());
+                equal = equal(_entity.getIRI().toString(), that._entity.getIRI().toString());
             }
             return equal && equal(getOntologyUri(), that.getOntologyUri()) && equal(getProjectName(), that.getProjectName());
         }

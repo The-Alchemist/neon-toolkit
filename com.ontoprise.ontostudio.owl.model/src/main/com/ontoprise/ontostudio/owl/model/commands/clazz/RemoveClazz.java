@@ -63,7 +63,7 @@ public class RemoveClazz extends OWLModuleChangeCommand {
 
         try {
             OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(getProjectName());
-            OWLClass subClazz = factory.getOWLClass(OWLUtilities.toURI(subClazzId));
+            OWLClass subClazz = factory.getOWLClass(OWLUtilities.toIRI(subClazzId));
             if (removeAllAxioms) {
                 // remove all found axioms
                 Set<OWLAxiom> axiomsToRemove = getOwlModel().getReferencingAxioms(subClazz);
@@ -83,7 +83,7 @@ public class RemoveClazz extends OWLModuleChangeCommand {
                     new ApplyChanges(getProjectName(), getOntology(), new String[0], new String[]{OWLUtilities.toString(subClassOf)}).perform();
                 } else {
                     // root class
-                    OWLEntity entity = factory.getOWLClass(OWLUtilities.toURI(subClazzId));
+                    OWLEntity entity = factory.getOWLClass(OWLUtilities.toIRI(subClazzId));
                     OWLDeclarationAxiom declaration = factory.getOWLDeclarationAxiom(entity);
                     new ApplyChanges(getProjectName(), getOntology(), new String[0], new String[]{OWLUtilities.toString(declaration)}).perform();
                 }

@@ -54,7 +54,7 @@ public class DatatypeProposalProvider extends AbstractOwlProposalProvider {
             if (!datatypeUri.equals(NULL_DATATYPE)) { // bugfix for #10099
                 OWLDatatype datatype;
                 try {
-                    datatype = _owlModel.getOWLDataFactory().getOWLDatatype(OWLUtilities.toURI(datatypeUri));
+                    datatype = _owlModel.getOWLDataFactory().getOWLDatatype(OWLUtilities.toIRI(datatypeUri));
                 } catch (NeOnCoreException e) {
                     throw new RuntimeException(e);
                 }

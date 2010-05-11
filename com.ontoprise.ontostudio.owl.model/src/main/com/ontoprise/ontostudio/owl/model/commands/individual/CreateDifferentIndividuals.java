@@ -45,7 +45,7 @@ public class CreateDifferentIndividuals extends OWLModuleChangeCommand {
             OWLIndividual[] individuals = new OWLIndividual[individualUris.length];
             int i = 0;
             for (String uri: individualUris) {
-                individuals[i] = factory.getOWLNamedIndividual(OWLUtilities.toURI(uri));
+                individuals[i] = factory.getOWLNamedIndividual(OWLUtilities.toIRI(uri));
                 i++;
             }
             OWLAxiom a = factory.getOWLDifferentIndividualsAxiom(individuals);

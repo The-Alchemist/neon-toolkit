@@ -86,7 +86,7 @@ public class NewDataPropertyHandler extends AbstractNewHandler {
                 newUri = newId;
             }
 
-            OWLDataProperty prop = OWLModelFactory.getOWLDataFactory(owlModel.getProjectId()).getOWLDataProperty(OWLUtilities.toURI(newUri));
+            OWLDataProperty prop = OWLModelFactory.getOWLDataFactory(owlModel.getProjectId()).getOWLDataProperty(OWLUtilities.toIRI(newUri));
             DataPropertyTreeElement newElement = new DataPropertyTreeElement(prop, owlModel.getOntologyURI(), owlModel.getProjectId(), provider);
             return newElement;
         } catch (NeOnCoreException e) {
@@ -118,10 +118,10 @@ public class NewDataPropertyHandler extends AbstractNewHandler {
             return false;
         }
 
-        OWLDataProperty prop = OWLModelFactory.getOWLDataFactory(projectId).getOWLDataProperty(OWLUtilities.toURI(newURI));
+        OWLDataProperty prop = OWLModelFactory.getOWLDataFactory(projectId).getOWLDataProperty(OWLUtilities.toIRI(newURI));
         Set<OWLEntity> entities = OWLModelFactory.getOWLModel(ontologyId, projectId).getEntity(newURI);
         for (OWLEntity entity: entities) {
-            if (entity.getURI().toString().equals(newURI)) {
+            if (entity.getIRI().toString().equals(newURI)) {
                 if(entity instanceof OWLObjectProperty) {
                     MessageDialog.openInformation(_view.getSite().getShell(), Messages.NewPropertyHandler_0, Messages.NewPropertyHandler_1);
                     return false;

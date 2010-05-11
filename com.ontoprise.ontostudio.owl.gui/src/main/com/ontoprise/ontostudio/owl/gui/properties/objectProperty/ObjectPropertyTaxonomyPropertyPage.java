@@ -829,7 +829,7 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                         OWLObjectPropertyExpression ope = subObjProp.getSubProperty();
                         if (ope instanceof OWLObjectProperty) {
                             OWLObjectProperty objectProperty = (OWLObjectProperty)ope;
-                            if (!(objectProperty.getURI().toString().equals(thisId))) {
+                            if (!(objectProperty.getIRI().toString().equals(thisId))) {
                                 uri1 = OWLGUIUtilities.getEntityLabel(objectProperty, ontologyUri1, _project);
 
                                 OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0], _namespaces, _factory);
@@ -837,7 +837,7 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                                 OWLObjectPropertyExpression ope2 = subObjProp2.getSubProperty();
                                 if (ope2 instanceof OWLObjectProperty) {
                                     OWLObjectProperty objectProperty2 = (OWLObjectProperty)ope2;
-                                    if (!(objectProperty2.getURI().toString().equals(thisId))) {
+                                    if (!(objectProperty2.getIRI().toString().equals(thisId))) {
                                         uri2 = OWLGUIUtilities.getEntityLabel(objectProperty2, ontologyUri2, _project);
                                     }
                                 }
@@ -860,7 +860,7 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                         Set<OWLObjectPropertyExpression> equivalentObjectProps = eop.getProperties();
                         for (OWLObjectPropertyExpression expr: equivalentObjectProps) {
                             if (expr instanceof OWLObjectProperty) {
-                                if (!((OWLObjectProperty)expr).getURI().toString().equals(thisId)) {
+                                if (!((OWLObjectProperty)expr).getIRI().toString().equals(thisId)) {
                                     uri1 = OWLGUIUtilities.getEntityLabel((OWLObjectProperty)expr, ontologyUri1, _project);
                                 }
                             }
@@ -871,7 +871,7 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                         Set<OWLObjectPropertyExpression> equivalentObjectProps2 = eop2.getProperties();
                         for (OWLObjectPropertyExpression expr: equivalentObjectProps2) {
                             if (expr instanceof OWLObjectProperty) {
-                                if (!((OWLObjectProperty)expr).getURI().toString().equals(thisId)) {
+                                if (!((OWLObjectProperty)expr).getIRI().toString().equals(thisId)) {
                                     uri2 = OWLGUIUtilities.getEntityLabel((OWLObjectProperty)expr, ontologyUri1, _project);
                                 }
                             }
@@ -881,7 +881,7 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                         OWLInverseObjectPropertiesAxiom iop = (OWLInverseObjectPropertiesAxiom) axiom1;
                         OWLObjectPropertyExpression first = iop.getFirstProperty();
                         OWLObjectPropertyExpression second = iop.getSecondProperty();
-                        if (((OWLObjectProperty)first).getURI().toString().equals(thisId)) {
+                        if (((OWLObjectProperty)first).getIRI().toString().equals(thisId)) {
                             uri1 = OWLGUIUtilities.getEntityLabel((OWLObjectProperty)second, ontologyUri1, _project);
                         } else {
                             uri1 = OWLGUIUtilities.getEntityLabel((OWLObjectProperty)first, ontologyUri1, _project);
@@ -892,7 +892,7 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                         
                         OWLObjectPropertyExpression first2 = iop2.getFirstProperty();
                         OWLObjectPropertyExpression second2 = iop2.getSecondProperty();
-                        if (((OWLObjectProperty)first2).getURI().toString().equals(thisId)) {
+                        if (((OWLObjectProperty)first2).getIRI().toString().equals(thisId)) {
                             uri2 = OWLGUIUtilities.getEntityLabel((OWLObjectProperty)second2, ontologyUri1, _project);
                         } else {
                             uri2 = OWLGUIUtilities.getEntityLabel((OWLObjectProperty)first2, ontologyUri1, _project);

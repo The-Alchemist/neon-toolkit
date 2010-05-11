@@ -30,7 +30,7 @@ public class RemoveAnnotationProperty extends OWLModuleChangeCommand {
         try {
             String propertyId = (String)getArgument(2);
 
-            OWLAnnotationProperty annotProperty = getOwlModel().getOWLDataFactory().getOWLAnnotationProperty(OWLUtilities.toURI(propertyId));
+            OWLAnnotationProperty annotProperty = getOwlModel().getOWLDataFactory().getOWLAnnotationProperty(OWLUtilities.toIRI(propertyId));
             getOwlModel().delEntity(annotProperty, null);
         } catch (NeOnCoreException e) {
             throw new CommandException(e);

@@ -3,7 +3,7 @@ Eclipse-RegisterBuddy: dependencies
 Bundle-ManifestVersion: 2
 Bundle-Name: %imporExportPluginContainer
 Bundle-SymbolicName: org.neontoolkit.io;singleton:=true
-Bundle-Version: 2.3.1
+Bundle-Version: 2.3.2
 Bundle-ClassPath: neontoolkit-io.jar
 Bundle-Vendor: %ontoprise
 Bundle-Localization: plugin
@@ -18,7 +18,7 @@ Require-Bundle: com.ontoprise.dependencies,
  org.neontoolkit.refactor,
  org.neontoolkit.gui,
  org.eclipse.ui.console,
- org.neontoolkit.core;bundle-version="2.3.1",
+ org.neontoolkit.core;bundle-version="2.3.2",
  org.eclipse.help
 Bundle-ActivationPolicy: lazy
 Export-Package: org.neontoolkit.io,

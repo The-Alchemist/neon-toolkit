@@ -12,14 +12,15 @@ package com.ontoprise.ontostudio.owl.model.util;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.ByteArrayInputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Field;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.junit.Assume;
 import org.junit.experimental.theories.DataPoint;
 import org.junit.experimental.theories.Theories;
@@ -27,8 +28,6 @@ import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.io.RDFXMLOntologyFormat;
-import org.semanticweb.owlapi.io.StringInputSource;
-import org.semanticweb.owlapi.io.StringOutputTarget;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
@@ -132,21 +131,14 @@ import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 public class InternalParserTest {
     private static final OWLDataFactory _f = OWLManager.createOWLOntologyManager().getOWLDataFactory();
     
-    private static URI uri(String namespace, String localPart) {
-        try {
-            return new URI(namespace + localPart);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    private static URI uri(String localPart) {
-        return uri("http://test.org/ontology#", localPart);
+    private static IRI iri(String namespace, String localPart) {
+        return IRI.create(namespace + localPart);
     }
     private static IRI iri(String localPart) {
-        return _f.getIRI(uri(localPart));
+        return iri("http://test.org/ontology#", localPart);
     }
-    private static URI xsdURI(String localPart) {
-        return uri(Namespaces.XSD.toString(), localPart);
+    private static IRI xsdURI(String localPart) {
+        return iri(Namespaces.XSD.toString(), localPart);
     }
     
     private static <E> Set<E> asSet(E...items) {
@@ -231,25 +223,25 @@ public class InternalParserTest {
     @DataPoint public static final OWLTypedLiteral typedConstant16 = _f.getOWLTypedLiteral("" + Integer.MAX_VALUE, xsdUnsignedInt);
     
     
-    @DataPoint public static final OWLAnnotation constantAnnotation0 = _f.getOWLAnnotation(_f.getOWLAnnotationProperty(uri("constantAnnotation")), untypedConstant0);
-    @DataPoint public static final OWLAnnotation constantAnnotation1 = _f.getOWLAnnotation(_f.getOWLAnnotationProperty(uri("constantAnnotation")), typedConstant0);
-    @DataPoint public static final OWLAnnotation objectAnnotation0 = _f.getOWLAnnotation(_f.getOWLAnnotationProperty(uri("objectAnntotation")), _f.getIRI(uri("iri")));
-    @DataPoint public static final OWLAnnotation objectAnnotation1 = _f.getOWLAnnotation(_f.getOWLAnnotationProperty(uri("objectAnntotation")), IRI.create("http://test.org/path?query"));
-    @DataPoint public static final OWLAnnotationProperty annotationProperty0 = _f.getOWLAnnotationProperty(uri("annotationProperty0"));
-    @DataPoint public static final OWLAnnotationProperty annotationProperty1 = _f.getOWLAnnotationProperty(uri("annotationProperty1"));
+    @DataPoint public static final OWLAnnotation constantAnnotation0 = _f.getOWLAnnotation(_f.getOWLAnnotationProperty(iri("constantAnnotation")), untypedConstant0);
+    @DataPoint public static final OWLAnnotation constantAnnotation1 = _f.getOWLAnnotation(_f.getOWLAnnotationProperty(iri("constantAnnotation")), typedConstant0);
+    @DataPoint public static final OWLAnnotation objectAnnotation0 = _f.getOWLAnnotation(_f.getOWLAnnotationProperty(iri("objectAnntotation")), iri("iri"));
+    @DataPoint public static final OWLAnnotation objectAnnotation1 = _f.getOWLAnnotation(_f.getOWLAnnotationProperty(iri("objectAnntotation")), IRI.create("http://test.org/path?query"));
+    @DataPoint public static final OWLAnnotationProperty annotationProperty0 = _f.getOWLAnnotationProperty(iri("annotationProperty0"));
+    @DataPoint public static final OWLAnnotationProperty annotationProperty1 = _f.getOWLAnnotationProperty(iri("annotationProperty1"));
 
-    @DataPoint public static final OWLNamedIndividual individual0 = _f.getOWLNamedIndividual(uri("individual0"));
-    @DataPoint public static final OWLNamedIndividual individual1 = _f.getOWLNamedIndividual(uri("individual1"));
-    @DataPoint public static final OWLNamedIndividual individual2 = _f.getOWLNamedIndividual(uri("individual2"));
+    @DataPoint public static final OWLNamedIndividual individual0 = _f.getOWLNamedIndividual(iri("individual0"));
+    @DataPoint public static final OWLNamedIndividual individual1 = _f.getOWLNamedIndividual(iri("individual1"));
+    @DataPoint public static final OWLNamedIndividual individual2 = _f.getOWLNamedIndividual(iri("individual2"));
     @DataPoint public static final OWLAnonymousIndividual anonymousIndividual0 = _f.getOWLAnonymousIndividual("anonymousIndividual0");
     @DataPoint public static final OWLAnonymousIndividual anonymousIndividual1 = _f.getOWLAnonymousIndividual("anonymousIndividual1");
-    @DataPoint public static final OWLDataProperty dataProperty0 = _f.getOWLDataProperty(uri("dataProperty0"));
-    @DataPoint public static final OWLDataProperty dataProperty1 = _f.getOWLDataProperty(uri("dataProperty1"));
-    @DataPoint public static final OWLDataProperty dataProperty2 = _f.getOWLDataProperty(uri("dataProperty2"));
-    @DataPoint public static final OWLObjectProperty objectProperty0 = _f.getOWLObjectProperty(uri("objectProperty0"));
-    @DataPoint public static final OWLObjectProperty objectProperty1 = _f.getOWLObjectProperty(uri("objectProperty1"));
-    @DataPoint public static final OWLObjectProperty objectProperty2 = _f.getOWLObjectProperty(uri("objectProperty2"));
-    @DataPoint public static final OWLObjectProperty objectProperty3 = _f.getOWLObjectProperty(uri("objectProperty3"));
+    @DataPoint public static final OWLDataProperty dataProperty0 = _f.getOWLDataProperty(iri("dataProperty0"));
+    @DataPoint public static final OWLDataProperty dataProperty1 = _f.getOWLDataProperty(iri("dataProperty1"));
+    @DataPoint public static final OWLDataProperty dataProperty2 = _f.getOWLDataProperty(iri("dataProperty2"));
+    @DataPoint public static final OWLObjectProperty objectProperty0 = _f.getOWLObjectProperty(iri("objectProperty0"));
+    @DataPoint public static final OWLObjectProperty objectProperty1 = _f.getOWLObjectProperty(iri("objectProperty1"));
+    @DataPoint public static final OWLObjectProperty objectProperty2 = _f.getOWLObjectProperty(iri("objectProperty2"));
+    @DataPoint public static final OWLObjectProperty objectProperty3 = _f.getOWLObjectProperty(iri("objectProperty3"));
     @DataPoint public static final OWLObjectInverseOf objectPropertyInverse0 = _f.getOWLObjectInverseOf(objectProperty0);
     
     @DataPoint public static final OWLFacetRestriction dataRangeFacetRestriction0 = _f.getOWLFacetRestriction(OWLFacet.FRACTION_DIGITS, 1f);
@@ -288,10 +280,10 @@ public class InternalParserTest {
     
     
     // OWLDescriptions
-    @DataPoint public static final OWLClass owlClass0 = _f.getOWLClass(uri("class0"));
-    @DataPoint public static final OWLClass owlClass1 = _f.getOWLClass(uri("class1"));
-    @DataPoint public static final OWLClass owlClass2 = _f.getOWLClass(uri("class2"));
-    @DataPoint public static final OWLClass owlClass3 = _f.getOWLClass(uri("class3"));
+    @DataPoint public static final OWLClass owlClass0 = _f.getOWLClass(iri("class0"));
+    @DataPoint public static final OWLClass owlClass1 = _f.getOWLClass(iri("class1"));
+    @DataPoint public static final OWLClass owlClass2 = _f.getOWLClass(iri("class2"));
+    @DataPoint public static final OWLClass owlClass3 = _f.getOWLClass(iri("class3"));
     @DataPoint public static final OWLClass owlClass4 = _f.getOWLClass(IRI.create("http://test.org/class?query"));
     @DataPoint public static final OWLObjectIntersectionOf objectIntersectionOf0 = _f.getOWLObjectIntersectionOf(owlClass0, owlClass1);
     @DataPoint public static final OWLObjectIntersectionOf objectIntersectionOf1 = _f.getOWLObjectIntersectionOf(owlClass0, owlClass1, owlClass2);
@@ -611,10 +603,10 @@ public class InternalParserTest {
             OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
             OWLOntology ontology = manager.createOntology(IRI.create("http://test.org/ontology#"));
             manager.addAxiom(ontology, object);
-            StringOutputTarget testTarget = new StringOutputTarget();
+            ByteArrayOutputStream testTarget = new ByteArrayOutputStream();
             manager.saveOntology(ontology, new RDFXMLOntologyFormat(), testTarget);
             manager.removeOntology(ontology);
-            ontology = manager.loadOntology(new StringInputSource(testTarget.toString()));
+            ontology = manager.loadOntologyFromOntologyDocument(new ByteArrayInputStream(testTarget.toByteArray()));
             Set<OWLAxiom> allAxioms = ontology.getAxioms();
             Set<OWLAxiom> axioms;
             if (!Collections.singleton(object).equals(allAxioms)) {

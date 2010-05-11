@@ -64,7 +64,7 @@ public abstract class AbstractAddAnnotation extends OWLModuleChangeCommand {
             
             String expandedRange = namespaces.expandString(range);
             String expandedProperty = namespaces.expandString(property);
-            OWLAnnotationProperty annotProp = factory.getOWLAnnotationProperty(OWLUtilities.toURI(expandedProperty));
+            OWLAnnotationProperty annotProp = factory.getOWLAnnotationProperty(OWLUtilities.toIRI(expandedProperty));
             OWLAnnotationValue c = null;
             if (language.equals(OWLCommandUtils.EMPTY_LANGUAGE) || language.equals("")) { //$NON-NLS-1$
                 // bugfix of bug 9674 - we get an exception if no type AND no language is selected,
@@ -74,9 +74,9 @@ public abstract class AbstractAddAnnotation extends OWLModuleChangeCommand {
                 }
                 expandedRange = namespaces.expandString(range);
                 if (expandedRange.equals(OWLAxiomUtils.OWL_INDIVIDUAL)) {
-                    c = IRI.create(OWLUtilities.toURI(namespaces.expandString(value)));
+                    c = OWLUtilities.toIRI(namespaces.expandString(value));
                 } else {
-                    c = factory.getOWLTypedLiteral(value, factory.getOWLDatatype(OWLUtilities.toURI(expandedRange)));
+                    c = factory.getOWLTypedLiteral(value, factory.getOWLDatatype(OWLUtilities.toIRI(expandedRange)));
                 }
             } else {
                 c = factory.getOWLStringLiteral(value, language);

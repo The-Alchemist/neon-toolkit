@@ -13,11 +13,11 @@ package com.ontoprise.ontostudio.owl.model.util.file;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.ByteArrayInputStream;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.log4j.Logger;
 import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntaxOntologyFormat;
 import org.coode.owlapi.obo.parser.OBOOntologyFormat;
@@ -25,11 +25,9 @@ import org.coode.owlapi.turtle.TurtleOntologyFormat;
 import org.junit.Test;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.io.OWLFunctionalSyntaxOntologyFormat;
-import org.semanticweb.owlapi.io.OWLOntologyOutputTarget;
 import org.semanticweb.owlapi.io.OWLXMLOntologyFormat;
 import org.semanticweb.owlapi.io.RDFXMLOntologyFormat;
-import org.semanticweb.owlapi.io.StringInputSource;
-import org.semanticweb.owlapi.io.StringOutputTarget;
+import org.semanticweb.owlapi.io.StreamDocumentSource;
 import org.semanticweb.owlapi.model.AddImport;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAxiom;
@@ -120,28 +118,24 @@ public class OWLFileUtilitiesTest {
     }
     
     private void testOntologyFormat(OWLOntologyManager manager, OWLOntology ontology, OWLOntologyFormat format, int addAxiomThreshold) throws Exception {
-        OWLOntologyOutputTarget target = new StringOutputTarget();
+        ByteArrayOutputStream target = new ByteArrayOutputStream();
         manager.saveOntology(ontology, format, target);
         
         OWLOntologyManager checkManager = OWLManager.createOWLOntologyManager();
         checkManager.setSilentMissingImportsHandling(true);
         checkManager.addIRIMapper(new OWLOntologyIRIMapper() {
             @Override
-            public URI getPhysicalURI(IRI ontologyIRI) {
-                try {
-                    return new URI("unkownScheme", "unkownSPP", "unknownFragment");
-                } catch (URISyntaxException e) {
-                    throw new RuntimeException(e);
-                }
+            public IRI getDocumentIRI(IRI ontologyIRI) {
+                return IRI.create("unkownScheme:unkownSPP#unknownFragment");
             }
         });
-        OWLOntologyID expectedOntologyID =  checkManager.loadOntology(new StringInputSource(target.toString())).getOntologyID();
+        OWLOntologyID expectedOntologyID =  checkManager.loadOntologyFromOntologyDocument(new ByteArrayInputStream(target.toByteArray())).getOntologyID();
         if (expectedOntologyID.isAnonymous() && !ontology.getOntologyID().isAnonymous()
                 || !expectedOntologyID.isAnonymous() && !expectedOntologyID.equals(ontology.getOntologyID())) {
             Logger.getLogger(getClass()).warn(String.format("Ontology format '%1$s' does not keep the ontology id. Original id: '%2$s'. Round tripped id: '%3$s'.", format.toString(), ontology.getOntologyID(), expectedOntologyID));
         }
         
-        OWLOntologyInfo info = OWLFileUtilities.getOntologyInfo(new StringInputSource(target.toString()), addAxiomThreshold);
+        OWLOntologyInfo info = OWLFileUtilities.getOntologyInfo(new StreamDocumentSource(new ByteArrayInputStream(target.toByteArray())), addAxiomThreshold);
         if (expectedOntologyID.isAnonymous()) {
             assertTrue(info.getOntologyID().isAnonymous());
         } else {

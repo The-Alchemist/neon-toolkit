@@ -37,6 +37,6 @@ public class RenameOWLDatatype extends RenameOWLEntity {
 
     @Override
     protected OWLEntity getEntity(String uri) throws NeOnCoreException {
-        return OWLModelFactory.getOWLDataFactory(getProjectName()).getOWLDatatype(OWLUtilities.toURI(uri));
+        return OWLModelFactory.getOWLDataFactory(getProjectName()).getOWLDatatype(OWLUtilities.toIRI(uri));
     }
 }

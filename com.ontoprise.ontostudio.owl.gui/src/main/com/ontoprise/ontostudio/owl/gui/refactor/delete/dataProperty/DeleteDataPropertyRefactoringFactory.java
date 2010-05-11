@@ -46,7 +46,7 @@ public class DeleteDataPropertyRefactoringFactory implements IRefactoringFactory
             for (DataPropertyTreeElement element: elements) {
                 String prop = element.getId();
                 owlModel = OWLModelFactory.getOWLModel(element.getOntologyUri(), element.getProjectName());
-                OWLDataProperty property = OWLModelFactory.getOWLDataFactory(element.getProjectName()).getOWLDataProperty(OWLUtilities.toURI(prop));
+                OWLDataProperty property = OWLModelFactory.getOWLDataFactory(element.getProjectName()).getOWLDataProperty(OWLUtilities.toIRI(prop));
                 if (!entities.contains(property)) {
                     entities.add(property);
                 }

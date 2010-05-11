@@ -72,7 +72,7 @@ public class RenameRunnableWithProgressOWL extends NotForkedRunnableWithProgress
                 for (String ontologyUri: _ontologyUris) {
                     Set<OWLEntity> entities = OWLModelFactory.getOWLModel(ontologyUri, _project).getEntity(_newId);
                     for (OWLEntity entity: entities) {
-                        if (entity.getURI().toString().equals(_newId)) {
+                        if (entity.getIRI().toString().equals(_newId)) {
                             if((_type == OBJECT_PROPERTY_TYPE && (entity instanceof OWLDataProperty || entity instanceof OWLAnnotationProperty)) ||
                                 (_type == DATA_PROPERTY_TYPE && (entity instanceof OWLObjectProperty || entity instanceof OWLAnnotationProperty)) ||
                                 (_type == ANNOTATION_PROPERTY_TYPE && (entity instanceof OWLObjectProperty || entity instanceof OWLDataProperty))) {

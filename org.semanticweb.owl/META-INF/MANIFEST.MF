@@ -4,7 +4,7 @@ Bundle-Name: OWLAPI lib Plug-in
 Bundle-SymbolicName: org.semanticweb.owl
 Bundle-Version: 3.0.0
 Bundle-Vendor: ontoprise GmbH
-Bundle-ClassPath: lib/owlapi/org.semanticweb.owlapi_3.0.0.v1310.jar
+Bundle-ClassPath: lib/org.semanticweb.owlapi_3.0.0.v20100128.jar
 Export-Package: 
  com.clarkparsia.owlapi.explanation,
  com.clarkparsia.owlapi.explanation.io,
@@ -12,7 +12,6 @@ Export-Package:
  com.clarkparsia.owlapi.modularity.locality,
  de.uulm.ecs.ai.owlapi.krssparser,
  de.uulm.ecs.ai.owlapi.krssrenderer,
- org.coode.mansyntax.editor,
  org.coode.owl.krssparser,
  org.coode.owlapi.functionalparser,
  org.coode.owlapi.functionalrenderer,
@@ -33,7 +32,6 @@ Export-Package:
  org.semanticweb.owlapi.apibinding,
  org.semanticweb.owlapi.debugging,
  org.semanticweb.owlapi.expression,
- org.semanticweb.owlapi.inference,
  org.semanticweb.owlapi.io,
  org.semanticweb.owlapi.metrics,
  org.semanticweb.owlapi.model,
@@ -44,16 +42,11 @@ Export-Package:
  org.semanticweb.owlapi.rdf.util,
  org.semanticweb.owlapi.reasoner,
  org.semanticweb.owlapi.reasoner.impl,
- org.semanticweb.owlapi.reasoner.query,
- org.semanticweb.owlapi.reasonerfactory,
- org.semanticweb.owlapi.reasonerfactory.factpp,
- org.semanticweb.owlapi.reasonerfactory.hermit,
- org.semanticweb.owlapi.reasonerfactory.pellet,
+ org.semanticweb.owlapi.reasoner.structural,
  org.semanticweb.owlapi.util,
  org.semanticweb.owlapi.vocab,
  uk.ac.manchester.cs.bhig.util,
  uk.ac.manchester.cs.owl.explanation.ordering,
- uk.ac.manchester.cs.owl.inference.dig11,
  uk.ac.manchester.cs.owl.owlapi,
  uk.ac.manchester.cs.owl.owlapi.mansyntaxrenderer,
  uk.ac.manchester.cs.owl.owlapi.turtle.parser,

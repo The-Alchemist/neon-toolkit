@@ -53,7 +53,7 @@ public class DeleteIndividualRefactoringFactory implements IRefactoringFactory {
                 String individualUri = element.getId();
                 
                 owlModel = OWLModelFactory.getOWLModel(element.getOntologyUri(), element.getProjectName());
-//                OWLIndividual individual = OWLModelFactory.getOWLDataFactory(element.getProjectName()).getOWLNamedIndividual(OWLUtilities.toURI(individualUri));
+//                OWLIndividual individual = OWLModelFactory.getOWLDataFactory(element.getProjectName()).getOWLNamedIndividual(OWLUtilities.toIRI(individualUri));
                 
                 OWLIndividual individual = new InternalParser(individualUri, OWLNamespaces.EMPTY_INSTANCE, OWLModelFactory.getOWLDataFactory(element.getProjectName())).parseOWLIndividual();
 

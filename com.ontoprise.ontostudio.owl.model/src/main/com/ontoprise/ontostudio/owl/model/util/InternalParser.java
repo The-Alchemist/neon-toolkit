@@ -155,7 +155,7 @@ public class InternalParser {
     private OWLAnnotationProperty parseAnnotationProperty()  throws InternalParserException {
         checkTokenType(_tokenizer,StreamTokenizer.TT_WORD);
         String uri=_namespaces.expandString(_tokenizer.sval);
-        OWLAnnotationProperty result=_f.getOWLAnnotationProperty(OWLUtilities.toURI(uri));
+        OWLAnnotationProperty result=_f.getOWLAnnotationProperty(OWLUtilities.toIRI(uri));
         nextToken();
         return result;
     }
@@ -185,7 +185,7 @@ public class InternalParser {
     private OWLDataProperty parseDataProperty() throws InternalParserException  {
         checkTokenType(_tokenizer,StreamTokenizer.TT_WORD);
         String uri=_namespaces.expandString(_tokenizer.sval);
-        OWLDataProperty result=_f.getOWLDataProperty(OWLUtilities.toURI(uri));
+        OWLDataProperty result=_f.getOWLDataProperty(OWLUtilities.toIRI(uri));
         nextToken();
         return result;
     }
@@ -289,7 +289,7 @@ public class InternalParser {
     private OWLDatatype parseDatatype() throws InternalParserException  {
         checkTokenType(_tokenizer,StreamTokenizer.TT_WORD);
         String uri=_namespaces.expandString(_tokenizer.sval);
-        OWLDatatype result=_f.getOWLDatatype(OWLUtilities.toURI(uri));
+        OWLDatatype result=_f.getOWLDatatype(OWLUtilities.toIRI(uri));
         nextToken();
         return result;
     }
@@ -304,7 +304,7 @@ public class InternalParser {
     private IRI parseIRI() throws InternalParserException  {
         checkTokenType(_tokenizer,StreamTokenizer.TT_WORD);
         String uri=_namespaces.expandString(_tokenizer.sval);
-        IRI result=_f.getIRI(OWLUtilities.toURI(uri));
+        IRI result=OWLUtilities.toIRI(uri);
         nextToken();
         return result;
     }
@@ -328,7 +328,7 @@ public class InternalParser {
     private OWLNamedIndividual parseNamedIndividual() throws InternalParserException{
         checkTokenType(_tokenizer,StreamTokenizer.TT_WORD);
         String uri=_namespaces.expandString(_tokenizer.sval);
-        OWLNamedIndividual result=_f.getOWLNamedIndividual(OWLUtilities.toURI(uri));
+        OWLNamedIndividual result=_f.getOWLNamedIndividual(OWLUtilities.toIRI(uri));
         nextToken();
         return result;
     }
@@ -336,7 +336,7 @@ public class InternalParser {
     private OWLObjectProperty parseObjectProperty() throws InternalParserException {
         checkTokenType(_tokenizer,StreamTokenizer.TT_WORD);
         String uri=_namespaces.expandString(_tokenizer.sval);
-        OWLObjectProperty result=_f.getOWLObjectProperty(OWLUtilities.toURI(uri));
+        OWLObjectProperty result=_f.getOWLObjectProperty(OWLUtilities.toIRI(uri));
         nextToken();
         return result;
     }
@@ -394,13 +394,13 @@ public class InternalParser {
             if (names.size()==0)
                 throw createException("Data range expected.");
             String dataRangeName=names.remove(names.size()-1);
-            dataRange=_f.getOWLDatatype(OWLUtilities.toURI(dataRangeName));
+            dataRange=_f.getOWLDatatype(OWLUtilities.toIRI(dataRangeName));
         }
         else
             dataRange=parseDataRange();
         OWLDataPropertyExpression[] dataProperties=new OWLDataPropertyExpression[names.size()];
         for (int i=0;i<names.size();i++)
-            dataProperties[i]=_f.getOWLDataProperty(OWLUtilities.toURI(names.get(i)));
+            dataProperties[i]=_f.getOWLDataProperty(OWLUtilities.toIRI(names.get(i)));
         return _f.getOWLDataAllValuesFrom(dataProperties[0],dataRange);
     }
 
@@ -417,13 +417,13 @@ public class InternalParser {
             if (names.size()==0)
                 throw createException("Data range expected.");
             String dataRangeName=names.remove(names.size()-1);
-            dataRange=_f.getOWLDatatype(OWLUtilities.toURI(dataRangeName));
+            dataRange=_f.getOWLDatatype(OWLUtilities.toIRI(dataRangeName));
         }
         else
             dataRange=parseDataRange();
         OWLDataPropertyExpression[] dataProperties=new OWLDataPropertyExpression[names.size()];
         for (int i=0;i<names.size();i++)
-            dataProperties[i]=_f.getOWLDataProperty(OWLUtilities.toURI(names.get(i)));
+            dataProperties[i]=_f.getOWLDataProperty(OWLUtilities.toIRI(names.get(i)));
         return _f.getOWLDataSomeValuesFrom(dataProperties[0],dataRange);
     }
 
@@ -509,7 +509,7 @@ public class InternalParser {
                     }
                     nextToken();
                     datatypeURI=_namespaces.expandString(datatypeURI);
-                    return _f.getOWLTypedLiteral(stringValue, _f.getOWLDatatype(OWLUtilities.toURI(datatypeURI)));
+                    return _f.getOWLTypedLiteral(stringValue, _f.getOWLDatatype(OWLUtilities.toIRI(datatypeURI)));
                 }
                 else if (_tokenizer.ttype==StreamTokenizer.TT_WORD && _tokenizer.sval.startsWith("@")) {
                     String language=_tokenizer.sval.substring(1);
@@ -581,7 +581,7 @@ public class InternalParser {
         OWLDataPropertyExpression dataProperty=parseDataProperty();
         OWLDataRange dataRange;
         if (_tokenizer.ttype==']')
-            dataRange=_f.getOWLDatatype(OWLUtilities.toURI(OWLNamespaces.RDFS_NS+"literal"));
+            dataRange=_f.getOWLDatatype(OWLUtilities.toIRI(OWLNamespaces.RDFS_NS+"literal"));
         else
             dataRange=parseDataRange();
         switch (cardinalityType) {
@@ -699,7 +699,7 @@ public class InternalParser {
     private OWLClass parseOWLClass() throws InternalParserException {
         checkTokenType(_tokenizer,StreamTokenizer.TT_WORD);
         String uri=_namespaces.expandString(_tokenizer.sval);
-        OWLClass result=_f.getOWLClass(OWLUtilities.toURI(uri));
+        OWLClass result=_f.getOWLClass(OWLUtilities.toIRI(uri));
         nextToken();
         return result;
     }
@@ -1040,8 +1040,6 @@ public class InternalParser {
             subject=parseIRI();
         else if ("annotationAnonymousIndividual".equalsIgnoreCase(annotationType))
             subject=parseAnonymousIndividual();
-        else if ("annotationAnnotation".equalsIgnoreCase(annotationType))
-            subject=parseOWLAnnotation(null);
         else
             throw createException("Invalid annotation type '"+annotationType+"'.");
         if (_tokenizer.ttype=='[') {

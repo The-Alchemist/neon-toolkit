@@ -44,7 +44,7 @@ public class GetRootDataProperties extends OWLOntologyRequestCommand {
             rootDataProperties = getOwlModel().getRootDataProperties();
             _result = new ArrayList<String>();
             for (OWLDataProperty op: rootDataProperties) {
-                _result.add(op.getURI().toString());
+                _result.add(op.getIRI().toString());
             }
         } catch (NeOnCoreException e) {
             throw new CommandException(e);

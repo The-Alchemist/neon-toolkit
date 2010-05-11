@@ -47,7 +47,7 @@ public class DeleteAnnotationPropertyRefactoringFactory implements IRefactoringF
             for (AnnotationPropertyTreeElement element: elements) {
                 String prop = element.getId();
                 owlModel = OWLModelFactory.getOWLModel(element.getOntologyUri(), element.getProjectName());
-                OWLAnnotationProperty property = owlModel.getOWLDataFactory().getOWLAnnotationProperty(OWLUtilities.toURI(prop));
+                OWLAnnotationProperty property = owlModel.getOWLDataFactory().getOWLAnnotationProperty(OWLUtilities.toIRI(prop));
                 entities.add(property);
                 axiomsToRemove.addAll(owlModel.getReferencingAxioms(property));
 

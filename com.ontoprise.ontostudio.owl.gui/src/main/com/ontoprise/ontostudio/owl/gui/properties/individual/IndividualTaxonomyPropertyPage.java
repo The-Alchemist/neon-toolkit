@@ -417,7 +417,7 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
                     try {
                         OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(_project);
                         OWLClassExpression newValue = _manager.parseDescription(text.getText(), _owlModel);
-                        OWLIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.toURI(_id));
+                        OWLIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.toIRI(_id));
                         OWLAxiom newAxiom = factory.getOWLClassAssertionAxiom((OWLClassExpression) newValue, individual);
                         _owlModel.addAxiom(newAxiom);
                     } catch (NeOnCoreException k2e) {
@@ -534,7 +534,7 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
                     String value = text.getText();
                     OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(_project);
                     OWLClassExpression clazzDesc = _manager.parseDescription(value, _owlModel);
-                    OWLIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.toURI(_id));
+                    OWLIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.toIRI(_id));
                     OWLAxiom oldAxiom = factory.getOWLClassAssertionAxiom(((OWLClassAssertionAxiom) axiom.getAxiom()).getClassExpression(), individual);
                     OWLAxiom newAxiom = factory.getOWLClassAssertionAxiom(clazzDesc, individual);
                     new ApplyChanges(_project, _ontologyUri, new String[] {OWLUtilities.toString(newAxiom)}, new String[] {OWLUtilities.toString(oldAxiom)}).run();
@@ -606,7 +606,7 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
                     for (LocatedAxiom oldAxiom: axioms) {
                         String oldAxiomText = OWLUtilities.toString(oldAxiom.getAxiom());
                         if (oldAxiom.isLocal()) {
-                            new EditDifferentIndividuals(_project, _ontologyUri, oldAxiomText, getEntity().getURI().toString(), value).run();
+                            new EditDifferentIndividuals(_project, _ontologyUri, oldAxiomText, getEntity().getIRI().toString(), value).run();
                         }
                     }
                 } catch (NeOnCoreException ce) {
@@ -687,7 +687,7 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
                     for (LocatedAxiom oldAxiom: getAxioms()) {
                         String oldAxiomText = OWLUtilities.toString(oldAxiom.getAxiom());
                         if (oldAxiom.isLocal()) {
-                            new EditEquivalentIndividuals(_project, _ontologyUri, oldAxiomText, getEntity().getURI().toString(), value).run();
+                            new EditEquivalentIndividuals(_project, _ontologyUri, oldAxiomText, getEntity().getIRI().toString(), value).run();
                         }
                     }
                 } catch (NeOnCoreException ce) {

@@ -38,7 +38,7 @@ public class MoveDataProperty extends MoveProperty {
     @Override
     protected OWLEntity getEntity(String propertyId) throws CommandException {
         try {
-            return OWLModelFactory.getOWLDataFactory(getProjectName()).getOWLDataProperty(OWLUtilities.toURI(propertyId));
+            return OWLModelFactory.getOWLDataFactory(getProjectName()).getOWLDataProperty(OWLUtilities.toIRI(propertyId));
         } catch (NeOnCoreException e) {
             throw new CommandException(e);
         }
@@ -46,7 +46,7 @@ public class MoveDataProperty extends MoveProperty {
 
     @Override
     protected boolean isRootProperty(String projectId, String id) throws NeOnCoreException  {
-        OWLDataProperty prop = OWLModelFactory.getOWLDataFactory(projectId).getOWLDataProperty(OWLUtilities.toURI(id));
+        OWLDataProperty prop = OWLModelFactory.getOWLDataFactory(projectId).getOWLDataProperty(OWLUtilities.toIRI(id));
         return getOwlModel().isRootDataProperty(prop);
     }
     

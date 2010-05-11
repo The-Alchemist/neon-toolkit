@@ -4,7 +4,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: OntoStudio Dependencies Plug-in
 Bundle-SymbolicName: com.ontoprise.ontostudio.dependencies
 Bundle-Vendor: ontoprise GmbH
-Bundle-Version: 2.3.1
+Bundle-Version: 2.3.2
 Bundle-ClassPath: lib/ktable/ktable-2.1.2.jar,
  lib/xml/xerces-compat-2.6.1.jar,
  lib/jpowergraph-0.1-swt.jar,

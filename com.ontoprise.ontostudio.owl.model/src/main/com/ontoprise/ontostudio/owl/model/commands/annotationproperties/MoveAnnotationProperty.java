@@ -36,7 +36,7 @@ public class MoveAnnotationProperty extends MoveProperty {
     @Override
     protected OWLEntity getEntity(String propertyId) throws CommandException {
         try {
-            return getOwlModel().getOWLDataFactory().getOWLAnnotationProperty(OWLUtilities.toURI(propertyId));
+            return getOwlModel().getOWLDataFactory().getOWLAnnotationProperty(OWLUtilities.toIRI(propertyId));
         } catch (NeOnCoreException e) {
             throw new CommandException(e);
         }

@@ -37,5 +37,5 @@ public class RenameOWLIndividual extends RenameOWLEntity {
 	
 	@Override
 	protected OWLEntity getEntity(String uri) throws NeOnCoreException {
-	    return OWLModelFactory.getOWLDataFactory(getProjectName()).getOWLNamedIndividual(OWLUtilities.toURI(uri));	}
+	    return OWLModelFactory.getOWLDataFactory(getProjectName()).getOWLNamedIndividual(OWLUtilities.toIRI(uri));	}
 }
