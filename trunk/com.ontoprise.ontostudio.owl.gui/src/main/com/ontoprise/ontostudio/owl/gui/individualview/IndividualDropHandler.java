@@ -167,7 +167,7 @@ public class IndividualDropHandler implements DropTargetListener {
                 for (int i = 0; i < elem.length; i++) {
                     String clazzUri = elem[i].getClazz();
                     OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(elem[i].getProjectName());
-                    OWLClass clazz = factory.getOWLClass(OWLUtilities.toURI(clazzUri));
+                    OWLClass clazz = factory.getOWLClass(OWLUtilities.toIRI(clazzUri));
                     ClazzTreeElement oldParent = new ClazzTreeElement(clazz, elem[i].getOntologyUri(), elem[i].getProjectName(), TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class));
                     if (!oldParent.equals(newParent)) {
                         oldParents.add(oldParent);

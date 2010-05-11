@@ -55,7 +55,7 @@ public class RemoveDataProperty extends OWLModuleChangeCommand {
             }
 
             if (superPropertyId == null) {
-                OWLDataProperty dataProperty = OWLModelFactory.getOWLDataFactory(getProjectName()).getOWLDataProperty(OWLUtilities.toURI(subPropertyId));
+                OWLDataProperty dataProperty = OWLModelFactory.getOWLDataFactory(getProjectName()).getOWLDataProperty(OWLUtilities.toIRI(subPropertyId));
                 getOwlModel().delEntity(dataProperty, null);
             } else {
                 new ApplyChanges(getProjectName(), getOntology(), new OWLAxiom[0], new OWLAxiom[]{factory.getOWLSubDataPropertyOfAxiom(OWLUtilities.dataProperty(subPropertyId, ns, factory), OWLUtilities.dataProperty(superPropertyId, ns, factory))}).perform();

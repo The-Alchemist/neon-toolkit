@@ -114,7 +114,7 @@ public class RemoveEntityWizardPage1 extends RemoveAxiomWizardPage1 {
                     
                     for (OWLEntity entity: _entities) {
                         //if (OWLUtilities.toString(superDesc).contains(entity.getURI().toString()) || OWLUtilities.toString(subDesc).contains(entity.getURI().toString())) {
-                            if (!OWLUtilities.toString(superDesc).contains(entity.getURI().toString()) && !OWLUtilities.toString(subDesc).contains(entity.getURI().toString()) && tryRecursive) {
+                            if (!OWLUtilities.toString(superDesc).contains(entity.getIRI().toString()) && !OWLUtilities.toString(subDesc).contains(entity.getIRI().toString()) && tryRecursive) {
                                 recursiveFetchChildren(child, rootAxiom);
                             }
                         //}

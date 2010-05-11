@@ -146,10 +146,10 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
             Object[] array = (Object[]) newInput;
             if (array[0] instanceof OWLClass) {
                 OWLClass elem = (OWLClass) array[0];
-                if (elem.getURI().toString().equals(_selectedClazz) && array[1].equals(_ontologyUri) && array[2].equals(_projectId)) {
+                if (elem.getIRI().toString().equals(_selectedClazz) && array[1].equals(_ontologyUri) && array[2].equals(_projectId)) {
                     return;
                 }
-                _selectedClazz = elem.getURI().toString();
+                _selectedClazz = elem.getIRI().toString();
                 _ontologyUri = (String) array[1];
                 _projectId = (String) array[2];
                 updateItems();

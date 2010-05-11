@@ -60,11 +60,11 @@ public class AddOntologyAnnotation extends OWLModuleChangeCommand {
             String expandedRange = namespaces.expandString(range);
 
             OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(getProjectName());
-            OWLAnnotationProperty annotProp = factory.getOWLAnnotationProperty(OWLUtilities.toURI(annotationProperty));
+            OWLAnnotationProperty annotProp = factory.getOWLAnnotationProperty(OWLUtilities.toIRI(annotationProperty));
             OWLLiteral c = null;
             if (language.equals(OWLCommandUtils.EMPTY_LANGUAGE)) {
                 expandedRange = namespaces.expandString(range);
-                c = factory.getOWLTypedLiteral(value, factory.getOWLDatatype(OWLUtilities.toURI(expandedRange)));
+                c = factory.getOWLTypedLiteral(value, factory.getOWLDatatype(OWLUtilities.toIRI(expandedRange)));
             } else {
                 c = factory.getOWLStringLiteral(value, language);
             }

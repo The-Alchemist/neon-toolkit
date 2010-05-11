@@ -144,7 +144,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
         try {
 //            Logger.getLogger(getClass()).error("TODO: migration"); //$NON-NLS-1$
             if (value.startsWith(IRIUtils.TURTLE_IRI_OPEN) && value.endsWith(IRIUtils.TURTLE_IRI_CLOSE)) {
-                return owlModel.getOWLDataFactory().getOWLClass(OWLUtilities.toURI(value.substring(1, value.length() - 1)));
+                return owlModel.getOWLDataFactory().getOWLClass(OWLUtilities.toIRI(value.substring(1, value.length() - 1)));
             } else {
                 ManchesterOWLSyntaxClassExpressionParser parser = new ManchesterOWLSyntaxClassExpressionParser(owlModel.getOWLDataFactory(), new DefaultEntityChecker(owlModel));
                 return parser.parse(value);
@@ -188,8 +188,8 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
 
             dataTypeNameMap = new HashMap<String,OWLDatatype>();
             for (XSDVocabulary v: XSDVocabulary.values()) {
-                dataTypeNameMap.put(v.getURI().getFragment(), dataFactory.getOWLDatatype(v.getURI()));
-                dataTypeNameMap.put("xsd:" + v.getURI().getFragment(), dataFactory.getOWLDatatype(v.getURI())); //$NON-NLS-1$
+                dataTypeNameMap.put(v.getURI().getFragment(), dataFactory.getOWLDatatype(v.getIRI()));
+                dataTypeNameMap.put("xsd:" + v.getURI().getFragment(), dataFactory.getOWLDatatype(v.getIRI())); //$NON-NLS-1$
             }
         }
 
@@ -201,25 +201,18 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
             } else
                 // don' t first check if a class with the passed URI is contained in our 
                 // ontologies, always return a class. see issue http://buggy.ontoprise.de/bugs/show_bug.cgi?id=12849
-            return dataFactory.getOWLClass(getUri(name));
+            return dataFactory.getOWLClass(getIRI(name));
 
         }
 
-        /**
-         * @param name
-         * @return
-         */
-        private URI getUri(String name) {
+        private IRI getIRI(String name) {
             String uri = null;
             try {
                 uri = OWLPlugin.getDefault().getSyntaxManager().parseUri(name, owlModel);
             } catch (NeOnCoreException e) {
                 return null;
             }
-            return OWLUtilities.toURI(uri);
-        }
-        private IRI getIRI(String name) {
-            return IRI.create(getUri(name));
+            return OWLUtilities.toIRI(name);
         }
 
         public OWLObjectProperty getOWLObjectProperty(String name) {
@@ -231,8 +224,8 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
                     return null;
                 }
                 for (OWLModel model: ontologies) {
-                    if (model.getOntology().containsObjectPropertyReference(iri) || allowUndeclared) {
-                        return dataFactory.getOWLObjectProperty(getUri(name));
+                    if (model.getOntology().containsObjectPropertyInSignature(iri) || allowUndeclared) {
+                        return dataFactory.getOWLObjectProperty(getIRI(name));
                     }
                 }
                 return null;
@@ -258,8 +251,8 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
                     return null;
                 }
                 for (OWLModel model: ontologies) {
-                    if (model.getOntology().containsDataPropertyReference(iri) || allowUndeclared) {
-                        return dataFactory.getOWLDataProperty(getUri(name));
+                    if (model.getOntology().containsDataPropertyInSignature(iri) || allowUndeclared) {
+                        return dataFactory.getOWLDataProperty(getIRI(name));
                     }
                 }
                 return null;
@@ -274,7 +267,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
             //A check if a individuals is in the KB is not necessary, because this 
             //method is only called if HAS_VALUE is selected. Selecting a not existing individual 
             //is allowed.
-            if(getUri(name) != null) {
+            if(getIRI(name) != null) {
                 IRI iri;
                 try {
                     iri = getIRI(name);
@@ -296,8 +289,8 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
                     return null;
                 }
                 for (OWLModel model: ontologies) {
-                    if (model.getOntology().containsDatatypeReference(iri) || dataTypeNameMap.containsKey(name) || allowUndeclared) {
-                        return dataFactory.getOWLDatatype(getUri(name));
+                    if (model.getOntology().containsDatatypeInSignature(iri) || dataTypeNameMap.containsKey(name) || allowUndeclared) {
+                        return dataFactory.getOWLDatatype(getIRI(name));
                     }
                 }
                 return null;
@@ -316,8 +309,8 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
                     return null;
                 }
                 for (OWLModel model: ontologies) {
-                    if (model.getOntology().containsAnnotationPropertyReference(iri) || allowUndeclared) {
-                        return dataFactory.getOWLAnnotationProperty(getUri(name));
+                    if (model.getOntology().containsAnnotationPropertyInSignature(iri) || allowUndeclared) {
+                        return dataFactory.getOWLAnnotationProperty(getIRI(name));
                     }
                 }
                 return null;
@@ -420,7 +413,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
     public OWLAnnotationProperty parseAnnotationProperty(String value, OWLModel owlModel) throws NeOnCoreException {
         try {
             OWLDataFactory factory = owlModel.getOWLDataFactory();
-            return factory.getOWLAnnotationProperty(getManchesterOWLSyntaxEditorParser(owlModel, value).parseIRI().toURI());
+            return factory.getOWLAnnotationProperty(getManchesterOWLSyntaxEditorParser(owlModel, value).parseIRI());
         } catch (ParserException e) {
             throw new InternalNeOnException(e);
         } catch (IllegalArgumentException e) {

@@ -38,7 +38,7 @@ public class GetRootClazzes extends OWLOntologyRequestCommand {
             rootClazzes = getOwlModel().getRootClasses();
             _result = new ArrayList<String>();
             for (OWLClass clazz: rootClazzes) {
-                _result.add(clazz.getURI().toString());
+                _result.add(clazz.getIRI().toString());
             }
         } catch (NeOnCoreException e) {
             throw new CommandException(e);

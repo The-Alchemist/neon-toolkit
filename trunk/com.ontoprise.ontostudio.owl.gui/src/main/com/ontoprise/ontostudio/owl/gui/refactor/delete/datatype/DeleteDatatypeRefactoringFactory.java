@@ -48,7 +48,7 @@ public class DeleteDatatypeRefactoringFactory implements IRefactoringFactory {
 			for(DatatypeTreeElement element: elements) {
 				String datattypeUri = element.getId();
 				owlModel = OWLModelFactory.getOWLModel(element.getOntologyUri(), element.getProjectName());
-	            OWLDatatype datatype = owlModel.getOWLDataFactory().getOWLDatatype(OWLUtilities.toURI(datattypeUri));
+	            OWLDatatype datatype = owlModel.getOWLDataFactory().getOWLDatatype(OWLUtilities.toIRI(datattypeUri));
 	            if (!entities.contains(datatype)) {
 	            	entities.add(datatype);
 	            }

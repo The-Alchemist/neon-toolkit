@@ -33,7 +33,7 @@ public class CreateDataProperty extends OWLModuleChangeCommand {
 
         try {
             OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(getProjectName());
-            OWLDataProperty dataProperty = factory.getOWLDataProperty(OWLUtilities.toURI(propertyId));
+            OWLDataProperty dataProperty = factory.getOWLDataProperty(OWLUtilities.toIRI(propertyId));
 
             if (superPropertyId != null) {
                 OWLNamespaces ns = getOwlModel().getNamespaces();

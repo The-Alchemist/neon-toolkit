@@ -122,7 +122,7 @@ public class VisualizerConfiguration implements IVisualizerConfiguration {
     public Node getRootElementNode(String id, String ontologyId, String projectId) {
         try {
             Set<OWLClass> allClasses = OWLModelFactory.getOWLModel(ontologyId, projectId).getAllClasses();
-            OWLClass clazz = OWLModelFactory.getOWLDataFactory(projectId).getOWLClass(OWLUtilities.toURI(id));
+            OWLClass clazz = OWLModelFactory.getOWLDataFactory(projectId).getOWLClass(OWLUtilities.toIRI(id));
             if (allClasses.contains(clazz)) {
                 return new ClazzNode(clazz, ontologyId, projectId);
             }
@@ -153,19 +153,19 @@ public class VisualizerConfiguration implements IVisualizerConfiguration {
                 case ONTOLOGY_TYPE:
                     return new OntologyNode(id, projectId);
                 case CLAZZ_TYPE:
-                    return new ClazzNode(OWLModelFactory.getOWLDataFactory(projectId).getOWLClass(OWLUtilities.toURI(id)), ontologyId, projectId);
+                    return new ClazzNode(OWLModelFactory.getOWLDataFactory(projectId).getOWLClass(OWLUtilities.toIRI(id)), ontologyId, projectId);
                 case INDIVIDUAL_TYPE:
-                    return new IndividualNode(OWLModelFactory.getOWLDataFactory(projectId).getOWLNamedIndividual(OWLUtilities.toURI(id)), ontologyId, projectId);
+                    return new IndividualNode(OWLModelFactory.getOWLDataFactory(projectId).getOWLNamedIndividual(OWLUtilities.toIRI(id)), ontologyId, projectId);
                 case INDIVIDUAL_MULTI_TYPE:
-                    return new IndividualMultiNode(OWLModelFactory.getOWLDataFactory(projectId).getOWLNamedIndividual(OWLUtilities.toURI(id)), ontologyId, projectId);
+                    return new IndividualMultiNode(OWLModelFactory.getOWLDataFactory(projectId).getOWLNamedIndividual(OWLUtilities.toIRI(id)), ontologyId, projectId);
                 case OBJECT_PROPERTY_TYPE:
-                    return new ObjectPropertyNode(OWLModelFactory.getOWLDataFactory(projectId).getOWLObjectProperty(OWLUtilities.toURI(id)), ontologyId, projectId);
+                    return new ObjectPropertyNode(OWLModelFactory.getOWLDataFactory(projectId).getOWLObjectProperty(OWLUtilities.toIRI(id)), ontologyId, projectId);
                 case DATA_PROPERTY_TYPE:
-                    return new DataPropertyNode(OWLModelFactory.getOWLDataFactory(projectId).getOWLDataProperty(OWLUtilities.toURI(id)), ontologyId, projectId);
+                    return new DataPropertyNode(OWLModelFactory.getOWLDataFactory(projectId).getOWLDataProperty(OWLUtilities.toIRI(id)), ontologyId, projectId);
                 case DATA_TYPE:
                     return new DataNode(id, ontologyId, projectId);
             }
-            return new ClazzNode(OWLModelFactory.getOWLDataFactory(projectId).getOWLClass(OWLUtilities.toURI(id)), ontologyId, projectId);
+            return new ClazzNode(OWLModelFactory.getOWLDataFactory(projectId).getOWLClass(OWLUtilities.toIRI(id)), ontologyId, projectId);
         } catch (NeOnCoreException e) {
             throw new RuntimeException(e);
         }
@@ -173,7 +173,7 @@ public class VisualizerConfiguration implements IVisualizerConfiguration {
     
     public Node createIndividualRangeNode(String id, String propertyUri, String ontologyId, String projectId) {
         try {
-            OWLEntity entity = OWLModelFactory.getOWLDataFactory(projectId).getOWLObjectProperty(OWLUtilities.toURI(id));
+            OWLEntity entity = OWLModelFactory.getOWLDataFactory(projectId).getOWLObjectProperty(OWLUtilities.toIRI(id));
             return new IndividualNode(entity, propertyUri, ontologyId, projectId);
         } catch (NeOnCoreException e) {
             throw new RuntimeException(e);

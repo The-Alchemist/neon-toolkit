@@ -52,19 +52,19 @@ public class CreateDataPropertyMember extends OWLModuleChangeCommand {
 
         try {
             OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(getProjectName());
-            OWLIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.toURI(individualUri));
+            OWLIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.toIRI(individualUri));
             OWLLiteral c;
             if (type.equals(OWLConstants.RDFS_LITERAL)) { //$NON-NLS-1$
                 if (!language.equals(OWLCommandUtils.EMPTY_LANGUAGE) && !language.equals("")) { //$NON-NLS-1$
                     c = factory.getOWLStringLiteral(value, language);
                 } else {
-                    c = factory.getOWLTypedLiteral(value, factory.getOWLDatatype(OWLUtilities.toURI(OWLNamespaces.XSD_NS+"string")));
+                    c = factory.getOWLTypedLiteral(value, factory.getOWLDatatype(OWLUtilities.toIRI(OWLNamespaces.XSD_NS+"string")));
                 }
             } else {
-                c = factory.getOWLTypedLiteral(value, factory.getOWLDatatype(OWLUtilities.toURI(type)));
+                c = factory.getOWLTypedLiteral(value, factory.getOWLDatatype(OWLUtilities.toIRI(type)));
             }
 
-            OWLDataPropertyExpression prop = OWLModelFactory.getOWLDataFactory(getProjectName()).getOWLDataProperty(OWLUtilities.toURI(propertyUri));
+            OWLDataPropertyExpression prop = OWLModelFactory.getOWLDataFactory(getProjectName()).getOWLDataProperty(OWLUtilities.toIRI(propertyUri));
             OWLAxiom newAxiom = factory.getOWLDataPropertyAssertionAxiom(prop, individual, c);
 
             new ApplyChanges(getProjectName(), getOntology(), new String[] {OWLUtilities.toString(newAxiom)}, new String[0]).perform();

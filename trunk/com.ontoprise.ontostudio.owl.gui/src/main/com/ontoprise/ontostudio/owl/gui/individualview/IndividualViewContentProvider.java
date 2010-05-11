@@ -206,7 +206,7 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
                 InternalParser parser = new InternalParser(individualUri, OWLNamespaces.EMPTY_INSTANCE, OWLModelFactory.getOWLDataFactory(_projectId));
                 OWLIndividual individual = parser.parseOWLIndividual();
 //                if(individualUri.startsWith("_:"))individualUri = individualUri.substring(2); //$NON-NLS-1$
-//                OWLIndividual individual = OWLModelFactory.getOWLDataFactory(_projectId).getOWLNamedIndividual(OWLUtilities.toURI(individualUri));
+//                OWLIndividual individual = OWLModelFactory.getOWLDataFactory(_projectId).getOWLNamedIndividual(OWLUtilities.toIRI(individualUri));
                 _items[i++] = IndividualItem.createNewInstance(individual, _selectedClazz, _ontologyUri, _projectId);
             }
             Arrays.sort(_items, new Comparator<IIndividualTreeElement>() {
@@ -266,7 +266,7 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
         String newURI = _newItem.getId(); 
         Set<OWLEntity> entities = OWLModelFactory.getOWLModel(_ontologyUri, _projectId).getEntity(newURI);
         for (OWLEntity entity: entities) {
-            if (entity.getURI().equals(newURI)) {
+            if (entity.getIRI().toString().equals(newURI)) {
                 if(!(entity instanceof OWLIndividual)) {
                     MessageDialog.openInformation(_individualTree.getTree().getShell(), Messages.NewClazzHandler_0, Messages.NewClazzHandler_1);
                     editingCancelled();
@@ -337,7 +337,7 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
         }
         OWLNamedIndividual individual;
         try {
-            individual = OWLModelFactory.getOWLDataFactory(_projectId).getOWLNamedIndividual(OWLUtilities.toURI(newUri));
+            individual = OWLModelFactory.getOWLDataFactory(_projectId).getOWLNamedIndividual(OWLUtilities.toIRI(newUri));
         } catch (NeOnCoreException e) {
             throw new RuntimeException(e);
         }

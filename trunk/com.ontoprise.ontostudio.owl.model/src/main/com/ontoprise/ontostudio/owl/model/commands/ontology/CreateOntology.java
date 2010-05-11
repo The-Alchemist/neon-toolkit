@@ -62,7 +62,7 @@ public class CreateOntology extends DatamodelCommand {
                 // MAPI remove OWLOntologyManager
                 OWLOntologyManager manager = ontologyProject.getAdapter(OWLOntologyManager.class);
                 OWLOntology ontology = manager.createOntology(IRI.create(ontologyURI));
-                manager.setPhysicalURIForOntology(ontology, URI.create(physicalUri));
+                manager.setOntologyDocumentIRI(ontology, IRI.create(physicalUri));
                 ontologyProject.readAndDispatchWhileWaitingForEvents();
                 
                 // The manchester implementation has no event for new created ontologies, we need to update manually.

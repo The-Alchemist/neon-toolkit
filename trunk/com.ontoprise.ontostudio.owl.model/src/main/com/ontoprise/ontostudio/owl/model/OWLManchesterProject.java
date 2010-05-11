@@ -129,11 +129,12 @@ public class OWLManchesterProject extends AbstractOntologyProject {
             String newOntologyURI = OWLManchesterProject.toString(change.getNewOntologyID());
             try {
                 getOntologyProjectNature().renameOntology(oldOntologyURI, newOntologyURI);
-            } catch (CoreException e1) {
+                removeOntology(oldOntologyURI, false);
+                fireRenameEvent(EventTypes.ONTOLOGY_RENAMED, oldOntologyURI, newOntologyURI);
+                OWLManchesterProject.this.setOntologyDirty(newOntologyURI, true);
+            } catch (Exception e1) {
                 e1.printStackTrace();
             }
-            fireRenameEvent(EventTypes.ONTOLOGY_RENAMED, oldOntologyURI, newOntologyURI);
-            OWLManchesterProject.this.setOntologyDirty(newOntologyURI, true);
         }
 
         @Override
@@ -220,7 +221,7 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                     // neither added nor removed
                 } else if (count < 0) {
                     // may have been removed
-                    if (!ontology.containsEntityReference(entity)) {
+                    if (!ontology.containsEntityInSignature(entity)) {
                         removedEntities.add(entity);
                     }
                 } else {
@@ -349,6 +350,9 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                     throw new InternalNeOnException(e);
                 }
             }
+            else {
+                setOntologyDirty(ontologyUri, false);
+            }
         }
         Logger.getLogger(getClass()).debug(String.format("Finished removing [%1$s]", ontologyUri));
 
@@ -408,7 +412,7 @@ public class OWLManchesterProject extends AbstractOntologyProject {
     @Override
     public void saveOntology(String ontologyUri) throws NeOnCoreException {
         try {
-            URI physicalURI = _ontologyManager.getPhysicalURIForOntology(_ontologyManager.getOntology(IRI.create(ontologyUri)));
+            IRI physicalURI = _ontologyManager.getOntologyDocumentIRI(_ontologyManager.getOntology(IRI.create(ontologyUri)));
             IProject project = this.getResource();
             URI projURI = project.getLocationURI();
             if (!physicalURI.toString().startsWith(projURI.toString())){
@@ -505,7 +509,7 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                         URI ontologyURI = URI.create(ontologyUri);
                         IRI ontologyIRI = IRI.create(ontologyURI);
                         ontologyIRIs.add(ontologyIRI);
-                        SimpleIRIMapper mapper = new SimpleIRIMapper(ontologyURI, physicalURI);
+                        SimpleIRIMapper mapper = new SimpleIRIMapper(IRI.create(ontologyURI), IRI.create(physicalURI));
                         _ontologyManager.addIRIMapper(mapper);
                         iriMappers.add(mapper);
                     }
@@ -519,15 +523,15 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                             if (event.getOntologyID().getOntologyIRI() == null){
                                 OWLOntology onto = _ontologyManager.getOntology(event.getOntologyID());
                                 // Change the null URI into the physicalURI so that NeOn Toolkit is happy.
-                                OWLOntologyID newID = new OWLOntologyID(IRI.create(event.getPhysicalURI()));
+                                OWLOntologyID newID = new OWLOntologyID(event.getDocumentIRI());
                                 try {
                                     _ontologyManager.applyChange(new SetOntologyID(onto, newID));
-                                    owlOntologyUris.put(newID, event.getPhysicalURI().toString());
+                                    owlOntologyUris.put(newID, event.getDocumentIRI().toString());
                                 } catch (OWLOntologyChangeException e) {
                                     e.printStackTrace();
                                 }
                             }
-                            else owlOntologyUris.put(event.getOntologyID(), event.getPhysicalURI().toString());
+                            else owlOntologyUris.put(event.getOntologyID(), event.getDocumentIRI().toString());
                         } else {
                             if (exception.get() == null) {
                                 exception.set(event.getException());
@@ -548,7 +552,7 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                     if (physicalURIs.length == 1) {
                         monitor.subTask("Loading ontology "+physicalURIs[0]); //$NON-NLS-1$
                         try {
-                            _ontologyManager.loadOntologyFromPhysicalURI(physicalURIs[0]);
+                            _ontologyManager.loadOntologyFromOntologyDocument(IRI.create(physicalURIs[0]));
                         } catch (OWLOntologyCreationException e) {
                             removeOntologies(_ontologyManager, owlOntologyUris.keySet());
                             throw e;
@@ -606,7 +610,7 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                                 this.addOntology(ontologyUri.getOntologyIRI().toString());
                                 registeredOntologies.add(ontologyUri.getOntologyIRI().toString());
                                 String physicalUri = owlOntologyUris.get(ontologyUri);
-                                _ontologyManager.setPhysicalURIForOntology(_ontologyManager.getOntology(ontologyUri), URI.create(physicalUri));
+                                _ontologyManager.setOntologyDocumentIRI(_ontologyManager.getOntology(ontologyUri), IRI.create(physicalUri));
                             }
                         }
                     } catch (NeOnCoreException e) {
@@ -686,7 +690,7 @@ public class OWLManchesterProject extends AbstractOntologyProject {
             String physicalOntologyUri = getResource().getFile(fileName).getLocationURI().toString();
             Set<OWLOntology> ontologies = getOntologyManager().getOntologies();
             for (OWLOntology ontology: ontologies) {
-                if (getOntologyManager().getPhysicalURIForOntology(ontology).toString().equals(physicalOntologyUri)) {
+                if (getOntologyManager().getOntologyDocumentIRI(ontology).toString().equals(physicalOntologyUri)) {
                     return true;
                 }
             }
@@ -759,16 +763,16 @@ public class OWLManchesterProject extends AbstractOntologyProject {
 
     @Override
     public String getPhysicalURIForOntology(String ontologyURI) throws NeOnCoreException {
-        return _ontologyManager.getPhysicalURIForOntology(getOntology(ontologyURI)).toString();
+        return _ontologyManager.getOntologyDocumentIRI(getOntology(ontologyURI)).toString();
     }
     
     @Override
     public void setPhysicalURIForOntology(String ontologyURI, String physicalURI) throws NeOnCoreException {
-        _ontologyManager.setPhysicalURIForOntology(getOntology(ontologyURI), URI.create(physicalURI));
+        _ontologyManager.setOntologyDocumentIRI(getOntology(ontologyURI), IRI.create(physicalURI));
     }
 
     public String getPhysicalURIForOntology(OWLOntology ontology) {
-        return _ontologyManager.getPhysicalURIForOntology(ontology).toString();
+        return _ontologyManager.getOntologyDocumentIRI(ontology).toString();
     }
 
     @Override
@@ -914,7 +918,7 @@ public class OWLManchesterProject extends AbstractOntologyProject {
             OWLDataFactory factory = _ontologyManager.getOWLDataFactory();
             List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
             for (String ontologyURIToImport: ontologyURIsToImport) {
-                changes.add(new AddImport(getOntology(ontologyURI), factory.getOWLImportsDeclaration(OWLUtilities.toURI(ontologyURIToImport))));
+                changes.add(new AddImport(getOntology(ontologyURI), factory.getOWLImportsDeclaration(OWLUtilities.toIRI(ontologyURIToImport))));
             }
             _ontologyManager.applyChanges(changes);
         } catch (OWLOntologyChangeException e) {
@@ -928,7 +932,7 @@ public class OWLManchesterProject extends AbstractOntologyProject {
             OWLDataFactory factory = _ontologyManager.getOWLDataFactory();
             List<OWLOntologyChange> changes = new ArrayList<OWLOntologyChange>();
             for (String ontologyURIToImport: ontologyURIsToImport) {
-                changes.add(new RemoveImport(getOntology(ontologyURI), factory.getOWLImportsDeclaration(OWLUtilities.toURI(ontologyURIToImport))));
+                changes.add(new RemoveImport(getOntology(ontologyURI), factory.getOWLImportsDeclaration(OWLUtilities.toIRI(ontologyURIToImport))));
             }
             _ontologyManager.applyChanges(changes);
         } catch (OWLOntologyChangeException e) {

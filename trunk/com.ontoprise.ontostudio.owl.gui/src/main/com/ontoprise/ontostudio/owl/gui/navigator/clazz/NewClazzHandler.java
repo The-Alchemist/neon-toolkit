@@ -81,7 +81,7 @@ public class NewClazzHandler extends AbstractNewHandler {
                 newUri = newId;
             }
 
-            OWLClass clazz = OWLModelFactory.getOWLDataFactory(owlModel.getProjectId()).getOWLClass(OWLUtilities.toURI(newUri));
+            OWLClass clazz = OWLModelFactory.getOWLDataFactory(owlModel.getProjectId()).getOWLClass(OWLUtilities.toIRI(newUri));
             ClazzTreeElement newElement = new ClazzTreeElement(
                     clazz, owlModel.getOntologyURI(), owlModel.getProjectId(), provider);
             return newElement;
@@ -119,7 +119,7 @@ public class NewClazzHandler extends AbstractNewHandler {
             return false;
         }
         
-		OWLEntity clazz = OWLModelFactory.getOWLDataFactory(projectId).getOWLClass(OWLUtilities.toURI(newUri));
+		OWLEntity clazz = OWLModelFactory.getOWLDataFactory(projectId).getOWLClass(OWLUtilities.toIRI(newUri));
 		ClazzTreeElement data = new ClazzTreeElement(
 				clazz,
 				element.getOntologyUri(), 

@@ -178,7 +178,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 axiomList.add(new LocatedAxiom(axiom, !imported));
                 Set<OWLClassExpression> descriptions = axiom.getClassExpressions();
                 for (OWLClassExpression d: descriptions) {
-                    if ((d instanceof OWLClass) && ((OWLClass)d).getURI().toString().equals(_id)) {
+                    if ((d instanceof OWLClass) && ((OWLClass)d).getIRI().toString().equals(_id)) {
                         // ignore, since we show the EPV of this description
                     } else {
                         createRow(_equivRestrictionsComp, d, axiomList, imported, new String[] {ontologyUri}, OWLCommandUtils.EQUIV);
@@ -750,7 +750,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 return;
             }
             OWLDataProperty prop = manager.parseDataProperty(input, _owlModel);
-            boolean isDataProperty = new IsDataProperty(_project, _ontologyUri, prop.getURI().toString()).isDataProperty();
+            boolean isDataProperty = new IsDataProperty(_project, _ontologyUri, prop.getIRI().toString()).isDataProperty();
             if (isDataProperty) {
                 if (hasValue) {
                     finalRangeText = new LiteralText(formRow.getParent(), _owlModel).getStyledText();

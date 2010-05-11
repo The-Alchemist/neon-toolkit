@@ -49,7 +49,7 @@ public class MoveClazz extends OWLModuleChangeCommand {
 	            OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(getProjectName());
                 if (oldSuperClazzId != null) {
 	                // tkr: remove the old SubClassOf axiom only, do not remove clazzId itself
-	                OWLSubClassOfAxiom axiom = factory.getOWLSubClassOfAxiom(factory.getOWLClass(OWLUtilities.toURI(clazzId)), factory.getOWLClass(OWLUtilities.toURI(oldSuperClazzId)));
+	                OWLSubClassOfAxiom axiom = factory.getOWLSubClassOfAxiom(factory.getOWLClass(OWLUtilities.toIRI(clazzId)), factory.getOWLClass(OWLUtilities.toIRI(oldSuperClazzId)));
 	                if (getOwlModel().containsAxiom(axiom, false)) {
 	                    new ApplyChanges(getProjectName(), getOntology(), new String[0], new String[]{OWLUtilities.toString(axiom)}).perform();
 	                }
@@ -58,7 +58,7 @@ public class MoveClazz extends OWLModuleChangeCommand {
 	            	// this means a clazz from root level has been moved, so we have to remove the 
 	            	// declaration so that the respective event removes the tree item. 
 	    			try {
-	    				OWLDeclarationAxiom decl = factory.getOWLDeclarationAxiom(factory.getOWLClass(OWLUtilities.toURI(clazzId)));
+	    				OWLDeclarationAxiom decl = factory.getOWLDeclarationAxiom(factory.getOWLClass(OWLUtilities.toIRI(clazzId)));
                         new ApplyChanges(getProjectName(), getOntology(), new String[0], new String[]{OWLUtilities.toString(decl)}).perform();
 					} catch (NeOnCoreException e) {
 	                    // nothing to do, no explicit information seems to exist

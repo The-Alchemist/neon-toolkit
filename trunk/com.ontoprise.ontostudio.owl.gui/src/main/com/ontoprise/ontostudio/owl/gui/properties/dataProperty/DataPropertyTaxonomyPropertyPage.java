@@ -299,15 +299,15 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                     OWLDataProperty dataProp = _manager.parseDataProperty(value, _owlModel);
                     remove();
                     if (mode == SUPER) {
-                        new CreateDataProperty(_project, _ontologyUri, _id, dataProp.getURI().toString()).run();
+                        new CreateDataProperty(_project, _ontologyUri, _id, dataProp.getIRI().toString()).run();
                         initSubSection(false);
                         initSuperSection(true);
                     } else if (mode == SUB) {
-                        new CreateDataProperty(_project, _ontologyUri, dataProp.getURI().toString(), _id).run();
+                        new CreateDataProperty(_project, _ontologyUri, dataProp.getIRI().toString(), _id).run();
                         initSuperSection(false);
                         initSubSection(true);
                     } else {
-                        new CreateEquivalentDataProperty(_project, _ontologyUri, dataProp.getURI().toString(), value);
+                        new CreateEquivalentDataProperty(_project, _ontologyUri, dataProp.getIRI().toString(), value);
                         initEquivSection(true);
                     }
                 } catch (NeOnCoreException k2e) {
@@ -376,13 +376,13 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                 try {
                     OWLDataProperty dataProp = _manager.parseDataProperty(value, _owlModel);
                     if (mode == SUPER) {
-                        new CreateDataProperty(_project, _ontologyUri, _id, dataProp.getURI().toString()).run();
+                        new CreateDataProperty(_project, _ontologyUri, _id, dataProp.getIRI().toString()).run();
                         initSuperSection(true);
                     } else if (mode == SUB) {
-                        new CreateDataProperty(_project, _ontologyUri, dataProp.getURI().toString(), _id).run();
+                        new CreateDataProperty(_project, _ontologyUri, dataProp.getIRI().toString(), _id).run();
                         initSubSection(true);
                     } else {
-                        new CreateEquivalentDataProperty(_project, _ontologyUri, dataProp.getURI().toString(), value);
+                        new CreateEquivalentDataProperty(_project, _ontologyUri, dataProp.getIRI().toString(), value);
                         initEquivSection(true);
                     }
 
@@ -465,18 +465,18 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
 
                     switch (mode) {
                         case SUPER:
-                            new CreateDataProperty(_project, _ontologyUri, _id, DataProp.getURI().toString()).run();
+                            new CreateDataProperty(_project, _ontologyUri, _id, DataProp.getIRI().toString()).run();
                             initSubSection(false);
                             initSuperSection(true);
                             break;
                         case SUB:
-                            new CreateDataProperty(_project, _ontologyUri, DataProp.getURI().toString(), _id).run();
+                            new CreateDataProperty(_project, _ontologyUri, DataProp.getIRI().toString(), _id).run();
                             initSuperSection(false);
                             initSubSection(true);
                             break;
                         case EQUIV:
-                            if (!DataProp.getURI().toString().equals(_id)) {
-                                new CreateEquivalentDataProperty(_project, _ontologyUri, _id, DataProp.getURI().toString()).run();
+                            if (!DataProp.getIRI().toString().equals(_id)) {
+                                new CreateEquivalentDataProperty(_project, _ontologyUri, _id, DataProp.getIRI().toString()).run();
                                 initEquivSection(true);
                             } else {
                                 String modeString = Messages.DataPropertyTaxonomyPropertyPage_0;
@@ -569,7 +569,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                             OWLDataPropertyExpression ope2 = subObjProp2.getSubProperty(); 
                             if (ope2 instanceof OWLDataProperty) {
                                 OWLDataProperty DataProperty2 = (OWLDataProperty)ope2;
-                                if (!(DataProperty2.getURI().toString().equals(thisId))) {
+                                if (!(DataProperty2.getIRI().toString().equals(thisId))) {
                                     uri2 = OWLGUIUtilities.getEntityLabel(DataProperty2, ontologyUri2, _project);
                                 }
                             }
@@ -579,7 +579,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                         Set<OWLDataPropertyExpression> equivalentDataProps = eop.getProperties();
                         for (OWLDataPropertyExpression expr: equivalentDataProps) {
                             if (expr instanceof OWLDataProperty) {
-                                if (!((OWLDataProperty)expr).getURI().toString().equals(thisId)) {
+                                if (!((OWLDataProperty)expr).getIRI().toString().equals(thisId)) {
                                     uri1 = OWLGUIUtilities.getEntityLabel((OWLDataProperty)expr, ontologyUri1, _project);
                                 }
                             }
@@ -590,7 +590,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                         Set<OWLDataPropertyExpression> equivalentDataProps2 = eop2.getProperties();
                         for (OWLDataPropertyExpression expr: equivalentDataProps2) {
                             if (expr instanceof OWLDataProperty) {
-                                if (!((OWLDataProperty)expr).getURI().toString().equals(thisId)) {
+                                if (!((OWLDataProperty)expr).getIRI().toString().equals(thisId)) {
                                     uri2 = OWLGUIUtilities.getEntityLabel((OWLDataProperty)expr, ontologyUri1, _project);
                                 }
                             }

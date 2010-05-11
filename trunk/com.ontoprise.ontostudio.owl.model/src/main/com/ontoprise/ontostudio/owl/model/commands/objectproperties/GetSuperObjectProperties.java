@@ -45,7 +45,7 @@ public class GetSuperObjectProperties extends OWLOntologyRequestCommand {
             superObjectProperties = getOwlModel().getSuperObjectProperties(propertyId);
             _result = new ArrayList<String>();
             for (OWLObjectProperty op: superObjectProperties) {
-                _result.add(op.getURI().toString());
+                _result.add(op.getIRI().toString());
             }
         } catch (NeOnCoreException e) {
             throw new CommandException(e);

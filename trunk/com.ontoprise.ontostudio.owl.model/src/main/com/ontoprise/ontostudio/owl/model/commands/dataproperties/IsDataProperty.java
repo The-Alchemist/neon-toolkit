@@ -39,7 +39,7 @@ public class IsDataProperty extends OWLOntologyRequestCommand {
         try {
             expandedURI = getOwlModel().getNamespaces().expandString(propertyUri);
 
-            OWLDataProperty prop = OWLModelFactory.getOWLDataFactory(getProjectName()).getOWLDataProperty(OWLUtilities.toURI(expandedURI));
+            OWLDataProperty prop = OWLModelFactory.getOWLDataFactory(getProjectName()).getOWLDataProperty(OWLUtilities.toIRI(expandedURI));
             Set<OWLDataProperty> properties = getOwlModel().getAllDataProperties(true);
             _isDataProperty = new Boolean(properties.contains(prop));
         } catch (NeOnCoreException e) {

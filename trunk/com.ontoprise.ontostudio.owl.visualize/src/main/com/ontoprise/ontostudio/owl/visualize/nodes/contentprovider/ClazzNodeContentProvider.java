@@ -63,7 +63,7 @@ public class ClazzNodeContentProvider extends AbstractNodeContentProvider {
             addSubClazzes(projectId, ontologyUri, nodes, edges, ((ClazzTreeElement) element).getEntity(), hierarchyLevel);
 
             // finally add a node for the passed element and set it as root node
-            LabelImageNode passedNode = getNode(((ClazzTreeElement) element).getEntity().getURI().toString(), ontologyUri, projectId, VisualizerConfiguration.CLAZZ_TYPE, _ontologyLanguage);
+            LabelImageNode passedNode = getNode(((ClazzTreeElement) element).getEntity().getIRI().toString(), ontologyUri, projectId, VisualizerConfiguration.CLAZZ_TYPE, _ontologyLanguage);
             passedNode.setFixed(true);
             addNode(passedNode, nodes);
 
@@ -107,9 +107,9 @@ public class ClazzNodeContentProvider extends AbstractNodeContentProvider {
     private void addSubClazzes(String projectId, String ontologyId, List<LabelImageNode> nodes, List<OntoStudioDefaultEdge> edges, OWLEntity superClazz, int hierarchyLevel) throws NeOnCoreException,NeOnCoreException {
         try {
             if (hierarchyLevel > -1) {
-                String[] subClazzUris = new GetSubClazzes(projectId, ontologyId, superClazz.getURI().toString()).getResults();
+                String[] subClazzUris = new GetSubClazzes(projectId, ontologyId, superClazz.getIRI().toString()).getResults();
                 for (String subClazzUri: subClazzUris) {
-                    OWLClass subClazz = OWLModelFactory.getOWLDataFactory(projectId).getOWLClass(OWLUtilities.toURI(subClazzUri));
+                    OWLClass subClazz = OWLModelFactory.getOWLDataFactory(projectId).getOWLClass(OWLUtilities.toIRI(subClazzUri));
                     while (hierarchyLevel > 1) {
                         // recurse according to hierarchyLevel
                         hierarchyLevel--;
@@ -117,7 +117,7 @@ public class ClazzNodeContentProvider extends AbstractNodeContentProvider {
                     }
                     LabelImageNode clazzNode = getNode(subClazzUri, ontologyId, projectId, VisualizerConfiguration.CLAZZ_TYPE, _ontologyLanguage);
                     addNode(clazzNode, nodes);
-                    addEdge(new OntoStudioDefaultEdge(clazzNode, getNode(superClazz.getURI().toString(), ontologyId, projectId, VisualizerConfiguration.CLAZZ_TYPE, _ontologyLanguage)), edges);
+                    addEdge(new OntoStudioDefaultEdge(clazzNode, getNode(superClazz.getIRI().toString(), ontologyId, projectId, VisualizerConfiguration.CLAZZ_TYPE, _ontologyLanguage)), edges);
                 }
             }
         } catch (CommandException ce) {
@@ -131,7 +131,7 @@ public class ClazzNodeContentProvider extends AbstractNodeContentProvider {
                 String[] rootClazzUris = new GetRootClazzes(projectId, ontologyId).getResults();
                 List<OWLClass> rootClazzes = new ArrayList<OWLClass>();
                 for (String uri: rootClazzUris) {
-                    rootClazzes.add(OWLModelFactory.getOWLDataFactory(projectId).getOWLClass(OWLUtilities.toURI(uri)));
+                    rootClazzes.add(OWLModelFactory.getOWLDataFactory(projectId).getOWLClass(OWLUtilities.toIRI(uri)));
                 }
                 for (OWLClass clazz: rootClazzes) {
                     int level = hierarchyLevel;
@@ -140,7 +140,7 @@ public class ClazzNodeContentProvider extends AbstractNodeContentProvider {
                         level--;
                         addSubClazzes(projectId, ontologyId, nodes, edges, clazz, level);
                     }
-                    LabelImageNode clazzNode = getNode(clazz.getURI().toString(), ontologyId, projectId, VisualizerConfiguration.CLAZZ_TYPE, _ontologyLanguage);
+                    LabelImageNode clazzNode = getNode(clazz.getIRI().toString(), ontologyId, projectId, VisualizerConfiguration.CLAZZ_TYPE, _ontologyLanguage);
                     addNode(clazzNode, nodes);
                     addEdge(new OntoStudioDefaultEdge(clazzNode, getNode(ontologyId, ontologyId, projectId, VisualizerConfiguration.ONTOLOGY_TYPE, _ontologyLanguage)), edges);
                 }
@@ -157,9 +157,9 @@ public class ClazzNodeContentProvider extends AbstractNodeContentProvider {
             String[] rootClazzUris = new GetRootClazzes(projectId, ontologyUri).getResults();
             List<OWLClass> rootClazzes = new ArrayList<OWLClass>();
             for (String uri: rootClazzUris) {
-                rootClazzes.add(OWLModelFactory.getOWLDataFactory(projectId).getOWLClass(OWLUtilities.toURI(uri)));
+                rootClazzes.add(OWLModelFactory.getOWLDataFactory(projectId).getOWLClass(OWLUtilities.toIRI(uri)));
             }
-            OWLClass clazz = OWLModelFactory.getOWLDataFactory(projectId).getOWLClass(OWLUtilities.toURI(clazzId));
+            OWLClass clazz = OWLModelFactory.getOWLDataFactory(projectId).getOWLClass(OWLUtilities.toIRI(clazzId));
             if (rootClazzes.contains(clazz)) {
                 LabelImageNode parentNode = getNode(ontologyUri, ontologyUri, projectId, VisualizerConfiguration.ONTOLOGY_TYPE, _ontologyLanguage);
                 addNode(parentNode, parentNodes);
@@ -169,13 +169,13 @@ public class ClazzNodeContentProvider extends AbstractNodeContentProvider {
                 if (parentClazzes.size() == 0) {
                     Set<OWLClass> equivalentClazzes = OWLModelFactory.getOWLModel(ontologyUri, projectId).getEquivalentClasses(clazzId);
                     for (OWLClass equivalentClazz: equivalentClazzes) {
-                        LabelImageNode parentNode = getNode(equivalentClazz.getURI().toString(), ontologyUri, projectId, VisualizerConfiguration.CLAZZ_TYPE, _ontologyLanguage);
+                        LabelImageNode parentNode = getNode(equivalentClazz.getIRI().toString(), ontologyUri, projectId, VisualizerConfiguration.CLAZZ_TYPE, _ontologyLanguage);
                         addNode(parentNode, parentNodes);
                         addEdge(new OntoStudioDefaultEdge(passedNode, parentNode), parentEdges);
                     }
                 }
                 for (OWLClass parentClazz: parentClazzes) {
-                    LabelImageNode parentNode = getNode(parentClazz.getURI().toString(), ontologyUri, projectId, VisualizerConfiguration.CLAZZ_TYPE, _ontologyLanguage);
+                    LabelImageNode parentNode = getNode(parentClazz.getIRI().toString(), ontologyUri, projectId, VisualizerConfiguration.CLAZZ_TYPE, _ontologyLanguage);
                     addNode(parentNode, parentNodes);
                     addEdge(new OntoStudioDefaultEdge(passedNode, parentNode), parentEdges);
                 }

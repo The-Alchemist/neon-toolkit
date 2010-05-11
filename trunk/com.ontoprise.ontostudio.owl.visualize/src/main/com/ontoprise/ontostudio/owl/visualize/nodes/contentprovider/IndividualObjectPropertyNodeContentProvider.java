@@ -92,7 +92,7 @@ public class IndividualObjectPropertyNodeContentProvider extends AbstractNodeCon
     private void addInstancePropertyValues(String projectId, String ontologyUri, List<LabelImageNode> nodes, List<OntoStudioDefaultEdge> edges, OWLEntity clazz, int hierarchyLevel) throws NeOnCoreException,NeOnCoreException {
         try {
             OWLModel owlModel = OWLModelFactory.getOWLModel(ontologyUri, projectId);
-            String[] individualUris = new GetIndividuals(projectId, ontologyUri, clazz.getURI().toString()).getResults();
+            String[] individualUris = new GetIndividuals(projectId, ontologyUri, clazz.getIRI().toString()).getResults();
             if (individualUris.length > 100) {
                 return;
             }

@@ -10,7 +10,6 @@
 
 package com.ontoprise.ontostudio.search.owl.references;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -24,6 +23,7 @@ import org.neontoolkit.gui.navigator.MTreeView;
 import org.neontoolkit.gui.navigator.TreeProviderManager;
 import org.neontoolkit.search.SearchPlugin;
 import org.neontoolkit.search.command.AbstractSearchCommand;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -61,7 +61,7 @@ public class FindReferencesCommand extends AbstractSearchCommand{
      * @param project
      */
     public FindReferencesCommand(OWLEntity entity, String project) {
-        super(project,  entity.getURI().toString(), false);
+        super(project,  entity.getIRI().toString(), false);
         _entity = entity;
     }
 
@@ -91,7 +91,7 @@ public class FindReferencesCommand extends AbstractSearchCommand{
         OWLAxiom axiom = element.getAxiom();
         OWLEntity entity = FindReferencesHelper.findSubject(axiom);
         FieldTypes elementType = FindReferencesHelper.findType(entity);
-        URI entityUri = entity.getURI();
+        IRI entityUri = entity.getIRI();
         
         try {
             OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(getProject());
@@ -124,7 +124,7 @@ public class FindReferencesCommand extends AbstractSearchCommand{
                     try {
                         classes = OWLModelFactory.getOWLModel(ontology, project).getClasses(OWLUtilities.toString(indi));
                         for (OWLClass c: classes) {
-                            elem = IndividualItem.createNewInstance(indi, c.getURI().toString(), ontology, project);
+                            elem = IndividualItem.createNewInstance(indi, c.getIRI().toString(), ontology, project);
                             break; // only add the match once
                         }
                     } catch (NeOnCoreException e) {

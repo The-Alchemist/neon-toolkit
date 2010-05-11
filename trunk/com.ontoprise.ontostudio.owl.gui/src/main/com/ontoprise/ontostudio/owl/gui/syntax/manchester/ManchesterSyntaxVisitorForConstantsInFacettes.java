@@ -38,7 +38,7 @@ public class ManchesterSyntaxVisitorForConstantsInFacettes extends OWLKAON2Visit
 //        } else if (value instanceof Double) {
 //            return value.toString();
 
-        if (!object.isTyped()) {
+        if (!object.isOWLTypedLiteral()) {
             OWLStringLiteral untypedConstant = (OWLStringLiteral)object;
             String string = untypedConstant.getLiteral();
             String language = untypedConstant.getLang();
@@ -51,7 +51,7 @@ public class ManchesterSyntaxVisitorForConstantsInFacettes extends OWLKAON2Visit
         } else {
             OWLTypedLiteral typedConstant = (OWLTypedLiteral)object;
             OWLDatatype datatype = typedConstant.getDatatype();
-            String xsdTypeURI = datatype.getURI().toString();
+            String xsdTypeURI = datatype.getIRI().toString();
             if(xsdTypeURI.equals("http://www.w3.org/2001/XMLSchema#unsignedInt")) { //$NON-NLS-1$
                 xsdTypeURI="integer"; //$NON-NLS-1$
             } else if(xsdTypeURI.equals("http://www.w3.org/2001/XMLSchema#integer")) { //$NON-NLS-1$

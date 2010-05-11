@@ -91,19 +91,19 @@ public class IndividualDataPropertyNodeContentProvider extends AbstractNodeConte
     private void addInstancePropertyValues(String projectId, String ontologyUri, List<LabelImageNode> nodes, List<OntoStudioDefaultEdge> edges, OWLEntity clazz, int hierarchyLevel) throws NeOnCoreException, NeOnCoreException {
         try {
             OWLModel owlModel = OWLModelFactory.getOWLModel(ontologyUri, projectId);
-            String[] individualUris = new GetIndividuals(projectId, ontologyUri, clazz.getURI().toString()).getResults();
+            String[] individualUris = new GetIndividuals(projectId, ontologyUri, clazz.getIRI().toString()).getResults();
             if (individualUris.length > 100) {
                 return;
             }
             for (String individualUri: individualUris) {
-                OWLNamedIndividual individual = OWLModelFactory.getOWLDataFactory(projectId).getOWLNamedIndividual(OWLUtilities.toURI(individualUri));
-                Set<LocatedItem<OWLDataPropertyAssertionAxiom>> objMem = owlModel.getDataPropertyMemberHits(individual.getURI().toString());
+                OWLNamedIndividual individual = OWLModelFactory.getOWLDataFactory(projectId).getOWLNamedIndividual(OWLUtilities.toIRI(individualUri));
+                Set<LocatedItem<OWLDataPropertyAssertionAxiom>> objMem = owlModel.getDataPropertyMemberHits(individual.getIRI().toString());
                 for (LocatedItem<OWLDataPropertyAssertionAxiom> mem: objMem) {
                     OWLDataPropertyAssertionAxiom member = mem.getItem();
                     OWLDataPropertyExpression dataProperty = member.getProperty();
                     OWLLiteral targetValue = member.getObject();
     
-                    LabelImageNode sourceInstanceNode = getNode(individual.getURI().toString(), ontologyUri, projectId, VisualizerConfiguration.INDIVIDUAL_TYPE, _ontologyLanguage);
+                    LabelImageNode sourceInstanceNode = getNode(individual.getIRI().toString(), ontologyUri, projectId, VisualizerConfiguration.INDIVIDUAL_TYPE, _ontologyLanguage);
                     LabelImageNode targetValueNode = getNode(OWLUtilities.toString(targetValue), ontologyUri, projectId, VisualizerConfiguration.DATA_TYPE, _ontologyLanguage);
                     LabelImageNode dataPropertyNode = getNode(OWLUtilities.toString(dataProperty), ontologyUri, projectId, VisualizerConfiguration.DATA_PROPERTY_TYPE, _ontologyLanguage);
                     addNode(targetValueNode, nodes);

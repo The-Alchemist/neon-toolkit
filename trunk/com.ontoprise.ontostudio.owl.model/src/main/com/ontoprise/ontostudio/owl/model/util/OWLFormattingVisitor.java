@@ -23,13 +23,9 @@ import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 
 
 public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
-    private static final URI OWL_THING_URI;
+    private static final IRI OWL_THING_IRI;
     static {
-        try {
-            OWL_THING_URI = new URI(OWLNamespaces.OWL_NS + "Thing");
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
+        OWL_THING_IRI = IRI.create(OWLNamespaces.OWL_NS + "Thing");
     }
     private Appendable m_target;
     private OWLNamespaces m_namespaces;
@@ -73,38 +69,34 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
             throw new RuntimeException(e);
         }
     }
-    
-    private void visit(URI uri) {
-        append(m_namespaces.abbreviateAsNamespace(uri.toString()));
-    }
 
     public Object visit(OWLNamedIndividual object) {
-        visit(object.getURI());
+        visit(object.getIRI());
         return null;
     }
 
     public Object visit(OWLAnnotationProperty object) {
-        visit(object.getURI());
+        visit(object.getIRI());
         return null;
     }
 
     public Object visit(OWLDataProperty object) {
-        visit(object.getURI());
+        visit(object.getIRI());
         return null;
     }
 
     public Object visit(OWLObjectProperty object) {
-        visit(object.getURI());
+        visit(object.getIRI());
         return null;
     }
 
     public Object visit(OWLDatatype object) {
-        visit(object.getURI());
+        visit(object.getIRI());
         return null;
     }
 
     public Object visit(OWLClass object) {
-        visit(object.getURI());
+        visit(object.getIRI());
         return null;
     }
 
@@ -116,7 +108,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     }
 
     public Object visit(OWLLiteral object) {
-        if (object.isTyped()) {
+        if (object instanceof OWLTypedLiteral) {
             visit((OWLTypedLiteral)object);
         } else {
             visit((OWLStringLiteral)object);
@@ -259,7 +251,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     }
     
     private boolean isOWLThing(OWLClassExpression description) {
-        return description instanceof OWLClass && OWL_THING_URI.equals(((OWLClass)description).getURI());
+        return description instanceof OWLClass && OWL_THING_IRI.equals(((OWLClass)description).getIRI());
     }
 
     public Object visit(OWLObjectOneOf object) {
@@ -818,7 +810,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
         append('"');
         append(literal);
         append("\"^^<");
-        append(datatype.getURI().toString());
+        append(datatype.getIRI().toString());
         append('>');
         return null;
     }
@@ -1005,10 +997,11 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
         append(']');
         return null;
     }
+
     
     @Override
     public Object visit(IRI iri) {
-        visit(iri.toURI());
+        append(m_namespaces.abbreviateAsNamespace(iri.toString()));
         return null;
     }
     @Override

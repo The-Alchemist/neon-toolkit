@@ -23,7 +23,7 @@ public class FindReferencesQuery extends AbstractSearchQuery {
      * @param project in which to search
      */
     public FindReferencesQuery(OWLEntity entity, String project) {
-        super(entity.getURI().toString(), 0, new String[]{project});
+        super(entity.getIRI().toString(), 0, new String[]{project});
         _entity = entity;
     }
 

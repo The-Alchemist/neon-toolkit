@@ -31,8 +31,8 @@ public class CreateIndividual extends OWLModuleChangeCommand {
     public void doPerform() throws CommandException {
         try {
             OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(getProjectName());
-            OWLClass clazz = factory.getOWLClass(OWLUtilities.toURI(getArgument(2).toString()));
-            OWLNamedIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.toURI(getArgument(3).toString()));
+            OWLClass clazz = factory.getOWLClass(OWLUtilities.toIRI(getArgument(2).toString()));
+            OWLNamedIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.toIRI(getArgument(3).toString()));
             OWLClassAssertionAxiom clazzMember = factory.getOWLClassAssertionAxiom(clazz, individual);
 
             getOwlModel().addEntity(individual);

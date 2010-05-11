@@ -45,7 +45,7 @@ public class GetSubAnnotationProperties extends OWLOntologyRequestCommand {
             subAnnotationProperties = getOwlModel().getSubAnnotationProperties(propertyId);
             _result = new ArrayList<String>();
             for (OWLAnnotationProperty op: subAnnotationProperties) {
-                _result.add(op.getURI().toString());
+                _result.add(op.getIRI().toString());
             }
         } catch (NeOnCoreException e) {
             throw new CommandException(e);

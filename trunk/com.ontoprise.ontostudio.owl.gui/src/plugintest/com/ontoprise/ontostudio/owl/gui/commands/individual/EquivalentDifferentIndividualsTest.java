@@ -80,8 +80,8 @@ public class EquivalentDifferentIndividualsTest extends AbstractOWLPluginTest {
         OWLSameIndividualAxiom sameIndividual = (OWLSameIndividualAxiom) OWLUtilities.axiom(equivalentIndividualHits[0][0], namespaces, factory);
         Set<OWLIndividual> individuals = sameIndividual.getIndividuals();
         Set<OWLIndividual> expectedIndividuals = new HashSet<OWLIndividual>();
-        expectedIndividuals.add(OWLModelFactory.getOWLDataFactory(PROJECT_ID).getOWLNamedIndividual(OWLUtilities.toURI(i1)));
-        expectedIndividuals.add(OWLModelFactory.getOWLDataFactory(PROJECT_ID).getOWLNamedIndividual(OWLUtilities.toURI(i3)));
+        expectedIndividuals.add(OWLModelFactory.getOWLDataFactory(PROJECT_ID).getOWLNamedIndividual(OWLUtilities.toIRI(i1)));
+        expectedIndividuals.add(OWLModelFactory.getOWLDataFactory(PROJECT_ID).getOWLNamedIndividual(OWLUtilities.toIRI(i3)));
 
         assertUnsortedArrayEquals(expectedIndividuals.toArray(new OWLIndividual[2]), individuals.toArray(new OWLIndividual[individuals.size()]));
 
@@ -122,8 +122,8 @@ public class EquivalentDifferentIndividualsTest extends AbstractOWLPluginTest {
         OWLDifferentIndividualsAxiom differentIndividuals = (OWLDifferentIndividualsAxiom) OWLUtilities.axiom(equivalentIndividualHits[0][0], namespaces, factory);
         Set<OWLIndividual> individuals = differentIndividuals.getIndividuals();
         Set<OWLIndividual> expectedIndividuals = new HashSet<OWLIndividual>();
-        expectedIndividuals.add(OWLModelFactory.getOWLDataFactory(PROJECT_ID).getOWLNamedIndividual(OWLUtilities.toURI(i1)));
-        expectedIndividuals.add(OWLModelFactory.getOWLDataFactory(PROJECT_ID).getOWLNamedIndividual(OWLUtilities.toURI(i3)));
+        expectedIndividuals.add(OWLModelFactory.getOWLDataFactory(PROJECT_ID).getOWLNamedIndividual(OWLUtilities.toIRI(i1)));
+        expectedIndividuals.add(OWLModelFactory.getOWLDataFactory(PROJECT_ID).getOWLNamedIndividual(OWLUtilities.toIRI(i3)));
 
         assertUnsortedArrayEquals(expectedIndividuals.toArray(new OWLIndividual[2]), individuals.toArray(new OWLIndividual[individuals.size()]));
 

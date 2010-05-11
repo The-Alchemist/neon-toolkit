@@ -16,18 +16,18 @@ import java.io.File;
  * Created on 4.05.2002
  * Created by Dirk Wenke
  *
- * Keywords: FileFilter, Ontology, Import, Esport
+ * Keywords: FileFilter, Ontology, Import, Export
  */
 
 
 /**
- * An extenstion of the javax.swing.filechooser.FileFilter. Additional the
+ * An extension of the javax.swing.filechooser.FileFilter. Additional the
  * extension of the accepted files can be specified.
  */
 public abstract class FileFilter extends javax.swing.filechooser.FileFilter {
 
     /**
-     * FileFilter - Konstruktorkommentar.
+     * FileFilter
      */
     public FileFilter() {
         super();

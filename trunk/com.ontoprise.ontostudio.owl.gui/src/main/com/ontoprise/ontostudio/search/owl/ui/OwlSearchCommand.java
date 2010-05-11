@@ -199,38 +199,38 @@ public class OwlSearchCommand extends AbstractSearchCommand {
             ITreeElement elem = null;
             switch (elementType) {
                 case CLASSES:
-                    OWLClass clazz = factory.getOWLClass(OWLUtilities.toURI(element.getEntityUri()));
+                    OWLClass clazz = factory.getOWLClass(OWLUtilities.toIRI(element.getEntityUri()));
                     elem = new ClazzTreeElement(clazz, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class));
                     add(new Match(new ClassSearchMatch((ClazzTreeElement) elem), 0, getExpression().length()), resultList);
                     break;
                     
                 case ANNOTATION_PROPERTIES:
-                    OWLAnnotationProperty annotProp = factory.getOWLAnnotationProperty(OWLUtilities.toURI(element.getEntityUri()));
+                    OWLAnnotationProperty annotProp = factory.getOWLAnnotationProperty(OWLUtilities.toIRI(element.getEntityUri()));
                     elem = new AnnotationPropertyTreeElement(annotProp, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, AnnotationPropertyHierarchyProvider.class));
                     add(new Match(new AnnotationPropertySearchMatch((AnnotationPropertyTreeElement) elem), 0, getExpression().length()), resultList);
                     break;
                     
                 case DATA_PROPERTIES:
-                    OWLDataProperty dataProp = factory.getOWLDataProperty(OWLUtilities.toURI(element.getEntityUri()));
+                    OWLDataProperty dataProp = factory.getOWLDataProperty(OWLUtilities.toIRI(element.getEntityUri()));
                     elem = new DataPropertyTreeElement(dataProp, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, DataPropertyHierarchyProvider.class));
                     add(new Match(new DataPropertySearchMatch((DataPropertyTreeElement) elem), 0, getExpression().length()), resultList);
                     break;
                     
                 case OBJECT_PROPERTIES:
-                    OWLObjectProperty objectProp = factory.getOWLObjectProperty(OWLUtilities.toURI(element.getEntityUri()));
+                    OWLObjectProperty objectProp = factory.getOWLObjectProperty(OWLUtilities.toIRI(element.getEntityUri()));
                     elem = new ObjectPropertyTreeElement(objectProp, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ObjectPropertyHierarchyProvider.class));
                     add(new Match(new ObjectPropertySearchMatch((ObjectPropertyTreeElement) elem), 0, getExpression().length()), resultList);
                     break;
                     
                 case INDIVIDUALS:
-                    OWLIndividual indi = new InternalParser(element.getEntityUri(), OWLNamespaces.EMPTY_INSTANCE, factory).parseOWLIndividual();// factory.getOWLNamedIndividual(OWLUtilities.toURI(element.getEntityUri()));
+                    OWLIndividual indi = new InternalParser(element.getEntityUri(), OWLNamespaces.EMPTY_INSTANCE, factory).parseOWLIndividual();// factory.getOWLNamedIndividual(OWLUtilities.toIRI(element.getEntityUri()));
                     Set<OWLClass> classes;
                     try {
                         classes = OWLModelFactory.getOWLModel(ontology, project).getClasses(OWLUtilities.toString(indi));
                         ClassSearchMatch classMatch = null;
                         for (OWLClass c: classes) {
                             classMatch = new ClassSearchMatch(new ClazzTreeElement(c, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class)));
-                            elem = IndividualItem.createNewInstance(indi, c.getURI().toString(), ontology, project);
+                            elem = IndividualItem.createNewInstance(indi, c.getIRI().toString(), ontology, project);
                             add(new Match(new IndividualSearchMatch((IIndividualTreeElement) elem, classMatch), 0, getExpression().length()), resultList);
                             break; // only add the match once
                         }
@@ -249,7 +249,7 @@ public class OwlSearchCommand extends AbstractSearchCommand {
                         ClassSearchMatch classMatch = null;
                         for (OWLClass c: classes) {
                             classMatch = new ClassSearchMatch(new ClazzTreeElement(c, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class)));
-                            elem = IndividualItem.createNewInstance(subject, c.getURI().toString(), ontology, project);
+                            elem = IndividualItem.createNewInstance(subject, c.getIRI().toString(), ontology, project);
 
                             int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
                             OWLObjectVisitorEx visitor = OWLPlugin.getDefault().getSyntaxManager().getVisitor(owlModel, idDisplayStyle);
@@ -286,7 +286,7 @@ public class OwlSearchCommand extends AbstractSearchCommand {
                     }
                     
                 case DATATYPES:
-                    OWLDatatype datatype = factory.getOWLDatatype(OWLUtilities.toURI(element.getEntityUri()));
+                    OWLDatatype datatype = factory.getOWLDatatype(OWLUtilities.toIRI(element.getEntityUri()));
                     elem = new DatatypeTreeElement(datatype, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, DatatypeProvider.class));
                     add(new Match(new DatatypeSearchMatch((DatatypeTreeElement) elem), 0, getExpression().length()), resultList);
                     break;
@@ -335,7 +335,7 @@ public class OwlSearchCommand extends AbstractSearchCommand {
 //                ClassSearchMatch classMatch = null;
                 for (OWLClass c: classes) {
 //                    classMatch = new ClassSearchMatch(new ClazzTreeElement(c, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class)));
-                    return IndividualItem.createNewInstance((OWLIndividual)entity, c.getURI().toString(), ontology, project);
+                    return IndividualItem.createNewInstance((OWLIndividual)entity, c.getIRI().toString(), ontology, project);
                 }
             } catch (NeOnCoreException e) {
                 SearchPlugin.logError(e.getMessage(), e);

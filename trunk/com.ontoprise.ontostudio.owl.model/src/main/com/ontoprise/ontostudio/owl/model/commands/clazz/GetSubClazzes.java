@@ -42,7 +42,7 @@ public class GetSubClazzes extends OWLOntologyRequestCommand {
             Set<OWLClass> subClazzes = getOwlModel().getSubClasses((String) getArgument(2));
             _result = new ArrayList<String>();
             for (OWLClass clazz: subClazzes) {
-                _result.add(clazz.getURI().toString());
+                _result.add(clazz.getIRI().toString());
             }
 
         } catch (NeOnCoreException e) {

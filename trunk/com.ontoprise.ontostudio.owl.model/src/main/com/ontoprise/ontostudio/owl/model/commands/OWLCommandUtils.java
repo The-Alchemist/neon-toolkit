@@ -75,7 +75,7 @@ public class OWLCommandUtils {
         OWLClassExpression desc = null;
         try {
             if (isDataProperty(expandedURI, ontologyId, project)) {
-                OWLDataPropertyExpression property = factory.getOWLDataProperty(OWLUtilities.toURI(expandedURI));
+                OWLDataPropertyExpression property = factory.getOWLDataProperty(OWLUtilities.toIRI(expandedURI));
                 if (quantor.equals(HAS_VALUE)) {
                     desc = factory.getOWLDataHasValue(property, OWLUtilities.constant(range, ns, factory));
                 } else {
@@ -99,7 +99,7 @@ public class OWLCommandUtils {
                     }
                 }
             } else {
-                OWLObjectPropertyExpression property = factory.getOWLObjectProperty(OWLUtilities.toURI(expandedURI));
+                OWLObjectPropertyExpression property = factory.getOWLObjectProperty(OWLUtilities.toIRI(expandedURI));
                 if (quantor.equals(HAS_VALUE)) {
                     desc = factory.getOWLObjectHasValue(property, OWLUtilities.individual(range, ns, factory));
                 } else {
@@ -160,7 +160,7 @@ public class OWLCommandUtils {
 
     public static boolean isDataProperty(String propertyUri, String ontologyUri, String projectId) throws NeOnCoreException {
         String expandedURI = OWLModelFactory.getOWLModel(ontologyUri, projectId).getNamespaces().expandString(propertyUri);
-        OWLDataProperty prop = OWLModelFactory.getOWLDataFactory(projectId).getOWLDataProperty(OWLUtilities.toURI(expandedURI));
+        OWLDataProperty prop = OWLModelFactory.getOWLDataFactory(projectId).getOWLDataProperty(OWLUtilities.toIRI(expandedURI));
         Set<OWLDataProperty> properties = OWLModelFactory.getOWLModel(ontologyUri, projectId).getAllDataProperties();
         return properties.contains(prop);
     }

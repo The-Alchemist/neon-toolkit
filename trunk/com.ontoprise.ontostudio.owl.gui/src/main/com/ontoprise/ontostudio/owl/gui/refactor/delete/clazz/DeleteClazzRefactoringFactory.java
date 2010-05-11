@@ -47,7 +47,7 @@ public class DeleteClazzRefactoringFactory implements IRefactoringFactory {
             for (ClazzTreeElement element: elements) {
                 String subClazzId = element.getId();
                 owlModel = OWLModelFactory.getOWLModel(element.getOntologyUri(), element.getProjectName());
-                OWLClass subClazz = OWLModelFactory.getOWLDataFactory(element.getProjectName()).getOWLClass(OWLUtilities.toURI(subClazzId));
+                OWLClass subClazz = OWLModelFactory.getOWLDataFactory(element.getProjectName()).getOWLClass(OWLUtilities.toIRI(subClazzId));
                 if (!entities.contains(subClazz)) {
                     entities.add(subClazz);
                 }

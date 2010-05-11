@@ -45,7 +45,7 @@ public class GetSuperAnnotationProperties extends OWLOntologyRequestCommand {
             superObjectProperties = getOwlModel().getSuperAnnotationProperties(propertyId);
             _result = new ArrayList<String>();
             for (OWLAnnotationProperty op: superObjectProperties) {
-                _result.add(op.getURI().toString());
+                _result.add(op.getIRI().toString());
             }
         } catch (NeOnCoreException e) {
             throw new CommandException(e);

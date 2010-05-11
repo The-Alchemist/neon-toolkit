@@ -29,7 +29,7 @@ public class RemoveDatatype extends OWLModuleChangeCommand {
     @Override
     public void doPerform() throws CommandException {
         try {
-            OWLDatatype datatype = OWLModelFactory.getOWLDataFactory(getProjectName()).getOWLDatatype(OWLUtilities.toURI(getArgument(2).toString()));
+            OWLDatatype datatype = OWLModelFactory.getOWLDataFactory(getProjectName()).getOWLDatatype(OWLUtilities.toIRI(getArgument(2).toString()));
             getOwlModel().delEntity(datatype, null);
         } catch (NeOnCoreException e) {
             throw new CommandException(e);

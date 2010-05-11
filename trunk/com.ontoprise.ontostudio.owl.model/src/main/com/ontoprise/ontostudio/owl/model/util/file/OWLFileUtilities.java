@@ -28,14 +28,14 @@ import org.coode.owlapi.owlxmlparser.OWLXMLParserFactory;
 import org.coode.owlapi.rdfxml.parser.RDFXMLParserFactory;
 import org.coode.owlapi.turtle.TurtleOntologyFormat;
 import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.io.IRIDocumentSource;
 import org.semanticweb.owlapi.io.OWLFunctionalSyntaxOntologyFormat;
-import org.semanticweb.owlapi.io.OWLOntologyInputSource;
+import org.semanticweb.owlapi.io.OWLOntologyDocumentSource;
 import org.semanticweb.owlapi.io.OWLParser;
 import org.semanticweb.owlapi.io.OWLParserFactory;
 import org.semanticweb.owlapi.io.OWLXMLOntologyFormat;
-import org.semanticweb.owlapi.io.PhysicalURIInputSource;
 import org.semanticweb.owlapi.io.RDFXMLOntologyFormat;
-import org.semanticweb.owlapi.io.ReaderInputSource;
+import org.semanticweb.owlapi.io.ReaderDocumentSource;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
@@ -132,15 +132,18 @@ public class OWLFileUtilities {
     }
     
     public static OWLOntologyInfo getOntologyInfo(URI physicalURI) throws UnknownOWLOntologyFormatException {
+        return getOntologyInfo(IRI.create(physicalURI));
+    }
+    public static OWLOntologyInfo getOntologyInfo(IRI physicalURI) throws UnknownOWLOntologyFormatException {
         return getOntologyInfo(physicalURI, ADD_AXIOM_THRESHOLD);
     }
-    public static OWLOntologyInfo getOntologyInfo(URI physicalURI, int addAxiomThreshold) throws UnknownOWLOntologyFormatException {
-        return getOntologyInfo(new PhysicalURIInputSource(physicalURI), addAxiomThreshold);
+    public static OWLOntologyInfo getOntologyInfo(IRI physicalURI, int addAxiomThreshold) throws UnknownOWLOntologyFormatException {
+        return getOntologyInfo(new IRIDocumentSource(physicalURI), addAxiomThreshold);
     }
-    public static OWLOntologyInfo getOntologyInfo(OWLOntologyInputSource source) throws UnknownOWLOntologyFormatException {
+    public static OWLOntologyInfo getOntologyInfo(OWLOntologyDocumentSource source) throws UnknownOWLOntologyFormatException {
         return getOntologyInfo(source, ADD_AXIOM_THRESHOLD);
     }
-    public static OWLOntologyInfo getOntologyInfo(OWLOntologyInputSource source, int addAxiomThreshold) throws UnknownOWLOntologyFormatException {
+    public static OWLOntologyInfo getOntologyInfo(OWLOntologyDocumentSource source, int addAxiomThreshold) throws UnknownOWLOntologyFormatException {
         // if source is reader or stream based we need to do resets between trying different parsers
         ResetReader resetReader = null;
         if (source.isReaderAvailable()) {
@@ -165,7 +168,7 @@ public class OWLFileUtilities {
             try {
                 if (resetReader != null) {
                     resetReader.resetToStart();
-                    parser.parse(new ReaderInputSource(resetReader, IRI.create(source.getPhysicalURI())), ontology);
+                    parser.parse(new ReaderDocumentSource(resetReader, source.getDocumentIRI()), ontology);
                 } else {
                     parser.parse(source, ontology);
                 }
@@ -237,17 +240,11 @@ public class OWLFileUtilities {
         manager.setSilentMissingImportsHandling(true);
         manager.addIRIMapper(new OWLOntologyIRIMapper() {
             @Override
-            public URI getPhysicalURI(IRI ontologyIRI) {
-                try {
-                    // make the loading mechanism fail by an "invalid" URI
-                    return new URI("unknownScheme", "unknownSSP", "unknownFragment");
-                } catch (URISyntaxException e) {
-                    // should not happen
-                    throw new OWLRuntimeException(e);
-                }
+            public IRI getDocumentIRI(IRI ontologyIRI) {
+                return IRI.create("file:unknownSSP#unknownFragment");
             }
         });
-        OWLOntology ontology = manager.loadOntologyFromPhysicalURI(physicalSourceURI);
-        manager.saveOntology(ontology, ontologyFormat, physicalTargetURI);
+        OWLOntology ontology = manager.loadOntologyFromOntologyDocument(IRI.create(physicalSourceURI));
+        manager.saveOntology(ontology, ontologyFormat, IRI.create(physicalTargetURI));
     }
 }

@@ -162,7 +162,7 @@ public class ObjectPropertyHierarchyProvider extends DefaultTreeDataProvider {
             String[] subPropertyIds = new GetSubObjectProperties(projectId, ontologyId, parentId).getResults();
             List<ObjectPropertyTreeElement> objPropNodes = new ArrayList<ObjectPropertyTreeElement>();
             for (String objPropUri: subPropertyIds) {
-                OWLObjectProperty objProp = OWLModelFactory.getOWLDataFactory(projectId).getOWLObjectProperty(OWLUtilities.toURI(objPropUri));
+                OWLObjectProperty objProp = OWLModelFactory.getOWLDataFactory(projectId).getOWLObjectProperty(OWLUtilities.toIRI(objPropUri));
                 objPropNodes.add(new ObjectPropertyTreeElement(objProp, ontologyId, projectId, this));
             }
             Collections.sort(objPropNodes, new AlphabeticalOWLEntityTreeElementComparator<ObjectPropertyTreeElement>());
@@ -241,7 +241,7 @@ public class ObjectPropertyHierarchyProvider extends DefaultTreeDataProvider {
             String[] rootPropertyUris = new GetRootObjectProperties(projectId, ontologyId).getResults();
             List<ObjectPropertyTreeElement> objPropNodes = new ArrayList<ObjectPropertyTreeElement>();
             for (String objPropUri: rootPropertyUris) {
-                OWLObjectProperty objProp = OWLModelFactory.getOWLDataFactory(projectId).getOWLObjectProperty(OWLUtilities.toURI(objPropUri));
+                OWLObjectProperty objProp = OWLModelFactory.getOWLDataFactory(projectId).getOWLObjectProperty(OWLUtilities.toIRI(objPropUri));
                 objPropNodes.add(new ObjectPropertyTreeElement(objProp, ontologyId, projectId, this));
             }
             Collections.sort(objPropNodes, new AlphabeticalOWLEntityTreeElementComparator<ObjectPropertyTreeElement>());
@@ -342,7 +342,7 @@ public class ObjectPropertyHierarchyProvider extends DefaultTreeDataProvider {
                 String[] localSuperProps = new GetSuperObjectProperties(objectPropertyTreeElement.getProjectName(), objectPropertyTreeElement.getOntologyUri(), superPropUri).getResults();
                 if (topOfPath.equals(objectPropertyTreeElement.getId())) {
                     TreeElementPath clonedPath = (TreeElementPath) currentPath.clone();
-                    OWLObjectProperty superProp = OWLModelFactory.getOWLDataFactory(objectPropertyTreeElement.getProjectName()).getOWLObjectProperty(OWLUtilities.toURI(superPropUri));
+                    OWLObjectProperty superProp = OWLModelFactory.getOWLDataFactory(objectPropertyTreeElement.getProjectName()).getOWLObjectProperty(OWLUtilities.toIRI(superPropUri));
                     ObjectPropertyTreeElement parent = new ObjectPropertyTreeElement(superProp, objectPropertyTreeElement.getOntologyUri(), objectPropertyTreeElement.getProjectName(), this);
                     ITreeElement[] currentElements = currentPath.toArray();
                     List<ITreeElement> currentElementList = new ArrayList<ITreeElement>();

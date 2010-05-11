@@ -184,7 +184,7 @@ public class OWLAxiomUtils {
             }
         }
         OWLDataFactory factory = getFactory(projectId);
-        OWLNamedIndividual newIndividual = factory.getOWLNamedIndividual(OWLUtilities.toURI(idToAdd));
+        OWLNamedIndividual newIndividual = factory.getOWLNamedIndividual(OWLUtilities.toIRI(idToAdd));
         clonedIndividuals.add(newIndividual);
         return factory.getOWLDifferentIndividualsAxiom(clonedIndividuals);
     }
@@ -213,7 +213,7 @@ public class OWLAxiomUtils {
             }
         }
         OWLDataFactory factory = getFactory(projectId);
-        OWLNamedIndividual newIndividual = factory.getOWLNamedIndividual(OWLUtilities.toURI(idToAdd));
+        OWLNamedIndividual newIndividual = factory.getOWLNamedIndividual(OWLUtilities.toIRI(idToAdd));
         clonedIndividuals.add(newIndividual);
         return factory.getOWLSameIndividualAxiom(clonedIndividuals);
     }
@@ -297,7 +297,7 @@ public class OWLAxiomUtils {
                     axioms,
                     id,
                     namespaces,
-                    entity.getURI().toString(),
+                    entity.getIRI().toString(),
                     owlModel); 
         } catch (CoreException e) {
             throw new InternalNeOnException(e);

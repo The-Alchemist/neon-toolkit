@@ -42,7 +42,7 @@ public class RemoveIndividual extends OWLModuleChangeCommand {
         for (int i = 0; i < individuals.length; i++) {
             try {
                 OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(getProjectName());
-                OWLNamedIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.toURI(individuals[i]));
+                OWLNamedIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.toIRI(individuals[i]));
                 if (removeReferringAxioms) {
                     getOwlModel().delEntity(individual, null);
                 } else {

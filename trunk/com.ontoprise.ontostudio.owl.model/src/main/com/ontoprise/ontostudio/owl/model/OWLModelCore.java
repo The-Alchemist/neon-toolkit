@@ -11,7 +11,6 @@
 package com.ontoprise.ontostudio.owl.model;
 
 import java.lang.reflect.InvocationTargetException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -209,7 +208,7 @@ public class OWLModelCore implements OWLModel {
             _entities.put(type, new LinkedHashSet<OWLEntity>());
         }
         OWLObjectVisitorEx<?> typeDetector = new GetInterfaceTypeVisitor();
-        Set<OWLEntity> allEntities = _ontology.getReferencedEntities();
+        Set<OWLEntity> allEntities = _ontology.getSignature();
         for (OWLEntity entity: allEntities) {
             Class<? extends OWLEntity> type = Cast.cast(entity.accept(typeDetector));
             Set<OWLEntity> entities = Cast.cast(_entities.get(type));
@@ -536,9 +535,9 @@ public class OWLModelCore implements OWLModel {
         protected Iterable<OWLAnnotationPropertyDomainAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
             Set<OWLAnnotationPropertyDomainAxiom> result = new LinkedHashSet<OWLAnnotationPropertyDomainAxiom>();
             if(parameters[0] instanceof OWLClass) {
-                URI clazz = ((OWLClass)parameters[0]).getURI();
+                IRI clazz = ((OWLClass)parameters[0]).getIRI();
                 for (OWLAnnotationPropertyDomainAxiom axiom: ontology.getAxioms(AxiomType.ANNOTATION_PROPERTY_DOMAIN)) {
-                    if (clazz.equals(axiom.getDomain().toURI())) {
+                    if (clazz.equals(axiom.getDomain())) {
                         result.add(axiom);
                     }
                 }
@@ -1565,7 +1564,7 @@ public class OWLModelCore implements OWLModel {
         if (addSourceToResult) {
             result.add(source);
         }
-        Set<OWLClass> subClasses = getSubClasses(source.getURI().toString());
+        Set<OWLClass> subClasses = getSubClasses(source.getIRI().toString());
         for (OWLClass subClass: subClasses) {
             if (!result.contains(subClass)) {
                 getAllSubClasses(subClass, result, true);
@@ -1650,7 +1649,7 @@ public class OWLModelCore implements OWLModel {
         Set<OWLClass> closure = getAllSubClasses(classId);
         closure.add(owlClass(classId));
         for (OWLClass clazz: closure) {
-            result.addAll(getIndividuals(clazz.getURI().toString()));
+            result.addAll(getIndividuals(clazz.getIRI().toString()));
         }
         return result;
     }
@@ -1790,7 +1789,7 @@ public class OWLModelCore implements OWLModel {
 
     @Override
     public Set<ItemHits<OWLObjectProperty,OWLSubObjectPropertyOfAxiom>> getSubObjectPropertyHits(String propertyId) throws NeOnCoreException {
-        Set<LocatedItem<OWLSubObjectPropertyOfAxiom>> locatedAxioms = getLocatedChildEdgeAxioms(OWLObjectPropertyExpression.class, OWLSubObjectPropertyOfAxiom.class, OWLModelFactory.getOWLDataFactory(getProjectId()).getOWLObjectProperty(OWLUtilities.toURI(propertyId)));
+        Set<LocatedItem<OWLSubObjectPropertyOfAxiom>> locatedAxioms = getLocatedChildEdgeAxioms(OWLObjectPropertyExpression.class, OWLSubObjectPropertyOfAxiom.class, OWLModelFactory.getOWLDataFactory(getProjectId()).getOWLObjectProperty(OWLUtilities.toIRI(propertyId)));
         return Cast.cast(SubObjectPropertyOf_subObjectProperties_NamedObjectPropertiesOnly_Collector.getItemHits(getGroupBy(), locatedAxioms));
     }
     
@@ -1802,7 +1801,7 @@ public class OWLModelCore implements OWLModel {
 
     @Override
     public Set<ItemHits<OWLDataProperty,OWLSubDataPropertyOfAxiom>> getSubDataPropertyHits(String propertyId) throws NeOnCoreException {
-        Set<LocatedItem<OWLSubDataPropertyOfAxiom>> locatedAxioms = getLocatedChildEdgeAxioms(OWLDataPropertyExpression.class, OWLSubDataPropertyOfAxiom.class, OWLModelFactory.getOWLDataFactory(getProjectId()).getOWLDataProperty(OWLUtilities.toURI(propertyId)));
+        Set<LocatedItem<OWLSubDataPropertyOfAxiom>> locatedAxioms = getLocatedChildEdgeAxioms(OWLDataPropertyExpression.class, OWLSubDataPropertyOfAxiom.class, OWLModelFactory.getOWLDataFactory(getProjectId()).getOWLDataProperty(OWLUtilities.toIRI(propertyId)));
         return Cast.cast(SubDataPropertyOf_subDataProperty_NamedDataPropertiesOnly_Collector.getItemHits(getGroupBy(), locatedAxioms));
     }
 
@@ -2222,7 +2221,7 @@ public class OWLModelCore implements OWLModel {
         if (monitor == null) {
             monitor = new NullProgressMonitor();
         }
-        OWLObjectDuplicator replaceVisitor = new OWLObjectDuplicator(Collections.singletonMap((OWLEntity)oldEntity, IRI.create(OWLUtilities.toURI(newUri))), getOWLDataFactory());
+        OWLObjectDuplicator replaceVisitor = new OWLObjectDuplicator(Collections.singletonMap((OWLEntity)oldEntity, OWLUtilities.toIRI(newUri)), getOWLDataFactory());
 
         List<OWLAxiomChange> changes = new ArrayList<OWLAxiomChange>();
         Set<OWLAxiom> axioms = getOntology().getReferencingAxioms(oldEntity);
@@ -2269,26 +2268,26 @@ public class OWLModelCore implements OWLModel {
 
     @Override
     public Set<OWLEntity> getEntity(String owlEntityId) throws NeOnCoreException {
-        IRI uri = IRI.create(OWLUtilities.toURI(owlEntityId));
+        IRI uri = OWLUtilities.toIRI(owlEntityId);
         Set<OWLEntity> result = new LinkedHashSet<OWLEntity>();
         for (OWLModel model: getRelevantOntologies(getIncludeImportedOntologies())) {
             OWLOntology ontology = model.getOntology();
-            if (ontology.containsClassReference(uri)) {
+            if (ontology.containsClassInSignature(uri)) {
                 result.add(getOWLDataFactory().getOWLClass(uri));
             }
-            if (ontology.containsDataPropertyReference(uri)) {
+            if (ontology.containsDataPropertyInSignature(uri)) {
                 result.add(getOWLDataFactory().getOWLDataProperty(uri));
             }
-            if (ontology.containsDatatypeReference(uri)) {
+            if (ontology.containsDatatypeInSignature(uri)) {
                 result.add(getOWLDataFactory().getOWLDatatype(uri));
             }
-            if (ontology.containsIndividualReference(uri)) {
+            if (ontology.containsIndividualInSignature(uri)) {
                 result.add(getOWLDataFactory().getOWLNamedIndividual(uri));
             }
-            if (ontology.containsObjectPropertyReference(uri)) {
+            if (ontology.containsObjectPropertyInSignature(uri)) {
                 result.add(getOWLDataFactory().getOWLObjectProperty(uri));
             }
-            if (ontology.containsAnnotationPropertyReference(uri)) {
+            if (ontology.containsAnnotationPropertyInSignature(uri)) {
                 result.add(getOWLDataFactory().getOWLAnnotationProperty(uri));
             }
         }
@@ -2296,15 +2295,15 @@ public class OWLModelCore implements OWLModel {
     }
 
     private OWLAnnotationProperty annotationProperty(String uri) throws NeOnCoreException {
-        return getOWLDataFactory().getOWLAnnotationProperty(OWLUtilities.toURI(uri));
+        return getOWLDataFactory().getOWLAnnotationProperty(OWLUtilities.toIRI(uri));
     }
 
     private OWLObjectProperty objectProperty(String uri) throws NeOnCoreException {
-        return getOWLDataFactory().getOWLObjectProperty(OWLUtilities.toURI(uri));
+        return getOWLDataFactory().getOWLObjectProperty(OWLUtilities.toIRI(uri));
     }
 
     private OWLDataProperty dataProperty(String uri) throws NeOnCoreException {
-        return getOWLDataFactory().getOWLDataProperty(OWLUtilities.toURI(uri));
+        return getOWLDataFactory().getOWLDataProperty(OWLUtilities.toIRI(uri));
     }
 
     private OWLIndividual individual(String uri) throws NeOnCoreException {
@@ -2313,11 +2312,11 @@ public class OWLModelCore implements OWLModel {
         } catch (InternalParserException e) {
             throw new InternalNeOnException(e.getMessage(), e.getCause());
             
-        }//.getOWLNamedIndividual(OWLUtilities.toURI(uri));
+        }//.getOWLNamedIndividual(OWLUtilities.toIRI(uri));
     }
 
     private OWLClass owlClass(String uri) throws NeOnCoreException {
-        return getOWLDataFactory().getOWLClass(OWLUtilities.toURI(uri));
+        return getOWLDataFactory().getOWLClass(OWLUtilities.toIRI(uri));
     }
 
     private OWLDeclarationAxiom declaration(OWLEntity entity) throws NeOnCoreException {
@@ -2331,7 +2330,7 @@ public class OWLModelCore implements OWLModel {
 
     @Override
     public Set<ItemHits<OWLAnnotationProperty,OWLSubAnnotationPropertyOfAxiom>> getSubAnnotationPropertyHits(String propertyId) throws NeOnCoreException {
-        Set<LocatedItem<OWLSubAnnotationPropertyOfAxiom>> locatedAxioms = getLocatedChildEdgeAxioms(OWLAnnotationProperty.class, OWLSubAnnotationPropertyOfAxiom.class, OWLModelFactory.getOWLDataFactory(getProjectId()).getOWLAnnotationProperty(OWLUtilities.toURI(propertyId)));
+        Set<LocatedItem<OWLSubAnnotationPropertyOfAxiom>> locatedAxioms = getLocatedChildEdgeAxioms(OWLAnnotationProperty.class, OWLSubAnnotationPropertyOfAxiom.class, OWLModelFactory.getOWLDataFactory(getProjectId()).getOWLAnnotationProperty(OWLUtilities.toIRI(propertyId)));
         return Cast.cast(SubAnnotationPropertyOf_subAnnotationProperty_Collector.getItemHits(getGroupBy(), locatedAxioms));
     }
 

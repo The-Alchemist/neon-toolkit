@@ -93,7 +93,7 @@ public class PropertyProposalProvider extends AbstractOwlProposalProvider {
                 // standard annotation properties
                 List<OWLAnnotationProperty> standardAnnotationProperties = new ArrayList<OWLAnnotationProperty>();
                 for (String prop: OntoStudioOWLConstants.OWL_STANDARD_ANNOTATION_PROPERTIES) {
-                    standardAnnotationProperties.add(_owlModel.getOWLDataFactory().getOWLAnnotationProperty(OWLUtilities.toURI(prop)));
+                    standardAnnotationProperties.add(_owlModel.getOWLDataFactory().getOWLAnnotationProperty(OWLUtilities.toIRI(prop)));
                 }
 
                 annotProps = _owlModel.getAllAnnotationProperties(true);

@@ -163,7 +163,7 @@ public class AnnotationPropertyHierarchyProvider extends DefaultTreeDataProvider
             List<AnnotationPropertyTreeElement> annotationPropNodes = new ArrayList<AnnotationPropertyTreeElement>();
             int i = 0;
             for (String annotationPropUri: subPropertyUris) {
-                OWLAnnotationProperty prop = OWLModelFactory.getOWLDataFactory(projectId).getOWLAnnotationProperty(OWLUtilities.toURI(annotationPropUri));
+                OWLAnnotationProperty prop = OWLModelFactory.getOWLDataFactory(projectId).getOWLAnnotationProperty(OWLUtilities.toIRI(annotationPropUri));
                 annotationPropNodes.add(new AnnotationPropertyTreeElement(prop, ontologyId, projectId, this));
                 i++;
             }
@@ -255,7 +255,7 @@ public class AnnotationPropertyHierarchyProvider extends DefaultTreeDataProvider
 
             List<AnnotationPropertyTreeElement> annotPropNodes = new ArrayList<AnnotationPropertyTreeElement>();
             for (String annotationProp: annotationPropUris) {
-                OWLAnnotationProperty prop = OWLModelFactory.getOWLDataFactory(projectId).getOWLAnnotationProperty(OWLUtilities.toURI(annotationProp));
+                OWLAnnotationProperty prop = OWLModelFactory.getOWLDataFactory(projectId).getOWLAnnotationProperty(OWLUtilities.toIRI(annotationProp));
                 annotPropNodes.add(new AnnotationPropertyTreeElement(prop, ontologyId, projectId, this));
             }
             Collections.sort(annotPropNodes, new AlphabeticalOWLEntityTreeElementComparator<AnnotationPropertyTreeElement>());
@@ -351,7 +351,7 @@ public class AnnotationPropertyHierarchyProvider extends DefaultTreeDataProvider
             TreeElementPath currentPath = (TreeElementPath) paths.get(i);
             String topOfPath = ((AnnotationPropertyTreeElement) currentPath.get(0)).getId();
             for (OWLAnnotationProperty superProp: superProps) {
-                Set<OWLAnnotationProperty> localSuperProps = OWLModelFactory.getOWLModel(clazz.getOntologyUri(), clazz.getProjectName()).getSuperAnnotationProperties(superProp.getURI().toString());
+                Set<OWLAnnotationProperty> localSuperProps = OWLModelFactory.getOWLModel(clazz.getOntologyUri(), clazz.getProjectName()).getSuperAnnotationProperties(superProp.getIRI().toString());
                 if (topOfPath.equals(clazz.getId())) {
                     TreeElementPath clonedPath = (TreeElementPath) currentPath.clone();
                     AnnotationPropertyTreeElement parent = new AnnotationPropertyTreeElement(superProp, clazz.getOntologyUri(), clazz.getProjectName(), this);

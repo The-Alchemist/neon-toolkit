@@ -10,15 +10,17 @@
 
 package com.ontoprise.ontostudio.owl.model.util.file;
 
-import java.net.URI;
+import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.io.OWLOntologyInputSource;
-import org.semanticweb.owlapi.io.OWLOntologyOutputTarget;
+import org.semanticweb.owlapi.io.OWLOntologyDocumentSource;
+import org.semanticweb.owlapi.io.OWLOntologyDocumentTarget;
 import org.semanticweb.owlapi.model.AddAxiom;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.MissingImportListener;
@@ -135,7 +137,7 @@ public final class OntologyInfoOntologyManager implements OWLOntologyManager {
         return Collections.emptyList();
     }
     @Override
-    public void makeLoadImportRequest(OWLImportsDeclaration declaration) throws OWLOntologyCreationException {
+    public void makeLoadImportRequest(OWLImportsDeclaration declaration) {
         // ignore
     }
 
@@ -251,7 +253,7 @@ public final class OntologyInfoOntologyManager implements OWLOntologyManager {
         throw new UnsupportedOperationException();
     }
     @Override
-    public URI getPhysicalURIForOntology(OWLOntology ontology) throws UnknownOWLOntologyException {
+    public IRI getOntologyDocumentIRI(OWLOntology ontology) throws UnknownOWLOntologyException {
         throw new UnsupportedOperationException();
     }
     @Override
@@ -267,11 +269,19 @@ public final class OntologyInfoOntologyManager implements OWLOntologyManager {
         throw new UnsupportedOperationException();
     }
     @Override
-    public OWLOntology loadOntology(OWLOntologyInputSource inputSource) throws OWLOntologyCreationException {
+    public OWLOntology loadOntologyFromOntologyDocument(InputStream inputSource) throws OWLOntologyCreationException {
         throw new UnsupportedOperationException();
     }
     @Override
-    public OWLOntology loadOntologyFromPhysicalURI(URI uri) throws OWLOntologyCreationException {
+    public OWLOntology loadOntologyFromOntologyDocument(IRI uri) throws OWLOntologyCreationException {
+        throw new UnsupportedOperationException();
+    }
+    @Override
+    public OWLOntology loadOntologyFromOntologyDocument(File file) throws OWLOntologyCreationException {
+        throw new UnsupportedOperationException();
+    }
+    @Override
+    public OWLOntology loadOntologyFromOntologyDocument(OWLOntologyDocumentSource documentSource) throws OWLOntologyCreationException {
         throw new UnsupportedOperationException();
     }
     @Override
@@ -319,7 +329,7 @@ public final class OntologyInfoOntologyManager implements OWLOntologyManager {
         throw new UnsupportedOperationException();
     }
     @Override
-    public void saveOntology(OWLOntology ontology, URI physicalURI) throws OWLOntologyStorageException, UnknownOWLOntologyException {
+    public void saveOntology(OWLOntology ontology, IRI physicalURI) throws OWLOntologyStorageException, UnknownOWLOntologyException {
         throw new UnsupportedOperationException();
     }
     @Override
@@ -327,15 +337,23 @@ public final class OntologyInfoOntologyManager implements OWLOntologyManager {
         throw new UnsupportedOperationException();
     }
     @Override
-    public void saveOntology(OWLOntology ontology, OWLOntologyOutputTarget outputTarget) throws OWLOntologyStorageException, UnknownOWLOntologyException {
+    public void saveOntology(OWLOntology ontology, OutputStream outputTarget) throws OWLOntologyStorageException, UnknownOWLOntologyException {
         throw new UnsupportedOperationException();
     }
     @Override
-    public void saveOntology(OWLOntology ontology, OWLOntologyFormat ontologyFormat, URI physicalURI) throws OWLOntologyStorageException, UnknownOWLOntologyException {
+    public void saveOntology(OWLOntology ontology, OWLOntologyFormat ontologyFormat, IRI physicalURI) throws OWLOntologyStorageException, UnknownOWLOntologyException {
         throw new UnsupportedOperationException();
     }
     @Override
-    public void saveOntology(OWLOntology ontology, OWLOntologyFormat ontologyFormat, OWLOntologyOutputTarget outputTarget) throws OWLOntologyStorageException, UnknownOWLOntologyException {
+    public void saveOntology(OWLOntology ontology, OWLOntologyFormat ontologyFormat, OutputStream outputTarget) throws OWLOntologyStorageException, UnknownOWLOntologyException {
+        throw new UnsupportedOperationException();
+    }
+    @Override
+    public void saveOntology(OWLOntology ontology, OWLOntologyDocumentTarget documentTarget) throws OWLOntologyStorageException {
+        throw new UnsupportedOperationException();
+    }
+    @Override
+    public void saveOntology(OWLOntology ontology, OWLOntologyFormat ontologyFormat, OWLOntologyDocumentTarget documentTarget) throws OWLOntologyStorageException {
         throw new UnsupportedOperationException();
     }
     @Override
@@ -347,7 +365,7 @@ public final class OntologyInfoOntologyManager implements OWLOntologyManager {
         throw new UnsupportedOperationException();
     }
     @Override
-    public void setPhysicalURIForOntology(OWLOntology ontology, URI physicalURI) throws UnknownOWLOntologyException {
+    public void setOntologyDocumentIRI(OWLOntology ontology, IRI physicalURI) throws UnknownOWLOntologyException {
         throw new UnsupportedOperationException();
     }
     @Override

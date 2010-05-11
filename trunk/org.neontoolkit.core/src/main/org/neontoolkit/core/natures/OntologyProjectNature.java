@@ -326,7 +326,11 @@ public class OntologyProjectNature implements IProjectNature {
      * ontology container.
      */
     public boolean removeOntology(String ontologyUri) throws CoreException {
-        getOntologies();
+        return removeOntologyIntern(ontologyUri);
+    }
+    
+   private boolean removeOntologyIntern(String ontologyUri) throws CoreException {
+       getOntologies();
         Boolean removedShowImports = _showImports.remove(ontologyUri);
         if (removedShowImports == null) {
             removedShowImports = new Boolean(false);
@@ -338,14 +342,13 @@ public class OntologyProjectNature implements IProjectNature {
         return false;
     }
     
-    public void renameOntology(String oldOntologyUri, String newOntologyUri) {
-        if (_ontologyIds.remove(oldOntologyUri)) {
-            _ontologyIds.add(newOntologyUri);
-            Boolean showImports = _showImports.remove(oldOntologyUri);
-            if (showImports != null) {
-                _showImports.put(newOntologyUri, showImports);
-            }
-        }
+    public boolean renameOntology(String oldOntologyUri, String newOntologyUri) throws CoreException {
+       if (removeOntologyIntern(oldOntologyUri)){
+           _ontologyIds.add(newOntologyUri);
+           persistNature();
+           return true;
+       }
+       return false;
     }
     
     /**

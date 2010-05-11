@@ -294,14 +294,14 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
           createAnnotationsRow(annotation, contents, imported, sourceOnto);
 
         } else if (o instanceof OWLLiteral) {
-            if (!((OWLLiteral)o).isTyped()) {
+            if (!((OWLLiteral)o).isOWLTypedLiteral()) {
                 OWLStringLiteral untypedConstant = (OWLStringLiteral)o;
                 String literal = untypedConstant.getLiteral();
                 String language = untypedConstant.getLang();
                 String dataType = OWLConstants.RDFS_LITERAL;
                 contents.add(propArray);
                 contents.add(new String[] {literal});
-                contents.add((String[]) OWLModelFactory.getOWLDataFactory(_project).getOWLDatatype(OWLUtilities.toURI(dataType)).accept(visitor));
+                contents.add((String[]) OWLModelFactory.getOWLDataFactory(_project).getOWLDatatype(OWLUtilities.toIRI(dataType)).accept(visitor));
                 contents.add(new String[] {language});
                 createAnnotationsRow(annotation, contents, imported, sourceOnto);
 

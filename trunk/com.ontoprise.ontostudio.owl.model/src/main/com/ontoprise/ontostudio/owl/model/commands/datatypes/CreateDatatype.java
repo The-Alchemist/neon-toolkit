@@ -29,7 +29,7 @@ public class CreateDatatype extends OWLModuleChangeCommand {
         String datatypeId = getArgument(2).toString();
 
         try {
-            OWLDatatype datatype = OWLModelFactory.getOWLDataFactory(getProjectName()).getOWLDatatype(OWLUtilities.toURI(datatypeId));
+            OWLDatatype datatype = OWLModelFactory.getOWLDataFactory(getProjectName()).getOWLDatatype(OWLUtilities.toIRI(datatypeId));
 
             getOwlModel().addEntity(datatype);
         } catch (NeOnCoreException e) {
