@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry exported="true" kind="lib" path="lib/sag/axis-1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jpowergraph-0.1-swt.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ktable/ktable-2.1.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xml/xerces-compat-2.6.1.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
