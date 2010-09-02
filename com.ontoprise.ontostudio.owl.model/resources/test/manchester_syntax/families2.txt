@@ -1,0 +1,7 @@
+Ontology: 
+    <http://example.com/owl2/families.owl>
+
+Namespace: g = <http://example.com/owl/families#>
+Individual: g:Michael
+Individual: g:Moritz
+Individual: g:Paula
