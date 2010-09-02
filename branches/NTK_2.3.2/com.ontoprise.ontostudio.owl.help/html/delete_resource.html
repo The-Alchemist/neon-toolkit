@@ -1,0 +1,37 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <title>How to delete an Entity?</title>
+    <link rel="stylesheet" type="text/css" href="../css/stylesheet.css">
+</head>
+<body class="bodynormal">
+
+<h4>How to delete an Entity?</h4>
+
+<p>If you want to delete a resource such as a class (object property, data property, etc.) from the ontology, you can use
+the Delete dialog which guides you through the process. For example, if you want to delete a class, three options are available:</p>
+<ul>
+<li><b>Delete Class.</b> Deletes only the selected Class and all axioms containing this class.</li>
+<li><b>Delete Class with Individuals.</b> Deletes the selected class, all individuals of that class and all axioms containing
+either the class or one of the individuals.</li>
+<li><b>Delete Subtree under Classes.</b> Deletes the selected class with all of its Subclasses, as well as all individuals and 
+all axioms containing one of these classes or individuals.</li>
+</ul>
+
+<p><img class="format" src="../images/screenshots/delowl1.jpg" title="OWL Perpective Delete Dialog" alt="OWL Perpective Delete Dialog"></p>
+
+<p>However, the axioms are not removed immediately. For every single axiom, you can still decide whether you want to 
+remove or keep it. In the next step of the Delete dialog you are prompted to specify which axioms you want to keep.</p>
+
+<p><img class="format" src="../images/screenshots/delowl2.jpg" title="OWL Perpective Delete Dialog" alt="OWL Perpective Delete Dialog"></p>
+
+<p>Sometimes it is even necessary to add new axioms to not change the semantics of the ontology. For example, suppose you have an
+axiom stating that classes <tt>A</tt>, <tt>B</tt> and <tt>C</tt> are equivalent and you want to remove the information that 
+<tt>A</tt> and <tt>B</tt> are equivalent. By simply removing the axiom you would also loose the information that <tt>A</tt> and 
+<tt>C</tt> are equivalent as well as that <tt>B</tt> and <tt>C</tt> are equivalent. Therefore, you have to re-add those two axioms.
+This is realized in the third step of the Delete dialog.</p>
+
+<p>The NeOn Toolkit discovers these cases and proposes axioms that could/should be added to the ontology again. 
+Effectively this Wizard proposes not to remove complete axioms but rather 
+to remove the occurrence of the entity-to-be-deleted from them.
+</p>
