@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.neontoolkit.plugin;singleton:=true
+Bundle-Version: 2.3.2
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui.ide.application;bundle-version="1.0.100",
+ org.eclipse.equinox.launcher,
+ org.eclipse.ui.intro,
+ org.eclipse.ui.cheatsheets,
+ org.eclipse.ui.forms;resolution:=optional,
+ org.eclipse.core.runtime,
+ org.eclipse.ui.intro.universal,
+ org.eclipse.ui.workbench,
+ org.eclipse.update.ui,
+ org.eclipse.update.configurator;bundle-version="3.3.0",
+ org.eclipse.update.core;bundle-version="3.2.300",
+ org.eclipse.update.scheduler;bundle-version="3.2.200",
+ org.apache.log4j
+Bundle-ClassPath: neontoolkit-plugin.jar
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+
