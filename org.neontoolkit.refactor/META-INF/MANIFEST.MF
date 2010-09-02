@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Refactor Plug-in
+Bundle-SymbolicName: org.neontoolkit.refactor;singleton:=true
+Bundle-Version: 2.3.2
+Bundle-Vendor: ontoprise GmbH
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.eclipse.ltk.core.refactoring,
+ org.eclipse.ltk.ui.refactoring
+Bundle-Activator: org.neontoolkit.refactor.RefactoringPlugin
+Export-Package: org.neontoolkit.refactor,
+ org.neontoolkit.refactor.ui
+Bundle-ClassPath: neontoolkit-refactor.jar
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
