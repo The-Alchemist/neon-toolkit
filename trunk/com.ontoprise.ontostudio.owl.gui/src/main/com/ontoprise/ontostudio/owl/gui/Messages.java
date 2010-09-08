@@ -407,7 +407,8 @@ public class Messages extends NLS {
 	public static String OWLPreferencePage_2;
 	public static String OWLPreferencePage_3;
 	public static String OWLPreferencePage_4;
-	public static String OWLPreferencePage_5;
+    public static String OWLPreferencePage_5;
+    public static String OWLPreferencePage_6; 
 	public static String DeleteIndividualProcessor_4;
     public static String NewOntologyProjectWizard_1;
     public static String NewOntologyProjectWizard_2;

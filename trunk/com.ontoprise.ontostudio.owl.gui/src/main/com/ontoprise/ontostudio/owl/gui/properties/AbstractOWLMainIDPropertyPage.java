@@ -855,21 +855,41 @@ public abstract class AbstractOWLMainIDPropertyPage extends AbstractMainIDProper
         try {
             ISyntaxManager manager = OWLPlugin.getDefault().getSyntaxManager();
             OWLModel owlModel = OWLModelFactory.getOWLModel(_ontologyUri, _project);
-            OWLObject entity = getOWLObject();
+            OWLObject entity = getOWLObject(); 
+            _showActualOntology = OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(OWLModelPlugin.SHOW_ACTUAL_ONTOLOGY);
+            createUriComposite();
             if (entity != null) {
                 String[] idArray = (String[]) getOWLObject().accept(manager.getVisitor(owlModel));
-                _uriText.setText(idArray[0]); // always use the URI
+                _uriText.setText(idArray[0]); // always use the URI(entity)
+                if(_showActualOntology)
+                    _ontologyText.setText("<" +_ontologyUri + ">");  //$NON-NLS-1$ //$NON-NLS-2$
                 _localText.setText(idArray[1]);
                 _qNameText.setText(idArray[2]);
             } else {
                 _uriText.setText(_id);
+                if(_showActualOntology)
+                    _ontologyText.setText("<" +_ontologyUri + ">"); //$NON-NLS-1$ //$NON-NLS-2$
             }
         } catch (NeOnCoreException e) {
             _uriText.setText(_id);
+            if(_showActualOntology)
+                _ontologyText.setText("<" +_ontologyUri + ">");  //$NON-NLS-1$ //$NON-NLS-2$
             _qNameText.setText(_id);
             _localText.setText(_id);
         }
         _stackLayout.topControl = _uriComposite;
+
+        // this is needed to auto resize the composite of the global content
+        // start bigger
+        //
+       /*
+        * NICO it doesn't work to make it smaller while the program is running
+        * but when you restart the NTK it gets smaller
+        */
+        Composite object = _uriComposite.getParent().getParent().getParent(); 
+        object.setSize(object.getSize().x-1, object.getSize().y-1);    
+        object.setSize(object.getSize().x+1, object.getSize().y+1);  
+        // end bigger
     }
 
     /*

@@ -18,7 +18,9 @@ public class Messages extends NLS {
     public static String AbstractMainIDPropertyPage_0;
     public static String AbstractMainIDPropertyPage_1;
     public static String AbstractMainIDPropertyPage_2;
-    public static String AbstractMainIDPropertyPage_3;
+//    public static String AbstractMainIDPropertyPage_3;
+    public static String AbstractMainIDPropertyPage_4;
+    public static String AbstractMainIDPropertyPage_5;
     public static String AbstractOntologyEntity_1;
     public static String AbstractRenameHandler_0;
     public static String CollabUserGroup_0;
@@ -89,6 +91,7 @@ public class Messages extends NLS {
     public static String ResultView_7;
     public static String ResultView_8;
     public static String SaveOntologyAction_1;
+    public static String SaveAllOntologiesAction_1;
     public static String SaveOntologyRunnableWithProgress_0;
     public static String ShowNamespaceAction_0;
     public static String ShowNamespaceAction_1;

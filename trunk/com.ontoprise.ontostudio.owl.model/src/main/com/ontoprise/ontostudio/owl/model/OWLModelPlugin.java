@@ -40,6 +40,7 @@ public class OWLModelPlugin extends AbstractUIPlugin {
     public static final String SHOW_IMPORTED = OWLModelPlugin.class.getName() + ".owlShowImportedAxioms"; //$NON-NLS-1$
     public static final String SHOW_AXIOMS = OWLModelPlugin.class.getName() + ".owlShowAxiomsInGui"; //$NON-NLS-1$
     public static final String USE_TOOLBAR = OWLModelPlugin.class.getName() + ".owlUseToolbarForComplexClasses"; //$NON-NLS-1$
+    public static final String SHOW_ACTUAL_ONTOLOGY = OWLModelPlugin.class.getName() + ".owlShowActualOntologyInIdentifier"; //$NON-NLS-1$ 
 
     public static final String LANGUAGE_PREFERENCE = OWLModelPlugin.class.getName() + ".language"; //$NON-NLS-1$
     public static final String NAMESPACE_PREFERENCE = OWLModelPlugin.class.getName() + ".namespace"; //$NON-NLS-1$
@@ -47,6 +48,7 @@ public class OWLModelPlugin extends AbstractUIPlugin {
     public static final String EXTERNAL_REPRESENTATION_PREFERENCE = OWLModelPlugin.class.getName() + ".externalrepresentation"; //$NON-NLS-1$
 
     public static final String FONT_WIDGET_FONT = "com.ontoprise.ontostudio.gui.widgetfont"; //$NON-NLS-1$
+
 
     // The shared instance.
     private static OWLModelPlugin _plugin;

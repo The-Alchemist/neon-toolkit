@@ -52,6 +52,7 @@ public class OWLPreferencePage extends PreferencePage implements IWorkbenchPrefe
     private Button _importedCheckbox;
     private Button _showAxiomsCheckbox;
     private Button _displayToolbar;
+    private Button _showActualOntology; 
 
     /*
      * (non-Javadoc)
@@ -87,7 +88,12 @@ public class OWLPreferencePage extends PreferencePage implements IWorkbenchPrefe
         _displayToolbar.setText(Messages.OWLPreferencePage_5); 
         enabled = _prefs.getBoolean(OWLModelPlugin.USE_TOOLBAR);
         _displayToolbar.setSelection(enabled);
-
+        
+        _showActualOntology = new Button(group, SWT.CHECK);
+        _showActualOntology.setText(Messages.OWLPreferencePage_6); 
+        enabled = _prefs.getBoolean(OWLModelPlugin.SHOW_ACTUAL_ONTOLOGY);
+        _showActualOntology.setSelection(enabled);
+        
         Set<ISyntaxManager> syntaxManagers = OWLPlugin.getDefault().getRegisteredSyntaxManagers();
         String[] managers = new String[syntaxManagers.size()];
         int i = 0;
@@ -144,11 +150,16 @@ public class OWLPreferencePage extends PreferencePage implements IWorkbenchPrefe
                 }
                 _prefs.setValue(OWLModelPlugin.SHOW_AXIOMS, getShowAxioms());
                 _prefs.setValue(OWLModelPlugin.USE_TOOLBAR, getUseToolbar());
+                _prefs.setValue(OWLModelPlugin.SHOW_ACTUAL_ONTOLOGY, getShowActualOntology());
             }
+
         });
         return true;
     }
 
+    private boolean getShowActualOntology() {
+        return _showActualOntology.getSelection();
+    }
     private boolean getUseToolbar() {
         return _displayToolbar.getSelection();
     }
@@ -171,10 +182,12 @@ public class OWLPreferencePage extends PreferencePage implements IWorkbenchPrefe
         _prefs.setValue(OWLModelPlugin.SHOW_IMPORTED, false);
         _prefs.setValue(OWLModelPlugin.SHOW_AXIOMS, false);
         _prefs.setValue(OWLModelPlugin.USE_TOOLBAR, false);
+        _prefs.setValue(OWLModelPlugin.SHOW_ACTUAL_ONTOLOGY, false);
 
         _importedCheckbox.setSelection(false);
         _showAxiomsCheckbox.setSelection(false);
         _displayToolbar.setSelection(true);
+        _showActualOntology.setSelection(false);
         _syntaxChooser.setSelection(OWLPlugin.DEFAULT_SYNTAX);
     }
 }
