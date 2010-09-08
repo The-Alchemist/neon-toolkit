@@ -34,6 +34,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.neontoolkit.gui.Messages;
 import org.neontoolkit.gui.NeOnUIPlugin;
 
+//import com.ontoprise.ontostudio.owl.model.OWLModelPlugin;
+
 /*
  * Created on 29.09.2008
  * Created by Dirk Wenke
@@ -51,19 +53,24 @@ public abstract class AbstractMainIDPropertyPage extends AbstractIDPropertyPage 
     private IWorkbenchPart _part;
     protected IWorkbenchPart _selectedPart;
     
+    protected static boolean _showActualOntology;
     
-	/*
+
+    /*
 	 * UI components
 	 */
     protected StackLayout _stackLayout;
 	protected Composite _composite;
-	protected Composite _uriComposite;
-	protected Text _uriText;
+    protected Composite _uriComposite;
+//    protected Text _uriText;
+    protected Text _uriText;
+    protected Text _ontologyText;
 	protected Composite _qNameComposite;
 	protected Text _qNameText;
 	protected Composite _localComposite;
 	protected Text _localText;
     protected ScrolledComposite _scrolledComposite;
+
        
     /**
 	 * 
@@ -93,7 +100,7 @@ public abstract class AbstractMainIDPropertyPage extends AbstractIDPropertyPage 
 	 */
 	public Composite createGlobalContents(Composite parent) {
     	Group group = new Group(parent, SWT.NONE);
-    	group.setText(Messages.AbstractMainIDPropertyPage_3);
+//    	group.setText(Messages.AbstractMainIDPropertyPage_3);
     	group.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
     	group.setLayout(new GridLayout(2, false));
     	
@@ -101,18 +108,13 @@ public abstract class AbstractMainIDPropertyPage extends AbstractIDPropertyPage 
     	composite.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
     	_stackLayout = new StackLayout();
     	composite.setLayout(_stackLayout);
-    	
-    	_uriComposite = new Composite(composite, SWT.NONE);
-    	_uriComposite.setLayout(new GridLayout(2, false));
-    	Label label = new Label(_uriComposite, SWT.NONE);
-    	label.setText(Messages.AbstractMainIDPropertyPage_0);
-    	GridData data = new GridData(GridData.FILL, GridData.FILL, false, false);
-    	data.verticalAlignment = GridData.CENTER;
-    	label.setLayoutData(data);
-    	_uriText = new Text(_uriComposite, SWT.BORDER);
-    	_uriText.setText(""); //$NON-NLS-1$
-    	_uriText.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
-    	_uriText.setEditable(false);
+
+        _showActualOntology = false;
+        _uriComposite = new Composite(composite, SWT.NONE);
+        _uriComposite.setLayout(new GridLayout(2, false));
+        createUriComposite();
+    	Label label;
+    	GridData data;
     	
     	_qNameComposite = new Composite(composite, SWT.NONE);
     	_qNameComposite.setLayout(new GridLayout(2, false));
@@ -138,12 +140,60 @@ public abstract class AbstractMainIDPropertyPage extends AbstractIDPropertyPage 
     	_localText.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
     	_localText.setEditable(false);
 
-    	_stackLayout.topControl = _uriComposite; 
+      _stackLayout.topControl = _uriComposite; 
 		return group;
 	}
 	
 
-	/* (non-Javadoc)
+	/**
+	 * @param composite 
+     * 
+     */
+    protected void createUriComposite() {
+
+        Label label; 
+        GridData data;
+        _uriComposite = new Composite(_uriComposite.getParent(), SWT.NONE);
+        _uriComposite.setLayout(new GridLayout(2, false));
+        
+        if(_showActualOntology){
+            label = new Label(_uriComposite, SWT.NONE);
+            label.setText(Messages.AbstractMainIDPropertyPage_4);
+            data = new GridData(GridData.FILL, GridData.FILL, false, false);
+            data.verticalAlignment = GridData.CENTER;
+            label.setLayoutData(data);
+            _ontologyText = new Text(_uriComposite, SWT.BORDER);
+            _ontologyText.setText(""); //$NON-NLS-1$
+            _ontologyText.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
+            _ontologyText.setEditable(false);
+
+            
+            Label label2 = new Label(_uriComposite, SWT.NONE);
+            label2.setText(Messages.AbstractMainIDPropertyPage_5);
+            GridData data2 = new GridData(GridData.FILL, GridData.FILL, false, false);
+            data2.verticalAlignment = GridData.CENTER;
+            label2.setLayoutData(data2);
+            
+            _uriText = new Text(_uriComposite, SWT.BORDER);
+            _uriText.setText(""); //$NON-NLS-1$
+            _uriText.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
+            _uriText.setEditable(false);
+        }else{
+            Label label2 = new Label(_uriComposite, SWT.NONE);
+            label2.setText(Messages.AbstractMainIDPropertyPage_0);
+            GridData data2 = new GridData(GridData.FILL, GridData.FILL, false, false);
+            data2.verticalAlignment = GridData.CENTER;
+            label2.setLayoutData(data2);
+
+            _uriText = new Text(_uriComposite, SWT.BORDER);
+            _uriText.setText(""); //$NON-NLS-1$
+            _uriText.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
+            _uriText.setEditable(false);
+        }
+        
+    }
+
+    /* (non-Javadoc)
 	 * @see org.neontoolkit.gui.properties.IMainPropertyPage#getPart()
 	 */
 	public IWorkbenchPart getPart() {
@@ -347,5 +397,20 @@ public abstract class AbstractMainIDPropertyPage extends AbstractIDPropertyPage 
 
     public Map<String,Object> getWidgetsForTesting() {
         return WIDGETS_FOR_TESTING;
+    }
+    
+
+    /**
+     * @return the _showActualOntology
+     */
+    public static boolean is_showActualOntology() {
+        return _showActualOntology;
+    }
+
+    /**
+     * @param showActualOntology the _showActualOntology to set
+     */
+    public static void set_showActualOntology(boolean showActualOntology) {
+        _showActualOntology = showActualOntology;
     }
 }

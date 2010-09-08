@@ -26,6 +26,7 @@ public class OWLModelPluginPreferenceInitializer extends AbstractPreferenceIniti
         store.setDefault(OWLModelPlugin.SHOW_IMPORTED, true);
         store.setDefault(OWLModelPlugin.SHOW_AXIOMS, false);
         store.setDefault(OWLModelPlugin.USE_TOOLBAR, false);
+        store.setDefault(OWLModelPlugin.SHOW_ACTUAL_ONTOLOGY, false); 
     }
 
 }
