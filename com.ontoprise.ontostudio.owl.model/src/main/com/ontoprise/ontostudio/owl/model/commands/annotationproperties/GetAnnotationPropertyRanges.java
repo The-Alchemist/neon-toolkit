@@ -26,11 +26,13 @@ import com.ontoprise.ontostudio.owl.model.commands.OWLOntologyRequestCommand;
 
 /**
  * @author Michael
+ * @author Nico Stieler
  *
  */
 public class GetAnnotationPropertyRanges extends OWLOntologyRequestCommand {
 
     private List<String[]> _results;
+    private List<IRI> _results2;
 
     /**
      * @param project
@@ -44,6 +46,7 @@ public class GetAnnotationPropertyRanges extends OWLOntologyRequestCommand {
     @Override
     protected void perform() throws CommandException {
         _results = new ArrayList<String[]>();
+        _results2 = new ArrayList<IRI>();
         String propertyUri = (String) getArgument(2);
 
         try {
@@ -51,7 +54,9 @@ public class GetAnnotationPropertyRanges extends OWLOntologyRequestCommand {
             for (ItemHits<IRI,OWLAnnotationPropertyRangeAxiom> hit: rangeHits) {
                 Set<LocatedItem<OWLAnnotationPropertyRangeAxiom>> axioms = hit.getAxioms();
                 for (LocatedItem<OWLAnnotationPropertyRangeAxiom> item: axioms) {
-                    _results.add(new String[]{OWLUtilities.toString(item.getItem()), item.getOntologyURI()});
+                    _results.add(new String[]{OWLUtilities.toString(item.getItem()), item.getOntologyURI()});        
+                    _results2.add(item.getItem().getRange());
+                    System.out.println(item);
                 }
             }
 
@@ -65,6 +70,12 @@ public class GetAnnotationPropertyRanges extends OWLOntologyRequestCommand {
             perform();
         }
         return _results.toArray(new String[_results.size()][2]);
+    }
+    public List<IRI> getURIOfResults() throws CommandException {
+        if (_results2 == null) {
+            perform();
+        }
+        return _results2;
     }
 
 }
