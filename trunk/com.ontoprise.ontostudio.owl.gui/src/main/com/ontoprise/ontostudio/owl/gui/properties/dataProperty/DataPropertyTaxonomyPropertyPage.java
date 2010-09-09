@@ -276,8 +276,8 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
         } else {
             parent = _equivFormComposite;
         }
+        final FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri,_owlModel.getProjectId(),_id);
 
-        final FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri);
 
         PropertyText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.DATA_PROPERTY);
         final StyledText textWidget = propertyText.getStyledText();
@@ -356,7 +356,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
         } else { // EQUIV
             parent = _equivFormComposite;
         }
-        FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, sourceOnto);
+        FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, sourceOnto,_owlModel.getProjectId(),_id);
 
         PropertyText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.DATA_PROPERTY);
         final StyledText text = propertyText.getStyledText();

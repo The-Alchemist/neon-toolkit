@@ -251,7 +251,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         OWLObjectVisitorEx visitor = _manager.getVisitor(_owlModel, idDisplayStyle);
         final OWLObjectPropertyAssertionAxiom objectPropertyMember = (OWLObjectPropertyAssertionAxiom) locatedAxiom.getAxiom();
 
-        FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri);
+        FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri,_owlModel.getProjectId(),_id);
         // text widgets
         final StyledText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.OBJECT_PROPERTY).getStyledText();
         row.addWidget(propertyText);
@@ -610,7 +610,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
      */
     private void createDataPropertyRow(Composite parent, LocatedAxiom locatedAxiom, String ontologyUri, boolean enabled) throws NeOnCoreException {
         boolean imported = !locatedAxiom.isLocal();
-        final FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri);
+        final FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri,_owlModel.getProjectId(),_id);
         final OWLDataPropertyAssertionAxiom axiom = (OWLDataPropertyAssertionAxiom) locatedAxiom.getAxiom();
         List<String[]> descriptions = handleDataPropertyMemberAxiom(axiom);
 

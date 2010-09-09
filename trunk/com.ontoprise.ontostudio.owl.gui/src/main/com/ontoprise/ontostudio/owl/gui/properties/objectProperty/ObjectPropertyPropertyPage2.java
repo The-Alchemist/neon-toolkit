@@ -457,7 +457,7 @@ public class ObjectPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         } else {
             parent = _rangeFormComposite;
         }
-        FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri);
+        FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri,_owlModel.getProjectId(),_id);
 
         final DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, _toolkit);
         final StyledText text = descriptionText.getStyledText();

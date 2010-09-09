@@ -434,7 +434,7 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
     private void createRow(List<LocatedAxiom> axioms, OWLObjectPropertyExpression property, boolean enabled, String sourceOnto) throws NeOnCoreException {
         boolean imported = !sourceOnto.equals(_ontologyUri);
         Composite parent = _equivPropertyComposite;
-        FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, sourceOnto);
+        FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, sourceOnto,_owlModel.getProjectId(),_id);
 
         PropertyText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.OBJECT_PROPERTY);
         final StyledText propertyTextWidget = propertyText.getStyledText();
@@ -522,7 +522,7 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
         } else {
             parent = _inversePropertyComp;
         }
-        final FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri);
+        final FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri,_owlModel.getProjectId(),_id);
 
         final StyledText text = new PropertyText(row.getParent(), _owlModel, PropertyText.OBJECT_PROPERTY).getStyledText();
         final AtomicReference<String[]> array = new AtomicReference<String[]>();

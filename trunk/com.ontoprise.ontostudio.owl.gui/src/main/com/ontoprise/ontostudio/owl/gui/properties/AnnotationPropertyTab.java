@@ -334,7 +334,7 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
      */
     private void createAnnotationsRow(OWLAnnotationAssertionAxiom annotation, ArrayList<String[]> descriptions, boolean imported, String sourceOnto) throws NeOnCoreException {
         boolean isLocal = !imported;
-        final FormRow formRow = new FormRow(_toolkit, _annotationsComp, NUM_COLS, imported, sourceOnto);
+        final FormRow formRow = new FormRow(_toolkit, _annotationsComp, NUM_COLS, imported, sourceOnto,_owlModel.getProjectId(),_id);
         // text widgets
         PropertyText propertyText =  new PropertyText(formRow.getParent(), _owlModel, PropertyText.ANNOTATION_PROPERTY);
         final StyledText propertyTextWidget = propertyText.getStyledText();

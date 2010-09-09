@@ -510,7 +510,7 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
         if (imported) {
             sourceOntologyUri = sourceOntologyUris[0];
         }
-        FormRow row = new FormRow(_toolkit, _clazzesComp, 3, imported, sourceOntologyUri);
+        FormRow row = new FormRow(_toolkit, _clazzesComp, 3, imported, sourceOntologyUri,_owlModel.getProjectId(),_id);
 
         DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, _toolkit);
         final StyledText text = descriptionText.getStyledText();
@@ -580,7 +580,7 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
         if (imported) {
             sourceOnto = sourceOntos[0];
         }
-        FormRow row = new FormRow(_toolkit, _differentFromComp, NUM_COLS, imported, sourceOnto);
+        FormRow row = new FormRow(_toolkit, _differentFromComp, NUM_COLS, imported, sourceOnto,_owlModel.getProjectId(),_id);
         int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
         OWLObjectVisitorEx visitor = _manager.getVisitor(_owlModel, idDisplayStyle);
         IndividualText individualText = new IndividualText(row.getParent(), _owlModel);
@@ -661,7 +661,7 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
             sourceOnto = sourceOntos[0];
         }
 
-        FormRow row = new FormRow(_toolkit, _sameAsComp, NUM_COLS, imported, sourceOnto);
+        FormRow row = new FormRow(_toolkit, _sameAsComp, NUM_COLS, imported, sourceOnto,_owlModel.getProjectId(),_id);
         int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
         OWLObjectVisitorEx visitor = _manager.getVisitor(_owlModel, idDisplayStyle);
 
