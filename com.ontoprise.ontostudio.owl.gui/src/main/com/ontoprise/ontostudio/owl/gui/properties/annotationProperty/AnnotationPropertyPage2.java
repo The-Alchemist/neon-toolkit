@@ -260,7 +260,7 @@ public class AnnotationPropertyPage2 extends AbstractOWLMainIDPropertyPage imple
             parent = _rangeFormComposite;
         }
         boolean imported = !locatedAxiom.isLocal();
-        FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri);
+        FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri,_owlModel.getProjectId(),_id);
         OWLAxiom axiom = locatedAxiom.getAxiom();
         OWLObject desc = mode == DOMAIN ? ((OWLAnnotationPropertyDomainAxiom) axiom).getDomain() : ((OWLAnnotationPropertyRangeAxiom) axiom).getRange();
     

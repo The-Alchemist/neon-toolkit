@@ -355,7 +355,7 @@ public class OntologyAnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage 
     }
 
     private void createAnnotationsRow(OWLAnnotationProperty prop, String annotationValueText, String language, String datatype, ArrayList<String[]> descriptions) throws NeOnCoreException {
-        final FormRow formRow = new FormRow(_toolkit, _annotationsComp, NUM_COLS, false, ""); //$NON-NLS-1$
+        final FormRow formRow = new FormRow(_toolkit, _annotationsComp, NUM_COLS, false, "",_owlModel.getProjectId(),_id); //$NON-NLS-1$
 
         // text widgets
         final StyledText propertyText = new PropertyText(formRow.getParent(), _owlModel, PropertyText.ANNOTATION_PROPERTY).getStyledText();

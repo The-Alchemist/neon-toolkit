@@ -110,7 +110,9 @@ public class OWLGUIUtilities {
 
     public static final String BUTTON_LABEL_ADD = Messages.OWLGUIUtilities_0;
     public static final String BUTTON_LABEL_REMOVE = Messages.OWLGUIUtilities_1;
+    public static final String BUTTON_LABEL_REMOVE_STAR = Messages.OWLGUIUtilities_5;
     public static final String BUTTON_LABEL_EDIT = Messages.OWLGUIUtilities_2;
+    public static final String BUTTON_LABEL_EDIT_STAR = Messages.OWLGUIUtilities_6;
     public static final String BUTTON_LABEL_SAVE = Messages.OWLGUIUtilities_3;
     public static final String BUTTON_LABEL_CANCEL = Messages.OWLGUIUtilities_4;
 

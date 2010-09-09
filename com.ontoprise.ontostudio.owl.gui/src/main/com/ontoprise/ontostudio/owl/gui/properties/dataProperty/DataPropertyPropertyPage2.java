@@ -345,7 +345,7 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             parent = _rangeFormComposite;
         }
         boolean imported = !locatedAxiom.isLocal();
-        FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri);
+        FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri,_owlModel.getProjectId(),_id);
         OWLAxiom axiom = locatedAxiom.getAxiom();
         OWLObject desc = mode == DOMAIN ? ((OWLDataPropertyDomainAxiom) axiom).getDomain() : ((OWLDataPropertyRangeAxiom) axiom).getRange();
 

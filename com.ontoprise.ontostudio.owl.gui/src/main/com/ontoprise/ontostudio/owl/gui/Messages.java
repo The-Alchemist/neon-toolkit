@@ -19,6 +19,8 @@ public class Messages extends NLS {
 	public static String OWLGUIUtilities_2;
 	public static String OWLGUIUtilities_3;
 	public static String OWLGUIUtilities_4;
+    public static String OWLGUIUtilities_5;
+    public static String OWLGUIUtilities_6;
 	public static String OWLOntologyPropertyPage_URI;
 	public static String OWLOntologyPropertyPage_Location;
 	public static String OWLOntologyPropertyPage_Imports;
