@@ -607,7 +607,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
      * @throws NeOnCoreException
      */
     private void createDisjointOrEquivalentRow(Composite parent, final OWLClassExpression description, final List<LocatedAxiom> axioms, boolean imported, boolean enabled, final int mode, String sourceOnto) throws NeOnCoreException {
-        FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, sourceOnto,_owlModel.getProjectId(),_id);//NICO changed
+        FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, sourceOnto,_owlModel.getProjectId(),_id);
 
         final String[] descriptionArray = getArrayFromDescription(description);
         String id = OWLGUIUtilities.getEntityLabel(descriptionArray);
