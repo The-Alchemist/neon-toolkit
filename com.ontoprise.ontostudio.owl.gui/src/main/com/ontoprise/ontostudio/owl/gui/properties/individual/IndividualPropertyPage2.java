@@ -41,11 +41,13 @@ import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.IHelpContextIds;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
+import org.semanticweb.owlapi.model.OWLDataRange;
 import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLLiteral;
@@ -53,6 +55,7 @@ import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLStringLiteral;
 import org.semanticweb.owlapi.model.OWLTypedLiteral;
 
@@ -61,6 +64,7 @@ import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
 import com.ontoprise.ontostudio.owl.gui.properties.AbstractOWLMainIDPropertyPage;
 import com.ontoprise.ontostudio.owl.gui.properties.LocatedAxiom;
+import com.ontoprise.ontostudio.owl.gui.syntax.ISyntaxManager;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.gui.util.UnknownDatatypeException;
 import com.ontoprise.ontostudio.owl.gui.util.forms.AbstractFormRow;
@@ -72,6 +76,7 @@ import com.ontoprise.ontostudio.owl.gui.util.textfields.IndividualText;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.PropertyText;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.StringText;
 import com.ontoprise.ontostudio.owl.model.OWLConstants;
+import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLModelPlugin;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
@@ -738,15 +743,47 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             }
 
         };
-        addListeners(row, propertyText, valueText, typeText);
+
+        addListeners(row, propertyText, valueText, typeText, false);
         row.init(rowHandler);
     }
 
-    private void addListeners(final AbstractFormRow row, final StyledText propertyText, final StyledText valueText, final StyledText typeText) {
+    private void addListeners(final AbstractFormRow row, final StyledText propertyText, final StyledText valueText, final StyledText typeText, boolean empty) {
+        final boolean[] systemChanged = {false};
+        final boolean[] userChanged = {!empty};//initial: false, edit: true
         propertyText.addModifyListener(new ModifyListener() {
 
             @Override
             public void modifyText(ModifyEvent e) {
+                try {
+                    if(!userChanged[0]){
+                        ISyntaxManager manager = OWLPlugin.getDefault().getSyntaxManager();
+                        String uri = manager.parseUri(propertyText.getText(), _owlModel);
+                        
+                        OWLDataProperty entity = _factory.getOWLDataProperty(IRI.create(uri));             
+                        
+                        Set<OWLOntology> ontologies = new HashSet<OWLOntology>(); 
+                        Set<OWLModel> models = _owlModel.getAllImportedOntologies();
+                        ontologies.add(_owlModel.getOntology());
+                        for(OWLModel om : models){
+                            ontologies.add(om.getOntology());
+                        }
+                        Set<OWLDataRange> ranges = entity.getRanges(ontologies);
+                        if(!(ranges == null || ranges.isEmpty())){
+                            for(OWLDataRange range : ranges){
+                                systemChanged[0] = true;
+                                typeText.setText(range.toString());
+                                break;
+                            }
+                        }else{
+                            systemChanged[0] = false;
+                            typeText.setText(""); //$NON-NLS-1$
+                        }
+                    }
+                } catch (NeOnCoreException e1) {
+                    e1.printStackTrace();
+                }
+                
                 verifyInput(row, propertyText, valueText, typeText);
             }
         });
@@ -761,10 +798,24 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 
             @Override
             public void modifyText(ModifyEvent e) {
+                if(systemChanged[0]){
+//                    System.out.println("changed by system"); //$NON-NLS-1$
+                    systemChanged[0] = false;
+                }
+                else{
+//                    System.out.println("changed by user"); //$NON-NLS-1$
+//                    System.out.println("=" + typeText.getText() + "="); //$NON-NLS-2$
+                    if(typeText.getText().isEmpty()){ //$NON-NLS-1$
+                        userChanged[0] = false;
+                    }else{
+                        userChanged[0] = true;
+                    }
+                }
                 verifyInput(row, propertyText, valueText, typeText);
             }
         });
     }
+
 
     /**
      * 
@@ -850,7 +901,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         };
         row.init(rowHandler);
 
-        addListeners(row, propertyText, valueText, typeText);
+        addListeners(row, propertyText, valueText, typeText, true);
         return propertyText;
     }
 

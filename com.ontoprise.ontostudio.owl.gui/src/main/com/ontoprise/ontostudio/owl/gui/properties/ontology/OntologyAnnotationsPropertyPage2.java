@@ -11,7 +11,9 @@
 package com.ontoprise.ontostudio.owl.gui.properties.ontology;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
@@ -47,7 +49,9 @@ import org.semanticweb.owlapi.model.OWLStringLiteral;
 import org.semanticweb.owlapi.model.OWLTypedLiteral;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
+import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.properties.AbstractOWLIdPropertyPage;
+import com.ontoprise.ontostudio.owl.gui.syntax.ISyntaxManager;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.gui.util.UnknownDatatypeException;
 import com.ontoprise.ontostudio.owl.gui.util.forms.AbstractFormRow;
@@ -59,9 +63,11 @@ import com.ontoprise.ontostudio.owl.gui.util.textfields.DatatypeText;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.PropertyText;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.StringText;
 import com.ontoprise.ontostudio.owl.model.OWLConstants;
+import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.OWLCommandUtils;
+import com.ontoprise.ontostudio.owl.model.commands.annotationproperties.GetAnnotationPropertyRanges;
 import com.ontoprise.ontostudio.owl.model.commands.annotations.AddOntologyAnnotation;
 import com.ontoprise.ontostudio.owl.model.commands.annotations.GetOntologyAnnotations;
 import com.ontoprise.ontostudio.owl.model.util.OWLAxiomUtils;
@@ -204,10 +210,49 @@ public class OntologyAnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage 
             }
         });
         
-        
+        final boolean[] systemChanged = {false};
+        final boolean[] userChanged = {false}; //initial: false, edit: true
+
         propertyText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
+                try {
+                    if(!userChanged[0]){
+                        ISyntaxManager manager = OWLPlugin.getDefault().getSyntaxManager();
+                        String uri = manager.parseUri(propertyText.getText(), _owlModel);
+                        LinkedList<IRI> ranges = new LinkedList<IRI>(new GetAnnotationPropertyRanges(_project, _ontologyUri,uri).getURIOfResults());
+
+                        Set<OWLModel> models = _owlModel.getAllImportedOntologies();
+
+                        for(OWLModel om : models){
+                            try{
+                                if(ranges == null)
+                                    ranges = new LinkedList<IRI>(new GetAnnotationPropertyRanges(_project, om.getOntology().toString(),uri).getURIOfResults());
+                                else
+                                    if(ranges.isEmpty())
+                                        ranges.addAll(new LinkedList<IRI>(new GetAnnotationPropertyRanges(_project, om.getOntology().toString(),uri).getURIOfResults()));
+                                    else
+                                        break;
+                            }catch (CommandException e1) {    
+                                continue;
+                            }
+                        }
+                        if(!(ranges == null || ranges.isEmpty())){
+                            for(IRI range : ranges){
+                                systemChanged[0] = true;
+                                typeText.setText(range.toString());
+                                break;
+                            }
+                        }else{
+                            systemChanged[0] = false;
+                            typeText.setText(""); //$NON-NLS-1$
+                        }
+                    }
+                } catch (CommandException e1) {
+                    e1.printStackTrace();
+                } catch (NeOnCoreException e2) {
+                    e2.printStackTrace();
+                }
                 verifyInput(formRow, propertyText, valueText, typeText);
             }
 
@@ -224,6 +269,16 @@ public class OntologyAnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage 
         typeText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
+                if(systemChanged[0]){
+                    systemChanged[0] = false;
+                }
+                else{
+                    if(typeText.getText().isEmpty()){
+                        userChanged[0] = false;
+                    }else{
+                        userChanged[0] = true;
+                    }
+                }
                 verifyInput(formRow, propertyText, valueText, typeText);
             }
 
@@ -459,9 +514,48 @@ public class OntologyAnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage 
         };
         formRow.init(rowHandler);
         
+        final boolean[] systemChanged = {false};
+        final boolean[] userChanged = {true}; //initial: false, edit: true
         propertyText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
+                try {
+                    if(!userChanged[0]){
+                        ISyntaxManager manager = OWLPlugin.getDefault().getSyntaxManager();
+                        String uri = manager.parseUri(propertyText.getText(), _owlModel);
+                        LinkedList<IRI> ranges = new LinkedList<IRI>(new GetAnnotationPropertyRanges(_project, _ontologyUri,uri).getURIOfResults());
+
+                        Set<OWLModel> models = _owlModel.getAllImportedOntologies();
+
+                        for(OWLModel om : models){
+                            try{
+                                if(ranges == null)
+                                    ranges = new LinkedList<IRI>(new GetAnnotationPropertyRanges(_project, om.getOntology().toString(),uri).getURIOfResults());
+                                else
+                                    if(ranges.isEmpty())
+                                        ranges.addAll(new LinkedList<IRI>(new GetAnnotationPropertyRanges(_project, om.getOntology().toString(),uri).getURIOfResults()));
+                                    else
+                                        break;
+                            }catch (CommandException e1) {    
+                                continue;
+                            }
+                        }
+                        if(!(ranges == null || ranges.isEmpty())){
+                            for(IRI range : ranges){
+                                systemChanged[0] = true;
+                                typeText.setText(range.toString());
+                                break;
+                            }
+                        }else{
+                            systemChanged[0] = false;
+                            typeText.setText(""); //$NON-NLS-1$
+                        }
+                    }
+                } catch (CommandException e1) {
+                    e1.printStackTrace();
+                } catch (NeOnCoreException e2) {
+                    e2.printStackTrace();
+                }
                 verifyInput(formRow, propertyText, valueText, typeText);
             }
 
@@ -478,6 +572,16 @@ public class OntologyAnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage 
         typeText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
+                if(systemChanged[0]){
+                    systemChanged[0] = false;
+                }
+                else{
+                    if(typeText.getText().isEmpty()){
+                        userChanged[0] = false;
+                    }else{
+                        userChanged[0] = true;
+                    }
+                }
                 verifyInput(formRow, propertyText, valueText, typeText);
             }
 
