@@ -80,27 +80,39 @@
       <objectContribution
             objectClass="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement"
             id="com.ontoprise.ontostudio.gui.navigator.actions">
+        <menu
+         		id="visualize.visOnto"
+         		label="Visualize Ontology..."
+         		path="navigator.vizOnto">
+         	<seperator name="VisOnto"/>
+         </menu>
          <action
                class="com.ontoprise.ontostudio.owl.visualize.action.VisualizeOWLOntologyAction"
                enablesFor="1"
                icon="icons/Graph.gif"
                id="com.ontoprise.ontostudio.rdf.visualize.action.VisualizeOWLOntologyAction"
                label="%visualizeOntologySchema"
-               menubarPath="navigator.refresh"
+               menubarPath="visualize.visOnto/VisOnto"
                tooltip="%visualizeOntologySchema">
          </action>
       </objectContribution>
       <objectContribution
             objectClass="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement"
             id="com.ontoprise.ontostudio.gui.navigator.actions">
+        <menu
+         		id="visualize.visOnto"
+         		label="Visualize Ontology..."
+         		path="navigator.vizOnto">
+         	<seperator name="VisOnto"/>
+         </menu>
          <action
                class="com.ontoprise.ontostudio.owl.visualize.action.ShowInVisualizerOWLAction"
                enablesFor="1"
                icon="icons/Graph.gif"
                id="com.ontoprise.ontostudio.rdf.visualize.actions.ShowInVisualizerOWLAction"
-               label="%showInVisualizer"
-               menubarPath="navigator.refresh"
-               tooltip="%showInVisualizer">
+               label="%inVisualizer"
+               menubarPath="visualize.visOnto/VisOnto"
+               tooltip="%inVisualizer">
          </action>
       </objectContribution>
 	</extension>
