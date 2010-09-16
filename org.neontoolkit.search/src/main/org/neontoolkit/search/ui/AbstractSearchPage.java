@@ -44,10 +44,17 @@ import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.core.project.OntologyProjectManager;
+import org.neontoolkit.gui.navigator.elements.IOntologyElement;
 import org.neontoolkit.gui.navigator.elements.IProjectElement;
 import org.neontoolkit.search.Messages;
 import org.neontoolkit.search.SearchPlugin;
 
+
+/**
+ * 
+ * @author Nico Stieler
+ * modified on: 15.09.2010
+ */
 
 
 public abstract class AbstractSearchPage extends DialogPage implements ISearchPage {
@@ -360,57 +367,135 @@ public abstract class AbstractSearchPage extends DialogPage implements ISearchPa
 	
 	protected abstract String getOntologyLanguage();
 	
-	protected String[] getProjectsInScope() {
-		
-		SearchPatternData patternData= getPatternData();
-	
-		// Setup search scope
-		NewSearchUI.activateSearchResultView();
-		
-		int scope = patternData.getScope();
-		String[] projects = new String[0];
-		switch (scope) {
-		case ISearchPageContainer.WORKSPACE_SCOPE:
-			//search over whole workspace
-			try {
-				projects = OntologyProjectManager.getDefault().getOntologyProjects(getOntologyLanguage());
-			} catch (NeOnCoreException e) {
-				SearchPlugin.logError(Messages.AbstractSearchPage_0, e);
-				projects = new String[0];
-			}
-			break;
-		case ISearchPageContainer.SELECTED_PROJECTS_SCOPE:
-			projects = patternData.getProjects();
-			break;
-		case ISearchPageContainer.SELECTION_SCOPE:
-			IStructuredSelection selection = (IStructuredSelection)this.getSelection();
-			List<String> enclProjects = new ArrayList<String>();
-			for (Iterator<?> it=selection.iterator(); it.hasNext();) {
-				Object next = it.next();
-				if (next instanceof IProjectElement) {
-					enclProjects.add(((IProjectElement)next).getProjectName());
-				}
-			}
-			projects = enclProjects.toArray(new String[0]);
-			break;
-		case ISearchPageContainer.WORKING_SET_SCOPE:
-			IWorkingSet[] workingSets = patternData.getWorkingSets();
-			List<String> projectList = new ArrayList<String>();
-			for (IWorkingSet ws: workingSets) {
-				IAdaptable[] adap = ws.getElements();
-				for (IAdaptable adapter: adap) {
-					IProject project = (IProject)adapter.getAdapter(IProject.class);
-					if (project != null) {
-						projectList.add(project.getName());
-					}
-				}
-			}
-			projects = projectList.toArray(new String[0]);
-			break;
-		}
-		return projects;
-	}
+//	protected String[] getProjectsInScope() {
+//		SearchPatternData patternData= getPatternData();
+//	
+//		// Setup search scope
+//		NewSearchUI.activateSearchResultView();
+//		
+//		int scope = patternData.getScope();
+//		String[] projects = new String[0];
+//        getScope();
+//		switch (scope) {
+//		case ISearchPageContainer.WORKSPACE_SCOPE:
+//			//search over whole workspace
+//			try {
+//				projects = OntologyProjectManager.getDefault().getOntologyProjects(getOntologyLanguage());
+//			} catch (NeOnCoreException e) {
+//				SearchPlugin.logError(Messages.AbstractSearchPage_0, e);
+//				projects = new String[0];
+//			}
+//			break;
+//		case ISearchPageContainer.SELECTED_PROJECTS_SCOPE:
+//			projects = patternData.getProjects();
+//			break;
+//		case ISearchPageContainer.SELECTION_SCOPE:
+//			IStructuredSelection selection = (IStructuredSelection)this.getSelection();
+//			List<String> enclProjects = new ArrayList<String>();
+//			for (Iterator<?> it=selection.iterator(); it.hasNext();) {
+//				Object next = it.next();
+//				if (next instanceof IProjectElement) {
+//					enclProjects.add(((IProjectElement)next).getProjectName());
+//				}
+//			}
+//			projects = enclProjects.toArray(new String[0]);
+//			break;
+//		case ISearchPageContainer.WORKING_SET_SCOPE:
+//			IWorkingSet[] workingSets = patternData.getWorkingSets();
+//			List<String> projectList = new ArrayList<String>();
+//			for (IWorkingSet ws: workingSets) {
+//				IAdaptable[] adap = ws.getElements();
+//				for (IAdaptable adapter: adap) {
+//					IProject project = (IProject)adapter.getAdapter(IProject.class);
+//					if (project != null) {
+//						projectList.add(project.getName());
+//					}
+//				}
+//			}
+//			projects = projectList.toArray(new String[0]);
+//			break;
+//		}
+//		return projects;
+//	}
 
+    protected Scope getScope() {
+        Scope output = new Scope();
+        
+        SearchPatternData patternData= getPatternData();
+    
+        // Setup search scope
+        NewSearchUI.activateSearchResultView();
+        
+        int scope = patternData.getScope();
+        switch (scope) {
+        case ISearchPageContainer.WORKSPACE_SCOPE:
+            String[] projects = new String[0];
+            //search over whole workspace
+            try {
+                projects = OntologyProjectManager.getDefault().getOntologyProjects(getOntologyLanguage());//NICO Ontology language ERROR
+            } catch (NeOnCoreException e) {
+                SearchPlugin.logError(Messages.AbstractSearchPage_0, e);
+                projects = new String[0];
+            }
+            output.setProjects(projects);
+            break;
+        case ISearchPageContainer.SELECTED_PROJECTS_SCOPE:
+            String[] projects2 = new String[0];
+            projects2 = patternData.getProjects();
+            output.setProjects(projects2);
+            break;
+        case ISearchPageContainer.SELECTION_SCOPE:
+            String[][] projects_ontologies;
+            IStructuredSelection selection = (IStructuredSelection)this.getSelection();
+            List<String> scopeProjects = new ArrayList<String>();
+            List<Object> helpOntologies = new ArrayList<Object>();
+            for (Iterator<?> it=selection.iterator(); it.hasNext();) {
+                Object next = it.next();
+                if (next instanceof IOntologyElement) {
+                    helpOntologies.add((IOntologyElement)next);
+                }else 
+                    if (next instanceof IProjectElement) {
+                        scopeProjects.add(((IProjectElement)next).getProjectName());
+                    }
+            }
+            
+            List<Object> help2Ontologies = new ArrayList<Object>();
+            for(Object ontology : helpOntologies)
+                if(ontology instanceof IProjectElement)
+                    if(!scopeProjects.contains(((IProjectElement)ontology).getProjectName()))
+                        help2Ontologies.add(ontology);
+            
+            projects_ontologies = new String[scopeProjects.size() + help2Ontologies.size()][];
+            int counter = 0;
+            for(String project : scopeProjects){
+                projects_ontologies[counter++] = new String[]{project,null};
+            }
+            for(Object ontology : help2Ontologies){
+                String projectName = ((IProjectElement)ontology).getProjectName();
+                String OntologyId = ((IOntologyElement)ontology).getOntologyUri();
+                projects_ontologies[counter++] = new String[]{projectName,OntologyId};
+            }
+            output.setProjects_ontologies(projects_ontologies);
+            break;
+        case ISearchPageContainer.WORKING_SET_SCOPE:
+            String[] projects3 = new String[0];
+            IWorkingSet[] workingSets = patternData.getWorkingSets();
+            List<String> projectList = new ArrayList<String>();
+            for (IWorkingSet ws: workingSets) {
+                IAdaptable[] adap = ws.getElements();
+                for (IAdaptable adapter: adap) {
+                    IProject project = (IProject)adapter.getAdapter(IProject.class);
+                    if (project != null) {
+                        projectList.add(project.getName());
+                    }
+                }
+            }
+            projects3 = projectList.toArray(new String[0]);
+            output.setProjects(projects3);
+            break;
+        }
+        return output;
+    }
 	private SearchPatternData findInPrevious(String pattern) {
 		for (Iterator<SearchPatternData> iter= _previousSearchPatterns.iterator(); iter.hasNext();) {
 			SearchPatternData element= iter.next();

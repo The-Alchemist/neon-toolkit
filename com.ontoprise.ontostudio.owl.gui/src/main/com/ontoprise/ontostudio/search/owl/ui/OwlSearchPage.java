@@ -10,25 +10,16 @@
 
 package com.ontoprise.ontostudio.search.owl.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
-import org.neontoolkit.core.NeOnCorePlugin;
-import org.neontoolkit.core.exception.NeOnCoreException;
-import org.neontoolkit.core.natures.OntologyProjectNature;
 import org.neontoolkit.gui.IHelpContextIds;
-import org.neontoolkit.search.SearchPlugin;
 import org.neontoolkit.search.ui.AbstractSearchPage;
+import org.neontoolkit.search.ui.Scope;
 import org.neontoolkit.search.ui.SearchPageOption;
 import org.neontoolkit.search.ui.SearchPatternData;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
-import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 
 /* 
  * Created on 04.04.2008
@@ -39,6 +30,8 @@ import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
  */
 /**
  * Type comment
+ * @author Dirk Wenke
+ * @author Nico Stieler
  */
 public class OwlSearchPage extends AbstractSearchPage {
 
@@ -64,34 +57,44 @@ public class OwlSearchPage extends AbstractSearchPage {
     @Override
     protected ISearchQuery getSearchQuery() {
         SearchPatternData patternData = getPatternData();
-        return new OwlSearchQuery(patternData.getPattern(), patternData.isIgnoreCase(), patternData.getSearchFlags(), getProjectsInScope());
+        return new OwlSearchQuery(patternData.getPattern(), patternData.isIgnoreCase(), patternData.getSearchFlags(), getScope());
     }
     
+//    /*
+//     * (non-Javadoc)
+//     * 
+//     * @see com.ontoprise.ontostudio.search.ui.AbstractSearchPage#getProjectsInScope()
+//     */
+//    @Override
+//    protected String[] getProjectsInScope() {
+//        return super.getProjectsInScope();
+//        try {
+//            String[] projects = OWLPlugin.getDefault().getOntologyProjects();
+//            List<String> list = new ArrayList<String>();
+//            for (String projectName: projects) {
+//                IProject project = NeOnCorePlugin.getDefault().getProject(projectName);
+//                if (project.isOpen() && project.hasNature(OntologyProjectNature.ID)) {
+//                    list.add(projectName);
+//                }
+//            }
+//            return list.toArray(new String[0]);
+//        } catch (CoreException ce) {
+//            SearchPlugin.logError(Messages.OwlSearchPage_8, ce); 
+//        } catch (NeOnCoreException ce) {
+//            SearchPlugin.logError(Messages.OwlSearchPage_8, ce); 
+//        }
+//        return new String[0];
+//    }
+
     /*
      * (non-Javadoc)
      * 
-     * @see com.ontoprise.ontostudio.search.ui.AbstractSearchPage#getProjectsInScope()
+     * @see com.ontoprise.ontostudio.search.ui.AbstractSearchPage#getScope()
      */
     @Override
-    protected String[] getProjectsInScope() {
-        try {
-            String[] projects = OWLPlugin.getDefault().getOntologyProjects();
-            List<String> list = new ArrayList<String>();
-            for (String projectName: projects) {
-                IProject project = NeOnCorePlugin.getDefault().getProject(projectName);
-                if (project.isOpen() && project.hasNature(OntologyProjectNature.ID)) {
-                    list.add(projectName);
-                }
-            }
-            return list.toArray(new String[0]);
-        } catch (CoreException ce) {
-            SearchPlugin.logError(Messages.OwlSearchPage_8, ce); 
-        } catch (NeOnCoreException ce) {
-            SearchPlugin.logError(Messages.OwlSearchPage_8, ce); 
-        }
-        return new String[0];
+    protected Scope getScope() {
+        return super.getScope();
     }
-
     /*
      * (non-Javadoc)
      * 
@@ -121,6 +124,6 @@ public class OwlSearchPage extends AbstractSearchPage {
 
     @Override
     protected String getOntologyLanguage() {
-       return "OWL"; //$NON-NLS-1$
+       return "OWL2"; //$NON-NLS-1$//NICO search is restricted on OWL2?
     }
 }

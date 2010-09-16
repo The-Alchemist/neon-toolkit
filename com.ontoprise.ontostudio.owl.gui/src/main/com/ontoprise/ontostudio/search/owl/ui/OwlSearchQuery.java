@@ -12,16 +12,23 @@ package com.ontoprise.ontostudio.search.owl.ui;
 
 import org.neontoolkit.search.command.AbstractSearchCommand;
 import org.neontoolkit.search.ui.AbstractSearchQuery;
+import org.neontoolkit.search.ui.Scope;
+
+import com.ontoprise.ontostudio.search.owl.ui.OwlSearchCommand.SearchArea;
 
 /* 
  * Created on 04.04.2008
  * @author Dirk Wenke
+ * Edited on 15.09.2010
+ * @author Nico Stieler
  *
  * Function:
  * Keywords:
  */
 /**
  * Type comment
+ * @author Dirk Wenke
+ * @author Nico Stieler
  */
 public class OwlSearchQuery extends AbstractSearchQuery {
 
@@ -31,15 +38,21 @@ public class OwlSearchQuery extends AbstractSearchQuery {
      * @param searchString
      * @param string
      * @param searchFlags
-     * @param projects
+     * @param scope
      */
-    public OwlSearchQuery(String searchString, boolean caseSensitive, int searchFlags, String[] projects) {
-        super(searchString, searchFlags, projects);
+    public OwlSearchQuery(String searchString, boolean caseSensitive, int searchFlags, Scope scope) {
+        super(searchString, searchFlags, scope.getProjects_ontologies());
         _caseSensitive = caseSensitive;
     }
 
     @Override
-    protected AbstractSearchCommand getSearchCommand(String project) {
-        return new OwlSearchCommand(project, _expression, _searchFlags, _caseSensitive);
+    protected AbstractSearchCommand getSearchCommand(String project, String ontology) {
+        SearchArea searchArea;
+        if(ontology == null){
+            searchArea = SearchArea.PROJECT;
+        }else{
+            searchArea = SearchArea.ONTOLOGY;
+        }
+        return new OwlSearchCommand(project, ontology, _expression, _searchFlags, _caseSensitive,searchArea);
     }
 }

@@ -16,6 +16,7 @@ import org.eclipse.search.ui.text.Match;
 import org.neontoolkit.core.EntityType;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.command.LoggedCommand;
+import org.neontoolkit.gui.navigator.elements.TreeElement;
 
 /*
  * Created on 14.07.2008

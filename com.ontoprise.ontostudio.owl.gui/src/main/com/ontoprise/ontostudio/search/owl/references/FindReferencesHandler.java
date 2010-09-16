@@ -19,9 +19,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.neontoolkit.gui.navigator.actions.AbstractSelectionBasedHandler;
+import org.neontoolkit.gui.navigator.project.ProjectTreeElement;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
+import com.ontoprise.ontostudio.owl.model.OWLModelPlugin;
 
 /**
  * Action for the finding the references to an entity.

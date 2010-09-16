@@ -100,31 +100,202 @@ public class AxiomSearchMatch extends OwlSearchMatch {
         }
     }
 
-    @SuppressWarnings("unchecked")
+//    @SuppressWarnings("unchecked")
     @Override
     public String toString() {
-        AbstractOwlEntityTreeElement element = (AbstractOwlEntityTreeElement) getMatch();
 
-        String subject = ""; //$NON-NLS-1$
-        String axiomString = ""; //$NON-NLS-1$
-        String projectName = ""; //$NON-NLS-1$
-        String ontology = ""; //$NON-NLS-1$
-
-        try {
-            if(element != null) {
-                OWLModel owlModel = OWLModelFactory.getOWLModel(element.getOntologyUri(), element.getProjectName());
-                int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
-                OWLObjectVisitorEx visitor = OWLPlugin.getDefault().getSyntaxManager().getVisitor(owlModel, idDisplayStyle);
-                subject = OWLGUIUtilities.getEntityLabel((String[]) element.getEntity().accept(visitor));
-                axiomString = OWLGUIUtilities.getEntityLabel((String[]) _axiom.accept(visitor));
-                projectName = element.getProjectName();
-                ontology = element.getOntologyUri();
-                return subject + ": " + axiomString + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_0 + ontology + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_1 + projectName + "]  "; //$NON-NLS-1$ //$NON-NLS-2$
-            }
-        } catch (NeOnCoreException e) {
-            // nothing to do
-        }
         return _axiom.toString();
+//        AbstractOwlEntityTreeElement element = (AbstractOwlEntityTreeElement) getMatch();
+//
+//        String subject = ""; //$NON-NLS-1$
+//        String axiomString = ""; //$NON-NLS-1$
+//        String projectName = ""; //$NON-NLS-1$
+//        String ontology = ""; //$NON-NLS-1$
+//
+//        try {
+//            if(element != null) {
+//                OWLModel owlModel = OWLModelFactory.getOWLModel(element.getOntologyUri(), element.getProjectName());
+//                int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
+//                OWLObjectVisitorEx visitor = OWLPlugin.getDefault().getSyntaxManager().getVisitor(owlModel, idDisplayStyle);
+//                subject = OWLGUIUtilities.getEntityLabel((String[]) element.getEntity().accept(visitor));
+//                axiomString = OWLGUIUtilities.getEntityLabel((String[]) _axiom.accept(visitor));
+//                projectName = element.getProjectName();
+//                ontology = element.getOntologyUri();
+//                return _axiom.toString();
+////////                return subject + ": " + axiomString + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_0 + ontology + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_1 + projectName + "]  "; //$NON-NLS-1$ //$NON-NLS-2$
+//////                String output;
+////////                if(_axiom instanceof 
+////////                        OWLAnnotationAssertionAxiom, 
+////////                        OWLAnnotationAxiom, 
+////////                        OWLAnnotationPropertyDomainAxiom, 
+////////                        OWLAnnotationPropertyRangeAxiom, 
+////////                        OWLAsymmetricObjectPropertyAxiom, 
+////////                        OWLClassAssertionAxiom, 
+////////                        OWLClassAxiom, 
+////////                        OWLDataPropertyAssertionAxiom, 
+////////                        OWLDataPropertyAxiom, 
+////////                        OWLDataPropertyCharacteristicAxiom, 
+////////                        OWLDataPropertyDomainAxiom, 
+////////                        OWLDataPropertyRangeAxiom, 
+////////                        OWLDatatypeDefinitionAxiom, 
+////////                        OWLDeclarationAxiom, 
+////////                        OWLDifferentIndividualsAxiom, 
+////////                        OWLDisjointClassesAxiom, 
+////////                        OWLDisjointDataPropertiesAxiom, 
+////////                        OWLDisjointObjectPropertiesAxiom, 
+////////                        OWLDisjointUnionAxiom, 
+////////                        OWLEquivalentClassesAxiom, 
+////////                        OWLEquivalentDataPropertiesAxiom, 
+////////                        OWLEquivalentObjectPropertiesAxiom, 
+////////                        OWLFunctionalDataPropertyAxiom, 
+////////                        OWLFunctionalObjectPropertyAxiom, 
+////////                        OWLHasKeyAxiom, 
+////////                        OWLIndividualAxiom, 
+////////                        OWLInverseFunctionalObjectPropertyAxiom, 
+////////                        OWLInverseObjectPropertiesAxiom, 
+////////                        OWLIrreflexiveObjectPropertyAxiom, 
+////////                        OWLLogicalAxiom, 
+////////                        OWLNaryAxiom, 
+////////                        OWLNaryClassAxiom, 
+////////                        OWLNaryIndividualAxiom, 
+////////                        OWLNaryPropertyAxiom<P>, 
+////////                        OWLNegativeDataPropertyAssertionAxiom, 
+////////                        OWLNegativeObjectPropertyAssertionAxiom, 
+////////                        OWLObjectPropertyAssertionAxiom, 
+////////                        OWLObjectPropertyAxiom, 
+////////                        OWLObjectPropertyCharacteristicAxiom, 
+////////                        OWLObjectPropertyDomainAxiom, 
+////////                        OWLObjectPropertyRangeAxiom, 
+////////                        OWLPropertyAssertionAxiom<P,O>, 
+////////                        OWLPropertyAxiom, 
+////////                        OWLPropertyDomainAxiom<P>, 
+////////                        OWLPropertyRangeAxiom<P,R>, 
+////////                        OWLReflexiveObjectPropertyAxiom, 
+////////                        OWLSameIndividualAxiom, 
+////////                        OWLSubAnnotationPropertyOfAxiom, 
+////////                        OWLSubClassOfAxiom, 
+////////                        OWLSubDataPropertyOfAxiom, 
+////////                        OWLSubObjectPropertyOfAxiom, 
+////////                        OWLSubPropertyAxiom<P>, 
+////////                        OWLSubPropertyChainOfAxiom, 
+////////                        OWLSymmetricObjectPropertyAxiom, 
+////////                        OWLTransitiveObjectPropertyAxiom, 
+////////                        OWLUnaryPropertyAxiom<P>, 
+////////                        SWRLRule;
+//////                output = _axiom.toString();
+////////                System.out.println("xxxxxxxxxxxxxxxxxxx");
+////////                System.out.println(output);
+//////                
+//////                if(_axiom.toString().contains("Declaration")){
+////////                    Declaration(OWLClass(<http://www.aktors.org/ontology/support#Thing>))
+//////                    String[][] spo = new String[3][3];
+//////                    int s0,s1,s2,s3;
+//////                    s0 = 0;
+//////                    s1 = output.indexOf("Declaration(");
+//////                    s2 = output.lastIndexOf("(");
+//////                    s3 = output.indexOf("))");
+//////                    
+//////                    spo[0][0] = output.substring(s0, s1+12);
+//////                    spo[1][0] = output.substring(s1+12, s2+1);
+//////                    spo[2][0] = output.substring(s2+1, s3);
+//////
+//////                    spo[0][1] = spo[0][0];
+//////                    spo[0][2] = spo[0][0];
+//////                    spo[1][1] = spo[1][0];
+//////                    spo[1][2] = spo[1][0];
+//////                    if( spo[2][0].contains("#")){
+//////                        String help = new String(spo[2][0]);
+//////                        if(help.startsWith("<"))
+//////                            help = help.substring(1);
+//////                        if(help.endsWith(">"))
+//////                            help = help.substring(0,help.length()-1);
+//////                        String[] split = help.split("#");
+////////                        OWLGUIUtilities.getEntityLabel()
+////////                        OWLGUIUtilities.get
+//////                        spo[2][1] = split[1];
+//////                        spo[2][2] = split[0].substring(split[0].lastIndexOf("/") + 1) + ":" + split[1];
+//////                        
+//////                    }else{
+//////                        spo[2][1] = spo[2][0];
+//////                        spo[2][2] = spo[2][0];
+//////                    }
+//////                    String ending = "))" + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_0 + ontology + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_1 + projectName + "]  ";//$NON-NLS-1$
+//////                    String[] out = new String[]{spo[0][0] + spo[1][0] + spo[2][0] + ending,spo[0][1] + spo[1][1] + spo[2][1] + ending,spo[0][2] + spo[1][2] + spo[2][2] + ending};
+////////                    System.out.println(OWLGUIUtilities.getEntityLabel(out));
+//////                    return OWLGUIUtilities.getEntityLabel(out);
+//////                }else{
+//////                    String[][] spo = new String[3][3];
+//////                    int s0,s1,s2,s3;
+//////                    s0 = 0;
+//////                    s1 = output.indexOf("(");
+//////                    s2 = output.indexOf(" ");
+//////                    s3 = output.indexOf(")");
+//////                    
+//////                    spo[1][0] = output.substring(s0, s1);
+//////                    spo[0][0] = output.substring(s1+1, s2);
+//////                    spo[2][0] = output.substring(s2+1, s3);
+//////                    
+//////                    if( spo[0][0].contains("#")){
+//////                        String help = new String(spo[0][0]);
+//////                        if(help.startsWith("<"))
+//////                            help = help.substring(1);
+//////                        if(help.endsWith(">"))
+//////                            help = help.substring(0,help.length()-1);
+//////                        String[] split = help.split("#");
+////////                        OWLGUIUtilities.getEntityLabel()
+////////                        OWLGUIUtilities.get
+//////                        spo[0][1] = split[1];
+//////                        spo[0][2] = split[0].substring(split[0].lastIndexOf("/") + 1) + ":" + split[1];
+//////                        
+//////                    }else{
+//////                        spo[0][1] = spo[0][0];
+//////                        spo[0][2] = spo[0][0];
+//////                    }
+//////
+//////                    if( spo[1][0].contains("#")){
+//////                        String help = new String(spo[1][0]);
+//////                        if(help.startsWith("<"))
+//////                            help = help.substring(1);
+//////                        if(help.endsWith(">"))
+//////                            help = help.substring(0,help.length()-1);
+//////                        String[] split = help.split("#");
+////////                        OWLGUIUtilities.getEntityLabel()
+////////                        OWLGUIUtilities.get
+//////                        spo[1][1] = split[1];
+//////                        spo[1][2] = split[0].substring(split[0].lastIndexOf("/") + 1) + ":" + split[1];
+//////                        
+//////                    }else{
+//////                        spo[1][1] = spo[1][0];
+//////                        spo[1][2] = spo[1][0];
+//////                    }
+//////
+//////                    if( spo[2][0].contains("#")){
+//////                        String help = new String(spo[2][0]);
+//////                        if(help.startsWith("<"))
+//////                            help = help.substring(1);
+//////                        if(help.endsWith(">"))
+//////                            help = help.substring(0,help.length()-1);
+//////                        String[] split = help.split("#");
+////////                        OWLGUIUtilities.getEntityLabel()
+////////                        OWLGUIUtilities.get
+//////                        spo[2][1] = split[1];
+//////                        spo[2][2] = split[0].substring(split[0].lastIndexOf("/") + 1) + ":" + split[1];
+//////                        
+//////                    }else{
+//////                        spo[2][1] = spo[2][0];
+//////                        spo[2][2] = spo[2][0];
+//////                    }
+////////                    System.out.println(s + ", " + p  + ", " + o);
+//////                    output = subject + ": " + axiomString + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_0 + ontology + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_1 + projectName + "]  "; //$NON-NLS-1$ //$NON-NLS-2$
+////////                    output = _axiom + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_0 + ontology + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_1 + projectName + "]  "; //$NON-NLS-1$
+//////                    output = OWLGUIUtilities.getEntityLabel(spo[0]) + " " + OWLGUIUtilities.getEntityLabel(spo[1])  + " " + OWLGUIUtilities.getEntityLabel(spo[2])+ com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_0 + ontology + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_1 + projectName + "]  ";  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+//////                    return output;
+////                }
+//            }
+//        } catch (NeOnCoreException e) {
+//            // nothing to do
+//        }
+//        return _axiom.toString();
     }
 
     /*

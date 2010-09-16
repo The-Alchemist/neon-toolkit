@@ -85,6 +85,7 @@ public class FindReferencesCommand extends AbstractSearchCommand{
         return matches.toArray(new Match[matches.size()]);
     }
 
+
     private void addSearchMatches(SearchElement element, List<Match> resultList) {
         String ontology = element.getOntologyUri(); 
         String project = getProject();
@@ -94,7 +95,7 @@ public class FindReferencesCommand extends AbstractSearchCommand{
         IRI entityUri = entity.getIRI();
         
         try {
-            OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(getProject());
+            OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(project);
 
             ITreeElement elem = null;
             switch (elementType) {

@@ -18,6 +18,7 @@ import java.util.Set;
 import org.eclipse.search.ui.text.Match;
 import org.neontoolkit.core.EntityType;
 import org.neontoolkit.core.command.CommandException;
+import org.neontoolkit.core.exception.InternalNeOnException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.navigator.ITreeElement;
@@ -71,12 +72,15 @@ import com.ontoprise.ontostudio.search.owl.match.ObjectPropertySearchMatch;
 
 /**
  * @author janiko
+ * @author Nico Stieler
  *
  */
 public class OwlSearchCommand extends AbstractSearchCommand {
 
 
     private int _searchFlags;
+    private SearchArea _searchArea;
+    private String _ontologyId;
 
     //Reimplementation of EntityTypes which is used in the generic class AbstractSearchCommand, EntityTypes has only FLogic types.
     public enum FieldTypes{
@@ -100,24 +104,32 @@ public class OwlSearchCommand extends AbstractSearchCommand {
             return _type;
         }
     }
+
+    //Reimplementation of EntityTypes which is used in the generic class AbstractSearchCommand, EntityTypes has only FLogic types.
+    public enum SearchArea{ONTOLOGY,PROJECT}
+        
     /**
-     * @param project
+     * @param project_or_onotlogy
      * @param expression
      * @param caseSensitive
      */
-    public OwlSearchCommand(String project, String expression, boolean caseSensitive) {
+    public OwlSearchCommand(String project, String onotlogyId, String expression, boolean caseSensitive, SearchArea searchArea) {
         super(project, expression, caseSensitive);
+        this._searchArea = searchArea;
+        this._ontologyId = onotlogyId;
     }
 
     /**
-     * @param project
+     * @param project_or_onotlogy
      * @param _expression
      * @param flags
      * @param sensitive
      */
-    public OwlSearchCommand(String project, String expression, int searchFlags, boolean caseSensitive) {
+    public OwlSearchCommand(String project, String onotlogyId, String expression, int searchFlags, boolean caseSensitive, SearchArea searchArea) {
         super(project, expression, caseSensitive);
         this._searchFlags = searchFlags;
+        this._searchArea = searchArea;
+        this._ontologyId = onotlogyId;
     }
 
     @Override 
@@ -161,29 +173,79 @@ public class OwlSearchCommand extends AbstractSearchCommand {
     @Override
     protected void perform() throws CommandException {
         try {
-            _results = getOWLResults(getProject(), getFieldTypes());
+            _results = getOWLResults(getProject(),getFieldTypes());
         } catch (NeOnCoreException e) {
             throw new CommandException(e);
         }         
     }
     
 
-    private Match[] getOWLResults(String project, Set<FieldTypes> types) throws NeOnCoreException {
+    protected Match[] getOWLResults(String project_or_onotlogy, Set<FieldTypes> types) throws NeOnCoreException {
+        List<Match> matches = new ArrayList<Match>();
+//        
+//        for (OWLModel owlModel: OWLModelFactory.getOWLModels(project)) {
+//            SimpleOwlSearchHelper searchHelper = new SimpleOwlSearchHelper(owlModel);
+//            String searchExpression = getExpression();
+//            
+//            SearchResults results = searchHelper.search(owlModel.getOntologyURI(), types, searchExpression, false, isCaseSensitive(), 0, 999);
+//            for (SearchElement result: results.getResults()) {
+//                addSearchMatches(project, result, matches);
+//            }
+//        }
+//
+//        OWLGUIUtilities.removeDuplicate(matches);
+//        
+        switch(_searchArea){
+            case ONTOLOGY:
+                matches = getOWLResultsForOntology(types,OWLModelFactory.getOWLModel(_ontologyId,getProject()));
+                break;
+            case PROJECT:
+                matches = getOWLResultsForProject(getProject(), types);
+                break;
+            default:
+                String message = "This should never happen";//$NON-NLS-1$
+                throw new InternalNeOnException(message);
+        }
+        return matches.toArray(new Match[matches.size()]);
+    }
+    
+
+    protected List<Match> getOWLResultsForOntology(Set<FieldTypes> types, OWLModel owlModel){
         List<Match> matches = new ArrayList<Match>();
         
-        for (OWLModel owlModel: OWLModelFactory.getOWLModels(project)) {
-            SimpleOwlSearchHelper searchHelper = new SimpleOwlSearchHelper(owlModel);
-            String searchExpression = getExpression();
-            
-            SearchResults results = searchHelper.search(owlModel.getOntologyURI(), types, searchExpression, false, isCaseSensitive(), 0, 999);
-            for (SearchElement result: results.getResults()) {
-                addSearchMatches(project, result, matches);
-            }
-        }
 
-        OWLGUIUtilities.removeDuplicate(matches);
+        SimpleOwlSearchHelper searchHelper = new SimpleOwlSearchHelper(owlModel);
+        String searchExpression = getExpression();
         
-        return matches.toArray(new Match[matches.size()]);
+        SearchResults results;
+        try {
+            results = searchHelper.search(owlModel.getOntologyURI(), types, searchExpression, false, isCaseSensitive(), 0, 999);
+            for (SearchElement result: results.getResults()) {
+                addSearchMatches(owlModel.getProjectId(), result, matches);
+            }
+            return matches;
+        } catch (NeOnCoreException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    protected List<Match> getOWLResultsForOntologies(Set<OWLModel> ontologies, Set<FieldTypes> types) {
+        List<Match> matches = new ArrayList<Match>();
+        
+        for (OWLModel owlModel: ontologies) {
+            matches.addAll(getOWLResultsForOntology(types, owlModel));
+        }
+        return matches;
+    }
+    protected List<Match> getOWLResultsForProject( String project, Set<FieldTypes> types) throws NeOnCoreException {
+        Set<OWLModel> ontologies = OWLModelFactory.getOWLModels(project);
+        return getOWLResultsForOntologies(ontologies, types);
+    }
+    protected List<Match> getOWLResultsForProjects(Set<String> projects, Set<FieldTypes> types) throws NeOnCoreException {
+        Set<OWLModel> ontologies = new HashSet<OWLModel>();
+        for(String project : projects)
+            ontologies.addAll(OWLModelFactory.getOWLModels(project));
+        return getOWLResultsForOntologies(ontologies, types);
     }
 
     @SuppressWarnings("unchecked")
