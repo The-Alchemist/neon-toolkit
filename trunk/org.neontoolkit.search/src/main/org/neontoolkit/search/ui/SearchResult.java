@@ -17,12 +17,15 @@ import org.eclipse.search.ui.text.AbstractTextSearchResult;
 import org.eclipse.search.ui.text.IEditorMatchAdapter;
 import org.eclipse.search.ui.text.IFileMatchAdapter;
 
-/*
+/**
+ * 
+ * @author 
+ * @author Nico Stieler
  * Created on 15.04.2005
  *
  */
 public class SearchResult extends AbstractTextSearchResult implements ISearchResult {
-	private AbstractSearchQuery _query;
+	protected AbstractSearchQuery _query;
 	
 	public SearchResult(AbstractSearchQuery query) {
 		_query = query;
@@ -41,8 +44,8 @@ public class SearchResult extends AbstractTextSearchResult implements ISearchRes
 
 	public String getLabel() {
 		int matchCount = getMatchCount();
-		String label = "\"" + _query.getExpression() + "\" - " + matchCount + " Reference"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		if (matchCount > 1) {
+		String label = "\"" + _query.getExpression() + "\" - " + matchCount + " Result"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		if (matchCount != 1) {
 			label += "s"; //$NON-NLS-1$
 		}
 		label += " found."; //$NON-NLS-1$

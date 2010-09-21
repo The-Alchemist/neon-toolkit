@@ -10,9 +10,12 @@
 
 package com.ontoprise.ontostudio.search.owl.references;
 
+import org.eclipse.search.ui.ISearchResult;
 import org.neontoolkit.gui.navigator.elements.TreeElement;
 import org.neontoolkit.search.command.AbstractSearchCommand;
 import org.neontoolkit.search.ui.AbstractSearchQuery;
+import org.neontoolkit.search.ui.SearchReferencesResult;
+import org.neontoolkit.search.ui.SearchResult;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 public class FindReferencesQuery extends AbstractSearchQuery {
@@ -32,5 +35,12 @@ public class FindReferencesQuery extends AbstractSearchQuery {
     protected AbstractSearchCommand getSearchCommand(String project, String ontology) {
 //        ontology should be always null
         return new FindReferencesCommand(_entity, project);
+    }
+
+    public ISearchResult getSearchResult() {
+        if (_result == null) {
+            _result = new SearchReferencesResult(this);
+        }
+        return _result;
     }
 }
