@@ -39,7 +39,7 @@ import org.neontoolkit.search.command.AbstractSearchCommand;
  * @author Nico Stieler
  */
 public abstract class AbstractSearchQuery implements ISearchQuery {
-	private SearchResult _result;
+	protected SearchResult _result;
 	protected String _expression;
     protected String[][] _projects_ontologies;
 	protected int _searchFlags;
