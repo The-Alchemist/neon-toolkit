@@ -10,6 +10,9 @@
 
 package org.neontoolkit.search.ui;
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.search.ui.ISearchResult;
@@ -73,4 +76,18 @@ public class SearchResult extends AbstractTextSearchResult implements ISearchRes
 		return _query;
 	}
 
+    @Override
+    public int getMatchCount() {
+        Object[] elements = getElements();
+        return elements.length;
+//        int count= 0;
+//        synchronized (super.fElementsToMatches) {
+//            for (Iterator elements= fElementsToMatches.values().iterator(); elements.hasNext();) {
+//                List element= (List) elements.next();
+//                if (element != null)
+//                    count+= element.size();
+//            }
+//        }
+//        return count;
+    }
 }
