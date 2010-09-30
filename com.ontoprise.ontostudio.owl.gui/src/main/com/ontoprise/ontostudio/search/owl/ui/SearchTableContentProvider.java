@@ -8,7 +8,7 @@
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  ******************************************************************************/
 
-package org.neontoolkit.search.ui;
+package com.ontoprise.ontostudio.search.owl.ui;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,6 +16,9 @@ import java.util.Set;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+
+import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
+import com.ontoprise.ontostudio.search.owl.match.OwlSearchMatch;
 
 /* 
  * Created on 15.04.2005
@@ -33,8 +36,8 @@ public class SearchTableContentProvider implements IStructuredContentProvider {
 	
     protected static final Object[] EMPTY = new Object[0];
 	
-    private SearchResultPage _page;
-	private SearchResult _result;
+    protected SearchResultPage _page;
+    protected SearchResult _result;
 
 	public SearchTableContentProvider(SearchResultPage page) {
 		_page = page;
@@ -58,6 +61,7 @@ public class SearchTableContentProvider implements IStructuredContentProvider {
 		if (_result == null) {
 			return;
 		}
+
 		int addCount = 0;
 		int removeCount = 0;
 		TableViewer viewer = (TableViewer) _page.getViewer();

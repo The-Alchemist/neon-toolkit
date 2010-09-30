@@ -31,6 +31,8 @@ import org.neontoolkit.gui.Messages;
  */
 /**
  * Runnable processing the renaming of a module 
+ * 
+ * @author Nico Stieler
  */
 public class SaveOntologyRunnableWithProgress implements IRunnableWithProgress {
 	private String _ontologyUri;
@@ -42,10 +44,9 @@ public class SaveOntologyRunnableWithProgress implements IRunnableWithProgress {
 	}
 	
 
-	public void run(IProgressMonitor monitor) throws InvocationTargetException,
-			InterruptedException {
+	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         try {
-        	monitor.beginTask(Messages.SaveOntologyRunnableWithProgress_0, IProgressMonitor.UNKNOWN);
+        	monitor.beginTask(Messages.SaveOntologyRunnableWithProgress_0 + _ontologyUri, IProgressMonitor.UNKNOWN);
         	IOntologyProject ontoProject = NeOnCorePlugin.getDefault().getOntologyProject(_project);
         	ontoProject.saveOntology(_ontologyUri);    
  			monitor.done();

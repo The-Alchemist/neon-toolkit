@@ -10,7 +10,6 @@
 
 package com.ontoprise.ontostudio.owl.model.commands.project;
 
-import java.net.URI;
 import java.util.Iterator;
 
 import org.coode.owlapi.manchesterowlsyntax.ManchesterOWLSyntaxOntologyFormat;

@@ -9,15 +9,18 @@
             pageClass="org.neontoolkit.search.workingset.OntologyWorkingSetPage"
             id="org.neontoolkit.search.ontologyWorkingSet"/>
    </extension>
-
+ 
+<!--
    <extension
          point="org.eclipse.search.searchResultViewPages">
       <viewPage
-            class="org.neontoolkit.search.ui.SearchResultPage"
-            icon="icons/csearch_obj.GIF"
-            id="org.neontoolkit.search.ui.SearchResultPage"
-            searchResultClass="org.neontoolkit.search.ui.SearchResult">
-      </viewPage>
+      		icon="icons/csearch_obj.GIF"
+      		label="%owlsearch"
+            class="org.neontoolkit.search.ui.AbstractSearchTreeResultPage"
+            searchResultClass="org.neontoolkit.search.ui.OWLTreeSearchResult"
+            id="com.ontoprise.ontostudio.search.owl.ui.OWLSearchResultPage"/>
    </extension>
+   
+   -->
 
 </plugin>
