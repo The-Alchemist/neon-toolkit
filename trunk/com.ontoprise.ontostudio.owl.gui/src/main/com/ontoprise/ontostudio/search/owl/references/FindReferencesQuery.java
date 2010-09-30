@@ -13,10 +13,11 @@ package com.ontoprise.ontostudio.search.owl.references;
 import org.eclipse.search.ui.ISearchResult;
 import org.neontoolkit.gui.navigator.elements.TreeElement;
 import org.neontoolkit.search.command.AbstractSearchCommand;
-import org.neontoolkit.search.ui.AbstractSearchQuery;
-import org.neontoolkit.search.ui.SearchReferencesResult;
-import org.neontoolkit.search.ui.SearchResult;
 import org.semanticweb.owlapi.model.OWLEntity;
+
+import com.ontoprise.ontostudio.search.owl.ui.AbstractSearchQuery;
+import com.ontoprise.ontostudio.search.owl.ui.SearchReferencesResult;
+import com.ontoprise.ontostudio.search.owl.ui.SearchResult;
 
 public class FindReferencesQuery extends AbstractSearchQuery {
 

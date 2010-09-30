@@ -223,11 +223,10 @@ public class OwlSearchCommand extends AbstractSearchCommand {
             for (SearchElement result: results.getResults()) {
                 addSearchMatches(owlModel.getProjectId(), result, matches);
             }
-            return matches;
         } catch (NeOnCoreException e) {
             e.printStackTrace();
         }
-        return null;
+        return matches; //it was null, now it is an empty set
     }
     protected List<Match> getOWLResultsForOntologies(Set<OWLModel> ontologies, Set<FieldTypes> types) {
         List<Match> matches = new ArrayList<Match>();

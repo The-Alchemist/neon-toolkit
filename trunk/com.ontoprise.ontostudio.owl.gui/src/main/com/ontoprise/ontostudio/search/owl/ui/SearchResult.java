@@ -8,7 +8,7 @@
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  ******************************************************************************/
 
-package org.neontoolkit.search.ui;
+package com.ontoprise.ontostudio.search.owl.ui;
 
 import java.util.Iterator;
 import java.util.List;

@@ -17,7 +17,6 @@ import org.neontoolkit.gui.util.ItemSorter;
 import org.neontoolkit.gui.util.PerspectiveChangeHandler;
 import org.neontoolkit.search.ui.NavigatorSearchMatch;
 
-import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
@@ -26,25 +25,31 @@ import com.ontoprise.ontostudio.owl.perspectives.OWLPerspective;
 /* 
  * Created on 04.04.2008
  * @author Dirk Wenke
+ * Edited on 30.09.2010
+ * @author Nico Stieler
  *
  * Function:
  * Keywords:
  */
 /**
- * Type comment
+ * @author Nico Stieler
  */
-public abstract class OwlSearchMatch extends NavigatorSearchMatch {
+public abstract class OwlSearchMatch extends NavigatorSearchMatch implements ITreeObject{
 
+
+    private String name;
+    private ITreeParent parent;
     /**
      * @param element
      */
     public OwlSearchMatch(ITreeElement element) {
         super(element);
+        name = element.toString();
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    protected ITreeElementPath[] getPaths() {
+    public ITreeElementPath[] getPaths() {
         AbstractOwlEntityTreeElement element = (AbstractOwlEntityTreeElement) getMatch();
         if (element instanceof IIndividualTreeElement) {
             return new ITreeElementPath[0];
@@ -78,7 +83,7 @@ public abstract class OwlSearchMatch extends NavigatorSearchMatch {
             // nothing to do
         }
 
-        return elementId + "  [Ontology: " + element.getOntologyUri() + "] " + Messages.OwlSearchMatch_0 + element.getProjectName() + "]  "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+        return elementId;// + "  [Ontology: " + element.getOntologyUri() + "] " + Messages.OwlSearchMatch_0 + element.getProjectName() + "]  "; /$NON_-NLS-1$ /$NON-NLS-2$ /$NON-NLS-3$ 
     }
 
     private String getId() {
@@ -105,6 +110,23 @@ public abstract class OwlSearchMatch extends NavigatorSearchMatch {
     
     @Override
     public int getOccurenceCount() {
+        return 1;
+    }
+    
+    public String getName() {
+        return name;
+    }
+    public void setParent(ITreeParent parent){
+        this.parent = parent;
+    }
+    public ITreeParent getParent() {
+        return parent;
+    }
+    @SuppressWarnings("unchecked")
+    public Object getAdapter(Class key) {
+        return null;
+    }
+    public int numberOfLeafs(){
         return 1;
     }
 }

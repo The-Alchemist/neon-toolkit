@@ -8,7 +8,7 @@
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  ******************************************************************************/
 
-package org.neontoolkit.search.ui;
+package com.ontoprise.ontostudio.search.owl.ui;
 
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.SafeRunner;
@@ -17,11 +17,17 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.search.internal.ui.text.DecoratingFileSearchLabelProvider;
+import org.eclipse.search.internal.ui.text.FileLabelProvider;
+import org.eclipse.search.internal.ui.text.FileTreeContentProvider;
+import org.eclipse.search.internal.ui.text.IFileSearchContentProvider;
+import org.eclipse.search.internal.ui.text.FileSearchPage.DecoratorIgnoringViewerSorter;
 import org.eclipse.search.ui.IContextMenuConstants;
 import org.eclipse.search.ui.ISearchResultPage;
 import org.eclipse.search.ui.text.AbstractTextSearchViewPage;
@@ -29,6 +35,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.IPageSite;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.search.Messages;
+import org.neontoolkit.search.ui.OpenSearchPreferencesAction;
+import org.neontoolkit.search.ui.SearchMatch;
 
 
 /*
@@ -37,7 +45,9 @@ import org.neontoolkit.search.Messages;
  */
 public class SearchResultPage extends AbstractTextSearchViewPage implements ISearchResultPage {
 
-	private SearchTableContentProvider _contentProvider;
+    private StructuredViewer fViewer;
+//    private SearchTreeContentProvider _contentProvider;
+    private SearchTableContentProvider _contentProvider;
 	private SearchTableLabelProvider _labelProvider;
 	private int _currentPathIndex = 0;
 	
@@ -54,6 +64,8 @@ public class SearchResultPage extends AbstractTextSearchViewPage implements ISea
 
 	public SearchResultPage() {
 		super(AbstractTextSearchViewPage.FLAG_LAYOUT_FLAT);
+		//NICO change FLAG: FLAT --> TREE
+		
 	}
 	
 	@Override
@@ -93,6 +105,16 @@ public class SearchResultPage extends AbstractTextSearchViewPage implements ISea
 	 */
 	@Override
     protected void configureTreeViewer(TreeViewer viewer) {
+//	  NICO   Entity contains Informations about the Ontology and the Project
+//        viewer.setUseHashlookup(true);
+////      viewer.setLabelProvider(new ColorDecoratingLabelProvider(new SortingLabelProvider(this), PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
+//        _contentProvider = new SearchTreeContentProvider(this, viewer);
+//        _labelProvider = new SearchTableLabelProvider();
+//        viewer.setContentProvider(_contentProvider);
+//        viewer.setLabelProvider(_labelProvider);
+////      setSortOrder(fCurrentSortOrder);
+//        IPreferenceStore store = NeOnUIPlugin.getDefault().getPreferenceStore();
+//        store.addPropertyChangeListener(_propertyChangeListener);
 	}
 
 	/* (non-Javadoc)

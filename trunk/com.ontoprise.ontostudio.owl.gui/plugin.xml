@@ -34,13 +34,30 @@
    </extension>
    <!-- need this for a tree-like result view, as well as classes in package 
    		com.ontoprise.ontostudio.search.owl.ui.tree, but this is not yet working. 
+            searchResultClass="com.ontoprise.ontostudio.search.owl.ui.OWLSearchResult"
+  
+-->
    <extension
          point="org.eclipse.search.searchResultViewPages">
       <viewPage
+      		icon="icons/csearch_obj.GIF"
+      		label="%owlsearch"
             class="com.ontoprise.ontostudio.search.owl.ui.OWLSearchResultPage"
-            searchResultClass="com.ontoprise.ontostudio.search.owl.ui.OWLSearchResult"
-            id="com.ontoprise.ontostudio.search.owl.ui.OWLSearchResultPage"/>
+            searchResultClass="com.ontoprise.ontostudio.search.owl.ui.SearchResult"
+            id="org.neontoolkit.search.ui.SearchResultPage">
+      </viewPage>
    </extension>
+ <!--
+   <extension
+         point="org.eclipse.search.searchResultViewPages">
+      <viewPage
+            class="com.ontoprise.ontostudio.search.owl.ui.SearchResultPage"
+            icon="icons/csearch_obj.GIF"
+            id="org.neontoolkit.search.ui.SearchResultPage"
+            searchResultClass="com.ontoprise.ontostudio.search.owl.ui.SearchResult">
+      </viewPage>
+   </extension>
+
    -->
 <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
 <!--+++++++++++++++++++++++++ PREFERENCES +++++++++++++++++++++++++++++++++-->
@@ -215,6 +232,12 @@
                label="%findReferencesLabel"
                style="push">
          </command>
+   <!--      <command
+			   commandId="com.ontoprise.ontostudio.owl.gui.navigator.findIn"
+               label="%findReferencesLabel2"
+               style="push">
+         </command>
+         -->
       </menuContribution>
       <menuContribution
             locationURI="toolbar:org.eclipse.ui.main.toolbar">
@@ -1141,6 +1164,26 @@
             </reference>
          </activeWhen> 
       </handler>
+<!--      <handler
+            class="com.ontoprise.ontostudio.search.owl.references.FindReferencesHandler"
+			commandId="com.ontoprise.ontostudio.owl.gui.navigator.findIn">
+         <activeWhen>
+            <reference
+	              definitionId="com.ontoprise.ontostudio.owl.gui.navigator.nOntologiesOrProjetctSelected">
+            </reference>
+         </activeWhen> 
+      </handler>
+      -->
+<!--      <handler
+            class="com.ontoprise.ontostudio.search.owl.references.FindReferencesHandler"
+			commandId="com.ontoprise.ontostudio.owl.gui.navigator.findIn">
+         <activeWhen>
+            <reference
+	              definitionId="com.ontoprise.ontostudio.owl.gui.navigator.nProjectsSelected">
+            </reference>
+         </activeWhen> 
+      </handler>
+     -->
    </extension>
 
    <extension
@@ -1491,7 +1534,23 @@
             </iterate>
          </and>
       </definition>
-      
+      <definition
+            id="com.ontoprise.ontostudio.owl.gui.navigator.nOntologiesOrProjetctSelected">
+         <or>
+	         <iterate
+	               ifEmpty="false">
+	            <instanceof
+	                  value="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement">
+	            </instanceof>
+	         </iterate>
+	         <iterate
+	               ifEmpty="false">
+	            <instanceof
+	                  value="com.ontoprise.ontostudio.owl.gui.navigator.project.OWLProjectTreeElement">
+	            </instanceof>
+	         </iterate>
+         </or>
+      </definition>
    </extension>
 
 <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
@@ -1548,6 +1607,12 @@
 			id="com.ontoprise.ontostudio.owl.gui.navigator.findReferencesCommand"
             name="%findReferencesLabel">
       </command>
+<!--      <command
+            description="%findReferencesDescription2"
+			id="com.ontoprise.ontostudio.owl.gui.navigator.findIn"
+            name="%findReferencesLabel2">
+      </command>
+      -->
    </extension>
 <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
 <!--+++++++++++++++++++++++++++++ KEY BINDINGS ++++++++++++++++++++++++++++-->
@@ -1708,7 +1773,7 @@
           visible="false"/>
   	</perspectiveExtension>
   </extension>
-
+<!--
    <extension
          point="org.eclipse.search.searchResultViewPages">
       <viewPage
@@ -1718,7 +1783,7 @@
             searchResultClass="org.neontoolkit.search.ui.SearchResult">
       </viewPage>
    </extension>
-
+-->
 <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
 <!-- additional extension of the gOntt plugin for the NeOn project         -->
 <!--                                                                       -->

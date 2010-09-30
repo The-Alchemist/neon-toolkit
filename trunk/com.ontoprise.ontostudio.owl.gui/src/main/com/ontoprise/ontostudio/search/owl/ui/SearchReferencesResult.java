@@ -1,4 +1,5 @@
-package org.neontoolkit.search.ui;
+package com.ontoprise.ontostudio.search.owl.ui;
+
 
 /**
  * @author Nico Stieler

@@ -10,10 +10,12 @@
 
 package com.ontoprise.ontostudio.search.owl.ui;
 
+import org.eclipse.swt.graphics.Image;
 import org.neontoolkit.search.command.AbstractSearchCommand;
-import org.neontoolkit.search.ui.AbstractSearchQuery;
 import org.neontoolkit.search.ui.Scope;
 
+import com.ontoprise.ontostudio.search.owl.match.ClassSearchMatch;
+import com.ontoprise.ontostudio.search.owl.match.OwlSearchMatch;
 import com.ontoprise.ontostudio.search.owl.ui.OwlSearchCommand.SearchArea;
 
 /* 
