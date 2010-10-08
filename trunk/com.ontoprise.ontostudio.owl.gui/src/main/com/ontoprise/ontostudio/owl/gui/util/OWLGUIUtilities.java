@@ -104,6 +104,9 @@ import com.ontoprise.ontostudio.owl.model.util.InternalParserException;
 import com.ontoprise.ontostudio.owl.model.util.OWLAxiomUtils;
 import com.ontoprise.ontostudio.owl.perspectives.OWLPerspective;
 
+/**
+ * @author Nico Stieler
+ */
 public class OWLGUIUtilities {
     
     public static final Color COLOR_FOR_IMPORTED_AXIOMS = new Color(null, 176, 196, 222);
@@ -480,7 +483,7 @@ public class OWLGUIUtilities {
         return manager.parseUri(uri, owlModel);
     }
 
-    public static void jumpToEntity(String uri, OWLModel owlModel) {
+    public static void jumpToEntity(String uri, OWLModel owlModel ) {
         String ontologyURI;
         String project;
         try {

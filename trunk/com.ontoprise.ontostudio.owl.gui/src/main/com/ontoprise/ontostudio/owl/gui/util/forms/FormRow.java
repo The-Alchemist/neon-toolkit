@@ -18,7 +18,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
@@ -26,17 +25,23 @@ import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.semanticweb.owlapi.model.OWLAxiom;
 
+import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLObjectImpl;
+import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyImpl;
+
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.properties.LocatedAxiom;
-import com.ontoprise.ontostudio.owl.gui.properties.clazz.ClazzTaxonomyPropertyPage2;
-import com.ontoprise.ontostudio.owl.gui.properties.ontology.OntologyPropertyPage2;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.AxiomText;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLModelPlugin;
 
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class FormRow extends AbstractFormRow {
 
     private Button _editButton;
@@ -109,14 +114,25 @@ public class FormRow extends AbstractFormRow {
                     enableWidgets(getWidgets());
                 } else {
                     if (_editButton.getText().equals(OWLGUIUtilities.BUTTON_LABEL_EDIT_STAR)) {
-                        if(MessageDialog.openQuestion(null, "Jump to source ontology", "Do you want to jump to the source ontology >" + _sourceOnto +"< to edit?")){
-                            try {
-                                OWLGUIUtilities.jumpToEntity(_entityName,OWLModelFactory.getOWLModel(_sourceOnto,_project));
-                                
-                           } catch (NeOnCoreException e1) {
-                              e1.printStackTrace();
-                          }
-                        }
+                        jump();
+//                        if(MessageDialog.openQuestion(null, Messages.JumpToTitle, Messages.JumpToText_0 + _sourceOnto + Messages.JumpToText_1)){
+//                            try {
+//
+//                                Object data = _axiomText.getData();
+//                                if(data instanceof OWLObjectImpl){
+//                                    if(data instanceof OWLClassImpl){
+//                                        _entityName = ((OWLClassImpl)data).getIRI().toString();
+//                                    }
+//                                    if(data instanceof OWLObjectPropertyImpl){
+//                                        _entityName = ((OWLObjectPropertyImpl)data).getIRI().toString();
+//                                    }
+//                                }
+//                                OWLGUIUtilities.jumpToEntity(_entityName,OWLModelFactory.getOWLModel(_sourceOnto,_project));
+//                                
+//                           } catch (NeOnCoreException e1) {
+//                              e1.printStackTrace();
+//                          }
+//                        }
                     } else {
                         _handler.savePressed();
                     }
@@ -142,14 +158,7 @@ public class FormRow extends AbstractFormRow {
                     }
                 }  else {
                     if (_removeButton.getText().equals(OWLGUIUtilities.BUTTON_LABEL_REMOVE_STAR)) {
-                        if(MessageDialog.openQuestion(null, "Jump to source ontology", "Do you want to jump to the source ontology >" + _sourceOnto +"< to edit?")){
-                            try {
-                                OWLGUIUtilities.jumpToEntity(_entityName,OWLModelFactory.getOWLModel(_sourceOnto,_project));
-                                
-                           } catch (NeOnCoreException e1) {
-                              e1.printStackTrace();
-                          }
-                        }
+                        jump();
                     } else {
                         _handler.cancelPressed();
                     }
@@ -171,6 +180,35 @@ public class FormRow extends AbstractFormRow {
 //                control.setToolTipText(Messages.FormRow_1 + _sourceOnto);
 //            }
         }
+    }
+
+    /**
+     * 
+     */
+    protected void jump() {
+        if(MessageDialog.openQuestion(null, Messages.JumpToTitle, Messages.JumpToText_0 + _sourceOnto + Messages.JumpToText_1)){
+            try {
+
+                Object data = _axiomText.getData();
+                if(data instanceof OWLObjectImpl){
+                    if(data instanceof OWLClassImpl){
+                        _entityName = ((OWLClassImpl)data).getIRI().toString();
+                    }
+                    if(data instanceof OWLObjectPropertyImpl){
+                        _entityName = ((OWLObjectPropertyImpl)data).getIRI().toString();
+                    }
+                }else{
+                    if(data instanceof String[]){
+                        _entityName = ((String[])data)[1];
+                    }
+                }
+                OWLGUIUtilities.jumpToEntity(_entityName,OWLModelFactory.getOWLModel(_sourceOnto,_project));
+                
+           } catch (NeOnCoreException e1) {
+              e1.printStackTrace();
+          }
+        }
+        
     }
 
     public Button getEditButton() {
