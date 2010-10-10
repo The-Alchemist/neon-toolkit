@@ -10,7 +10,8 @@ import com.softwareag.neontoolkit.ontostat.StatsProvider;
 
 public class IndividualsStatsProvider extends StatsProvider {
 
-	public Object getValue(OWLModel model) {
+	@Override
+    public Object getValue(OWLModel model) {
 		try {
 			return model.getOntology().getIndividualsInSignature().size();
 		} catch (Exception e) {
@@ -18,7 +19,8 @@ public class IndividualsStatsProvider extends StatsProvider {
 		}	
 	}
 	
-	public OWLIndividual[] getElements(OWLModel model) {
+	@Override
+    public OWLIndividual[] getElements(OWLModel model) {
 		try {
 			return model.getOntology().getIndividualsInSignature().toArray(new OWLIndividual[0]);
 		} catch (Exception e) {
@@ -26,11 +28,13 @@ public class IndividualsStatsProvider extends StatsProvider {
 		}
 	}
 	
-
-	public Class getType() {
+	@Override
+    public Class getType() {
 		return OWLIndividual.class;
 	}
-	public Image getIconImage() {
+	
+	@Override
+    public Image getIconImage() {
 		return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.INDIVIDUAL);
 	}
 

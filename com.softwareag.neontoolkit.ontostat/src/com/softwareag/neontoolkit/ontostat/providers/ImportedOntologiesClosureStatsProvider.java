@@ -10,7 +10,8 @@ import com.softwareag.neontoolkit.ontostat.StatsProvider;
 
 public class ImportedOntologiesClosureStatsProvider extends StatsProvider {
 
-	public Object getValue(OWLModel model) {
+	@Override
+    public Object getValue(OWLModel model) {
 		try {
 			return model.getAllImportedOntologiesURIs().size();
 		} catch (Exception e) {
@@ -18,7 +19,8 @@ public class ImportedOntologiesClosureStatsProvider extends StatsProvider {
 		}
 	}
 	
-	public OWLOntology[] getElements(OWLModel model) {
+	@Override
+    public OWLOntology[] getElements(OWLModel model) {
 		try {
 			return model.getOntology().getImportsClosure().toArray(new OWLOntology[0]);
 		} catch (Exception e) {
@@ -27,11 +29,13 @@ public class ImportedOntologiesClosureStatsProvider extends StatsProvider {
 	}
 	
 
-	public Class getType() {
+	@Override
+    public Class getType() {
 		return OWLOntology.class;
 	}
 
-	public Image getIconImage() {
+	@Override
+    public Image getIconImage() {
 		return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.ONTOLOGY);
 	}
 	

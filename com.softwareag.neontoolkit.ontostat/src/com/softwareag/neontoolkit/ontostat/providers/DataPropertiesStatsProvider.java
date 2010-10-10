@@ -33,7 +33,8 @@ public class DataPropertiesStatsProvider extends StatsProvider {
 		return OWLDataProperty.class;
 	}
 
-	public Image getIconImage() {
+	@Override
+    public Image getIconImage() {
 		return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.DATA_PROPERTY);
 	}
 }

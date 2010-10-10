@@ -35,7 +35,8 @@ public class SubClassesStatsProvider extends StatsProvider {
 		return OWLClass.class;
 	}
 
-	public Image getIconImage() {
+	@Override
+    public Image getIconImage() {
 		return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.CLAZZ);
 	}
 }

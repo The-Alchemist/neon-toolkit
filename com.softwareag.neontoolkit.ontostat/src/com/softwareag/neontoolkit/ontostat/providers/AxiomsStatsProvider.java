@@ -10,7 +10,8 @@ import com.softwareag.neontoolkit.ontostat.StatsProvider;
 
 public class AxiomsStatsProvider extends StatsProvider {
 
-	public Object getValue(OWLModel model) {
+	@Override
+    public Object getValue(OWLModel model) {
 		try {
 			return model.getOntology().getAxiomCount();
 		} catch (Exception e) {
@@ -18,7 +19,8 @@ public class AxiomsStatsProvider extends StatsProvider {
 		}
 	}
 	
-	public OWLAxiom[] getElements(OWLModel model) {
+	@Override
+    public OWLAxiom[] getElements(OWLModel model) {
 		try {
 			return model.getOntology().getAxioms().toArray(new OWLAxiom[0]);
 		} catch (Exception e) {
@@ -27,11 +29,13 @@ public class AxiomsStatsProvider extends StatsProvider {
 	}
 	
 
-	public Class getType() {
+	@Override
+    public Class getType() {
 		return OWLAxiom.class;
 	}
 	
-	public Image getIconImage() {
+	@Override
+    public Image getIconImage() {
 		return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.HAS_VALUE);
 	}
 }

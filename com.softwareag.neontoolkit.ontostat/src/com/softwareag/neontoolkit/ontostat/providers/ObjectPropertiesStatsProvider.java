@@ -34,7 +34,8 @@ public class ObjectPropertiesStatsProvider extends StatsProvider {
 		return OWLObjectProperty.class;
 	}
 
-	public Image getIconImage() {
+	@Override
+    public Image getIconImage() {
 		return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.OBJECT_PROPERTY);
 	}
 }
