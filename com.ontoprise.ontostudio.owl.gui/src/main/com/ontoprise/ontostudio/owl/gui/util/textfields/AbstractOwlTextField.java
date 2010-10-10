@@ -41,10 +41,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
-
-import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
-import uk.ac.manchester.cs.owl.owlapi.OWLObjectImpl;
-import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyImpl;
+import org.semanticweb.owlapi.model.OWLNamedObject;
 
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.properties.table.proposal.DefaultOWLProposalLabelProvider;
@@ -218,40 +215,26 @@ public abstract class AbstractOwlTextField {
                 if ((e.stateMask & SWT.CTRL) == 0) {
                     return;
                 }
-//                _styledText.g
-//                if(){
-//                    return;
-//                }
                 int offset = 0;
                 try {
                     offset = _styledText.getOffsetAtLocation(new Point(e.x, e.y));
                 } catch (IllegalArgumentException iae) {
                     return;
                 }
-                //NICO to jump correct change the selected text
-                String selectedText = getSelectedTextForOffset(offset);
 
+                String selectedText = getSelectedTextForOffset(offset);
                 if (selectedText != null) {
                     try {
                         ISyntaxManager manager = OWLPlugin.getDefault().getSyntaxManager();
 
                         Object data = _styledText.getData();
-                        if(data instanceof OWLObjectImpl){
-                            if(data instanceof OWLClassImpl){
-                                selectedText = ((OWLClassImpl)data).getIRI().toString();
-                            }
-                            if(data instanceof OWLObjectPropertyImpl){
-                                selectedText = ((OWLObjectPropertyImpl)data).getIRI().toString();
-                            }
-                        }else{
-                            if(data instanceof String[]){
-                                selectedText = ((String[])data)[1];
-                            }
+                        if(data instanceof OWLNamedObject) {
+                            selectedText = ((OWLNamedObject) data).getIRI().toString();
+                        } else if(data instanceof String[]){
+                            selectedText = ((String[])data)[1];
                         }
                         selectedText = manager.parseUri(selectedText, _owlModel);
-                        System.out.println(selectedText);
-                        //NICO get the real URI
-                        OWLGUIUtilities.jumpToEntity(selectedText, _owlModel);//NICO remove
+                        OWLGUIUtilities.jumpToEntity(selectedText, _owlModel);
                     } catch (NeOnCoreException e1) {
                         new NeonToolkitExceptionHandler().handleException(e1);
                         return;
