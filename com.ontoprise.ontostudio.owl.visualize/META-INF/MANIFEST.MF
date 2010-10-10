@@ -8,7 +8,6 @@ Bundle-Localization: plugin
 Bundle-Vendor: %ontoprise
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- com.ontoprise.ontostudio.dependencies,
  org.semanticweb.owl;bundle-version="1.0.0",
  com.ontoprise.ontostudio.owl.gui,
  com.ontoprise.ontostudio.owl.model,
