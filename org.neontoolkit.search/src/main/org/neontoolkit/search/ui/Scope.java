@@ -1,11 +1,5 @@
 package org.neontoolkit.search.ui;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.neontoolkit.core.project.OntologyProjectManager;
-
 /**
  * @author Nico Stieler
  * Created on: 15.09.2010
@@ -34,6 +28,7 @@ public class Scope {
     public void setProjects_ontologies(String[][] projectsOntologies) {
         projects_ontologies = projectsOntologies;
     }
+    
     /**
      * @param projectsOntologies the projects_ontologies to set
      */
