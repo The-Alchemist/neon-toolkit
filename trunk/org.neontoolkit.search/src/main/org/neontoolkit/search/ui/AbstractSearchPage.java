@@ -55,8 +55,6 @@ import org.neontoolkit.search.SearchPlugin;
  * @author Nico Stieler
  * modified on: 15.09.2010
  */
-
-
 public abstract class AbstractSearchPage extends DialogPage implements ISearchPage {
 	private static final int HISTORY_SIZE= 12;
 	private static final String STORE_CASE_SENSITIVE= "CASE_SENSITIVE"; //$NON-NLS-1$
