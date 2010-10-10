@@ -15,6 +15,7 @@ import org.osgi.framework.BundleContext;
 /**
  * The activator class controls the plug-in life cycle
  */
+@SuppressWarnings("nls")
 public class StatsPlugin extends AbstractUIPlugin {
 
 	public static final String PLUGIN_ID = "com.softwareag.neontoolkit.ontostat";
@@ -24,12 +25,14 @@ public class StatsPlugin extends AbstractUIPlugin {
 	public StatsPlugin() {
 	}
 
-	public void start(BundleContext context) throws Exception {
+	@Override
+    public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
 	}
 
-	public void stop(BundleContext context) throws Exception {
+	@Override
+    public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
 	}
@@ -59,7 +62,7 @@ public class StatsPlugin extends AbstractUIPlugin {
 				if (o instanceof StatsProvider) {
 					((StatsProvider)o).setDefaults(title, iconImage!=null?iconImage.createImage():null);
 					res.put((order<10?"0":"")+order+title+id, (StatsProvider)o);
-				};
+				}
 			} catch (Exception e1) {
 			}
 		if (res.size()==0)
