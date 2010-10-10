@@ -8,7 +8,6 @@ Bundle-ClassPath: neontoolkit-io.jar
 Bundle-Vendor: %ontoprise
 Bundle-Localization: plugin
 Require-Bundle: com.ontoprise.dependencies,
- com.ontoprise.ontostudio.dependencies,
  org.eclipse.core.resources,
  org.eclipse.core.runtime,
  org.eclipse.ltk.core.refactoring,
