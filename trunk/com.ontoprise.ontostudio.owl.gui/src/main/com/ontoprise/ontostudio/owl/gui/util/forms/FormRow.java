@@ -24,11 +24,7 @@ import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.semanticweb.owlapi.model.OWLAxiom;
-
-import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
-import uk.ac.manchester.cs.owl.owlapi.OWLObjectImpl;
-import uk.ac.manchester.cs.owl.owlapi.OWLObjectPropertyImpl;
-
+import org.semanticweb.owlapi.model.OWLNamedObject;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
@@ -190,17 +186,10 @@ public class FormRow extends AbstractFormRow {
             try {
 
                 Object data = _axiomText.getData();
-                if(data instanceof OWLObjectImpl){
-                    if(data instanceof OWLClassImpl){
-                        _entityName = ((OWLClassImpl)data).getIRI().toString();
-                    }
-                    if(data instanceof OWLObjectPropertyImpl){
-                        _entityName = ((OWLObjectPropertyImpl)data).getIRI().toString();
-                    }
-                }else{
-                    if(data instanceof String[]){
-                        _entityName = ((String[])data)[1];
-                    }
+                if(data instanceof OWLNamedObject){
+                    _entityName = ((OWLNamedObject)data).getIRI().toString();
+                } else if(data instanceof String[]){
+                    _entityName = ((String[])data)[1];
                 }
                 OWLGUIUtilities.jumpToEntity(_entityName,OWLModelFactory.getOWLModel(_sourceOnto,_project));
                 
