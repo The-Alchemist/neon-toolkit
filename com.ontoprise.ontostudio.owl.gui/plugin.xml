@@ -95,6 +95,12 @@
             icon="icons/domain.gif"
             id="com.ontoprise.ontostudio.owl.views.domainview"
             name="%DomainView"/>
+      <view
+            category="org.neontoolkit.gui.views.general"
+            class="com.ontoprise.ontostudio.owl.gui.rangeView.RangeView"
+            icon="icons/domain.gif"
+            id="com.ontoprise.ontostudio.owl.views.rangeview"
+            name="%RangeView"/>
 	</extension>
 
 
@@ -1752,6 +1758,16 @@
   		<view
           closeable="true"
           id="com.ontoprise.ontostudio.owl.views.domainview"
+          moveable="true"
+          relationship="stack"
+          relative="com.ontoprise.ontostudio.owl.views.individualview"
+          visible="true"/>
+  	</perspectiveExtension>
+  	<perspectiveExtension
+  		targetID="com.ontoprise.ontostudio.owl.perspectives.OWLPerspective">
+  		<view
+          closeable="true"
+          id="com.ontoprise.ontostudio.owl.views.rangeview"
           moveable="true"
           relationship="stack"
           relative="com.ontoprise.ontostudio.owl.views.individualview"

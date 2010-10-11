@@ -63,7 +63,10 @@ import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubPropertyChainOfAxiom;
 
 import com.ontoprise.ontostudio.owl.model.event.OWLAxiomListener;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public interface OWLModel {
 
     /**
@@ -405,6 +408,19 @@ public interface OWLModel {
     public Set<ItemHits<OWLAnnotationProperty,OWLAnnotationPropertyDomainAxiom>> getAnnotationPropertiesForDomainHits(String classId) throws NeOnCoreException;
 
     /**
+     * returns a list of all properties that have the passed class as range
+     * 
+     * @param classId
+     * @param ontologyId
+     * @param projectId
+     * @return
+     * @throws NeOnCoreException
+     */
+    public Set<OWLAnnotationProperty> getAnnotationPropertiesForRange(String classId) throws NeOnCoreException; 
+    public Set<ItemHits<OWLAnnotationProperty,OWLAnnotationPropertyRangeAxiom>> getAnnotationPropertiesForRangeHits(String classId) throws NeOnCoreException; //NICO inserted 
+
+
+    /**
      * returns a list of all properties that have the passed class as domain
      * 
      * @param classId
@@ -415,6 +431,18 @@ public interface OWLModel {
      */
     public Set<OWLDataProperty> getDataPropertiesForDomain(String classId) throws NeOnCoreException;
     public Set<ItemHits<OWLDataProperty,OWLDataPropertyDomainAxiom>> getDataPropertiesForDomainHits(String classId) throws NeOnCoreException;
+
+    /**
+     * returns a list of all properties that have the passed class as range
+     * 
+     * @param classId
+     * @param ontologyId
+     * @param projectId
+     * @return
+     * @throws NeOnCoreException
+     */
+    public Set<OWLDataProperty> getDataPropertiesForRange(String classId) throws NeOnCoreException;//NICO inserted  
+    public Set<ItemHits<OWLDataProperty,OWLDataPropertyRangeAxiom>> getDataPropertiesForRangeHits(String classId) throws NeOnCoreException;//NICO inserted  
 
     /**
      * returns a list of all properties that have the passed class as domain
@@ -428,6 +456,19 @@ public interface OWLModel {
     public Set<OWLObjectProperty> getObjectPropertiesForDomain(String classId) throws NeOnCoreException;
     public Set<ItemHits<OWLObjectProperty,OWLObjectPropertyDomainAxiom>> getObjectPropertiesForDomainHits(String classId) throws NeOnCoreException;
 
+
+    /**
+     * returns a list of all properties that have the passed class as range
+     * 
+     * @param classId
+     * @param ontologyId
+     * @param projectId
+     * @return
+     * @throws NeOnCoreException
+     */
+    public Set<OWLObjectProperty> getObjectPropertiesForRange(String classId) throws NeOnCoreException;
+    public Set<ItemHits<OWLObjectProperty,OWLObjectPropertyRangeAxiom>> getObjectPropertiesForRangeHits(String classId) throws NeOnCoreException;//NICO inserted 
+    
     /**
      * Returns a list of all complex classes that do not have named classes as subclasses and are root descriptions.<br/>
      * <br/>
@@ -599,6 +640,15 @@ public interface OWLModel {
      * @throws NeOnCoreException
      */
     public Set<OWLClassExpression> getDomainDescriptions(String propertyId) throws NeOnCoreException;
+
+    /**
+//     * returns a list of all ranges of passed OWL property
+//     * 
+//     * @param propertyId
+//     * @return
+//     * @throws NeOnCoreException
+//     */
+//    public Set<OWLClassExpression> getRangeDescriptions(String propertyId) throws NeOnCoreException; //NICO removed
 
     /**
      * returns a list of all ranges of passed OWL property
@@ -886,6 +936,7 @@ public interface OWLModel {
     Set<ItemHits<OWLObjectPropertyExpression,OWLSubObjectPropertyOfAxiom>> getSuperObjectPropertyHits(String propertyUri) throws NeOnCoreException;
     Set<ItemHits<OWLClass,OWLEquivalentClassesAxiom>> getEquivalentClassesHits(String clazzUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLObjectPropertyDomainAxiom>> getObjectPropertyDomainHits(String propertyUri) throws NeOnCoreException;
+    Set<ItemHits<OWLClassExpression,OWLObjectPropertyRangeAxiom>> getObjectPropertyRangeHits(String propertyUri) throws NeOnCoreException;//NICO inserted
     Set<ItemHits<OWLClassExpression,OWLEquivalentObjectPropertiesAxiom>> getEquivalentObjectPropertyHits(String propertyUri) throws NeOnCoreException;
     Set<ItemHits<OWLDataPropertyExpression,OWLSubDataPropertyOfAxiom>> getSuperDataPropertyHits(String propertyUri) throws NeOnCoreException;
     boolean isRootObjectProperty(OWLObjectProperty prop) throws NeOnCoreException;

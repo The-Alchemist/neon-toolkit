@@ -105,16 +105,7 @@ public class SearchResultPage extends AbstractTextSearchViewPage implements ISea
 	 */
 	@Override
     protected void configureTreeViewer(TreeViewer viewer) {
-//	  NICO   Entity contains Informations about the Ontology and the Project
-//        viewer.setUseHashlookup(true);
-////      viewer.setLabelProvider(new ColorDecoratingLabelProvider(new SortingLabelProvider(this), PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
-//        _contentProvider = new SearchTreeContentProvider(this, viewer);
-//        _labelProvider = new SearchTableLabelProvider();
-//        viewer.setContentProvider(_contentProvider);
-//        viewer.setLabelProvider(_labelProvider);
-////      setSortOrder(fCurrentSortOrder);
-//        IPreferenceStore store = NeOnUIPlugin.getDefault().getPreferenceStore();
-//        store.addPropertyChangeListener(_propertyChangeListener);
+	    // not implemented here
 	}
 
 	/* (non-Javadoc)
