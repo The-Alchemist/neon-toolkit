@@ -17,17 +17,11 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.search.internal.ui.text.DecoratingFileSearchLabelProvider;
-import org.eclipse.search.internal.ui.text.FileLabelProvider;
-import org.eclipse.search.internal.ui.text.FileTreeContentProvider;
-import org.eclipse.search.internal.ui.text.IFileSearchContentProvider;
-import org.eclipse.search.internal.ui.text.FileSearchPage.DecoratorIgnoringViewerSorter;
 import org.eclipse.search.ui.IContextMenuConstants;
 import org.eclipse.search.ui.ISearchResultPage;
 import org.eclipse.search.ui.text.AbstractTextSearchViewPage;
@@ -64,8 +58,6 @@ public class OWLSearchResultPage extends AbstractTextSearchViewPage implements I
 
     public OWLSearchResultPage() {
         super(AbstractTextSearchViewPage.FLAG_LAYOUT_TREE);
-        //NICO change FLAG: FLAT --> TREE
-        
     }
     
     @Override
@@ -105,7 +97,6 @@ public class OWLSearchResultPage extends AbstractTextSearchViewPage implements I
      */
     @Override
     protected void configureTreeViewer(TreeViewer viewer) {
-//    NICO   Entity contains Informations about the Ontology and the Project
         viewer.setUseHashlookup(true);
 //      viewer.setLabelProvider(new ColorDecoratingLabelProvider(new SortingLabelProvider(this), PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
         _contentProvider = new SearchTreeContentProvider(this);

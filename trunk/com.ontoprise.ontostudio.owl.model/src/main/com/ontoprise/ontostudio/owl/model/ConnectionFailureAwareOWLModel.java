@@ -67,6 +67,7 @@ import com.ontoprise.ontostudio.owl.model.event.OWLAxiomListener;
 
 /**
  * @author krekeler
+ * @author Nico Stieler
  *
  */
 public class ConnectionFailureAwareOWLModel implements OWLModel {
@@ -941,6 +942,84 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
         }
     }
 
+
+    @Override
+    public Set<OWLAnnotationProperty> getAnnotationPropertiesForRange(String classId) throws NeOnCoreException {
+        try {
+            return _model.getAnnotationPropertiesForRange(classId);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+
+    @Override
+    public Set<ItemHits<OWLAnnotationProperty,OWLAnnotationPropertyRangeAxiom>> getAnnotationPropertiesForRangeHits(String classId) throws NeOnCoreException {
+        try {
+            return _model.getAnnotationPropertiesForRangeHits(classId);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+
+    @Override
+    public Set<OWLDataProperty> getDataPropertiesForRange(String classId) throws NeOnCoreException{
+        try {
+            return _model.getDataPropertiesForRange(classId);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+    
+    @Override
+    public Set<ItemHits<OWLDataProperty,OWLDataPropertyRangeAxiom>> getDataPropertiesForRangeHits(String classId) throws NeOnCoreException {
+        try {
+            return _model.getDataPropertiesForRangeHits(classId);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+    
+    @Override
+    public Set<OWLObjectProperty> getObjectPropertiesForRange(String classId) throws NeOnCoreException{
+        try {
+            return _model.getObjectPropertiesForRange(classId);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+
+    @Override
+    public Set<ItemHits<OWLObjectProperty,OWLObjectPropertyRangeAxiom>> getObjectPropertiesForRangeHits(String classId) throws NeOnCoreException {
+        try {
+            return _model.getObjectPropertiesForRangeHits(classId);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+
+    @Override
+    public Set<ItemHits<OWLClassExpression,OWLObjectPropertyRangeAxiom>> getObjectPropertyRangeHits(String propertyUri) throws NeOnCoreException {
+        try {
+            return _model.getObjectPropertyRangeHits(propertyUri);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+    
     @Override
     public Set<LocatedItem<OWLObjectPropertyAssertionAxiom>> getObjectPropertyMemberHits(String individualUri) throws NeOnCoreException {
         try {
