@@ -98,7 +98,7 @@
       <view
             category="org.neontoolkit.gui.views.general"
             class="com.ontoprise.ontostudio.owl.gui.rangeView.RangeView"
-            icon="icons/domain.gif"
+            icon="icons/range.gif"
             id="com.ontoprise.ontostudio.owl.views.rangeview"
             name="%RangeView"/>
 	</extension>
