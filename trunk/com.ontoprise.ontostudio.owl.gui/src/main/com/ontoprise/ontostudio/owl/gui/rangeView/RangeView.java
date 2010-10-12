@@ -25,6 +25,7 @@ import org.semanticweb.owlapi.model.OWLClass;
 
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzFolderTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
+import com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeTreeElement;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 /**
  * 
@@ -78,6 +79,7 @@ public class RangeView extends ViewPart implements ISelectionListener {
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+
         if (selection instanceof StructuredSelection) {
             StructuredSelection s = (StructuredSelection) selection;
             Object o = s.getFirstElement();
@@ -101,8 +103,14 @@ public class RangeView extends ViewPart implements ISelectionListener {
                     _clazz = null;
                 }
             } else {
-                _viewer.setInput(null);
-                _clazz = null;
+                if(o instanceof DatatypeTreeElement){
+                    Object _entity = ((DatatypeTreeElement) o).getEntity();
+                    System.out.println(_entity);
+                    _viewer.setInput(new Object[] {_entity, _ontologyId, _projectId});
+                }else{
+                    _viewer.setInput(null);
+                    _clazz = null;
+                }
             }
         }
     }

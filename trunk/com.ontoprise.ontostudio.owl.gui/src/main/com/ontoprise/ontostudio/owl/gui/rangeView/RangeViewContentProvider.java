@@ -24,6 +24,7 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
+import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyRangeAxiom;
@@ -152,6 +153,18 @@ public class RangeViewContentProvider implements IStructuredContentProvider, ITr
                 _projectId = (String) array[2];
                 updateItems();
             }
+            else{
+                if (array[0] instanceof OWLDatatype) {
+                    OWLDatatype elem = (OWLDatatype) array[0];
+                    if (elem.getIRI().toString().equals(_selectedClazz) && array[1].equals(_ontologyUri) && array[2].equals(_projectId)) {
+                        return;
+                    }
+                    _selectedClazz = elem.getIRI().toString();
+                    _ontologyUri = (String) array[1];
+                    _projectId = (String) array[2];
+                    updateItems();
+                }
+            }
         } else {
             _projectId = null;
             _selectedClazz = ""; //$NON-NLS-1$
@@ -169,7 +182,6 @@ public class RangeViewContentProvider implements IStructuredContentProvider, ITr
         }
 
         try {
-//            String[][] _propertyHits = new GetPropertiesForDomainHits(_projectId, _ontologyUri, _selectedClazz).getResults();
             String[][] _propertyHits = new GetPropertiesForRangeHits(_projectId, _ontologyUri, _selectedClazz).getResults();
              _items = new PropertyTreeElement[_propertyHits.length];
             

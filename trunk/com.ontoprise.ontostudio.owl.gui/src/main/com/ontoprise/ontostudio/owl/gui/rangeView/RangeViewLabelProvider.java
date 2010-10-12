@@ -51,8 +51,6 @@ public class RangeViewLabelProvider extends LabelProvider implements IColorProvi
     @Override
     public Image getImage(Object element) {
         if (element instanceof DataPropertyTreeElement) {
-            //should newer happen
-            System.out.println("should newer happen");
             return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.DATA_PROPERTY);
         } else if (element instanceof ObjectPropertyTreeElement) {
             return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.OBJECT_PROPERTY);

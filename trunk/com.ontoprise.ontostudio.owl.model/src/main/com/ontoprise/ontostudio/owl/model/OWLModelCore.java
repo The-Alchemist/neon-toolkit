@@ -484,11 +484,11 @@ public class OWLModelCore implements OWLModel {
     }; 
     private final AxiomRequest<OWLDataPropertyRangeAxiom> DataPropertyRange_range_Request = new AxiomRequestCore<OWLDataPropertyRangeAxiom>(AxiomType.DATA_PROPERTY_RANGE, "range") {//NICO inserted
         @Override
-        protected Iterable<OWLDataPropertyRangeAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
-            OWLClassExpression clazz = (OWLClassExpression)parameters[0];
+        protected Iterable<OWLDataPropertyRangeAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {//NICO habs gefunden: OWLCLassException/OWLDatatype
+            OWLDatatype dataType = (OWLDatatype)parameters[0];
             Set<OWLDataPropertyRangeAxiom> result = new LinkedHashSet<OWLDataPropertyRangeAxiom>();
             for (OWLDataPropertyRangeAxiom axiom: ontology.getAxioms(AxiomType.DATA_PROPERTY_RANGE)) {
-                if (clazz.equals(axiom.getRange())) {
+                if (dataType.equals(axiom.getRange())) {
                     result.add(axiom);
                 }
             }
@@ -1984,7 +1984,7 @@ public class OWLModelCore implements OWLModel {
     @Override
     public Set<ItemHits<OWLDataProperty,OWLDataPropertyRangeAxiom>> getDataPropertiesForRangeHits(String classId) throws NeOnCoreException {//NICO inserted
         Set<ItemHits<OWLDataProperty,OWLDataPropertyRangeAxiom>> properties =
-            DataPropertyRange_property_Collector.getItemHits(DataPropertyRange_range_Request, autoBox(owlClass(classId)));
+            DataPropertyRange_property_Collector.getItemHits(DataPropertyRange_range_Request, autoBox(owlDatatype(classId)));
         return properties;            
     }
 
@@ -2421,6 +2421,12 @@ public class OWLModelCore implements OWLModel {
 
     private OWLClass owlClass(String uri) throws NeOnCoreException {
         return getOWLDataFactory().getOWLClass(OWLUtilities.toIRI(uri));
+    }
+    private OWLDatatype owlDatatype(String uri) throws NeOnCoreException {
+        OWLDatatype oWLDatatype = getOWLDataFactory().getOWLDatatype(OWLUtilities.toIRI(uri));
+        System.out.println(oWLDatatype);//NICO remove
+        return oWLDatatype;
+//        return getOWLDataFactory().getOWLDatatype(OWLUtilities.toIRI(uri));
     }
 
     private OWLDeclarationAxiom declaration(OWLEntity entity) throws NeOnCoreException {

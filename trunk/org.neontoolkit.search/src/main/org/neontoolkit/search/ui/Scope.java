@@ -3,6 +3,16 @@ package org.neontoolkit.search.ui;
 /**
  * @author Nico Stieler
  * Created on: 15.09.2010
+ * 
+ * The Scope class provides ontologies and projects for the entity search
+ * 
+ * e.g.:
+ * {{"projectName1","ontologyName1"},
+ *  {"projectName1","ontologyName2"},
+ *  {"projectName2",null}}
+ * 
+ * In this example the Scope is Ontology1 and Ontology2 of Project1 and the whole Project2
+ * 
  */
 public class Scope {
     private String[][] projects_ontologies;
