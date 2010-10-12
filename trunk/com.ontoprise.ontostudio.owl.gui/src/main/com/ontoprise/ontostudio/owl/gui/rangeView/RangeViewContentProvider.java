@@ -26,6 +26,7 @@ import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLNamedObject;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyRangeAxiom;
 
@@ -64,7 +65,7 @@ public class RangeViewContentProvider implements IStructuredContentProvider, ITr
     private IPreferenceStore _guiStore;
     private IPreferenceStore _owlStore;
 
-    String _selectedClazz;
+    String _selectedRange;
     String _ontologyUri;
     String _projectId;
 
@@ -143,31 +144,19 @@ public class RangeViewContentProvider implements IStructuredContentProvider, ITr
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
         if (newInput instanceof Object[]) {
             Object[] array = (Object[]) newInput;
-            if (array[0] instanceof OWLClass) {
-                OWLClass elem = (OWLClass) array[0];
-                if (elem.getIRI().toString().equals(_selectedClazz) && array[1].equals(_ontologyUri) && array[2].equals(_projectId)) {
+            if (array[0] instanceof OWLNamedObject) {
+                OWLNamedObject elem = (OWLClass) array[0];
+                if (elem.getIRI().toString().equals(_selectedRange) && array[1].equals(_ontologyUri) && array[2].equals(_projectId)) {
                     return;
                 }
-                _selectedClazz = elem.getIRI().toString();
+                _selectedRange = elem.getIRI().toString();
                 _ontologyUri = (String) array[1];
                 _projectId = (String) array[2];
                 updateItems();
             }
-            else{
-                if (array[0] instanceof OWLDatatype) {
-                    OWLDatatype elem = (OWLDatatype) array[0];
-                    if (elem.getIRI().toString().equals(_selectedClazz) && array[1].equals(_ontologyUri) && array[2].equals(_projectId)) {
-                        return;
-                    }
-                    _selectedClazz = elem.getIRI().toString();
-                    _ontologyUri = (String) array[1];
-                    _projectId = (String) array[2];
-                    updateItems();
-                }
-            }
         } else {
             _projectId = null;
-            _selectedClazz = ""; //$NON-NLS-1$
+            _selectedRange = ""; //$NON-NLS-1$
         }
     }
 
@@ -177,12 +166,12 @@ public class RangeViewContentProvider implements IStructuredContentProvider, ITr
     }
 
     private void updateItems() {
-        if (_selectedClazz == null || _ontologyUri == null) {
+        if (_selectedRange == null || _ontologyUri == null) {
             return;
         }
 
         try {
-            String[][] _propertyHits = new GetPropertiesForRangeHits(_projectId, _ontologyUri, _selectedClazz).getResults();
+            String[][] _propertyHits = new GetPropertiesForRangeHits(_projectId, _ontologyUri, _selectedRange).getResults();
              _items = new PropertyTreeElement[_propertyHits.length];
             
             ITreeDataProvider treeDataProvider = null;
