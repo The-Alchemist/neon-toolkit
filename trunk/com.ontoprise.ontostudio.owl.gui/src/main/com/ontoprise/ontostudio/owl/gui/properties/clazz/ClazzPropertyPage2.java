@@ -478,7 +478,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
     @SuppressWarnings("unchecked")
     private void createRow(Composite parent, final OWLClassExpression description, List<LocatedAxiom> axioms, boolean imported, String[] sourceOntos, final String clazzType) throws NeOnCoreException {
 
-        final RestrictionRow row = new RestrictionRow(_toolkit, parent, NUM_COLS, imported, sourceOntos.length > 0 ? sourceOntos[0] : ""); //$NON-NLS-1$
+        final RestrictionRow row = new RestrictionRow(_toolkit, parent, NUM_COLS, imported, sourceOntos.length > 0 ? sourceOntos[0] : "",_owlModel.getProjectId(),_id); //$NON-NLS-1$
         OWLObjectVisitorEx visitor = _manager.getVisitor(_owlModel, NeOnUIPlugin.getDefault().getIdDisplayStyle());
         final ArrayList<String[]> restrictions = RestrictionOnPropertyWriter.performRestriction(description, _namespaces, visitor, (OWLEntity)_owlObject);
 
