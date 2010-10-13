@@ -11,6 +11,7 @@
 package com.ontoprise.ontostudio.owl.gui.util.forms;
 
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.custom.StyledText;
@@ -24,13 +25,17 @@ import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLNamedObject;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.properties.LocatedAxiom;
+import com.ontoprise.ontostudio.owl.gui.syntax.ISyntaxManager;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.AxiomText;
+import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLModelPlugin;
 
@@ -66,7 +71,7 @@ public class FormRow extends AbstractFormRow {
         _handler = handler;
 
         // optional textfield for axiom text
-        if (_showAxioms) {
+        if (_showAxioms) { 
             _axiomText = new AxiomText(getParent(), _handler._owlModel, getColCount()).getStyledText();
             _axiomText.setEditable(false);
             int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
@@ -111,24 +116,6 @@ public class FormRow extends AbstractFormRow {
                 } else {
                     if (_editButton.getText().equals(OWLGUIUtilities.BUTTON_LABEL_EDIT_STAR)) {
                         jump();
-//                        if(MessageDialog.openQuestion(null, Messages.JumpToTitle, Messages.JumpToText_0 + _sourceOnto + Messages.JumpToText_1)){
-//                            try {
-//
-//                                Object data = _axiomText.getData();
-//                                if(data instanceof OWLObjectImpl){
-//                                    if(data instanceof OWLClassImpl){
-//                                        _entityName = ((OWLClassImpl)data).getIRI().toString();
-//                                    }
-//                                    if(data instanceof OWLObjectPropertyImpl){
-//                                        _entityName = ((OWLObjectPropertyImpl)data).getIRI().toString();
-//                                    }
-//                                }
-//                                OWLGUIUtilities.jumpToEntity(_entityName,OWLModelFactory.getOWLModel(_sourceOnto,_project));
-//                                
-//                           } catch (NeOnCoreException e1) {
-//                              e1.printStackTrace();
-//                          }
-//                        }
                     } else {
                         _handler.savePressed();
                     }
@@ -181,17 +168,13 @@ public class FormRow extends AbstractFormRow {
     /**
      * 
      */
+    @Override
     protected void jump() {
         if(MessageDialog.openQuestion(null, Messages.JumpToTitle, Messages.JumpToText_0 + _sourceOnto + Messages.JumpToText_1)){
             try {
+                OWLModel model = OWLModelFactory.getOWLModel(_sourceOnto,_project);
 
-                Object data = _axiomText.getData();
-                if(data instanceof OWLNamedObject){
-                    _entityName = ((OWLNamedObject)data).getIRI().toString();
-                } else if(data instanceof String[]){
-                    _entityName = ((String[])data)[1];
-                }
-                OWLGUIUtilities.jumpToEntity(_entityName,OWLModelFactory.getOWLModel(_sourceOnto,_project));
+                OWLGUIUtilities.jumpToEntity(_entityName,model);
                 
            } catch (NeOnCoreException e1) {
               e1.printStackTrace();
