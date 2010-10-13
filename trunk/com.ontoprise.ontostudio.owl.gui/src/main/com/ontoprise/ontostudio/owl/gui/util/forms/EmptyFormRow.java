@@ -15,7 +15,10 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class EmptyFormRow extends AbstractFormRow {
 
     private Button _addButton;
@@ -62,5 +65,10 @@ public class EmptyFormRow extends AbstractFormRow {
 
     public void setCancelButton(Button button) {
         _cancelButton = button;
+    }
+
+    @Override
+    protected void jump() {
+        // nothing to do
     }
 }

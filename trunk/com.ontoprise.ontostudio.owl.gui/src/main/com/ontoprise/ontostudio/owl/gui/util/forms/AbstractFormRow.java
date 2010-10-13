@@ -32,6 +32,7 @@ import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
  * Holds text widgets of a form row, and the axioms behind them.
  * 
  * @author werner
+ * @author Nico Stieler
  * 
  */
 public abstract class AbstractFormRow {
@@ -250,4 +251,6 @@ public abstract class AbstractFormRow {
     public abstract void init(AbstractRowHandler handler) throws NeOnCoreException;
 
     public abstract Button getSubmitButton();
+
+    protected abstract void jump();
 }

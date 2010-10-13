@@ -16,7 +16,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.neontoolkit.core.exception.NeOnCoreException;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class EmptyRestrictionRow extends AbstractRestrictionRow {
 
     private Button _addButton;
@@ -65,6 +68,11 @@ public class EmptyRestrictionRow extends AbstractRestrictionRow {
     @Override
     public void setSubmitButton(Button b) {
         _addButton = b;
+    }
+
+    @Override
+    protected void jump() {
+        // nothing to do
     }
 
 }

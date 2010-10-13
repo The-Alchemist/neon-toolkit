@@ -12,6 +12,7 @@ package com.ontoprise.ontostudio.owl.gui.util.forms;
 
 import java.util.List;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -31,8 +32,14 @@ import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.properties.LocatedAxiom;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.AxiomText;
+import com.ontoprise.ontostudio.owl.model.OWLModel;
+import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLModelPlugin;
-
+/**
+ * 
+ * @author Nico Stieler
+ * 
+ */
 public class RestrictionRow extends AbstractRestrictionRow {
 
     private Button _editButton;
@@ -42,12 +49,16 @@ public class RestrictionRow extends AbstractRestrictionRow {
     private boolean _imported;
     private boolean _showAxioms;
 
+    private String _project;
     private String _sourceOnto;
+    private String _entityName;
 
-    public RestrictionRow(FormToolkit toolkit, Composite parent, int cols, boolean imported, String sourceOnto) {
+    public RestrictionRow(FormToolkit toolkit, Composite parent, int cols, boolean imported, String sourceOnto, String project, String entityName) {
         super(toolkit, parent, cols);
         _imported = imported;
+        _entityName = entityName;
         _sourceOnto = sourceOnto;
+        _project = project;
         _showAxioms = OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(OWLModelPlugin.SHOW_AXIOMS);
     }
 
@@ -96,7 +107,11 @@ public class RestrictionRow extends AbstractRestrictionRow {
                     editPressed(_editButton, _removeButton);
                     enableWidgets(getWidgets());
                 } else {
-                    _handler.savePressed();
+                    if (_editButton.getText().equals(OWLGUIUtilities.BUTTON_LABEL_EDIT_STAR)) {
+                        jump();
+                    } else {
+                        _handler.savePressed();
+                    }
                 }
             }
 
@@ -117,21 +132,30 @@ public class RestrictionRow extends AbstractRestrictionRow {
                         new NeonToolkitExceptionHandler().handleException(e2);
                     }
                 } else {
-                    _handler.cancelPressed();
+                    if (_removeButton.getText().equals(OWLGUIUtilities.BUTTON_LABEL_REMOVE_STAR)) {
+                        jump();
+                    } else {
+                        _handler.cancelPressed();
+                    }
                 }
             }
 
         });
         if (_imported) {
             getParent().setBackground(new Color(null, 176, 196, 222));
-            getParent().setToolTipText(Messages.FormRow_1 + _sourceOnto);
+//            getParent().setToolTipText(Messages.FormRow_1 + _sourceOnto);
 
-            _editButton.setEnabled(false);
-            _removeButton.setEnabled(false);
-            Control[] children = getParent().getChildren();
-            for (Control control: children) {
-                control.setToolTipText(Messages.FormRow_1 + _sourceOnto);
-            }
+            _editButton.setToolTipText(Messages.FormRow_1 + _sourceOnto);
+            _removeButton.setToolTipText(Messages.FormRow_1 + _sourceOnto);
+
+            _editButton.setText(OWLGUIUtilities.BUTTON_LABEL_EDIT_STAR);
+            _removeButton.setText(OWLGUIUtilities.BUTTON_LABEL_REMOVE_STAR);
+//            _editButton.setEnabled(false);
+//            _removeButton.setEnabled(false);
+//            Control[] children = getParent().getChildren();
+//            for (Control control: children) {
+//                control.setToolTipText(Messages.FormRow_1 + _sourceOnto);
+//            }
         }
     }
 
@@ -171,5 +195,23 @@ public class RestrictionRow extends AbstractRestrictionRow {
             _buttonsToDisable.remove(widget);
         }
         super.removeWidget(widget);
+    }
+
+    /**
+     * 
+     */
+    @Override
+    protected void jump() {
+        if(MessageDialog.openQuestion(null, Messages.JumpToTitle, Messages.JumpToText_0 + _sourceOnto + Messages.JumpToText_1)){
+            try {
+                OWLModel model = OWLModelFactory.getOWLModel(_sourceOnto,_project);
+
+                OWLGUIUtilities.jumpToEntity(_entityName,model);
+                
+           } catch (NeOnCoreException e1) {
+              e1.printStackTrace();
+          }
+        }
+        
     }
 }
