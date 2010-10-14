@@ -408,7 +408,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         String[] quantifiers = QUANTOR_TYPES;
 
         // property
-        final StyledText propertyText = new PropertyText(formRow.getParent(), _owlModel, PropertyText.DATA_PROPERTY | PropertyText.OBJECT_PROPERTY).getStyledText();
+        final StyledText propertyText = new PropertyText(formRow.getParent(), _owlModel, PropertyText.DATA_PROPERTY | PropertyText.OBJECT_PROPERTY, "").getStyledText();
         addSimpleWidget(propertyText);
         formRow.addWidget(propertyText);
 
@@ -427,7 +427,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         formRow.addWidget(cardinalityText);
 
         // range
-        DescriptionText descriptionText = new DescriptionText(formRow.getParent(), _owlModel, false, _toolkit);
+        DescriptionText descriptionText = new DescriptionText(formRow.getParent(), _owlModel, false, _toolkit, null);
         final StyledText rangeText = descriptionText.getStyledText();
         formRow.addWidget(rangeText);
         formRow.setRangeText(rangeText);
@@ -486,7 +486,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         final String[] rangeArray = restrictions.get(2);
 
         // property
-        PropertyText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.DATA_PROPERTY | PropertyText.OBJECT_PROPERTY);
+        PropertyText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.DATA_PROPERTY | PropertyText.OBJECT_PROPERTY,propertyArray[1]); //$NON-NLS-1$
         final StyledText propertyTextWidget = propertyText.getStyledText();
         propertyTextWidget.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, propertyText);
         OWLGUIUtilities.enable(propertyTextWidget, false);
@@ -515,7 +515,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         row.addWidget(cardinalityText);
 
         // range
-        final StyledText rangeTextWidget = getRangeText(description, row.getParent(), imported);
+        final StyledText rangeTextWidget = getRangeText(description, row.getParent(), imported, rangeArray[1]);
         OWLGUIUtilities.enable(rangeTextWidget, false);
 
         if (rangeArray != null) {
@@ -642,9 +642,9 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         addVerificationListeners(row, rowHandler, quantifierCombo, cardinalityText, propertyTextWidget, false);
     }
 
-    private StyledText getRangeText(OWLClassExpression restriction, Composite rowComp, boolean imported) {
+    private StyledText getRangeText(OWLClassExpression restriction, Composite rowComp, boolean imported, String name) {
         if ((restriction instanceof OWLObjectSomeValuesFrom) || (restriction instanceof OWLObjectAllValuesFrom) || (restriction instanceof OWLObjectCardinalityRestriction) || (restriction instanceof OWLObjectHasSelf)) {
-            DescriptionText descriptionText = new DescriptionText(rowComp, _owlModel, imported, _toolkit);
+            DescriptionText descriptionText = new DescriptionText(rowComp, _owlModel, imported, _toolkit,name);
             addComplexText(descriptionText, true);
             StyledText text = descriptionText.getStyledText();
             text.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, descriptionText);
@@ -655,7 +655,8 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             textWidget.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, text);
             return textWidget;
         } else if ((restriction instanceof OWLDataSomeValuesFrom) || (restriction instanceof OWLDataAllValuesFrom) || (restriction instanceof OWLDataCardinalityRestriction)) {
-            DatatypeText text = new DatatypeText(rowComp, _owlModel);
+            
+            DatatypeText text = new DatatypeText(rowComp, _owlModel, name);//NICO mach mal
             StyledText textWidget = text.getStyledText();
             textWidget.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, text);
             return textWidget;
@@ -700,7 +701,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 // initWarnings(formRow, quantifierCombo, cardinalityText, propertyText);
                 // enableButtons(quantifierCombo, cardinalityText, propertyText, formRow.getRangeText(), formRow.getSubmitButton());
 
-                updateRangeText(formRow, rowHandler, quantifierCombo, cardinalityText, propertyText, emptyRow);
+                updateRangeText(formRow, rowHandler, quantifierCombo, cardinalityText, propertyText, emptyRow, ""); //$NON-NLS-1$
             }
         });
 
@@ -721,7 +722,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         propertyText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                updateRangeText(formRow, rowHandler, quantifierCombo, cardinalityText, propertyText, emptyRow);
+                updateRangeText(formRow, rowHandler, quantifierCombo, cardinalityText, propertyText, emptyRow,""); //$NON-NLS-1$
             }
 
         });
@@ -734,7 +735,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
      * @param cardinalityText
      * @param propertyText
      */
-    private void updateRangeText(final AbstractRestrictionRow formRow, final AbstractRowHandler rowHandler, final CCombo quantifierCombo, final StyledText cardinalityText, final StyledText propertyText, boolean emptyRow) {
+    private void updateRangeText(final AbstractRestrictionRow formRow, final AbstractRowHandler rowHandler, final CCombo quantifierCombo, final StyledText cardinalityText, final StyledText propertyText, boolean emptyRow, String name) {
         try {
             String oldValue = ((AbstractRestrictionRow) formRow).getRangeText().getText();
 
@@ -755,7 +756,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 if (hasValue) {
                     finalRangeText = new LiteralText(formRow.getParent(), _owlModel).getStyledText();
                 } else {
-                    finalRangeText = new DatatypeText(formRow.getParent(), _owlModel).getStyledText();
+                    finalRangeText = new DatatypeText(formRow.getParent(), _owlModel,"").getStyledText();//NICO mach mal
                 }
             } else {
                 OWLObjectPropertyExpression objProp = manager.parseObjectProperty(input, _owlModel);
@@ -764,7 +765,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     if (hasValue) {
                         finalRangeText = new IndividualText(formRow.getParent(), _owlModel).getStyledText();
                     } else {
-                        finalRangeText = new DescriptionText(formRow.getParent(), _owlModel, false, _toolkit).getStyledText();
+                        finalRangeText = new DescriptionText(formRow.getParent(), _owlModel, false, _toolkit, name).getStyledText();
                     }
                 }  
             } 

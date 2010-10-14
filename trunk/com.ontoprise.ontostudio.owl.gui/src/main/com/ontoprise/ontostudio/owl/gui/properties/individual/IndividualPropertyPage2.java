@@ -49,6 +49,7 @@ import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 import org.semanticweb.owlapi.model.OWLDataRange;
 import org.semanticweb.owlapi.model.OWLDatatype;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
@@ -258,7 +259,14 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 
         FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri,_owlModel.getProjectId(),_id);
         // text widgets
-        final StyledText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.OBJECT_PROPERTY).getStyledText();
+
+        String name = null;
+        if(locatedAxiom != null && locatedAxiom.getAxiom() != null){
+            for(OWLEntity e : locatedAxiom.getAxiom().getObjectPropertiesInSignature()){
+                name = e.toString();
+            }
+        }
+        final StyledText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.OBJECT_PROPERTY,name).getStyledText();
         row.addWidget(propertyText);
 
         final StyledText valueText = new IndividualText(row.getParent(), _owlModel).getStyledText();
@@ -333,7 +341,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
     private Composite createEmptyObjectPropertyRow(Composite parent) {
         final EmptyFormRow row = new EmptyFormRow(_toolkit, parent, NUM_COLS);
         // text widgets
-        final StyledText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.OBJECT_PROPERTY).getStyledText();
+        final StyledText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.OBJECT_PROPERTY,"").getStyledText();
         row.addWidget(propertyText);
         addSimpleWidget(propertyText);
 
@@ -619,13 +627,25 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         final OWLDataPropertyAssertionAxiom axiom = (OWLDataPropertyAssertionAxiom) locatedAxiom.getAxiom();
         List<String[]> descriptions = handleDataPropertyMemberAxiom(axiom);
 
-        final StyledText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.DATA_PROPERTY).getStyledText();
+        String name = null;
+        if(locatedAxiom != null && locatedAxiom.getAxiom() != null){
+            for(OWLEntity e : locatedAxiom.getAxiom().getDataPropertiesInSignature()){
+                name = e.toString();
+            }
+        }
+        final StyledText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.DATA_PROPERTY, name).getStyledText();
         row.addWidget(propertyText);
 
         final StyledText valueText = new StringText(row.getParent()).getStyledText();
         row.addWidget(valueText);
 
-        final StyledText typeText = new DatatypeText(row.getParent(), _owlModel).getStyledText();
+        name = null;
+        if(locatedAxiom != null && locatedAxiom.getAxiom() != null){
+            for(OWLEntity e : locatedAxiom.getAxiom().getDatatypesInSignature()){
+                name = e.toString();
+            }
+        }
+        final StyledText typeText = new DatatypeText(row.getParent(), _owlModel, name).getStyledText();
         row.addWidget(typeText);
 
         final CCombo languageCombo = OWLGUIUtilities.createLanguageComboBox(row.getParent(), enabled);
@@ -826,7 +846,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
      */
     private Composite createEmptyDataPropertyRow(Composite parent, boolean enabled) {
         final EmptyFormRow row = new EmptyFormRow(_toolkit, parent, NUM_COLS);
-        final StyledText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.DATA_PROPERTY).getStyledText();
+        final StyledText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.DATA_PROPERTY,"").getStyledText();
         row.addWidget(propertyText);
         addSimpleWidget(propertyText);
 
@@ -834,7 +854,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         row.addWidget(valueText);
         addSimpleWidget(valueText);
 
-        final StyledText typeText = new DatatypeText(row.getParent(), _owlModel).getStyledText();
+        final StyledText typeText = new DatatypeText(row.getParent(), _owlModel,"").getStyledText();
         row.addWidget(typeText);
         addSimpleWidget(typeText);
 

@@ -34,8 +34,8 @@ public class DatatypeText extends AbstractOwlTextField {
     /**
 	 * 
 	 */
-    public DatatypeText(Composite parent, OWLModel owlModel) {
-        super(parent, owlModel);
+    public DatatypeText(Composite parent, OWLModel owlModel, String entityName) {
+        super(parent, owlModel, entityName);
 
         GridData data = new GridData();
         data.widthHint = WIDTH;

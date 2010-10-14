@@ -279,7 +279,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
         final FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri,_owlModel.getProjectId(),_id);
 
 
-        PropertyText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.DATA_PROPERTY);
+        PropertyText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.DATA_PROPERTY,"");//NICO property
         final StyledText textWidget = propertyText.getStyledText();
         textWidget.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, propertyText);
         OWLGUIUtilities.enable(textWidget, false);
@@ -358,7 +358,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
         }
         FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, sourceOnto,_owlModel.getProjectId(),_id);
 
-        PropertyText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.DATA_PROPERTY);
+        PropertyText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.DATA_PROPERTY,"");//NICO property
         final StyledText text = propertyText.getStyledText();
         text.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, propertyText);
         final String[] array = getArrayFromDescription(property);
@@ -445,7 +445,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
             parent = _equivFormComposite;
         }
         final EmptyFormRow row = new EmptyFormRow(_toolkit, parent, NUM_COLS);
-        final StyledText text = new PropertyText(row.getParent(), _owlModel, PropertyText.DATA_PROPERTY).getStyledText();
+        final StyledText text = new PropertyText(row.getParent(), _owlModel, PropertyText.DATA_PROPERTY,"").getStyledText();
         row.addWidget(text);
         addSimpleWidget(text);
 

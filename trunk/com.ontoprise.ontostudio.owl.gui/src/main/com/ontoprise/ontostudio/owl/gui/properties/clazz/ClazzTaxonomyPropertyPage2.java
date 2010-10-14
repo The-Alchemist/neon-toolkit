@@ -381,7 +381,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
     private Composite createEmptyRow(Composite parent, final int mode) {
         final EmptyFormRow formRow = new EmptyFormRow(_toolkit, parent, NUM_COLS);
 
-        DescriptionText descriptionText = new DescriptionText(formRow.getParent(), _owlModel, false, _toolkit);
+        DescriptionText descriptionText = new DescriptionText(formRow.getParent(), _owlModel, false, _toolkit, null);
         final StyledText clazzText = descriptionText.getStyledText();
         addComplexText(descriptionText);
         formRow.addWidget(clazzText);
@@ -526,7 +526,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
         final String[] array = getArrayFromDescription(description);
         String id = OWLGUIUtilities.getEntityLabel(array);
 
-        DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, imported, _toolkit);
+        DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, imported, _toolkit, null);
         final StyledText clazzText = descriptionText.getStyledText();
         addComplexText(descriptionText);
         clazzText.setText(id);
@@ -611,7 +611,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
 
         final String[] descriptionArray = getArrayFromDescription(description);
         String id = OWLGUIUtilities.getEntityLabel(descriptionArray);
-        DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, imported, _toolkit);
+        DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, imported, _toolkit, null);
         final StyledText clazzText = descriptionText.getStyledText();
         addComplexText(descriptionText);
 

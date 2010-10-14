@@ -29,7 +29,7 @@ public class StringText extends AbstractOwlTextField {
 	 * 
 	 */
     public StringText(Composite parent) {
-        super(parent, null);
+        super(parent, null, null);
 
         GridData data = new GridData();
         data.widthHint = WIDTH;

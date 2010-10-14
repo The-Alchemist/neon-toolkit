@@ -32,7 +32,7 @@ public class AxiomText extends AbstractOwlTextField {
      * 
      */
     public AxiomText(Composite parent, OWLModel owlModel, int cols) {
-        super(parent, owlModel);
+        super(parent, owlModel, null);
 
         GridData data = new GridData();
         data.widthHint = cols < 4 ? WIDTH_2_COLS : WIDTH_MORE_COLS;
@@ -47,7 +47,7 @@ public class AxiomText extends AbstractOwlTextField {
      * 
      */
     public AxiomText(Composite parent, OWLModel owlModel) {
-        super(parent, owlModel);
+        super(parent, owlModel, null);
 
         GridData data = new GridData();
         data.verticalAlignment = SWT.FILL;

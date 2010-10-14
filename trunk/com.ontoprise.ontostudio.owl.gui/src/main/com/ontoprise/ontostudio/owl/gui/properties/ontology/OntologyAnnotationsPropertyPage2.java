@@ -144,7 +144,7 @@ public class OntologyAnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage 
     private Composite createEmptyRow() {
         final EmptyFormRow formRow = new EmptyFormRow(_toolkit, _annotationsComp, NUM_COLS);
         // text widgets
-        final StyledText propertyText = new PropertyText(formRow.getParent(), _owlModel, PropertyText.ANNOTATION_PROPERTY).getStyledText();
+        final StyledText propertyText = new PropertyText(formRow.getParent(), _owlModel, PropertyText.ANNOTATION_PROPERTY, "").getStyledText();
         formRow.addWidget(propertyText);
         addSimpleWidget(propertyText);
 
@@ -152,7 +152,7 @@ public class OntologyAnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage 
         formRow.addWidget(valueText);
         addSimpleWidget(valueText);
 
-        final StyledText typeText = new DatatypeText(formRow.getParent(), _owlModel).getStyledText();
+        final StyledText typeText = new DatatypeText(formRow.getParent(), _owlModel, "").getStyledText();
         formRow.addWidget(typeText);
         addSimpleWidget(typeText);
 
@@ -411,15 +411,14 @@ public class OntologyAnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage 
 
     private void createAnnotationsRow(OWLAnnotationProperty prop, String annotationValueText, String language, String datatype, ArrayList<String[]> descriptions) throws NeOnCoreException {
         final FormRow formRow = new FormRow(_toolkit, _annotationsComp, NUM_COLS, false, "",_owlModel.getProjectId(),_id); //$NON-NLS-1$
-
         // text widgets
-        final StyledText propertyText = new PropertyText(formRow.getParent(), _owlModel, PropertyText.ANNOTATION_PROPERTY).getStyledText();
+        final StyledText propertyText = new PropertyText(formRow.getParent(), _owlModel, PropertyText.ANNOTATION_PROPERTY, prop.getIRI().toString()).getStyledText();
         formRow.addWidget(propertyText);
 
         final StyledText valueText = new StringText(formRow.getParent()).getStyledText();
         formRow.addWidget(valueText);
 
-        final StyledText typeText = new DatatypeText(formRow.getParent(), _owlModel).getStyledText();
+        final StyledText typeText = new DatatypeText(formRow.getParent(), _owlModel, datatype).getStyledText();
         formRow.addWidget(typeText);
 
         final CCombo languageCombo = OWLGUIUtilities.createLanguageComboBox(formRow.getParent(), false);
