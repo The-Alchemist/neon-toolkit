@@ -35,7 +35,7 @@ public class IndividualText extends AbstractOwlTextField {
 	 * 
 	 */
     public IndividualText(Composite parent, OWLModel owlModel) {
-        super(parent, owlModel);
+        super(parent, owlModel, null);
 
         GridData data = new GridData();
         data.widthHint = WIDTH;

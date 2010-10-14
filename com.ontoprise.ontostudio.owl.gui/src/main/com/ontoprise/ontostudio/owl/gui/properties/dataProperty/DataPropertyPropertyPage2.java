@@ -47,6 +47,7 @@ import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataPropertyDomainAxiom;
 import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLDataRange;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObject;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
@@ -351,12 +352,18 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 
         final StyledText text;
         if (mode == DOMAIN) {
-            DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, _toolkit);
+            DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, _toolkit, null);
             text = descriptionText.getStyledText();
             text.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, descriptionText);
             addComplexText(descriptionText);
         } else {
-            DatatypeText datatypeText = new DatatypeText(row.getParent(), _owlModel); 
+            String name = null;
+            if(locatedAxiom != null && locatedAxiom.getAxiom() != null){
+                for(OWLEntity e : locatedAxiom.getAxiom().getDatatypesInSignature()){
+                    name = e.toString();
+                }
+            }
+            DatatypeText datatypeText = new DatatypeText(row.getParent(), _owlModel, name); //NICO property
             text = datatypeText.getStyledText();
             text.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, datatypeText);
         }
@@ -432,11 +439,11 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         final EmptyFormRow row = new EmptyFormRow(_toolkit, parent, NUM_COLS);
         final StyledText text;
         if (mode == DOMAIN) {
-            DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, _toolkit);
+            DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, _toolkit, null);//NICO insert
             text = descriptionText.getStyledText();
             addComplexText(descriptionText);
         } else {
-            text = new DatatypeText(row.getParent(), _owlModel).getStyledText();
+            text = new DatatypeText(row.getParent(), _owlModel, null).getStyledText();
             addSimpleWidget(text);
         }
         row.addWidget(text);

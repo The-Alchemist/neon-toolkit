@@ -459,7 +459,7 @@ public class ObjectPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         }
         FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri,_owlModel.getProjectId(),_id);
 
-        final DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, _toolkit);
+        final DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, _toolkit, null);
         final StyledText text = descriptionText.getStyledText();
         OWLClassExpression desc = mode == DOMAIN ? ((OWLObjectPropertyDomainAxiom) axiom).getDomain() : ((OWLObjectPropertyRangeAxiom) axiom).getRange();
         addComplexText(descriptionText);
@@ -527,7 +527,7 @@ public class ObjectPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         }
         final EmptyFormRow row = new EmptyFormRow(_toolkit, parent, NUM_COLS);
 
-        DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, _toolkit);
+        DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, _toolkit, null);
         final StyledText text = descriptionText.getStyledText();
         row.addWidget(text);
         addComplexText(descriptionText);

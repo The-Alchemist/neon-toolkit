@@ -12,6 +12,7 @@ package com.ontoprise.ontostudio.owl.gui.util.textfields;
 
 import org.eclipse.jface.bindings.keys.KeyStroke;
 import org.eclipse.jface.bindings.keys.ParseException;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.ContentProposalAdapter;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.text.Document;
@@ -40,9 +41,14 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLNamedObject;
 
+import uk.ac.manchester.cs.owl.explanation.ordering.EntailedAxiomTree;
+
+import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.properties.table.proposal.DefaultOWLProposalLabelProvider;
 import com.ontoprise.ontostudio.owl.gui.syntax.ISyntaxManager;
@@ -50,6 +56,7 @@ import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.gui.util.StyledTextContentAdapter;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
+import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 
 /**
  * @author mer
@@ -72,13 +79,21 @@ public abstract class AbstractOwlTextField {
     private ContentProposalAdapter _adapter;
 
     private boolean _highlighting;
+    private String _entityName;
 
     /**
 	 * 
 	 */
-    public AbstractOwlTextField(Composite parent, OWLModel owlModel) {
+    public AbstractOwlTextField(Composite parent, OWLModel owlModel, String entityName) {
         _parent = parent;
         _owlModel = owlModel;
+        _entityName = entityName;
+        if( _entityName != null){
+            String not = "not "; //$NON-NLS-1$
+            if(_entityName.startsWith(not)){
+                _entityName = _entityName.substring(4);
+            }
+        }
 
         OWLNamespaces ns = OWLNamespaces.INSTANCE;
         if (owlModel != null) {
@@ -221,17 +236,46 @@ public abstract class AbstractOwlTextField {
                 } catch (IllegalArgumentException iae) {
                     return;
                 }
-
                 String selectedText = getSelectedTextForOffset(offset);
+                
                 if (selectedText != null) {
                     try {
                         ISyntaxManager manager = OWLPlugin.getDefault().getSyntaxManager();
+                        local:
+                        if( NeOnUIPlugin.getDefault().getIdDisplayStyle() == NeOnUIPlugin.DISPLAY_LOCAL){
 
-                        Object data = _styledText.getData();
-                        if(data instanceof OWLNamedObject) {
-                            selectedText = ((OWLNamedObject) data).getIRI().toString();
-                        } else if(data instanceof String[]){
-                            selectedText = ((String[])data)[1];
+                            System.out.println("hui-buh" + _entityName);
+                            
+                            if(_entityName != null &&_entityName.contains(selectedText)){
+                                selectedText = _entityName;
+                                break local;
+                            }
+                            
+                            Object data = _styledText.getData();
+                            if(data instanceof OWLNamedObject) {
+                                selectedText = ((OWLNamedObject) data).getIRI().toString();
+                            } else if(data instanceof String[]){
+                                selectedText = ((String[])data)[1];
+                            }else{
+
+                                
+                                selectedText = manager.parseUri(selectedText, _owlModel);
+                                
+                                if(_owlModel.getEntity(selectedText).isEmpty())
+                                    if(MessageDialog.openQuestion(null, "Change of display style is necessary", "Change of display style is necessary\nDo you want to change the display style to QName?")){
+                                        NeOnUIPlugin.getDefault().getPreferenceStore().setValue(NeOnUIPlugin.ID_DISPLAY_PREFERENCE,NeOnUIPlugin.DISPLAY_QNAME);
+                                        System.out.println(NeOnUIPlugin.getDefault().getIdDisplayStyle());
+                                        throw new NeOnCoreException(selectedText) {
+                                            private static final long serialVersionUID = 1L;
+                                            @Override
+                                            public String getErrorCode() {
+                                                return null;
+                                            }
+                                        };
+                                    }else{
+                                        return;
+                                    }
+                            }
                         }
                         selectedText = manager.parseUri(selectedText, _owlModel);
                         OWLGUIUtilities.jumpToEntity(selectedText, _owlModel);
@@ -252,7 +296,7 @@ public abstract class AbstractOwlTextField {
                     _styledText.setCursor(null);
                     if (_highlighting) {
                         initSyntaxHighlighting(_textViewer);
-                    }
+                     }
                     return;
                 }
 

@@ -458,7 +458,7 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
     }
 
     private StyledText getComplexClassText(EmptyFormRow row) {
-        DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, _toolkit);
+        DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, _toolkit, null);
         addComplexText(descriptionText);
         return descriptionText.getStyledText();
     }
@@ -512,7 +512,7 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
         }
         FormRow row = new FormRow(_toolkit, _clazzesComp, 3, imported, sourceOntologyUri,_owlModel.getProjectId(),_id);
 
-        DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, _toolkit);
+        DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, _toolkit, null);
         final StyledText text = descriptionText.getStyledText();
         text.setToolTipText(Messages.IndividualPropertyPage2_30);
         addComplexText(descriptionText);

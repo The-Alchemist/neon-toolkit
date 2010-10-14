@@ -35,8 +35,8 @@ public class ClassText extends AbstractOwlTextField {
     /**
 	 * 
 	 */
-    public ClassText(Composite parent, OWLModel owlModel) {
-        super(parent, owlModel);
+    public ClassText(Composite parent, OWLModel owlModel, String entityName) {
+        super(parent, owlModel, entityName);
 
         GridData data = new GridData();
         data.widthHint = WIDTH;

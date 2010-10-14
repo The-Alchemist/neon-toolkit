@@ -32,7 +32,7 @@ public class ShortStringText extends AbstractOwlTextField {
 	 * 
 	 */
     public ShortStringText(Composite parent, OWLModel owlModel) {
-        super(parent, owlModel);
+        super(parent, owlModel, null);
 
         GridData data = new GridData();
         data.widthHint = WIDTH;

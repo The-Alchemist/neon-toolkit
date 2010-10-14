@@ -31,7 +31,7 @@ public class UriText extends AbstractOwlTextField {
 	 * 
 	 */
     public UriText(Composite parent, OWLModel owlModel) {
-        super(parent, owlModel);
+        super(parent, owlModel, null);
 
         GridData data = new GridData();
         data.widthHint = WIDTH;

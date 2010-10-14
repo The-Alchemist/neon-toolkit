@@ -338,9 +338,10 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
      */
     private void createAnnotationsRow(OWLAnnotationAssertionAxiom annotation, ArrayList<String[]> descriptions, boolean imported, String sourceOnto) throws NeOnCoreException {
         boolean isLocal = !imported;
-        final FormRow formRow = new FormRow(_toolkit, _annotationsComp, NUM_COLS, imported, sourceOnto,_owlModel.getProjectId(),_id);
+        final FormRow formRow = new FormRow(_toolkit, _annotationsComp, NUM_COLS, imported, sourceOnto,_owlModel.getProjectId(),_id);//NICO annotation
+       
         // text widgets
-        PropertyText propertyText =  new PropertyText(formRow.getParent(), _owlModel, PropertyText.ANNOTATION_PROPERTY);
+        PropertyText propertyText =  new PropertyText(formRow.getParent(), _owlModel, PropertyText.ANNOTATION_PROPERTY, annotation.getProperty().getIRI().toString());
         final StyledText propertyTextWidget = propertyText.getStyledText();
         propertyTextWidget.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, propertyText);
         formRow.addWidget(propertyTextWidget);
@@ -350,8 +351,12 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
         final StyledText valueTextWidget = valueText.getStyledText(); 
         valueTextWidget.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, valueText);
         formRow.addWidget(valueTextWidget);
-
-        DatatypeAndIndividualText typeText = new DatatypeAndIndividualText(formRow.getParent(), _owlModel);
+        
+        String type = ""; //$NON-NLS-1$
+        if(!annotation.getValue().getDatatypesInSignature().isEmpty()){
+            type = annotation.getValue().getDatatypesInSignature().toArray()[0].toString();
+        }
+        DatatypeAndIndividualText typeText = new DatatypeAndIndividualText(formRow.getParent(), _owlModel, type);
         final StyledText typeTextWidget = typeText.getStyledText();
         typeTextWidget.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, typeText);
         formRow.addWidget(typeTextWidget);
@@ -550,9 +555,9 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
      * @return the composite
      */
     private Composite createEmptyRow() {
-        final EmptyFormRow formRow = new EmptyFormRow(_toolkit, _annotationsComp, NUM_COLS);
+        final EmptyFormRow formRow = new EmptyFormRow(_toolkit, _annotationsComp, NUM_COLS);//NICO check
         // text widgets
-        final StyledText propertyText = new PropertyText(formRow.getParent(), _owlModel, PropertyText.ANNOTATION_PROPERTY).getStyledText();
+        final StyledText propertyText = new PropertyText(formRow.getParent(), _owlModel, PropertyText.ANNOTATION_PROPERTY, null).getStyledText();
         formRow.addWidget(propertyText);
         addSimpleWidget(propertyText);
 
@@ -561,7 +566,7 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
         formRow.addWidget(valueText);
         addSimpleWidget(valueText);
 
-        final StyledText typeText = new DatatypeAndIndividualText(formRow.getParent(), _owlModel).getStyledText();
+        final StyledText typeText = new DatatypeAndIndividualText(formRow.getParent(), _owlModel, null).getStyledText();
         formRow.addWidget(typeText);
         addSimpleWidget(typeText);
 

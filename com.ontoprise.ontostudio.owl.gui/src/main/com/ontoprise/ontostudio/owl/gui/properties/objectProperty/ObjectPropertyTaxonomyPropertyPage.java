@@ -435,8 +435,20 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
         boolean imported = !sourceOnto.equals(_ontologyUri);
         Composite parent = _equivPropertyComposite;
         FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, sourceOnto,_owlModel.getProjectId(),_id);
-
-        PropertyText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.OBJECT_PROPERTY);
+        
+        String name = null;
+        if(axioms != null && !axioms.isEmpty()){
+            LocatedAxiom locatedAxiom = axioms.get(axioms.size()-1);
+            if(locatedAxiom != null && locatedAxiom.getAxiom() != null)
+                for(OWLEntity e : locatedAxiom.getAxiom().getSignature()){
+                    if(!e.toStringID().equals(_id)){
+                        name = e.getIRI().toString();
+                        break;
+                    }
+                }
+            
+        }
+        PropertyText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.OBJECT_PROPERTY,name);//NICO property
         final StyledText propertyTextWidget = propertyText.getStyledText();
         propertyTextWidget.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, propertyText);
         final String[] array = getArrayFromDescription(property);
@@ -523,8 +535,23 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
             parent = _inversePropertyComp;
         }
         final FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri,_owlModel.getProjectId(),_id);
-
-        final StyledText text = new PropertyText(row.getParent(), _owlModel, PropertyText.OBJECT_PROPERTY).getStyledText();
+        String name = null;
+        if(locatedAxiom != null && locatedAxiom.getAxiom() != null){
+            for(OWLEntity e : locatedAxiom.getAxiom().getSignature()){
+                if(!e.toStringID().equals(_id)){
+                    name = e.getIRI().toString();
+                    break;
+                }
+            }
+            //special case: both the object and the subject are the same object
+            for(OWLEntity e : locatedAxiom.getAxiom().getSignature()){
+                if(e.toStringID().equals(_id)){
+                    name = e.getIRI().toString();
+                    break;
+                }
+            }
+        }
+        final StyledText text = new PropertyText(row.getParent(), _owlModel, PropertyText.OBJECT_PROPERTY,name).getStyledText();
         final AtomicReference<String[]> array = new AtomicReference<String[]>();
         switch (mode) {
             case SUPER:
@@ -680,7 +707,7 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
         }
         final EmptyFormRow row = new EmptyFormRow(_toolkit, parent, NUM_COLS);
 
-        final StyledText text = new PropertyText(row.getParent(), _owlModel, PropertyText.OBJECT_PROPERTY).getStyledText();
+        final StyledText text = new PropertyText(row.getParent(), _owlModel, PropertyText.OBJECT_PROPERTY,null).getStyledText();
         row.addWidget(text);
         addSimpleWidget(text);
         
