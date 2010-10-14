@@ -35,6 +35,8 @@ import org.neontoolkit.gui.NeOnUIPlugin;
 /**
  * An action in the workbench toolbar to enable the user to hide/show the
  * namespaces.
+ * 
+ * @author Nico Stieler
  */
 public class ShowNamespaceAction extends SelectionAdapter implements
 		IWorkbenchWindowPulldownDelegate {
@@ -82,17 +84,34 @@ public class ShowNamespaceAction extends SelectionAdapter implements
 			_qNameItem.addSelectionListener(this);
 			
 			hookSubMenu(parent, _menu);
-			switch (NeOnUIPlugin.getDefault().getIdDisplayStyle()) {
-			case NeOnUIPlugin.DISPLAY_LOCAL:
-				_localItem.setSelection(true);
-				break;
-			case NeOnUIPlugin.DISPLAY_QNAME:
-				_qNameItem.setSelection(true);
-				break;
-			default:
-				_uriItem.setSelection(true);
-			}
+//            switch (NeOnUIPlugin.getDefault().getIdDisplayStyle()) {
+//                case NeOnUIPlugin.DISPLAY_LOCAL:
+//                    _localItem.setSelection(true);
+//                    break;
+//                case NeOnUIPlugin.DISPLAY_QNAME:
+//                    _qNameItem.setSelection(true);
+//                    break;
+//                default:
+//                    _uriItem.setSelection(true);
+//                }
 		}
+
+        switch (NeOnUIPlugin.getDefault().getIdDisplayStyle()) {
+            case NeOnUIPlugin.DISPLAY_LOCAL:
+                _localItem.setSelection(true);
+                _qNameItem.setSelection(false);
+                _uriItem.setSelection(false);
+                break;
+            case NeOnUIPlugin.DISPLAY_QNAME:
+                _qNameItem.setSelection(true);
+                _localItem.setSelection(false);
+                _uriItem.setSelection(false);
+                break;
+            default:
+                _uriItem.setSelection(true);
+                _localItem.setSelection(false);
+                _qNameItem.setSelection(false);
+        }
 		return _menu;
 	}
 	
