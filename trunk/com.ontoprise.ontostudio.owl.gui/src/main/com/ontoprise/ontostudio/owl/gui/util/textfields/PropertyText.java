@@ -37,6 +37,10 @@ public class PropertyText extends AbstractOwlTextField {
     /**
 	 * 
 	 */
+    public PropertyText(Composite parent, OWLModel owlModel, int type) {
+        this(parent, owlModel, type, null);
+    }
+    
     public PropertyText(Composite parent, OWLModel owlModel, int type, String entityName) {
         super(parent, owlModel, entityName);
 

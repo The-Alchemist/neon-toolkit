@@ -35,6 +35,10 @@ public class ClassText extends AbstractOwlTextField {
     /**
 	 * 
 	 */
+    public ClassText(Composite parent, OWLModel owlModel) {
+        this(parent, owlModel, null);
+    }
+    
     public ClassText(Composite parent, OWLModel owlModel, String entityName) {
         super(parent, owlModel, entityName);
 

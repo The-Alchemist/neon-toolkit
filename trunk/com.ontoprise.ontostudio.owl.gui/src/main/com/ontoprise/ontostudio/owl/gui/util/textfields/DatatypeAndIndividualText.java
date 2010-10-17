@@ -34,6 +34,9 @@ public class DatatypeAndIndividualText extends AbstractOwlTextField {
     /**
 	 * 
 	 */
+    public DatatypeAndIndividualText(Composite parent, OWLModel owlModel) {
+        this(parent, owlModel, null);
+    }
     public DatatypeAndIndividualText(Composite parent, OWLModel owlModel, String entityName) {
         super(parent, owlModel, entityName);
 

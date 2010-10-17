@@ -43,12 +43,8 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
-import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLNamedObject;
 
-import uk.ac.manchester.cs.owl.explanation.ordering.EntailedAxiomTree;
-
-import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.properties.table.proposal.DefaultOWLProposalLabelProvider;
 import com.ontoprise.ontostudio.owl.gui.syntax.ISyntaxManager;
@@ -56,7 +52,6 @@ import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.gui.util.StyledTextContentAdapter;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
-import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 
 /**
  * @author mer
@@ -84,6 +79,10 @@ public abstract class AbstractOwlTextField {
     /**
 	 * 
 	 */
+    public AbstractOwlTextField(Composite parent, OWLModel owlModel) {
+        this(parent, owlModel, null);
+    }
+    
     public AbstractOwlTextField(Composite parent, OWLModel owlModel, String entityName) {
         _parent = parent;
         _owlModel = owlModel;
@@ -247,6 +246,9 @@ public abstract class AbstractOwlTextField {
 
                             System.out.println("hui-buh" + _entityName);
                             
+                            // TODO das ist falsch!!!
+                            // _entityName sollte kein String, sondern ein OWLentity sein, so dass es als objekt untersucht werden kann
+                            // in _entityName konnte zB "classA or classB and classAA" drin stehen
                             if(_entityName != null &&_entityName.contains(selectedText)){
                                 selectedText = _entityName;
                                 break local;
@@ -255,11 +257,11 @@ public abstract class AbstractOwlTextField {
                             Object data = _styledText.getData();
                             if(data instanceof OWLNamedObject) {
                                 selectedText = ((OWLNamedObject) data).getIRI().toString();
+
                             } else if(data instanceof String[]){
                                 selectedText = ((String[])data)[1];
+                            
                             }else{
-
-                                
                                 selectedText = manager.parseUri(selectedText, _owlModel);
                                 
                                 if(_owlModel.getEntity(selectedText).isEmpty())

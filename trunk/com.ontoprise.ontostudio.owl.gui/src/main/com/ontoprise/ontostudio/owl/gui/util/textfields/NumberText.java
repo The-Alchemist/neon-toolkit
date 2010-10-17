@@ -31,7 +31,7 @@ public class NumberText extends AbstractOwlTextField {
 	 * 
 	 */
     public NumberText(Composite parent, OWLModel owlModel) {
-        super(parent, owlModel, null);
+        super(parent, owlModel);
 
         GridData data = new GridData();
         data.widthHint = WIDTH;
