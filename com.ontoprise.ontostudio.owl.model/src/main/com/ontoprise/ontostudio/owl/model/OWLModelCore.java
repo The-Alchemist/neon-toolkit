@@ -110,7 +110,8 @@ import com.ontoprise.ontostudio.owl.model.visitors.GetMemberVisitor;
 /**
  * This class is a utility class to simplify the access to the OWL datamodel from GUI plugins.
  * 
- * @author Michael
+ * @author Thomas Krekeler
+ * @author Michael Erdmann
  * @author Nico Stieler
  * 
  */
@@ -514,6 +515,21 @@ public class OWLModelCore implements OWLModel {
             return ontology.getDataPropertyAssertionAxioms((OWLIndividual)parameters[0]);
         }
     };
+    private final AxiomRequest<OWLDataPropertyAssertionAxiom> DataPropertyMember_property_Request = new AxiomRequestCore<OWLDataPropertyAssertionAxiom>(AxiomType.DATA_PROPERTY_ASSERTION, "property") {
+        @Override
+        protected Iterable<OWLDataPropertyAssertionAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
+            Set<OWLDataPropertyAssertionAxiom> result = new LinkedHashSet<OWLDataPropertyAssertionAxiom>();
+            if(parameters[0] instanceof OWLDataProperty) {
+                OWLDataProperty property = (OWLDataProperty) parameters[0];
+                for (OWLDataPropertyAssertionAxiom axiom: ontology.getAxioms(AxiomType.DATA_PROPERTY_ASSERTION)) {
+                    if (property.equals(axiom.getProperty())) {
+                        result.add(axiom);
+                    }
+                }
+            }
+            return result;
+        }
+    };
     private final AxiomRequest<OWLDifferentIndividualsAxiom> DifferentIndividuals_individuals_Request = new AxiomRequestCore<OWLDifferentIndividualsAxiom>(AxiomType.DIFFERENT_INDIVIDUALS, "individuals") {
         @Override
         protected Iterable<OWLDifferentIndividualsAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
@@ -579,6 +595,20 @@ public class OWLModelCore implements OWLModel {
         @Override
         protected Iterable<OWLAnnotationAssertionAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
             return getAnnotationAssertionAxioms(ontology, (OWLAnnotationSubject)parameters[0]);
+        }
+    };
+
+    private final AxiomRequest<OWLAnnotationAssertionAxiom> EntityAnnotation_property_Request = new AxiomRequestCore<OWLAnnotationAssertionAxiom>(AxiomType.ANNOTATION_ASSERTION, "property") {
+        @Override
+        protected Iterable<OWLAnnotationAssertionAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
+            OWLAnnotationProperty property = (OWLAnnotationProperty)parameters[0];
+            Set<OWLAnnotationAssertionAxiom> result = new LinkedHashSet<OWLAnnotationAssertionAxiom>();
+            for (OWLAnnotationAssertionAxiom axiom: ontology.getAxioms(AxiomType.ANNOTATION_ASSERTION)) {
+                if (property.equals(axiom.getProperty())) {
+                    result.add(axiom);
+                }
+            }
+            return result;
         }
     };
 
@@ -720,6 +750,21 @@ public class OWLModelCore implements OWLModel {
             return result;
         }
     }; 
+    private final AxiomRequest<OWLObjectPropertyAssertionAxiom> ObjectPropertyMember_property_Request = new AxiomRequestCore<OWLObjectPropertyAssertionAxiom>(AxiomType.OBJECT_PROPERTY_ASSERTION, "property") {
+        @Override
+        protected Iterable<OWLObjectPropertyAssertionAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
+            Set<OWLObjectPropertyAssertionAxiom> result = new LinkedHashSet<OWLObjectPropertyAssertionAxiom>();
+            if(parameters[0] instanceof OWLObjectProperty) {
+                OWLObjectProperty property = (OWLObjectProperty) parameters[0];
+                for (OWLObjectPropertyAssertionAxiom axiom: ontology.getAxioms(AxiomType.OBJECT_PROPERTY_ASSERTION)) {
+                    if (property.equals(axiom.getProperty())) {
+                        result.add(axiom);
+                    }
+                }
+            }
+            return result;
+        }
+    };
     private final AxiomRequest<OWLObjectPropertyAssertionAxiom> ObjectPropertyMember_sourceIndividual_Request = new AxiomRequestCore<OWLObjectPropertyAssertionAxiom>(AxiomType.OBJECT_PROPERTY_ASSERTION, "sourceIndividual") {
         @Override
         protected Iterable<OWLObjectPropertyAssertionAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
@@ -1342,6 +1387,12 @@ public class OWLModelCore implements OWLModel {
     public Set<LocatedItem<OWLAnnotationAssertionAxiom>> getAnnotationHits(OWLAnnotationSubject annotationSubject) throws NeOnCoreException {
         return EntityAnnotation_entity_Request.getLocatedAxioms(annotationSubject);
     }
+    
+    @Override
+    public Set<LocatedItem<OWLAnnotationAssertionAxiom>> getAnnotationHitsForAnnotationProperty(OWLAnnotationProperty annotationProperty) throws NeOnCoreException {
+        return EntityAnnotation_property_Request.getLocatedAxioms(annotationProperty);
+    }
+
     // ///////////////////////////////////////////////////////////////////////
     // 
     // OWL ONTOLOGY
@@ -2201,6 +2252,11 @@ public class OWLModelCore implements OWLModel {
     }
 
     @Override
+    public Set<LocatedItem<OWLDataPropertyAssertionAxiom>> getDataPropertyMemberHitsForProperty(OWLDataProperty property) throws NeOnCoreException {
+        return DataPropertyMember_property_Request.getLocatedAxioms(property);
+    }
+
+    @Override
     public Set<OWLDataPropertyAssertionAxiom> getDataPropertyMembers(String individualId, String propertyId) throws NeOnCoreException {
         return DataPropertyMember_dataProperty_sourceIndividual_Request.getAxioms(dataProperty(propertyId), individual(individualId));
     }
@@ -2213,6 +2269,11 @@ public class OWLModelCore implements OWLModel {
     @Override
     public Set<LocatedItem<OWLObjectPropertyAssertionAxiom>> getObjectPropertyMemberHits(String individualId) throws NeOnCoreException {
         return ObjectPropertyMember_sourceIndividual_Request.getLocatedAxioms(individual(individualId));
+    }
+
+    @Override
+    public Set<LocatedItem<OWLObjectPropertyAssertionAxiom>> getObjectPropertyMemberHitsForProperty(OWLObjectProperty property) throws NeOnCoreException {
+        return ObjectPropertyMember_property_Request.getLocatedAxioms(property);
     }
 
     @Override

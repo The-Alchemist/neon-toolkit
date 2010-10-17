@@ -67,14 +67,8 @@ import com.ontoprise.ontostudio.owl.model.util.OWLFormattingVisitor;
 
 public class OWLUtilities {
     private static final IRI SWRL_RULE_IRI_IRI = IRI.create("http://www.semanticweb.org/owlapi#iri"); //$NON-NLS-1$
-    private static final IRI OWL_THING_URI;
-    static {
-        OWL_THING_URI = IRI.create(OWLConstants.OWL_THING_URI);
-    }
-    private static final IRI OWL_NOTHING_URI;
-    static {
-        OWL_NOTHING_URI = IRI.create(OWLConstants.OWL_NOTHING_URI);
-    }
+    private static final IRI OWL_THING_URI = IRI.create(OWLConstants.OWL_THING_URI);
+    private static final IRI OWL_NOTHING_URI = IRI.create(OWLConstants.OWL_NOTHING_URI);
     
     public static boolean isOWLThing(OWLClassExpression description) {
         return description instanceof OWLClass && OWL_THING_URI.equals(((OWLClass)description).getIRI());

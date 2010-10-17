@@ -101,6 +101,12 @@
             icon="icons/range.gif"
             id="com.ontoprise.ontostudio.owl.views.rangeview"
             name="%RangeView"/>
+      <view
+            category="org.neontoolkit.gui.views.general"
+            class="com.ontoprise.ontostudio.owl.gui.views.propertymember.PropertyMemberView"
+            icon="icons/propertymembers.png"
+            id="com.ontoprise.ontostudio.owl.views.propertymemberview"
+            name="%PropertyMembersView"/>
 	</extension>
 
 
@@ -1768,6 +1774,16 @@
   		<view
           closeable="true"
           id="com.ontoprise.ontostudio.owl.views.rangeview"
+          moveable="true"
+          relationship="stack"
+          relative="com.ontoprise.ontostudio.owl.views.individualview"
+          visible="true"/>
+  	</perspectiveExtension>
+  	<perspectiveExtension
+  		targetID="com.ontoprise.ontostudio.owl.perspectives.OWLPerspective">
+  		<view
+          closeable="true"
+          id="com.ontoprise.ontostudio.owl.views.propertyInstancesContext"
           moveable="true"
           relationship="stack"
           relative="com.ontoprise.ontostudio.owl.views.individualview"

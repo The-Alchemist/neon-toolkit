@@ -64,7 +64,8 @@ import org.semanticweb.owlapi.model.OWLSubPropertyChainOfAxiom;
 
 import com.ontoprise.ontostudio.owl.model.event.OWLAxiomListener;
 /**
- * 
+ * @author Michael Erdmann
+ * @author Thomas Krekeler
  * @author Nico Stieler
  */
 public interface OWLModel {
@@ -918,12 +919,14 @@ public interface OWLModel {
 
     public Set<LocatedItem<OWLAnnotationAssertionAxiom>> getAnnotationHits(String owlEntityId) throws NeOnCoreException;
     public Set<LocatedItem<OWLAnnotationAssertionAxiom>> getAnnotationHits(OWLAnnotationSubject annotationSubject) throws NeOnCoreException;
+    public Set<LocatedItem<OWLAnnotationAssertionAxiom>> getAnnotationHitsForAnnotationProperty(OWLAnnotationProperty annotationProperty) throws NeOnCoreException;
     public Set<ItemHits<OWLClassExpression,OWLDisjointClassesAxiom>> getDisjointDescriptionHits(String classId) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLEquivalentClassesAxiom>> getEquivalentDescriptionHits(String clazzUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLClassAssertionAxiom>> getClassHits(String individualUri) throws NeOnCoreException;
     Set<ItemHits<OWLDataRange,OWLDataPropertyRangeAxiom>> getDataPropertyDataRangeHits(String propertyUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLDataPropertyDomainAxiom>> getDataPropertyDomainHits(String propertyUri) throws NeOnCoreException;
     Set<LocatedItem<OWLDataPropertyAssertionAxiom>> getDataPropertyMemberHits(String individualUri) throws NeOnCoreException;
+    Set<LocatedItem<OWLDataPropertyAssertionAxiom>> getDataPropertyMemberHitsForProperty(OWLDataProperty property) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLClassAssertionAxiom>> getDescriptionHits(String individualUri) throws NeOnCoreException;
     Set<ItemHits<OWLIndividual,OWLDifferentIndividualsAxiom>> getDifferentIndividualHits(String individualUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLEquivalentDataPropertiesAxiom>> getEquivalentDataPropertyHits(String propertyUri) throws NeOnCoreException;
@@ -942,6 +945,7 @@ public interface OWLModel {
     boolean isRootObjectProperty(OWLObjectProperty prop) throws NeOnCoreException;
     Set<ItemHits<OWLIndividual,OWLSameIndividualAxiom>> getEquivalentIndividualHits(String individualUri) throws NeOnCoreException;
     Set<LocatedItem<OWLObjectPropertyAssertionAxiom>> getObjectPropertyMemberHits(String individualUri) throws NeOnCoreException;
+    Set<LocatedItem<OWLObjectPropertyAssertionAxiom>> getObjectPropertyMemberHitsForProperty(OWLObjectProperty property) throws NeOnCoreException;
     Set<ItemHits<OWLObjectProperty,OWLSubObjectPropertyOfAxiom>> getSubObjectPropertyHits(String propertyUri) throws NeOnCoreException;
     boolean isRootDataProperty(OWLDataProperty prop) throws NeOnCoreException;
     Set<ItemHits<OWLDataProperty,OWLSubDataPropertyOfAxiom>> getSubDataPropertyHits(String propertyUri) throws NeOnCoreException;

@@ -66,7 +66,8 @@ import org.semanticweb.owlapi.model.OWLSubPropertyChainOfAxiom;
 import com.ontoprise.ontostudio.owl.model.event.OWLAxiomListener;
 
 /**
- * @author krekeler
+ * @author Thomas Krekeler
+ * @author Michael Erdmann
  * @author Nico Stieler
  *
  */
@@ -528,6 +529,17 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
     public Set<OWLDataPropertyAssertionAxiom> getDataPropertyMembers(String individualId) throws NeOnCoreException {
         try {
             return _model.getDataPropertyMembers(individualId);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+
+    @Override
+    public Set<LocatedItem<OWLDataPropertyAssertionAxiom>> getDataPropertyMemberHitsForProperty(OWLDataProperty property) throws NeOnCoreException {
+        try {
+            return _model.getDataPropertyMemberHitsForProperty(property);
         } catch (NeOnCoreException e) {
             throw checkConnectionFailure(e);
         } catch (RuntimeException e) {
@@ -1024,6 +1036,17 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
     public Set<LocatedItem<OWLObjectPropertyAssertionAxiom>> getObjectPropertyMemberHits(String individualUri) throws NeOnCoreException {
         try {
             return _model.getObjectPropertyMemberHits(individualUri);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+
+    @Override
+    public Set<LocatedItem<OWLObjectPropertyAssertionAxiom>> getObjectPropertyMemberHitsForProperty(OWLObjectProperty property) throws NeOnCoreException {
+        try {
+            return _model.getObjectPropertyMemberHitsForProperty(property);
         } catch (NeOnCoreException e) {
             throw checkConnectionFailure(e);
         } catch (RuntimeException e) {
@@ -1833,7 +1856,18 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
             throw checkConnectionFailure(e);
         }
     }
-    
+
+    @Override
+    public Set<LocatedItem<OWLAnnotationAssertionAxiom>> getAnnotationHitsForAnnotationProperty(OWLAnnotationProperty annotationProperty) throws NeOnCoreException {
+        try {
+            return _model.getAnnotationHitsForAnnotationProperty(annotationProperty);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+
     @Override
     public Set<List<OWLObjectProperty>> getSubPropertyChains(String propertyId) throws NeOnCoreException {
         try {
