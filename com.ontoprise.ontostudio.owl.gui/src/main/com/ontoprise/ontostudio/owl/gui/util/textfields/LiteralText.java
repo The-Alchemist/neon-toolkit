@@ -35,7 +35,7 @@ public class LiteralText extends AbstractOwlTextField {
 	 * 
 	 */
     public LiteralText(Composite parent, OWLModel owlModel) {
-        super(parent, owlModel, null);//NICO unclear
+        super(parent, owlModel, null);
 
         GridData data = new GridData();
         data.widthHint = WIDTH;

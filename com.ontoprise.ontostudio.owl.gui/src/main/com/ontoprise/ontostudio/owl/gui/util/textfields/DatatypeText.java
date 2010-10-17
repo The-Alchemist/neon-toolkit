@@ -34,6 +34,10 @@ public class DatatypeText extends AbstractOwlTextField {
     /**
 	 * 
 	 */
+    public DatatypeText(Composite parent, OWLModel owlModel) {
+        this(parent, owlModel, null);
+    }
+    
     public DatatypeText(Composite parent, OWLModel owlModel, String entityName) {
         super(parent, owlModel, entityName);
 

@@ -65,6 +65,10 @@ public class DescriptionText extends AbstractOwlTextField {
      */
     private int _toolbarRowSpan = 5;
 
+    public DescriptionText(Composite parent, OWLModel owlModel, FormToolkit toolkit) {
+        this(parent, owlModel, false, toolkit, null);
+    }
+    
     public DescriptionText(Composite parent, OWLModel owlModel, FormToolkit toolkit, String name) {
         this(parent, owlModel, false, toolkit, name);
     }
@@ -72,6 +76,10 @@ public class DescriptionText extends AbstractOwlTextField {
     /**
 	 * 
 	 */
+    public DescriptionText(Composite parent, OWLModel owlModel, boolean imported, FormToolkit toolkit) {
+        this(parent, owlModel, imported, toolkit, null);
+    }
+    
     public DescriptionText(Composite parent, OWLModel owlModel, boolean imported, FormToolkit toolkit, String name) {
         super(parent, owlModel, name);
 
