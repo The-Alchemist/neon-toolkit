@@ -89,6 +89,7 @@ public abstract class AbstractOwlTextField {
         _owlModel = owlModel;
         _entityName = entityName;
         if( _entityName != null){
+            // TODO this is a hack!!!
             String not = "not "; //$NON-NLS-1$
             if(_entityName.startsWith(not)){
                 _entityName = _entityName.substring(4);
