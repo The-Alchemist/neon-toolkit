@@ -267,7 +267,12 @@ public class Messages extends NLS {
     public static String SourceViewTab_1;
     public static String SourceViewTab_2;
     public static String SourceViewTab_3;
-	public static String PropertyMoveChange_0;
+	public static String PropertyMemberView_0;
+    public static String PropertyMemberView_1;
+    public static String PropertyMemberView_2;
+    public static String PropertyMemberViewContentProvider_0;
+    public static String PropertyMemberViewContentProvider_1;
+    public static String PropertyMoveChange_0;
 	public static String PropertyMoveChange_1;
 	public static String PropertyMoveChange_2;
 	public static String PropertyMoveChange_5;
