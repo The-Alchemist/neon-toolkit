@@ -145,7 +145,7 @@ public class RangeViewContentProvider implements IStructuredContentProvider, ITr
         if (newInput instanceof Object[]) {
             Object[] array = (Object[]) newInput;
             if (array[0] instanceof OWLNamedObject) {
-                OWLNamedObject elem = (OWLClass) array[0];
+                OWLNamedObject elem = (OWLNamedObject) array[0];
                 if (elem.getIRI().toString().equals(_selectedRange) && array[1].equals(_ontologyUri) && array[2].equals(_projectId)) {
                     return;
                 }
