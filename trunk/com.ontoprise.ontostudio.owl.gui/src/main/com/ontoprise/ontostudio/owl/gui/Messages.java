@@ -14,6 +14,12 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "com.ontoprise.ontostudio.owl.gui.messages";//$NON-NLS-1$
+    public static String EditImportedTitle;
+    public static String EditImportedText_0;
+    public static String EditImportedText_1;
+    public static String RemoveImportedTitle;
+    public static String RemoveImportedText_0;
+    public static String RemoveImportedText_1;
     public static String JumpToTitle;
     public static String JumpToText_0;
     public static String JumpToText_1;
@@ -24,6 +30,8 @@ public class Messages extends NLS {
 	public static String OWLGUIUtilities_4;
     public static String OWLGUIUtilities_5;
     public static String OWLGUIUtilities_6;
+    public static String OWLGUIUtilities_7;
+    public static String OWLGUIUtilities_8;
 	public static String OWLOntologyPropertyPage_URI;
 	public static String OWLOntologyPropertyPage_Location;
 	public static String OWLOntologyPropertyPage_Imports;
