@@ -20,6 +20,10 @@
 			<topic href="html/search.html" label="Search"></topic>
 			<topic href="html/ontology_visualizer.html" label="Ontology Visualizer"></topic>
 			<topic href="html/preferences.html" label="Preferences"></topic>
+   <topic href="html/domain_view.html" label="Domain View">
+   </topic>
+   <topic href="html/range_view.html" label="Range View">
+   </topic>
 		</topic>
 		
 		<topic href="html/using_owl_editor.html" label="How to use the OWL Perspective?">

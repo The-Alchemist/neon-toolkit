@@ -73,6 +73,14 @@
        <description>How to delete an Entity</description>
        <topic href="html/delete_resource.html" label="Delete an Entity"/>
     </context>
+    <context id="DOMAIN_VIEW" title="Domain View">
+       <description>Domain View</description>
+       <topic href="html/domain_view.html" label="Domain View"/>
+    </context>
+    <context id="RANGE_VIEW" title="Range View">
+       <description>Range View</description>
+       <topic href="html/range_view.html" label="Range View"/>
+    </context>
     
   <!-- 
     <context id="">
