@@ -23,6 +23,7 @@ import org.semanticweb.owlapi.model.OWLDatatype;
 import com.ontoprise.ontostudio.owl.gui.control.AlphabeticalProposalComparator;
 import com.ontoprise.ontostudio.owl.model.OWLConstants;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
+import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.util.OWLAxiomUtils;
 
@@ -34,6 +35,10 @@ public class DatatypeAndIndividualProposalProvider extends AbstractOwlProposalPr
         super(owlModel);
     }
 
+    public DatatypeAndIndividualProposalProvider(OWLModel localOwlModel, OWLModel sourceOwlModel) {
+        super(localOwlModel, sourceOwlModel);
+    }
+    
     public IContentProposal[] getProposals(String contents, int position) {
         List<IContentProposal> allProposals = new ArrayList<IContentProposal>();
         List<IContentProposal> datatypeProposals = new ArrayList<IContentProposal>();
@@ -41,11 +46,11 @@ public class DatatypeAndIndividualProposalProvider extends AbstractOwlProposalPr
         Set<String> datatypes = OWLConstants.OWL_DATATYPE_URIS;
         Set<OWLDatatype> datatypesFromModel;
         try {
-            datatypesFromModel = _owlModel.getAllDatatypes();
+            datatypesFromModel = _sourceOwlModel.getAllDatatypes();//NICO are you sure?
             for (OWLDatatype datatype: datatypesFromModel) {
                 String[] array = (String[]) datatype.accept(_visitor);
                 if (AbstractOwlProposalProvider.checkProposal(array, contents)) {
-                    datatypeProposals.add(new DatatypeProposal(datatype, array, position, _owlModel));
+                    datatypeProposals.add(new DatatypeProposal(datatype, array, position, _localOwlModel));//NICO are you sure?
                 }
             }
         } catch (NeOnCoreException e) {
@@ -56,14 +61,14 @@ public class DatatypeAndIndividualProposalProvider extends AbstractOwlProposalPr
             if (!datatypeUri.equals(NULL_DATATYPE)) { // bugfix for #10099
                 OWLDatatype datatype;
                 try {
-                    datatype = _owlModel.getOWLDataFactory().getOWLDatatype(OWLUtilities.toIRI(datatypeUri));
+                    datatype = _sourceOwlModel.getOWLDataFactory().getOWLDatatype(OWLUtilities.toIRI(datatypeUri));//NICO are you sure?
                 } catch (NeOnCoreException e) {
                     throw new RuntimeException(e);
                 }
                 if (!datatypesFromModel.contains(datatype)) {
                     String[] array = (String[]) datatype.accept(_visitor);
                     if (AbstractOwlProposalProvider.checkProposal(array, contents)) {
-                        datatypeProposals.add(new DatatypeProposal(datatype, array, position, _owlModel));
+                        datatypeProposals.add(new DatatypeProposal(datatype, array, position, _localOwlModel));//NICO are you sure?
                     }
                 }
             }

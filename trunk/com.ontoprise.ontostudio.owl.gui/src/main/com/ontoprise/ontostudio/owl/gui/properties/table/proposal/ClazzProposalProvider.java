@@ -26,18 +26,20 @@ public class ClazzProposalProvider extends AbstractOwlProposalProvider {
 
     public ClazzProposalProvider(OWLModel owlModel) {
         super(owlModel);
-        
+    }
+    public ClazzProposalProvider(OWLModel localOwlModel, OWLModel sourceOwlModel) {
+        super(localOwlModel, sourceOwlModel);
     }
 
     public IContentProposal[] getProposals(String contents, int position) {
         List<IContentProposal> proposals = new ArrayList<IContentProposal>();
 
         try {
-            Set<OWLClass> allClasses = _owlModel.getAllClasses(true);
+            Set<OWLClass> allClasses = _sourceOwlModel.getAllClasses(true);
 
             try {
-                allClasses.add(_owlModel.getOWLDataFactory().getOWLThing());
-                allClasses.add(_owlModel.getOWLDataFactory().getOWLNothing());
+                allClasses.add(_sourceOwlModel.getOWLDataFactory().getOWLThing());
+                allClasses.add(_sourceOwlModel.getOWLDataFactory().getOWLNothing());
             } catch (Exception e) {
                 //ignore
             }
@@ -45,7 +47,7 @@ public class ClazzProposalProvider extends AbstractOwlProposalProvider {
             for (OWLClass clazz: allClasses) {
                 String[] array = (String[]) clazz.accept(_visitor);
                 if (AbstractOwlProposalProvider.checkProposal(array, contents)) {
-                    proposals.add(new ClazzProposal(clazz, array, position, _owlModel));
+                    proposals.add(new ClazzProposal(clazz, array, position, _localOwlModel));//NICO are you sure?
                 }
             }
         } catch (NeOnCoreException e) {

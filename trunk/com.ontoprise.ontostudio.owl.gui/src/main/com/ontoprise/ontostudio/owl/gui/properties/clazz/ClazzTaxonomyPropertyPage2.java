@@ -52,13 +52,13 @@ import com.ontoprise.ontostudio.owl.gui.util.forms.DescriptionRowHandler;
 import com.ontoprise.ontostudio.owl.gui.util.forms.EmptyFormRow;
 import com.ontoprise.ontostudio.owl.gui.util.forms.FormRow;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.DescriptionText;
+import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.ApplyChanges;
 import com.ontoprise.ontostudio.owl.model.commands.clazz.GetDisjointClazzHits;
 import com.ontoprise.ontostudio.owl.model.commands.clazz.GetEquivalentClazzHits;
 import com.ontoprise.ontostudio.owl.model.commands.clazz.GetSubDescriptionHits;
-import com.ontoprise.ontostudio.owl.model.commands.clazz.GetSuperClazzesHits;
 import com.ontoprise.ontostudio.owl.model.commands.clazz.GetSuperDescriptionHits;
 import com.ontoprise.ontostudio.owl.model.util.OWLAxiomUtils;
 
@@ -381,12 +381,12 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
     private Composite createEmptyRow(Composite parent, final int mode) {
         final EmptyFormRow formRow = new EmptyFormRow(_toolkit, parent, NUM_COLS);
 
-        DescriptionText descriptionText = new DescriptionText(formRow.getParent(), _owlModel, false, _toolkit, null);
+        DescriptionText descriptionText = new DescriptionText(formRow.getParent(), _owlModel, _owlModel, false, _toolkit);
         final StyledText clazzText = descriptionText.getStyledText();
         addComplexText(descriptionText);
         formRow.addWidget(clazzText);
 
-        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, null) {
+        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, _owlModel, null) {
 
             @Override
             public void savePressed() {
@@ -397,13 +397,13 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
             public void addPressed() {
                 // add new entry
                 try {
-                    OWLDataFactory factory = _owlModel.getOWLDataFactory();
+                    OWLDataFactory factory = _sourceOwlModel.getOWLDataFactory();
                     OWLAxiom newAxiom = null;
                     String value = clazzText.getText();
                     String modeString = ""; //$NON-NLS-1$
                     if (mode == SUPER_MODE || mode == EQUIV_MODE || mode == DISJOINT_MODE) {
                         OWLClassExpression thisClazzDesc = getClazzDescription();
-                        OWLClassExpression thatClazzDesc = _manager.parseDescription(value, _owlModel);
+                        OWLClassExpression thatClazzDesc = _manager.parseDescription(value, _localOwlModel);
                         switch (mode) {
                             case SUPER_MODE:
                                 newAxiom = factory.getOWLSubClassOfAxiom(thisClazzDesc, thatClazzDesc);
@@ -427,7 +427,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
                                 return;
                         }
                     } else { // mode == SUB_MODE
-                        OWLClassExpression subClazzDesc = _manager.parseDescription(value, _owlModel);
+                        OWLClassExpression subClazzDesc = _manager.parseDescription(value, _localOwlModel);
                         OWLClassExpression superClazzDesc = getClazzDescription();
                         newAxiom = factory.getOWLSubClassOfAxiom(subClazzDesc, superClazzDesc);
                     }
@@ -526,7 +526,11 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
         final String[] array = getArrayFromDescription(description);
         String id = OWLGUIUtilities.getEntityLabel(array);
 
-        DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, imported, _toolkit, null);
+        OWLModel sourceOwlModel =_owlModel;
+        if(imported){
+            sourceOwlModel = OWLModelFactory.getOWLModel(ontologyUri, _project);
+        }
+        DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, sourceOwlModel, imported, _toolkit);
         final StyledText clazzText = descriptionText.getStyledText();
         addComplexText(descriptionText);
         clazzText.setText(id);
@@ -535,8 +539,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
         OWLGUIUtilities.enable(clazzText, false);
         row.addWidget(clazzText);
 
-        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, locatedAxiom) {
-
+        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, sourceOwlModel, locatedAxiom) {
             @Override
             public void savePressed() {
                 // save modified entries
@@ -545,20 +548,23 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
                     OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(_project);
                     OWLAxiom axiomToRemove = locatedAxiom.getAxiom();
                     OWLAxiom axiomToAdd;
-
                     OWLClassExpression id = getClazzDescription();
+
+//                    value = _manager.parseUri(value, _owlModel);
+//                    System.out.println(value);
                     if (mode == SUPER_MODE) {
-                        OWLClassExpression superClazzDesc = _manager.parseDescription(value, _owlModel);
+                        OWLClassExpression superClazzDesc = _manager.parseDescription(value, _localOwlModel);
                         axiomToAdd = factory.getOWLSubClassOfAxiom(id, superClazzDesc);
                     } else if (mode == SUB_MODE) {
-                        OWLClassExpression subClazzDesc = _manager.parseDescription(value, _owlModel);
+                        OWLClassExpression subClazzDesc = _manager.parseDescription(value, _localOwlModel);
                         axiomToAdd = factory.getOWLSubClassOfAxiom(subClazzDesc, id);
+                        System.out.println(subClazzDesc.getSignature());
                     } else {
                         throw new IllegalArgumentException(Messages.ClazzTaxonomyPropertyPage2_4);
                     }
 
                     if (axiomToRemove != null) {
-                        new ApplyChanges(_project, _ontologyUri, new String[] {OWLUtilities.toString(axiomToAdd)}, new String[] {OWLUtilities.toString(axiomToRemove)}).run();
+                        new ApplyChanges(_project, _sourceOwlModel.getOntologyURI(), new String[] {OWLUtilities.toString(axiomToAdd)}, new String[] {OWLUtilities.toString(axiomToRemove)}).run();
                     }
 
                 } catch (NeOnCoreException k2e) {
@@ -608,10 +614,14 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
      */
     private void createDisjointOrEquivalentRow(Composite parent, final OWLClassExpression description, final List<LocatedAxiom> axioms, boolean imported, boolean enabled, final int mode, String sourceOnto) throws NeOnCoreException {
         FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, sourceOnto,_owlModel.getProjectId(),_id);
-
+        OWLModel sourceOwlModel =_owlModel;
+        if(imported){
+            sourceOwlModel = OWLModelFactory.getOWLModel(sourceOnto, _project);
+        }
+         
         final String[] descriptionArray = getArrayFromDescription(description);
         String id = OWLGUIUtilities.getEntityLabel(descriptionArray);
-        DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, imported, _toolkit, null);
+        DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, sourceOwlModel, imported, _toolkit);
         final StyledText clazzText = descriptionText.getStyledText();
         addComplexText(descriptionText);
 
@@ -621,17 +631,17 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
         OWLGUIUtilities.enable(clazzText, false);
         row.addWidget(clazzText);
 
-        DescriptionRowHandler rowHandler = new DescriptionRowHandler(this, _owlModel, descriptionArray, axioms) {
+        DescriptionRowHandler rowHandler = new DescriptionRowHandler(this, _owlModel, sourceOwlModel, descriptionArray, axioms) {
 
             @Override
             public void savePressed() {
                 String value = clazzText.getText();
                 try {
-                    OWLDataFactory factory = _owlModel.getOWLDataFactory();
+                    OWLDataFactory factory = _sourceOwlModel.getOWLDataFactory();
                     OWLAxiom axiomToAdd;
 
                     OWLClassExpression id = getClazzDescription();
-                    OWLClassExpression equivOrDisjointClazzDesc = _manager.parseDescription(value, _owlModel);
+                    OWLClassExpression equivOrDisjointClazzDesc = _manager.parseDescription(value, _localOwlModel);
                     switch (mode) {
                         case EQUIV_MODE:
                             axiomToAdd = factory.getOWLEquivalentClassesAxiom(id, equivOrDisjointClazzDesc);
@@ -647,18 +657,18 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
                     for (LocatedAxiom axiom: getAxioms()) {
                         if (axiom != null) {
                             OWLAxiom axiomToRemove = axiom.getAxiom();
-                            new ApplyChanges(_project, _ontologyUri, new String[] {OWLUtilities.toString(axiomToAdd)}, new String[] {OWLUtilities.toString(axiomToRemove)}).run();
+                            new ApplyChanges(_project, _sourceOwlModel.getOntologyURI(), new String[] {OWLUtilities.toString(axiomToAdd)}, new String[] {OWLUtilities.toString(axiomToRemove)}).run();
                         } else {
                             String[] axiomsToRemove = new String[0];
                             if (mode == DISJOINT_MODE) {
-                                OWLClassExpression targetClazzDesc = _manager.parseDescription(clazzText.getText(), _owlModel);
+                                OWLClassExpression targetClazzDesc = _manager.parseDescription(clazzText.getText(), _localOwlModel);
                                 axiomsToRemove = new String[] {OWLUtilities.toString(factory.getOWLDisjointClassesAxiom(id, targetClazzDesc), _namespaces)};
                             } else if (mode == EQUIV_MODE) {
                                 OWLClassExpression eqClazzDesc = (OWLClassExpression) clazzText.getData();
                                 axiomsToRemove = new String[] {OWLUtilities.toString(factory.getOWLEquivalentClassesAxiom(id, eqClazzDesc), _namespaces)};
                             }
 
-                            new ApplyChanges(_project, _ontologyUri, new String[] {OWLUtilities.toString(axiomToAdd)}, axiomsToRemove).run();
+                            new ApplyChanges(_project, _sourceOwlModel.getOntologyURI(), new String[] {OWLUtilities.toString(axiomToAdd)}, axiomsToRemove).run();
                         }
                     }
                 } catch (NeOnCoreException k2e) {
@@ -676,9 +686,11 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
                 for (LocatedAxiom a: locatedAxioms) {
                     if (a.isLocal()) {
                         owlAxioms.add(a.getAxiom());
+                    }else{
+                        owlAxioms.add(a.getAxiom());//NICO think about that
                     }
                 }
-                OWLAxiomUtils.triggerRemovePressed(owlAxioms, OWLUtilities.toString(description), _namespaces, _id, _owlModel);
+                OWLAxiomUtils.triggerRemovePressed(owlAxioms, OWLUtilities.toString(description), _namespaces, _id, _sourceOwlModel);
                 refresh();
             }
 

@@ -218,7 +218,7 @@ public class NamespacesArea extends AbstractOWLIdPropertyPage {
         }
 
         // prefix text
-        final StyledText prefixText = new ShortStringText(rowComp, _owlModel).getStyledText();
+        final StyledText prefixText = new ShortStringText(rowComp, _owlModel, _owlModel).getStyledText();//NICO are you sure?
 
         if (passedPrefix != null) {
             prefixText.setText(passedPrefix);
@@ -265,7 +265,7 @@ public class NamespacesArea extends AbstractOWLIdPropertyPage {
         }
 
         // namespace text
-        final StyledText namespaceText = new UriText(rowComp, _owlModel).getStyledText();
+        final StyledText namespaceText = new UriText(rowComp, _owlModel,_owlModel).getStyledText();//NICO are you sure?
         namespaceText.setToolTipText(Messages.NamespacesArea_3);
         widgets.add(namespaceText);
 

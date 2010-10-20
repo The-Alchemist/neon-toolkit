@@ -10,7 +10,6 @@
 
 package com.ontoprise.ontostudio.owl.gui.syntax.manchester;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -127,7 +126,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
             if (!expandedValue.endsWith(IRIUtils.TURTLE_IRI_CLOSE)) {
                 expandedValue += IRIUtils.TURTLE_IRI_CLOSE;
             }
-            return new ManchesterOWLSyntaxEditorParser(owlModel.getOWLDataFactory(), expandedValue).parseIRI().toString();
+            return new ManchesterOWLSyntaxEditorParser(owlModel.getOWLDataFactory(), expandedValue).parseIRI().toString();//NICO problem is maybe here??
 
         } catch (ParserException e) {
             throw new InternalNeOnException(e);
@@ -212,7 +211,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
             } catch (NeOnCoreException e) {
                 return null;
             }
-            return OWLUtilities.toIRI(name);
+            return OWLUtilities.toIRI(uri);//NICO changed
         }
 
         public OWLObjectProperty getOWLObjectProperty(String name) {

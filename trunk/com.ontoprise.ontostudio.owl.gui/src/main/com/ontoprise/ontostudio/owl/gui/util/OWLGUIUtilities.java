@@ -117,7 +117,9 @@ public class OWLGUIUtilities {
     public static final String BUTTON_LABEL_EDIT = Messages.OWLGUIUtilities_2;
     public static final String BUTTON_LABEL_EDIT_STAR = Messages.OWLGUIUtilities_6;
     public static final String BUTTON_LABEL_SAVE = Messages.OWLGUIUtilities_3;
+    public static final String BUTTON_LABEL_SAVE_STAR = Messages.OWLGUIUtilities_7;
     public static final String BUTTON_LABEL_CANCEL = Messages.OWLGUIUtilities_4;
+    public static final String BUTTON_LABEL_CANCEL_STAR = Messages.OWLGUIUtilities_8;
 
     public static final String TEXT_WIDGET_DATA_ID = "text_widget_data_id"; //$NON-NLS-1$
     
@@ -386,7 +388,7 @@ public class OWLGUIUtilities {
             if (o instanceof AbstractOwlTextField) {
                 AbstractOwlTextField textField = (AbstractOwlTextField) o;
                 if (textField != null) {
-                    textField.setProposalAdapterEnabled(enabled);
+                    textField.setProposalAdapterEnabled(enabled);//NICO autocomplete
                 }
             }
         } else {

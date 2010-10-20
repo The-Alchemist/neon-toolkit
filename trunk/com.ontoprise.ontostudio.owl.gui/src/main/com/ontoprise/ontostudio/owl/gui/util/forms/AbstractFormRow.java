@@ -226,6 +226,12 @@ public abstract class AbstractFormRow {
         disableOtherButtons(new Button[] {editButton, removeButton}, _buttonsToDisable);
     }
 
+    protected void editStarPressed(Button editButton, Button removeButton) {
+        editButton.setText(OWLGUIUtilities.BUTTON_LABEL_SAVE_STAR);
+        removeButton.setText(OWLGUIUtilities.BUTTON_LABEL_CANCEL_STAR);
+        editButton.getParent().setBackground(new Color(null, 250, 250, 210));
+        disableOtherButtons(new Button[] {editButton, removeButton}, _buttonsToDisable);
+    }
     /**
      * Disables the buttons of all other rows
      * 

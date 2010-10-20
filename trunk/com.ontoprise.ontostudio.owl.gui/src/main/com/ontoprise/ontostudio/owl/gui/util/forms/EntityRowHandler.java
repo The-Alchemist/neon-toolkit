@@ -25,8 +25,8 @@ public abstract class EntityRowHandler extends AbstractRowHandler {
     private OWLEntity _entity;
     private List<LocatedAxiom> _axioms;
 
-    public EntityRowHandler(IOWLPropertyPage page, OWLModel owlModel, OWLEntity entity, List<LocatedAxiom> axioms) {
-        super(page, owlModel);
+    public EntityRowHandler(IOWLPropertyPage page, OWLModel localOwlModel, OWLModel sourceOwlModel, OWLEntity entity, List<LocatedAxiom> axioms) {
+        super(page, localOwlModel, sourceOwlModel);
         _entity = entity;
         _axioms = axioms;
     }

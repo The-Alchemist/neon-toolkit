@@ -23,8 +23,8 @@ public abstract class DescriptionRowHandler extends AbstractRowHandler {
     private String[] _descriptionArray;
     private List<LocatedAxiom> _axioms;
 
-    public DescriptionRowHandler(IOWLPropertyPage page, OWLModel owlModel, String[] descriptionArray, List<LocatedAxiom> axioms) {
-        super(page, owlModel);
+    public DescriptionRowHandler(IOWLPropertyPage page, OWLModel localOwlModel, OWLModel sourceOwlModel, String[] descriptionArray, List<LocatedAxiom> axioms) {
+        super(page, localOwlModel, sourceOwlModel);
         _descriptionArray = descriptionArray;
         _axioms = axioms;
     }

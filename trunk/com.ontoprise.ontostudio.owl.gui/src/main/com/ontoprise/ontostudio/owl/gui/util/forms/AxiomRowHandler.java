@@ -22,14 +22,15 @@ import com.ontoprise.ontostudio.owl.model.OWLModel;
  * Provides methods that are called when buttons in a FormRow are pressed.
  * 
  * @author werner
+ * @author Nico Stieler
  * 
  */
 public abstract class AxiomRowHandler extends AbstractRowHandler {
 
     private LocatedAxiom _axiom;
 
-    public AxiomRowHandler(IOWLPropertyPage page, OWLModel owlModel, LocatedAxiom axiom) {
-        super(page, owlModel);
+    public AxiomRowHandler(IOWLPropertyPage page, OWLModel localOwlModel, OWLModel sourceOwlModel, LocatedAxiom axiom) {
+        super(page, localOwlModel, sourceOwlModel);
         _axiom = axiom;
     }
 
@@ -52,8 +53,18 @@ public abstract class AxiomRowHandler extends AbstractRowHandler {
      */
     public void remove() throws NeOnCoreException {
         if (_axiom.isLocal()) {
-            _owlModel.removeAxiom(_axiom.getAxiom());
+            _sourceOwlModel.removeAxiom(_axiom.getAxiom());
+        }else{
+            removeImported();
         }
+    }
+
+    /**
+     * Removes the axiom stored for this row from the source ontology in case its imported.
+     * @throws NeOnCoreException 
+     */
+    private void removeImported() throws NeOnCoreException {
+        _sourceOwlModel.removeAxiom(_axiom.getAxiom());
     }
 
     public OWLAxiom getAxiom() {

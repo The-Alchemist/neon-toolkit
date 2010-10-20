@@ -27,16 +27,32 @@ import com.ontoprise.ontostudio.owl.model.OWLModel;
 
 public class ManchesterSyntaxProposalProvider implements IContentProposalProvider {
 
-    private OWLModel _owlModel;
+    private OWLModel _localOwlModel;
+    private OWLModel _sourceOwlModel;
 
     public void setOwlModel(OWLModel owlModel) {
-        _owlModel = owlModel;
+        _localOwlModel = owlModel;
+        _sourceOwlModel = owlModel;
+    }
+
+    /**
+     * @param localOwlModel - the OwlModel of the current ontology
+     */
+    public void setLocalOwlModel(OWLModel localOwlModel) {
+        _localOwlModel = localOwlModel;
+    }
+    /**
+     * @param sourceOwlModel - the OwlModel of the source ontology of the axiom
+     */
+    public void setSorceOwlModel(OWLModel sourceOwlModel) {
+        _sourceOwlModel = sourceOwlModel;
     }
 
     public IContentProposal[] getProposals(String contents, int position) {
+        
         List<IContentProposal> proposals = new ArrayList<IContentProposal>();
 
-        ManchesterSyntaxContextReader contextReader = new ManchesterSyntaxContextReader(contents.substring(0, position), _owlModel);
+        ManchesterSyntaxContextReader contextReader = new ManchesterSyntaxContextReader(contents.substring(0, position), _localOwlModel);//NICO are you sure?
         String current = contextReader.getLastToken();
         int result = contextReader.getResult();
 
@@ -96,22 +112,22 @@ public class ManchesterSyntaxProposalProvider implements IContentProposalProvide
     }
 
     private List<IContentProposal> addClasses(String currentToken, int position) {
-        ClazzProposalProvider provider = new ClazzProposalProvider(_owlModel);
+        ClazzProposalProvider provider = new ClazzProposalProvider(_localOwlModel,_sourceOwlModel);//NICO are you sure?
         return Arrays.asList(provider.getProposals(currentToken, position));
     }
 
     private List<IContentProposal> addProperties(String currentToken, int position) {
-        AbstractOwlProposalProvider provider = new PropertyProposalProvider(_owlModel, PropertyProposalProvider.DATA_PROPERTY_STYLE | PropertyProposalProvider.OBJECT_PROPERTY_STYLE);
+        AbstractOwlProposalProvider provider = new PropertyProposalProvider(_localOwlModel,_sourceOwlModel, PropertyProposalProvider.DATA_PROPERTY_STYLE | PropertyProposalProvider.OBJECT_PROPERTY_STYLE);//NICO are you sure?
         return Arrays.asList(provider.getProposals(currentToken, position));
     }
 
     private List<IContentProposal> addDatatypes(String currentToken, int position) {
-        DatatypeProposalProvider provider = new DatatypeProposalProvider(_owlModel);
+        DatatypeProposalProvider provider = new DatatypeProposalProvider(_localOwlModel,_sourceOwlModel);//NICO are you sure?
         return Arrays.asList(provider.getProposals(currentToken, position));
     }
 
     private List<IContentProposal> addIndividuals(String currentToken, int position) {
-        IndividualProposalProvider provider = new IndividualProposalProvider(_owlModel);
+        IndividualProposalProvider provider = new IndividualProposalProvider(_localOwlModel,_sourceOwlModel);//NICO are you sure?
         return Arrays.asList(provider.getProposals(currentToken, position));
     }
 

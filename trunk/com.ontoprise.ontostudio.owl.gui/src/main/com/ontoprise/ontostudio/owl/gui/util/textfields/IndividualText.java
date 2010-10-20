@@ -32,14 +32,16 @@ public class IndividualText extends AbstractOwlTextField {
     public static final int WIDTH = 200;
 
     /**
-	 * 
-	 */
+     * 
+     */
     public IndividualText(Composite parent, OWLModel owlModel) {
-        this(parent, owlModel, null);
+        this(parent,owlModel,owlModel);
     }
-
-    public IndividualText(Composite parent, OWLModel owlModel, String entityName) {
-        super(parent, owlModel, entityName);
+    /**
+     * 
+     */
+    public IndividualText(Composite parent, OWLModel localOwlModel, OWLModel sourceOwlModel) {
+        super(parent, localOwlModel, sourceOwlModel);
 
         GridData data = new GridData();
         data.widthHint = WIDTH;
@@ -47,6 +49,6 @@ public class IndividualText extends AbstractOwlTextField {
         data.horizontalAlignment = SWT.FILL;
         data.grabExcessHorizontalSpace = true;
 
-        createTextWidget(parent, data, new IndividualProposalProvider(owlModel), false, true);
+        createTextWidget(parent, data, new IndividualProposalProvider(localOwlModel, sourceOwlModel), false, true);
     }
 }

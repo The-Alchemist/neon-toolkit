@@ -32,13 +32,16 @@ public class DatatypeAndIndividualText extends AbstractOwlTextField {
     public static final int WIDTH = 200;
 
     /**
-	 * 
-	 */
+     * 
+     */
     public DatatypeAndIndividualText(Composite parent, OWLModel owlModel) {
-        this(parent, owlModel, null);
+        this(parent,owlModel,owlModel);
     }
-    public DatatypeAndIndividualText(Composite parent, OWLModel owlModel, String entityName) {
-        super(parent, owlModel, entityName);
+    /**
+     * 
+     */
+    public DatatypeAndIndividualText(Composite parent, OWLModel localOwlModel, OWLModel sourceOwlModel) {
+        super(parent, localOwlModel, sourceOwlModel);
 
         GridData data = new GridData();
         data.widthHint = WIDTH;
@@ -46,6 +49,6 @@ public class DatatypeAndIndividualText extends AbstractOwlTextField {
         data.horizontalAlignment = SWT.FILL;
         data.grabExcessHorizontalSpace = true;
 
-        createTextWidget(parent, data, new DatatypeAndIndividualProposalProvider(owlModel), false, true);
+        createTextWidget(parent, data, new DatatypeAndIndividualProposalProvider(localOwlModel, sourceOwlModel), false, true);
     }
 }

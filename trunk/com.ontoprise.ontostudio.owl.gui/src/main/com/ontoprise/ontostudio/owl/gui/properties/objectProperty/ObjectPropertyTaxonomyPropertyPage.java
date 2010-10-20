@@ -57,6 +57,8 @@ import com.ontoprise.ontostudio.owl.gui.util.forms.EmptyFormRow;
 import com.ontoprise.ontostudio.owl.gui.util.forms.EntityRowHandler;
 import com.ontoprise.ontostudio.owl.gui.util.forms.FormRow;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.PropertyText;
+import com.ontoprise.ontostudio.owl.model.OWLModel;
+import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.ApplyChanges;
@@ -435,7 +437,13 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
         boolean imported = !sourceOnto.equals(_ontologyUri);
         Composite parent = _equivPropertyComposite;
         FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, sourceOnto,_owlModel.getProjectId(),_id);
-        
+
+        OWLModel sourceOwlModel;
+        if(imported){
+            sourceOwlModel = OWLModelFactory.getOWLModel(sourceOnto, _project);
+        }else{
+            sourceOwlModel =_owlModel;
+        }
         String name = null;
         if(axioms != null && !axioms.isEmpty()){
             LocatedAxiom locatedAxiom = axioms.get(axioms.size()-1);
@@ -448,7 +456,7 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                 }
             
         }
-        PropertyText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.OBJECT_PROPERTY,name);//NICO property
+        PropertyText propertyText = new PropertyText(row.getParent(), _owlModel, sourceOwlModel, PropertyText.OBJECT_PROPERTY);
         final StyledText propertyTextWidget = propertyText.getStyledText();
         propertyTextWidget.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, propertyText);
         final String[] array = getArrayFromDescription(property);
@@ -457,16 +465,16 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
         OWLGUIUtilities.enable(propertyTextWidget, false);
         row.addWidget(propertyTextWidget);
 
-        EntityRowHandler rowHandler = new EntityRowHandler(this, _owlModel, (OWLEntity) property, axioms) {
+        EntityRowHandler rowHandler = new EntityRowHandler(this, _owlModel, sourceOwlModel, (OWLEntity) property, axioms) {
 
             @Override
             public void savePressed() {
                 // save modified entries
                 String value = propertyTextWidget.getText();
                 try {
-                    OWLObjectPropertyExpression objectProp = _manager.parseObjectProperty(value, _owlModel);
+                    OWLObjectPropertyExpression objectProp = _manager.parseObjectProperty(value, _localOwlModel);//NICO are you sure?
                     removePressed();
-                    new CreateEquivalentObjectProperty(_project, _ontologyUri, _id, OWLUtilities.toString(objectProp)).run();
+                    new CreateEquivalentObjectProperty(_project, _sourceOwlModel.getOntologyURI(), _id, OWLUtilities.toString(objectProp)).run();//NICO are you sure?
                     initEquivSection(false);
                     layoutSections();
                     _form.reflow(true);
@@ -490,9 +498,11 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                 for (LocatedAxiom a: locatedAxioms) {
                     if (a.isLocal()) {
                         owlAxioms.add(a.getAxiom());
+                    }else{
+                        owlAxioms.add(a.getAxiom());//NICO think about that
                     }
                 }
-                OWLAxiomUtils.triggerRemovePressed(owlAxioms, getEntity(), _namespaces, _id, _owlModel, WizardConstants.ADD_DEPENDENT_MODE);
+                OWLAxiomUtils.triggerRemovePressed(owlAxioms, getEntity(), _namespaces, _id, _sourceOwlModel, WizardConstants.ADD_DEPENDENT_MODE);//NICO are you sure?
                 refresh();
             }
 
@@ -534,7 +544,14 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
         } else {
             parent = _inversePropertyComp;
         }
-        final FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri,_owlModel.getProjectId(),_id);
+
+        OWLModel sourceOwlModel;
+        if(imported){
+            sourceOwlModel = OWLModelFactory.getOWLModel(ontologyUri, _project);
+        }else{
+            sourceOwlModel =_owlModel;
+        }
+        final FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri,sourceOwlModel.getProjectId(),_id);
         String name = null;
         if(locatedAxiom != null && locatedAxiom.getAxiom() != null){
             for(OWLEntity e : locatedAxiom.getAxiom().getSignature()){
@@ -551,7 +568,7 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                 }
             }
         }
-        final StyledText text = new PropertyText(row.getParent(), _owlModel, PropertyText.OBJECT_PROPERTY,name).getStyledText();
+        final StyledText text = new PropertyText(row.getParent(), _owlModel, sourceOwlModel, PropertyText.OBJECT_PROPERTY).getStyledText();
         final AtomicReference<String[]> array = new AtomicReference<String[]>();
         switch (mode) {
             case SUPER:
@@ -565,7 +582,7 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                 break;
 
             case CHAIN:
-                array.set(new ManchesterSyntaxVisitor(_owlModel).visitSubObjectProperyChain(propertyChain));
+                array.set(new ManchesterSyntaxVisitor(sourceOwlModel).visitSubObjectProperyChain(propertyChain));
                 text.setText(OWLGUIUtilities.getEntityLabel(array.get()));
                 OWLGUIUtilities.enable(text, false);
                 row.addWidget(text);
@@ -575,7 +592,7 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                 throw new IllegalStateException();
            }
         
-        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, new LocatedAxiom(axiom, true)) {
+        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, sourceOwlModel, new LocatedAxiom(axiom, true)) {
 
             @Override
             public void savePressed() {
@@ -586,34 +603,34 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                     String uri = ""; //$NON-NLS-1$
                     remove();
                     if (mode == SUPER) {
-                        objectProp = _manager.parseObjectProperty(value, _owlModel);
-                        new CreateObjectProperty(_project, _ontologyUri, _id, OWLUtilities.toString(objectProp)).run();
+                        objectProp = _manager.parseObjectProperty(value, _localOwlModel);//NICO are you sure?
+                        new CreateObjectProperty(_project, _sourceOwlModel.getOntologyURI(), _id, OWLUtilities.toString(objectProp)).run();//NICO are you sure?
                         initSubSection(false);
                         initSuperSection(true);
                         
                     } else if (mode == SUB) {
-                        objectProp = _manager.parseObjectProperty(value, _owlModel);
-                        new CreateObjectProperty(_project, _ontologyUri, OWLUtilities.toString(objectProp), _id).run();
+                        objectProp = _manager.parseObjectProperty(value, _localOwlModel);//NICO are you sure?
+                        new CreateObjectProperty(_project, _sourceOwlModel.getOntologyURI(), OWLUtilities.toString(objectProp), _id).run();//NICO are you sure?
                         initSuperSection(false);
                         initSubSection(true);
                         
                     } else if (mode == CHAIN) {
-                        List<OWLObjectPropertyExpression> objectPropChain = _manager.parseObjectPropertyChain(value, _owlModel);
-                        array.set(new ManchesterSyntaxVisitor(_owlModel).visitSubObjectProperyChain(objectPropChain));
+                        List<OWLObjectPropertyExpression> objectPropChain = _manager.parseObjectPropertyChain(value, _localOwlModel);//NICO are you sure?
+                        array.set(new ManchesterSyntaxVisitor(_sourceOwlModel).visitSubObjectProperyChain(objectPropChain));//NICO are you sure? are you sure? visitor
                         text.setText(OWLGUIUtilities.getEntityLabel(array.get()));
                         OWLGUIUtilities.enable(text, false);
                         row.addWidget(text);
-                        new CreateSubPropertyChainOf(_project, _ontologyUri, OWLUtilities.toString(objectPropChain), _id).run();
+                        new CreateSubPropertyChainOf(_project, _sourceOwlModel.getOntologyURI(), OWLUtilities.toString(objectPropChain), _id).run();//NICO are you sure?
                         initSubPropertyChainSection(true);
                         
                     } else if (mode == EQUIV) {
-                        objectProp = _manager.parseObjectProperty(value, _owlModel);
+                        objectProp = _manager.parseObjectProperty(value, _localOwlModel);//NICO are you sure?
                         if(objectProp instanceof OWLObjectProperty) {
                             OWLObjectProperty op =(OWLObjectProperty)objectProp;
                             uri = OWLUtilities.toString(op);
                         }
                         if (!uri.equals(_id)) { // also true if uri is still ""
-                            new CreateEquivalentObjectProperty(_project, _ontologyUri, _id, OWLUtilities.toString(objectProp)).run();
+                            new CreateEquivalentObjectProperty(_project, _sourceOwlModel.getOntologyURI(), _id, OWLUtilities.toString(objectProp)).run();//NICO are you sure?
                             initEquivSection(true);
                         } else {
                             String modeString = Messages.ObjectPropertyTaxonomyPropertyPage_0;
@@ -621,13 +638,13 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                         }
                         
                     } else { // inverse
-                        objectProp = _manager.parseObjectProperty(value, _owlModel);
+                        objectProp = _manager.parseObjectProperty(value, _localOwlModel);//NICO are you sure?
                         if(objectProp instanceof OWLObjectProperty) {
                             OWLObjectProperty op =(OWLObjectProperty)objectProp;
                             uri = OWLUtilities.toString(op);
                         }
                         if (!uri.equals(_id)) { // also true if uri is still ""
-                            new CreateInverseObjectProperty(_project, _ontologyUri, _id, OWLUtilities.toString(objectProp)).run();
+                            new CreateInverseObjectProperty(_project, _sourceOwlModel.getOntologyURI(), _id, OWLUtilities.toString(objectProp)).run();//NICO are you sure?
                             initInverseSection(true);
                         } else {
                             String modeString = Messages.ObjectPropertyTaxonomyPropertyPage_3;
@@ -658,14 +675,14 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                 if (mode == INVERSE) {
                     try {
                         // have to remove in both directions
-                        OWLNamespaces ns = _owlModel.getNamespaces();
-                        OWLDataFactory factory = _owlModel.getOWLDataFactory();
+                        OWLNamespaces ns = _sourceOwlModel.getNamespaces();//NICO are you sure? are you sure?
+                        OWLDataFactory factory = _sourceOwlModel.getOWLDataFactory();//NICO are you sure? are you sure?
 
                         OWLAxiom changingAxiom = factory.getOWLInverseObjectPropertiesAxiom(objPropExpr, OWLUtilities.objectProperty(_id, ns, factory));
-                        new ApplyChanges(_project, _ontologyUri, new String[0], new String[] {OWLUtilities.toString(changingAxiom, ns)}).run();
+                        new ApplyChanges(_project, _sourceOwlModel.getOntologyURI(), new String[0], new String[] {OWLUtilities.toString(changingAxiom, ns)}).run();//NICO are you sure?
 
                         OWLAxiom changingAxiom2 = factory.getOWLInverseObjectPropertiesAxiom(OWLUtilities.objectProperty(_id, ns, factory), objPropExpr);
-                        new ApplyChanges(_project, _ontologyUri, new String[0], new String[] {OWLUtilities.toString(changingAxiom2, ns)}).run();
+                        new ApplyChanges(_project, _sourceOwlModel.getOntologyURI(), new String[0], new String[] {OWLUtilities.toString(changingAxiom2, ns)}).run();//NICO are you sure?
                     } catch (CommandException ce) {
                         handleException(ce, Messages.ObjectPropertyPropertyPage2_45, text.getShell());
                     }
@@ -707,11 +724,11 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
         }
         final EmptyFormRow row = new EmptyFormRow(_toolkit, parent, NUM_COLS);
 
-        final StyledText text = new PropertyText(row.getParent(), _owlModel, PropertyText.OBJECT_PROPERTY,null).getStyledText();
+        final StyledText text = new PropertyText(row.getParent(), _owlModel, _owlModel, PropertyText.OBJECT_PROPERTY).getStyledText();
         row.addWidget(text);
         addSimpleWidget(text);
         
-        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, null) {
+        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, _owlModel, null) {
 
             @Override
             public void savePressed() {
@@ -727,33 +744,33 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                     String uri = "";
                     switch (mode) {
                         case SUPER:
-                            objectProp = _manager.parseObjectProperty(value, _owlModel);
-                            new CreateObjectProperty(_project, _ontologyUri, _id, OWLUtilities.toString(objectProp)).run();
+                            objectProp = _manager.parseObjectProperty(value, _localOwlModel);//NICO are you sure?
+                            new CreateObjectProperty(_project, _sourceOwlModel.getOntologyURI(), _id, OWLUtilities.toString(objectProp)).run();//NICO are you sure?
                             initSubSection(false);
                             initSuperSection(true);
                             break;
                             
                         case SUB:
-                            objectProp = _manager.parseObjectProperty(value, _owlModel);
-                            new CreateObjectProperty(_project, _ontologyUri, OWLUtilities.toString(objectProp), _id).run();
+                            objectProp = _manager.parseObjectProperty(value, _localOwlModel);//NICO are you sure?
+                            new CreateObjectProperty(_project, _sourceOwlModel.getOntologyURI(), OWLUtilities.toString(objectProp), _id).run();//NICO are you sure?
                             initSuperSection(false);
                             initSubSection(true);
                             break;
                             
                         case CHAIN:
-                            List<OWLObjectPropertyExpression> objectPropChain = _manager.parseObjectPropertyChain(value, _owlModel);
-                            new CreateSubPropertyChainOf(_project, _ontologyUri, OWLUtilities.toString(objectPropChain), _id).run();
+                            List<OWLObjectPropertyExpression> objectPropChain = _manager.parseObjectPropertyChain(value, _localOwlModel);//NICO are you sure?
+                            new CreateSubPropertyChainOf(_project, _sourceOwlModel.getOntologyURI(), OWLUtilities.toString(objectPropChain), _id).run();//NICO are you sure?
                             initSubPropertyChainSection(false);
                             break;
                             
                         case EQUIV:
-                            objectProp = _manager.parseObjectProperty(value, _owlModel);
+                            objectProp = _manager.parseObjectProperty(value, _localOwlModel);//NICO are you sure?
                             if(objectProp instanceof OWLObjectProperty) {
                                 OWLObjectProperty op =(OWLObjectProperty)objectProp;
                                 uri = OWLUtilities.toString(op);
                             }
                             if (!uri.equals(_id)) { // also true if uri is still ""
-                                new CreateEquivalentObjectProperty(_project, _ontologyUri, _id, OWLUtilities.toString(objectProp)).run();
+                                new CreateEquivalentObjectProperty(_project, _sourceOwlModel.getOntologyURI(), _id, OWLUtilities.toString(objectProp)).run();//NICO are you sure?
                                 initEquivSection(true);
                             } else {
                                 String modeString = Messages.ObjectPropertyTaxonomyPropertyPage_0;
@@ -762,13 +779,13 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                             break;
                             
                         case INVERSE:
-                            objectProp = _manager.parseObjectProperty(value, _owlModel);
+                            objectProp = _manager.parseObjectProperty(value, _localOwlModel);//NICO are you sure?
                             if(objectProp instanceof OWLObjectProperty) {
                                 OWLObjectProperty op =(OWLObjectProperty)objectProp;
                                 uri = OWLUtilities.toString(op);
                             }
                             if (!uri.equals(_id)) { // also true if uri is still ""
-                                new CreateInverseObjectProperty(_project, _ontologyUri, _id, OWLUtilities.toString(objectProp)).run();
+                                new CreateInverseObjectProperty(_project, _sourceOwlModel.getOntologyURI(), _id, OWLUtilities.toString(objectProp)).run();//NICO are you sure?
                                 initInverseSection(true);
                             } else {
                                 String modeString = Messages.ObjectPropertyTaxonomyPropertyPage_3;

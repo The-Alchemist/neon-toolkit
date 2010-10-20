@@ -25,7 +25,7 @@ public abstract class OntologyAnnotationRowHandler extends AbstractRowHandler {
     private String _datatype;
 
     public OntologyAnnotationRowHandler(IOWLPropertyPage page, OWLModel owlModel, String prop, String annotationValueText, String language, String datatype) {
-        super(page, owlModel);
+        super(page, owlModel, owlModel);
         _annotationValueText = annotationValueText;
         _annotationPropertyText = prop;
         _language = language;
@@ -47,7 +47,7 @@ public abstract class OntologyAnnotationRowHandler extends AbstractRowHandler {
     }
     
     protected void removeOldAnnotation() throws NeOnCoreException, CommandException {
-        new RemoveOntologyAnnotation(_owlModel.getProjectId(), _owlModel.getOntologyURI(), _annotationPropertyText, _annotationValueText, _language, _datatype).run();
+        new RemoveOntologyAnnotation(_sourceOwlModel.getProjectId(), _sourceOwlModel.getOntologyURI(), _annotationPropertyText, _annotationValueText, _language, _datatype).run();//NICO are you sure?
     }
 
 }
