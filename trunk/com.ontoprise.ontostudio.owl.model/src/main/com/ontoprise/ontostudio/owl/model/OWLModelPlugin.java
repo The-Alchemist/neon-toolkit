@@ -29,6 +29,8 @@ import org.eclipse.ui.themes.IThemeManager;
 import org.osgi.framework.BundleContext;
 
 /**
+ * 
+ * @author Nico Stieler
  * This is the plugin activator for the gui plugin. this plugin provides various extension points.
  */
 public class OWLModelPlugin extends AbstractUIPlugin {
@@ -41,6 +43,8 @@ public class OWLModelPlugin extends AbstractUIPlugin {
     public static final String SHOW_AXIOMS = OWLModelPlugin.class.getName() + ".owlShowAxiomsInGui"; //$NON-NLS-1$
     public static final String USE_TOOLBAR = OWLModelPlugin.class.getName() + ".owlUseToolbarForComplexClasses"; //$NON-NLS-1$
     public static final String SHOW_ACTUAL_ONTOLOGY = OWLModelPlugin.class.getName() + ".owlShowActualOntologyInIdentifier"; //$NON-NLS-1$ 
+    public static final String EDIT_IMPORTED_AXIOMS_WITHOUT_ASKING = OWLModelPlugin.class.getName() + ".owlEditImportedWithoutAsking"; //$NON-NLS-1$
+    public static final String REMOVE_IMPORTED_AXIOMS_WITHOUT_ASKING = OWLModelPlugin.class.getName() + ".owlRemoveImportedWithoutAsking"; //$NON-NLS-1$ 
 
     public static final String LANGUAGE_PREFERENCE = OWLModelPlugin.class.getName() + ".language"; //$NON-NLS-1$
     public static final String NAMESPACE_PREFERENCE = OWLModelPlugin.class.getName() + ".namespace"; //$NON-NLS-1$

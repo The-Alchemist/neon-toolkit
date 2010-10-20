@@ -33,7 +33,7 @@ import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 
 /**
- * @author werner
+ * @author Nico Stieler
  * 
  */
 public class RenameOwlEntityOntologySelectionDialog extends Dialog {

@@ -424,12 +424,15 @@ public class Messages extends NLS {
     public static String RenameOwlEntityOntologySelectionDialog_6;
     public static String RenameOwlEntityOntologySelectionDialog_7;
     public static String RenameOwlEntityOntologySelectionDialog_8;
+    public static String OWLPreferencePage_Title_0;
+    public static String OWLPreferencePage_Title_1;
+    public static String OWLPreferencePage_Title_2;
 	public static String OWLPreferencePage_0;
-	public static String OWLPreferencePage_2;
-	public static String OWLPreferencePage_3;
 	public static String OWLPreferencePage_4;
     public static String OWLPreferencePage_5;
     public static String OWLPreferencePage_6; 
+    public static String OWLPreferencePage_7; 
+    public static String OWLPreferencePage_8; 
 	public static String DeleteIndividualProcessor_4;
     public static String NewOntologyProjectWizard_1;
     public static String NewOntologyProjectWizard_2;
