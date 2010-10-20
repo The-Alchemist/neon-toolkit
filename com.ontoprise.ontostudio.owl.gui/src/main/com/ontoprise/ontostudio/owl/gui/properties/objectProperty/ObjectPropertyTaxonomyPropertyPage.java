@@ -447,18 +447,18 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
         }else{
             sourceOwlModel =_owlModel;
         }
-        String name = null;
-        if(axioms != null && !axioms.isEmpty()){
-            LocatedAxiom locatedAxiom = axioms.get(axioms.size()-1);
-            if(locatedAxiom != null && locatedAxiom.getAxiom() != null)
-                for(OWLEntity e : locatedAxiom.getAxiom().getSignature()){
-                    if(!e.toStringID().equals(_id)){
-                        name = e.getIRI().toString();
-                        break;
-                    }
-                }
-            
-        }
+//        String name = null; //NICO remove me
+//        if(axioms != null && !axioms.isEmpty()){
+//            LocatedAxiom locatedAxiom = axioms.get(axioms.size()-1);
+//            if(locatedAxiom != null && locatedAxiom.getAxiom() != null)
+//                for(OWLEntity e : locatedAxiom.getAxiom().getSignature()){
+//                    if(!e.toStringID().equals(_id)){
+//                        name = e.getIRI().toString();
+//                        break;
+//                    }
+//                }
+//            
+//        }
         PropertyText propertyText = new PropertyText(row.getParent(), _owlModel, sourceOwlModel, PropertyText.OBJECT_PROPERTY);
         final StyledText propertyTextWidget = propertyText.getStyledText();
         propertyTextWidget.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, propertyText);
@@ -476,7 +476,7 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                 String value = propertyTextWidget.getText();
                 try {
                     OWLObjectPropertyExpression objectProp = _manager.parseObjectProperty(value, _localOwlModel);//NICO are you sure?
-                    removePressed();
+                    remove();
                     new CreateEquivalentObjectProperty(_project, _sourceOwlModel.getOntologyURI(), _id, OWLUtilities.toString(objectProp)).run();//NICO are you sure?
                     initEquivSection(false);
                     layoutSections();
@@ -496,6 +496,10 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
 
             @Override
             public void removePressed() throws NeOnCoreException {
+                remove();
+                refresh();
+            }
+            public void remove() throws NeOnCoreException {
                 List<LocatedAxiom> locatedAxioms = getAxioms();
                 List<OWLAxiom> owlAxioms = new ArrayList<OWLAxiom>();
                 for (LocatedAxiom a: locatedAxioms) {
@@ -506,9 +510,7 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                     }
                 }
                 OWLAxiomUtils.triggerRemovePressed(owlAxioms, getEntity(), _namespaces, _id, _sourceOwlModel, WizardConstants.ADD_DEPENDENT_MODE);//NICO are you sure?
-                refresh();
             }
-
             @Override
             public void addPressed() {
                 // nothing to do
@@ -555,22 +557,22 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
             sourceOwlModel =_owlModel;
         }
         final FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri,sourceOwlModel.getProjectId(),_id);
-        String name = null;
-        if(locatedAxiom != null && locatedAxiom.getAxiom() != null){
-            for(OWLEntity e : locatedAxiom.getAxiom().getSignature()){
-                if(!e.toStringID().equals(_id)){
-                    name = e.getIRI().toString();
-                    break;
-                }
-            }
-            //special case: both the object and the subject are the same object
-            for(OWLEntity e : locatedAxiom.getAxiom().getSignature()){
-                if(e.toStringID().equals(_id)){
-                    name = e.getIRI().toString();
-                    break;
-                }
-            }
-        }
+//        String name = null; //NICO remove me
+//        if(locatedAxiom != null && locatedAxiom.getAxiom() != null){
+//            for(OWLEntity e : locatedAxiom.getAxiom().getSignature()){
+//                if(!e.toStringID().equals(_id)){
+//                    name = e.getIRI().toString();
+//                    break;
+//                }
+//            }
+//            //special case: both the object and the subject are the same object
+//            for(OWLEntity e : locatedAxiom.getAxiom().getSignature()){
+//                if(e.toStringID().equals(_id)){
+//                    name = e.getIRI().toString();
+//                    break;
+//                }
+//            }
+//        }
         final StyledText text = new PropertyText(row.getParent(), _owlModel, sourceOwlModel, PropertyText.OBJECT_PROPERTY).getStyledText();
         final AtomicReference<String[]> array = new AtomicReference<String[]>();
         switch (mode) {

@@ -424,8 +424,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                     if (a.isLocal()) {
                         owlAxioms.add(a.getAxiom());
                     }else{
-                        owlAxioms.add(a.getAxiom());
-                        //NICO think about that
+                        owlAxioms.add(a.getAxiom());//NICO think about that
                     }
                 }
                 OWLAxiomUtils.triggerRemovePressed(owlAxioms, getEntity(), _namespaces, _id, _sourceOwlModel, WizardConstants.ADD_DEPENDENT_MODE);//NICO are you sure?
