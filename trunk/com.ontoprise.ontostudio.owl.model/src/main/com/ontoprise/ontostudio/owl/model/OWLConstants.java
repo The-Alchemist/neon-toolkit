@@ -19,6 +19,7 @@ import java.util.Set;
  * @author krekeler
  *
  */
+@SuppressWarnings("nls")
 public interface OWLConstants {
     public static final String XSD_DATE_TIME_STAMP = OWLNamespaces.XSD_NS + "dateTimeStamp";
     public static final String XSD_DATE_TIME = OWLNamespaces.XSD_NS + "dateTime";
@@ -97,6 +98,7 @@ public interface OWLConstants {
     public static final String OWL_EXTENSION = ".owl"; //$NON-NLS-1$
     public static final String OWL2_EXTENSION = ".owl2"; //$NON-NLS-1$
     public static final String RDF_EXTENSION = ".rdf"; //$NON-NLS-1$
+    public static final String RDFS_EXTENSION = ".rdfs"; //$NON-NLS-1$
     public static final String OWLXML_EXTENSION = ".owlx"; //$NON-NLS-1$
     public static final String MANCHESTER_SYNTAX_EXTENSION = ".omn"; //$NON-NLS-1$
     public static final String FUNCTIONAL_SYNTAX_EXTENSION = ".owl2"; //$NON-NLS-1$

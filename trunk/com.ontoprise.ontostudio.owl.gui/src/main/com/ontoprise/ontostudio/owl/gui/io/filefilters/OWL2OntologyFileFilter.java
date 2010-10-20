@@ -24,7 +24,10 @@ import com.ontoprise.ontostudio.owl.model.OWLConstants;
  */
 public class OWL2OntologyFileFilter extends AbstractOWLFileFilter {
     
-    private static final String WILDCARD_EXTENSIONS = "*"+OWLConstants.OWL_EXTENSION+";*"+OWLConstants.RDF_EXTENSION; //$NON-NLS-1$ //$NON-NLS-2$ 
+    private static final String WILDCARD_EXTENSIONS = 
+    	        "*" + OWLConstants.OWL_EXTENSION //$NON-NLS-1$ 
+            + "; *" + OWLConstants.RDF_EXTENSION //$NON-NLS-1$  
+            + "; *" + OWLConstants.RDFS_EXTENSION; //$NON-NLS-1$  
 
     /*
      * (non-Javadoc)
@@ -40,7 +43,8 @@ public class OWL2OntologyFileFilter extends AbstractOWLFileFilter {
     public String[] getExtensions() {
         return new String[] {
                 OWLConstants.OWL_EXTENSION,
-                OWLConstants.RDF_EXTENSION
+                OWLConstants.RDF_EXTENSION,
+                OWLConstants.RDFS_EXTENSION
             };
     }
     
