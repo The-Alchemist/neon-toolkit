@@ -59,7 +59,10 @@ import com.ontoprise.ontostudio.owl.model.commands.namespaces.GetRegisteredPrefi
 import com.ontoprise.ontostudio.owl.model.commands.namespaces.RemoveNamespace;
 import com.ontoprise.ontostudio.owl.model.commands.namespaces.SetDefaultNamespace;
 import com.ontoprise.ontostudio.owl.model.commands.namespaces.SetNamespacePrefix;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class NamespacesArea extends AbstractOWLIdPropertyPage {
 
     private Section _namespacesSection;

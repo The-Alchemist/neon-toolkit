@@ -76,7 +76,10 @@ import com.ontoprise.ontostudio.owl.model.commands.individual.GetEquivalentIndiv
 import com.ontoprise.ontostudio.owl.model.util.OWLAxiomUtils;
 import com.ontoprise.ontostudio.owl.model.util.wizard.WizardConstants;
 
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
 
     /*

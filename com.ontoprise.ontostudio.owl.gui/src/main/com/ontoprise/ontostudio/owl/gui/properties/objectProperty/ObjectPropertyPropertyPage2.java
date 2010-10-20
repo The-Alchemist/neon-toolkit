@@ -68,7 +68,10 @@ import com.ontoprise.ontostudio.owl.model.commands.objectproperties.CreateObject
 import com.ontoprise.ontostudio.owl.model.commands.objectproperties.GetObjectPropertyDomains;
 import com.ontoprise.ontostudio.owl.model.commands.objectproperties.GetObjectPropertyRanges;
 
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class ObjectPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 
     private static final int DOMAIN = 1;

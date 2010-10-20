@@ -21,6 +21,7 @@ import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 
 /**
  * @author mer
+ * @author Nico Stieler
  * 
  */
 public abstract class AbstractOwlProposalProvider implements IContentProposalProvider {

@@ -21,7 +21,10 @@ import org.semanticweb.owlapi.model.OWLClass;
 
 import com.ontoprise.ontostudio.owl.gui.control.AlphabeticalProposalComparator;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class ClazzProposalProvider extends AbstractOwlProposalProvider {
 
     public ClazzProposalProvider(OWLModel owlModel) {

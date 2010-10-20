@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author mer
+ * @author Nico Stieler
  * 
  *         This class represents a StyledText field for an arbitrary string, e.g. dataproperty or annotation property value.
  * 

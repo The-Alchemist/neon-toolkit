@@ -28,7 +28,7 @@ import com.ontoprise.ontostudio.owl.model.OntoStudioOWLConstants;
 
 /**
  * @author mer
- * 
+ * @author Nico Stieler
  */
 public abstract class OwlURIProposal implements IContentProposal {
 

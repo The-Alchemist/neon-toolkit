@@ -17,8 +17,6 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 
-import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
-import com.ontoprise.ontostudio.search.owl.match.OwlSearchMatch;
 
 /* 
  * Created on 15.04.2005
@@ -31,6 +29,9 @@ import com.ontoprise.ontostudio.search.owl.match.OwlSearchMatch;
  * 
  * @author Dirk Wenke
  * 
+ */
+/**
+ * @author Nico Stieler
  */
 public class SearchTableContentProvider implements IStructuredContentProvider {
 	

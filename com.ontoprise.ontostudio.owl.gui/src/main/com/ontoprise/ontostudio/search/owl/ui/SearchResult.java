@@ -10,9 +10,6 @@
 
 package com.ontoprise.ontostudio.search.owl.ui;
 
-import java.util.Iterator;
-import java.util.List;
-
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.search.ui.ISearchResult;

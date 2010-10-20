@@ -88,7 +88,10 @@ import com.ontoprise.ontostudio.owl.model.commands.individual.CreateObjectProper
 import com.ontoprise.ontostudio.owl.model.commands.individual.GetDataPropertyMemberHits;
 import com.ontoprise.ontostudio.owl.model.commands.individual.GetObjectPropertyMemberHits;
 
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 
     /*

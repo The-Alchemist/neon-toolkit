@@ -17,7 +17,6 @@ import org.neontoolkit.search.Messages;
 import org.neontoolkit.search.ui.SearchMatch;
 
 import com.ontoprise.ontostudio.search.owl.match.ITreeObject;
-import com.ontoprise.ontostudio.search.owl.match.ITreeParent;
 import com.ontoprise.ontostudio.search.owl.match.TreeParent;
 
 
@@ -31,6 +30,7 @@ import com.ontoprise.ontostudio.search.owl.match.TreeParent;
  */
 /**
  * @author Dirk Wenke
+ * @author Nico Stieler
  */
 
 public class SearchTableLabelProvider extends LabelProvider implements ITableLabelProvider {

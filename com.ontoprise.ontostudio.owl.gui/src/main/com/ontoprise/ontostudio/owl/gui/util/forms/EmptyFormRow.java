@@ -16,7 +16,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 /**
- * 
  * @author Nico Stieler
  */
 public class EmptyFormRow extends AbstractFormRow {

@@ -35,7 +35,6 @@ import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLModelPlugin;
 
 /**
- * 
  * @author Nico Stieler
  */
 public class FormRow extends AbstractFormRow {

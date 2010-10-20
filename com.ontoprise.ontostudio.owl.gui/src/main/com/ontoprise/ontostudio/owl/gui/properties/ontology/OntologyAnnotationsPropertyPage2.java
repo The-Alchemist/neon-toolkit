@@ -71,7 +71,10 @@ import com.ontoprise.ontostudio.owl.model.commands.annotationproperties.GetAnnot
 import com.ontoprise.ontostudio.owl.model.commands.annotations.AddOntologyAnnotation;
 import com.ontoprise.ontostudio.owl.model.commands.annotations.GetOntologyAnnotations;
 import com.ontoprise.ontostudio.owl.model.util.OWLAxiomUtils;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class OntologyAnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage {
 
     /*

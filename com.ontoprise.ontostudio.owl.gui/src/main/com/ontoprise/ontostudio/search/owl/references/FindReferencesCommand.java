@@ -52,6 +52,9 @@ import com.ontoprise.ontostudio.search.owl.ui.SearchElement;
 import com.ontoprise.ontostudio.search.owl.ui.SearchResults;
 import com.ontoprise.ontostudio.search.owl.ui.OwlSearchCommand.FieldTypes;
 
+/**
+ * @author Nico Stieler
+ */
 public class FindReferencesCommand extends AbstractSearchCommand{
 
     private OWLEntity _entity;

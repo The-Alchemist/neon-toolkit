@@ -17,7 +17,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.neontoolkit.core.exception.NeOnCoreException;
 /**
- * 
  * @author Nico Stieler
  */
 public class EmptyRestrictionRow extends AbstractRestrictionRow {

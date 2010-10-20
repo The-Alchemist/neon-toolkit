@@ -62,7 +62,10 @@ import com.ontoprise.ontostudio.owl.model.commands.imports.AddOntologyToImports;
 import com.ontoprise.ontostudio.owl.model.commands.imports.GetImportedOntologies;
 import com.ontoprise.ontostudio.owl.model.commands.imports.RemoveOntologyFromImports;
 
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class OntologyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 
     /*

@@ -18,6 +18,7 @@ import com.ontoprise.ontostudio.owl.model.OWLModel;
 
 /**
  * @author mer
+ * @author Nico Stieler
  * 
  *         This class represents a StyledText field for an short string, e.g. namespace prefix, or language tag.
  * 

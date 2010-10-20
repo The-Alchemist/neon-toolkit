@@ -23,9 +23,11 @@ import org.semanticweb.owlapi.model.OWLDatatype;
 import com.ontoprise.ontostudio.owl.gui.control.AlphabeticalProposalComparator;
 import com.ontoprise.ontostudio.owl.model.OWLConstants;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
-import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class DatatypeProposalProvider extends AbstractOwlProposalProvider {
 
     private static final String NULL_DATATYPE = "http://kaon2.semanticweb.org/internal#null"; //$NON-NLS-1$

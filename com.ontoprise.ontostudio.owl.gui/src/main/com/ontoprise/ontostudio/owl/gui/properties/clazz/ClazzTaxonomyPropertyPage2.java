@@ -61,7 +61,10 @@ import com.ontoprise.ontostudio.owl.model.commands.clazz.GetEquivalentClazzHits;
 import com.ontoprise.ontostudio.owl.model.commands.clazz.GetSubDescriptionHits;
 import com.ontoprise.ontostudio.owl.model.commands.clazz.GetSuperDescriptionHits;
 import com.ontoprise.ontostudio.owl.model.util.OWLAxiomUtils;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
 
     private static final int SUPER_MODE = 0;

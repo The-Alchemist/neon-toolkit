@@ -25,6 +25,9 @@ import com.ontoprise.ontostudio.owl.gui.properties.table.proposal.OWLTextProposa
 import com.ontoprise.ontostudio.owl.gui.properties.table.proposal.PropertyProposalProvider;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 
+/**
+ * @author Nico Stieler
+ */
 public class ManchesterSyntaxProposalProvider implements IContentProposalProvider {
 
     private OWLModel _localOwlModel;

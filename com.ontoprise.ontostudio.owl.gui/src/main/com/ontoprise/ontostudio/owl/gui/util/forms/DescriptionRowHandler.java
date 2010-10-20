@@ -18,6 +18,9 @@ import com.ontoprise.ontostudio.owl.gui.properties.IOWLPropertyPage;
 import com.ontoprise.ontostudio.owl.gui.properties.LocatedAxiom;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 
+/**
+ * @author Nico Stieler
+ */
 public abstract class DescriptionRowHandler extends AbstractRowHandler {
 
     private String[] _descriptionArray;

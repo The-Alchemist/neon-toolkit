@@ -70,6 +70,9 @@ import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.OWLCommandUtils;
 
+/**
+ * @author Nico Stieler
+ */
 public class ManchesterSyntaxManager implements ISyntaxManager {
 
     private String _syntaxName;

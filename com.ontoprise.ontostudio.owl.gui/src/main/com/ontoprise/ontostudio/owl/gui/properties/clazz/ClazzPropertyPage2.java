@@ -101,7 +101,10 @@ import com.ontoprise.ontostudio.owl.model.commands.clazz.GetSuperRestrictionHits
 import com.ontoprise.ontostudio.owl.model.commands.dataproperties.IsDataProperty;
 import com.ontoprise.ontostudio.owl.model.commands.objectproperties.IsObjectProperty;
 import com.ontoprise.ontostudio.owl.model.util.OWLAxiomUtils;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 
 public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 
