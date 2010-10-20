@@ -74,7 +74,10 @@ import com.ontoprise.ontostudio.owl.model.commands.objectproperties.GetSuperObje
 import com.ontoprise.ontostudio.owl.model.util.OWLAxiomUtils;
 import com.ontoprise.ontostudio.owl.model.util.wizard.WizardConstants;
 
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
 
     private static final int SUPER = 1;

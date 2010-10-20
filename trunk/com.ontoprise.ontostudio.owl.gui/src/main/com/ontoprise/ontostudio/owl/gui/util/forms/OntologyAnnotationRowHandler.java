@@ -17,6 +17,9 @@ import com.ontoprise.ontostudio.owl.gui.properties.IOWLPropertyPage;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.commands.annotations.RemoveOntologyAnnotation;
 
+/**
+ * @author Nico Stieler
+ */
 public abstract class OntologyAnnotationRowHandler extends AbstractRowHandler {
 
     private String _annotationValueText;

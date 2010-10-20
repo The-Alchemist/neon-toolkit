@@ -83,6 +83,7 @@ import com.ontoprise.ontostudio.owl.model.commands.annotations.GetEntityAnnotati
 import com.ontoprise.ontostudio.owl.model.util.OWLAxiomUtils;
 
 /**
+ * @author Nico Stieler
  * This class is essentially a copy of AnnotationsPropertyPage2. 
  * This is not good but due to the current EPV framework I did not manage to unify both into one class :( 
  */

@@ -16,6 +16,9 @@ import org.neontoolkit.core.exception.NeOnCoreException;
 import com.ontoprise.ontostudio.owl.gui.properties.IOWLPropertyPage;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 
+/**
+ * @author Nico Stieler
+ */
 public abstract class AbstractRowHandler {
 
     protected IOWLPropertyPage _propertyPage;

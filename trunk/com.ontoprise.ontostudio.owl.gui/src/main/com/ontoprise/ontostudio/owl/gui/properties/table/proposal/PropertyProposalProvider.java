@@ -27,6 +27,9 @@ import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.OntoStudioOWLConstants;
 
+/**
+ * @author Nico Stieler
+ */
 public class PropertyProposalProvider extends AbstractOwlProposalProvider {
 
     public static final int ALL_PROPERTY_STYLE = 7;

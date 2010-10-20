@@ -31,6 +31,9 @@ import com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataProp
 import com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.perspectives.OWLPerspective;
 
+/**
+ * @author Nico Stieler
+ */
 public class AxiomSearchMatch extends OwlSearchMatch {
 
     private IndividualView _individualView;

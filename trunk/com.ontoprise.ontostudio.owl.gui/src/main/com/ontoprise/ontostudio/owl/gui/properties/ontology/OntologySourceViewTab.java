@@ -56,6 +56,8 @@ import com.ontoprise.ontostudio.owl.gui.util.textfields.AxiomText;
 /**
  * This class is essentially a copy of AnnotationsPropertyPage2. 
  * This is not good but due to the current EPV framework I did not manage to unify both into one class :( 
+ * 
+ * @author Nico Stieler
  */
 public class OntologySourceViewTab extends AbstractOWLIdPropertyPage implements IImagePropertyPage{
     private static final int FUNCTIONAL = 0;

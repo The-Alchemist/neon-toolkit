@@ -44,6 +44,7 @@ import com.ontoprise.ontostudio.owl.gui.util.textfields.AxiomText;
  * This class shows the source text of an entity, i.e. a frame-like representation of it in Manchester Syntax.
  *  
  * @author mer
+ * @author Nico Stieler
  */
 public class SourceViewTab extends AbstractOWLIdPropertyPage implements IImagePropertyPage{
 

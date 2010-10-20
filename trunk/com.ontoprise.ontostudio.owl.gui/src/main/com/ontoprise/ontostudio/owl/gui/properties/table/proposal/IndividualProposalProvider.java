@@ -22,7 +22,9 @@ import org.semanticweb.owlapi.model.OWLIndividual;
 
 import com.ontoprise.ontostudio.owl.gui.control.AlphabeticalProposalComparator;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
-
+/**
+ * @author Nico Stieler
+ */
 public class IndividualProposalProvider extends AbstractOwlProposalProvider {
 
     public IndividualProposalProvider(OWLModel owlModel) {

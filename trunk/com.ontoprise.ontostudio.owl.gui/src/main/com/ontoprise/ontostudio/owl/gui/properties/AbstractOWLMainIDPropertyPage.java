@@ -75,6 +75,7 @@ import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.perspectives.OWLPerspective;
 
 /**
+ * @author Nico Stieler
  * The Class BasicOWLEntityPropertyPage.
  */
 public abstract class AbstractOWLMainIDPropertyPage extends AbstractMainIDPropertyPage implements IOWLPropertyPage {

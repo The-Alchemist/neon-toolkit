@@ -72,7 +72,10 @@ import com.ontoprise.ontostudio.owl.model.commands.dataproperties.CreateDataProp
 import com.ontoprise.ontostudio.owl.model.commands.dataproperties.GetDataPropertyDomains;
 import com.ontoprise.ontostudio.owl.model.commands.dataproperties.GetDataPropertyRanges;
 
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 
     private static final int DOMAIN = 1;

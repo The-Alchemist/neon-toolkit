@@ -42,6 +42,7 @@ import com.ontoprise.ontostudio.owl.model.OWLModelPlugin;
  */
 /**
  * @author Werner Hihn
+ * @author Nico Stieler
  */
 
 public class OWLPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {

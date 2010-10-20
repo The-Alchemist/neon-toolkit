@@ -11,7 +11,10 @@
 package com.ontoprise.ontostudio.owl.gui;
 
 import org.eclipse.osgi.util.NLS;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "com.ontoprise.ontostudio.owl.gui.messages";//$NON-NLS-1$
     public static String EditImportedTitle;

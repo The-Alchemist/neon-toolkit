@@ -61,7 +61,10 @@ import com.ontoprise.ontostudio.owl.model.commands.annotationproperties.CreateAn
 import com.ontoprise.ontostudio.owl.model.commands.annotationproperties.CreateAnnotationPropertyRange;
 import com.ontoprise.ontostudio.owl.model.commands.annotationproperties.GetAnnotationPropertyDomains;
 import com.ontoprise.ontostudio.owl.model.commands.annotationproperties.GetAnnotationPropertyRanges;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class AnnotationPropertyPage2 extends AbstractOWLMainIDPropertyPage implements IImagePropertyPage {
    
     private static final int DOMAIN = 1;

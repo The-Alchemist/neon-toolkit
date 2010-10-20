@@ -19,6 +19,7 @@ import com.ontoprise.ontostudio.owl.model.OWLModel;
 
 /**
  * @author mer
+ * @author Nico Stieler
  * 
  *         This class represents a StyledText field for OWL classes.
  * 
