@@ -12,7 +12,10 @@ package com.ontoprise.ontostudio.owl.model;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class OWLModelPluginPreferenceInitializer extends AbstractPreferenceInitializer {
 
     public OWLModelPluginPreferenceInitializer() {
@@ -27,6 +30,8 @@ public class OWLModelPluginPreferenceInitializer extends AbstractPreferenceIniti
         store.setDefault(OWLModelPlugin.SHOW_AXIOMS, false);
         store.setDefault(OWLModelPlugin.USE_TOOLBAR, false);
         store.setDefault(OWLModelPlugin.SHOW_ACTUAL_ONTOLOGY, true); 
+        store.setDefault(OWLModelPlugin.EDIT_IMPORTED_AXIOMS_WITHOUT_ASKING, false); 
+        store.setDefault(OWLModelPlugin.REMOVE_IMPORTED_AXIOMS_WITHOUT_ASKING, false); 
     }
 
 }

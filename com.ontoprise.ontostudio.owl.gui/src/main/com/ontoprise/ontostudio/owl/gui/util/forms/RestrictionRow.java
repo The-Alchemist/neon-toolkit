@@ -12,6 +12,7 @@ package com.ontoprise.ontostudio.owl.gui.util.forms;
 
 import java.util.List;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -29,6 +30,7 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.properties.LocatedAxiom;
+import com.ontoprise.ontostudio.owl.gui.util.CheckboxDialog;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.AxiomText;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
@@ -105,7 +107,11 @@ public class RestrictionRow extends AbstractRestrictionRow {
                     enableWidgets(getWidgets());
                 } else {
                     if (_editButton.getText().equals(OWLGUIUtilities.BUTTON_LABEL_EDIT_STAR)) {
-                        if(MessageDialog.openQuestion(null, Messages.EditImportedTitle, Messages.EditImportedText_0 + _sourceOnto  + " " + Messages.EditImportedText_1 )){ //$NON-NLS-1$//NICO OR preferences
+                        String  checkboxID = OWLModelPlugin.EDIT_IMPORTED_AXIOMS_WITHOUT_ASKING;
+                        String  title = Messages.EditImportedTitle;
+                        String  text = Messages.EditImportedText_0 + _sourceOnto  + " " + Messages.EditImportedText_1;//$NON-NLS-1$
+                        if(OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(checkboxID) || new CheckboxDialog(null,title, text, checkboxID).open() == Dialog.OK){ 
+//                        if(MessageDialog.openQuestion(null, Messages.EditImportedTitle, Messages.EditImportedText_0 + _sourceOnto  + " " + Messages.EditImportedText_1 )){ //$NON-NLS-1$//NICO OR preferences
                             maximizeAllWidgets(getWidgets());
                             _handler.ensureQName();
                             // enable widgets, so the user can change them
@@ -141,7 +147,11 @@ public class RestrictionRow extends AbstractRestrictionRow {
                     }
                 } else{
                     if (_removeButton.getText().equals(OWLGUIUtilities.BUTTON_LABEL_REMOVE_STAR)) {
-                        if(MessageDialog.openQuestion(null, Messages.RemoveImportedTitle, Messages.RemoveImportedText_0 + _sourceOnto  + " " + Messages.RemoveImportedText_1 )){ //$NON-NLS-1$//NICO OR preferences
+                        String  checkboxID = OWLModelPlugin.REMOVE_IMPORTED_AXIOMS_WITHOUT_ASKING;
+                        String  title = Messages.RemoveImportedTitle;
+                        String  text = Messages.RemoveImportedText_0 + _sourceOnto  + " " + Messages.RemoveImportedText_1;//$NON-NLS-1$
+                        if(OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(checkboxID) || new CheckboxDialog(null,title, text, checkboxID).open() == Dialog.OK){ 
+//                        if(MessageDialog.openQuestion(null, Messages.RemoveImportedTitle, Messages.RemoveImportedText_0 + _sourceOnto  + " " + Messages.RemoveImportedText_1 )){ //$NON-NLS-1$//NICO OR preferences
                             try {
                                 _handler.removePressed();
                             } catch (NeOnCoreException e1) {

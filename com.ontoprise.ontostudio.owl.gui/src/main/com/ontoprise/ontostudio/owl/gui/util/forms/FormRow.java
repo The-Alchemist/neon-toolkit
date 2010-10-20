@@ -10,6 +10,7 @@
 
 package com.ontoprise.ontostudio.owl.gui.util.forms;
 
+import org.eclipse.jface.dialogs.Dialog;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -33,6 +34,8 @@ import com.ontoprise.ontostudio.owl.gui.util.textfields.AxiomText;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLModelPlugin;
+
+import com.ontoprise.ontostudio.owl.gui.util.CheckboxDialog;
 
 /**
  * @author Nico Stieler
@@ -108,7 +111,11 @@ public class FormRow extends AbstractFormRow {
                     enableWidgets(getWidgets());
                 } else {
                     if (_editButton.getText().equals(OWLGUIUtilities.BUTTON_LABEL_EDIT_STAR)) {
-                        if(MessageDialog.openQuestion(null, Messages.EditImportedTitle, Messages.EditImportedText_0 + _sourceOnto  + " " + Messages.EditImportedText_1 )){ //$NON-NLS-1$//NICO OR preferences
+                        String  checkboxID = OWLModelPlugin.EDIT_IMPORTED_AXIOMS_WITHOUT_ASKING;
+                        String  title = Messages.EditImportedTitle;
+                        String  text = Messages.EditImportedText_0 + _sourceOnto  + " " + Messages.EditImportedText_1;//$NON-NLS-1$
+                        if(OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(checkboxID) || new CheckboxDialog(null,title, text, checkboxID).open() == Dialog.OK){ 
+//                        if(MessageDialog.openQuestion(null, Messages.EditImportedTitle, Messages.EditImportedText_0 + _sourceOnto  + " " + Messages.EditImportedText_1 )){ //$NON-NLS-1$
                             maximizeAllWidgets(getWidgets());
                             _handler.ensureQName();
                             // enable widgets, so the user can change them
@@ -144,7 +151,11 @@ public class FormRow extends AbstractFormRow {
                     }
                 }else{
                     if (_removeButton.getText().equals(OWLGUIUtilities.BUTTON_LABEL_REMOVE_STAR)) {
-                        if(MessageDialog.openQuestion(null, Messages.RemoveImportedTitle, Messages.RemoveImportedText_0 + _sourceOnto  + " " + Messages.RemoveImportedText_1 )){ //$NON-NLS-1$//NICO OR preferences
+                        String  checkboxID = OWLModelPlugin.REMOVE_IMPORTED_AXIOMS_WITHOUT_ASKING;
+                        String  title = Messages.RemoveImportedTitle;
+                        String  text = Messages.RemoveImportedText_0 + _sourceOnto  + " " + Messages.RemoveImportedText_1;//$NON-NLS-1$
+                        if(OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(checkboxID) || new CheckboxDialog(null,title, text, checkboxID).open() == Dialog.OK){ 
+//                        if(MessageDialog.openQuestion(null, Messages.RemoveImportedTitle, Messages.RemoveImportedText_0 + _sourceOnto  + " " + Messages.RemoveImportedText_1 )){ //$NON-NLS-1$
                             try {
                                 _handler.removePressed();
                             } catch (NeOnCoreException e1) {
