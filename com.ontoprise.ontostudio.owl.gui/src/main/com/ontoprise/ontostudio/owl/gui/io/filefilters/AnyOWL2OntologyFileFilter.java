@@ -23,7 +23,8 @@ public class AnyOWL2OntologyFileFilter extends AbstractOWLFileFilter {
     @SuppressWarnings("nls")
     private static final String getWildCards() {
         return    "*" + OWLConstants.OWL_EXTENSION + 
-        		"; *" + OWLConstants.RDF_EXTENSION + 
+                "; *" + OWLConstants.RDF_EXTENSION + 
+                "; *" + OWLConstants.RDFS_EXTENSION + 
         		"; *" + OWLConstants.OWLXML_EXTENSION + 
         		"; *" + OWLConstants.MANCHESTER_SYNTAX_EXTENSION + 
         		"; *" + OWLConstants.FUNCTIONAL_SYNTAX_EXTENSION + 
@@ -45,6 +46,7 @@ public class AnyOWL2OntologyFileFilter extends AbstractOWLFileFilter {
         return new String[] {
                 OWLConstants.OWL_EXTENSION,
                 OWLConstants.RDF_EXTENSION,
+                OWLConstants.RDFS_EXTENSION,
                 OWLConstants.OWLXML_EXTENSION,
                 OWLConstants.MANCHESTER_SYNTAX_EXTENSION,
                 OWLConstants.FUNCTIONAL_SYNTAX_EXTENSION,
