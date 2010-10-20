@@ -207,7 +207,7 @@ public class OntologyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         final List<Composite> widgets = new ArrayList<Composite>();
 
         if (ontologyUri != null) {
-            final StyledText ontologyText = new UriText(rowComp, _owlModel).getStyledText();
+            final StyledText ontologyText = new UriText(rowComp, _owlModel, _owlModel).getStyledText();
 
             ontologyText.setToolTipText(Messages.OntologyPropertyPage2_10);
             ontologyText.setText(ontologyUri);

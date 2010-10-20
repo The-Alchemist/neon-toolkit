@@ -31,16 +31,18 @@ import com.ontoprise.ontostudio.owl.model.OWLModel;
 public class ClassText extends AbstractOwlTextField {
 
     public static final int WIDTH = 200;
-    
+
     /**
-	 * 
-	 */
+     * 
+     */
     public ClassText(Composite parent, OWLModel owlModel) {
-        this(parent, owlModel, null);
+        this(parent,owlModel,owlModel);
     }
-    
-    public ClassText(Composite parent, OWLModel owlModel, String entityName) {
-        super(parent, owlModel, entityName);
+    /**
+     * 
+     */
+    public ClassText(Composite parent, OWLModel localOwlModel, OWLModel sourceOwlModel) {
+        super(parent, localOwlModel, sourceOwlModel);
 
         GridData data = new GridData();
         data.widthHint = WIDTH;
@@ -48,6 +50,6 @@ public class ClassText extends AbstractOwlTextField {
         data.horizontalAlignment = SWT.FILL;
         data.grabExcessHorizontalSpace = true;
 
-        createTextWidget(parent, data, new ClazzProposalProvider(owlModel), false, true);
+        createTextWidget(parent, data, new ClazzProposalProvider(localOwlModel, sourceOwlModel), false, true);
     }
 }

@@ -25,20 +25,26 @@ import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
  */
 public abstract class AbstractOwlProposalProvider implements IContentProposalProvider {
 
-    protected OWLModel _owlModel;
+    protected OWLModel _localOwlModel; 
+    protected OWLModel _sourceOwlModel;
     protected OWLNamespaces _namespace;
     protected OWLObjectVisitorEx _visitor;
 
 
     public AbstractOwlProposalProvider(OWLModel owlModel) {
-        _owlModel = owlModel;
+        this(owlModel,owlModel);//NICO check me
+    }
+
+    public AbstractOwlProposalProvider(OWLModel localOwlModel, OWLModel sourceOwlModel) {
+        _localOwlModel = localOwlModel;
+        _sourceOwlModel = sourceOwlModel;
         try {
-            _namespace = _owlModel.getNamespaces();
+            _namespace = sourceOwlModel.getNamespaces();
         } catch (NeOnCoreException e) {
             _namespace = OWLNamespaces.INSTANCE;
         }
         // always use QName for autocompletion (see http://buggy.ontoprise.de/bugs/show_bug.cgi?id=10525)
-        _visitor =  OWLPlugin.getDefault().getSyntaxManager().getVisitor(_owlModel, NeOnUIPlugin.DISPLAY_QNAME);
+        _visitor =  OWLPlugin.getDefault().getSyntaxManager().getVisitor(_localOwlModel, NeOnUIPlugin.DISPLAY_QNAME); //NICO are you sure?
     }
 
     public static boolean checkProposal(String[] array, String contents) {

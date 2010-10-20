@@ -11,7 +11,6 @@
 package com.ontoprise.ontostudio.owl.gui.util.forms;
 
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.custom.StyledText;
@@ -25,14 +24,10 @@ import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLNamedObject;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.properties.LocatedAxiom;
-import com.ontoprise.ontostudio.owl.gui.syntax.ISyntaxManager;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.AxiomText;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
@@ -72,7 +67,7 @@ public class FormRow extends AbstractFormRow {
 
         // optional textfield for axiom text
         if (_showAxioms) { 
-            _axiomText = new AxiomText(getParent(), _handler._owlModel, getColCount()).getStyledText();
+            _axiomText = new AxiomText(getParent(), _handler._localOwlModel, _handler._sourceOwlModel, getColCount()).getStyledText();
             _axiomText.setEditable(false);
             int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
             StringBuffer buffer = new StringBuffer();
@@ -80,23 +75,22 @@ public class FormRow extends AbstractFormRow {
                 List<LocatedAxiom> axioms = ((EntityRowHandler) _handler).getAxioms();
                 if (axioms.size() > 0) {
                     OWLAxiom axiom = axioms.get(0).getAxiom();
-                    buffer.append(OWLGUIUtilities.getEntityLabel((String[]) axiom.accept(OWLPlugin.getDefault().getSyntaxManager().getVisitor(_handler._owlModel, idDisplayStyle))));
+                    buffer.append(OWLGUIUtilities.getEntityLabel((String[]) axiom.accept(OWLPlugin.getDefault().getSyntaxManager().getVisitor(_handler._localOwlModel, idDisplayStyle))));
                 }
             } else if (_handler instanceof AxiomRowHandler) {
                 OWLAxiom axiom = ((AxiomRowHandler) _handler).getAxiom();
                 if (axiom != null) {
-                    buffer.append(OWLGUIUtilities.getEntityLabel((String[]) axiom.accept(OWLPlugin.getDefault().getSyntaxManager().getVisitor(_handler._owlModel, idDisplayStyle))));
+                    buffer.append(OWLGUIUtilities.getEntityLabel((String[]) axiom.accept(OWLPlugin.getDefault().getSyntaxManager().getVisitor(_handler._localOwlModel, idDisplayStyle))));
                 }
             } else if (_handler instanceof DescriptionRowHandler) {
                 List<LocatedAxiom> axioms = ((DescriptionRowHandler) _handler).getAxioms();
                 if (axioms.size() > 0) {
                     LocatedAxiom axiom = axioms.get(0);
-                    buffer.append(OWLGUIUtilities.getEntityLabel((String[]) axiom.getAxiom().accept(OWLPlugin.getDefault().getSyntaxManager().getVisitor(_handler._owlModel, idDisplayStyle))));
+                    buffer.append(OWLGUIUtilities.getEntityLabel((String[]) axiom.getAxiom().accept(OWLPlugin.getDefault().getSyntaxManager().getVisitor(_handler._localOwlModel, idDisplayStyle))));
                 }
             }
             _axiomText.setText(buffer.toString());
             _axiomText.addSelectionListener(new SelectionAdapter() {
-       //NICO what is that???
         });
         }
 
@@ -115,14 +109,24 @@ public class FormRow extends AbstractFormRow {
                     enableWidgets(getWidgets());
                 } else {
                     if (_editButton.getText().equals(OWLGUIUtilities.BUTTON_LABEL_EDIT_STAR)) {
-                        jump();
+                        if(MessageDialog.openQuestion(null, Messages.EditImportedTitle, Messages.EditImportedText_0 + _sourceOnto  + " " + Messages.EditImportedText_1 )){ //$NON-NLS-1$//NICO OR preferences
+                            maximizeAllWidgets(getWidgets());
+                            _handler.ensureQName();
+                            // enable widgets, so the user can change them
+                            editStarPressed(_editButton, _removeButton);
+                            enableWidgets(getWidgets());
+                        }
                     } else {
-                        _handler.savePressed();
+                        if (_editButton.getText().equals(OWLGUIUtilities.BUTTON_LABEL_SAVE_STAR)) {
+                            _handler.savePressed();
+                        }else {
+//                            if (_editButton.getText().equals(OWLGUIUtilities.BUTTON_LABEL_SAVE)) {
+                                _handler.savePressed();
+//                            }
+                        }
                     }
                 }
             }
-
-
         });
 
         _removeButton.addSelectionListener(new SelectionAdapter() {
@@ -139,15 +143,23 @@ public class FormRow extends AbstractFormRow {
                     } catch (CommandException e2) {
                         new NeonToolkitExceptionHandler().handleException(e2);
                     }
-                }  else {
+                }else{
                     if (_removeButton.getText().equals(OWLGUIUtilities.BUTTON_LABEL_REMOVE_STAR)) {
-                        jump();
+                        if(MessageDialog.openQuestion(null, Messages.RemoveImportedTitle, Messages.RemoveImportedText_0 + _sourceOnto  + " " + Messages.RemoveImportedText_1 )){ //$NON-NLS-1$//NICO OR preferences
+                            try {
+                                _handler.removePressed();
+                            } catch (NeOnCoreException e1) {
+                                new NeonToolkitExceptionHandler().handleException(e1);
+                            } catch (CommandException e2) {
+                                new NeonToolkitExceptionHandler().handleException(e2);
+                            }
+                        }
+                        
                     } else {
                         _handler.cancelPressed();
                     }
                 }
             }
-
         });
         if (_imported) {
             getParent().setBackground(OWLGUIUtilities.COLOR_FOR_IMPORTED_AXIOMS);

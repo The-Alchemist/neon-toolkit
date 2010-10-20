@@ -32,10 +32,16 @@ public class LiteralText extends AbstractOwlTextField {
     public static final int WIDTH = 200;
 
     /**
-	 * 
-	 */
+     * 
+     */
     public LiteralText(Composite parent, OWLModel owlModel) {
-        super(parent, owlModel, null);
+        this(parent,owlModel,owlModel);
+    }
+    /**
+     * 
+     */
+    public LiteralText(Composite parent, OWLModel localOwlModel, OWLModel sourceOwlModel) {
+        super(parent, localOwlModel, sourceOwlModel);
 
         GridData data = new GridData();
         data.widthHint = WIDTH;
@@ -43,6 +49,6 @@ public class LiteralText extends AbstractOwlTextField {
         data.horizontalAlignment = SWT.FILL;
         data.grabExcessHorizontalSpace = true;
 
-        createTextWidget(parent, data, new DatatypeProposalProvider(owlModel), false, true);
+        createTextWidget(parent, data, new DatatypeProposalProvider(localOwlModel, sourceOwlModel), false, true);
     }
 }

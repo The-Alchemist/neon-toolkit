@@ -49,6 +49,8 @@ import com.ontoprise.ontostudio.owl.gui.util.forms.EmptyFormRow;
 import com.ontoprise.ontostudio.owl.gui.util.forms.EntityRowHandler;
 import com.ontoprise.ontostudio.owl.gui.util.forms.FormRow;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.PropertyText;
+import com.ontoprise.ontostudio.owl.model.OWLModel;
+import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.dataproperties.CreateDataProperty;
 import com.ontoprise.ontostudio.owl.model.commands.dataproperties.CreateEquivalentDataProperty;
@@ -276,10 +278,16 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
         } else {
             parent = _equivFormComposite;
         }
-        final FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri,_owlModel.getProjectId(),_id);
+
+        OWLModel sourceOwlModel =_owlModel;
+        if(imported){
+            sourceOwlModel = OWLModelFactory.getOWLModel(ontologyUri, _project);
+        }
+       
+        final FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri,sourceOwlModel.getProjectId(),_id);
 
 
-        PropertyText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.DATA_PROPERTY,"");//NICO property
+        PropertyText propertyText = new PropertyText(row.getParent(), _owlModel, sourceOwlModel, PropertyText.DATA_PROPERTY);
         final StyledText textWidget = propertyText.getStyledText();
         textWidget.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, propertyText);
         OWLGUIUtilities.enable(textWidget, false);
@@ -289,25 +297,25 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
         textWidget.setData(objPropExpr);
         row.addWidget(textWidget);
 
-        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, locatedAxiom) {
+        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, sourceOwlModel, locatedAxiom) {
 
             @Override
             public void savePressed() {
                 // save modified entries
                 String value = textWidget.getText();
                 try {
-                    OWLDataProperty dataProp = _manager.parseDataProperty(value, _owlModel);
+                    OWLDataProperty dataProp = _manager.parseDataProperty(value, _localOwlModel);//NICO are you sure?
                     remove();
                     if (mode == SUPER) {
-                        new CreateDataProperty(_project, _ontologyUri, _id, dataProp.getIRI().toString()).run();
+                        new CreateDataProperty(_project, _sourceOwlModel.getOntologyURI(), _id, dataProp.getIRI().toString()).run();
                         initSubSection(false);
                         initSuperSection(true);
                     } else if (mode == SUB) {
-                        new CreateDataProperty(_project, _ontologyUri, dataProp.getIRI().toString(), _id).run();
+                        new CreateDataProperty(_project, _sourceOwlModel.getOntologyURI(), dataProp.getIRI().toString(), _id).run();
                         initSuperSection(false);
                         initSubSection(true);
                     } else {
-                        new CreateEquivalentDataProperty(_project, _ontologyUri, dataProp.getIRI().toString(), value);
+                        new CreateEquivalentDataProperty(_project, _sourceOwlModel.getOntologyURI(), dataProp.getIRI().toString(), value);
                         initEquivSection(true);
                     }
                 } catch (NeOnCoreException k2e) {
@@ -356,9 +364,15 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
         } else { // EQUIV
             parent = _equivFormComposite;
         }
-        FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, sourceOnto,_owlModel.getProjectId(),_id);
 
-        PropertyText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.DATA_PROPERTY,"");//NICO property
+        OWLModel sourceOwlModel =_owlModel;
+        if(imported){
+            sourceOwlModel = OWLModelFactory.getOWLModel(sourceOnto, _project); //NICO Onto
+        }
+       
+        FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, sourceOnto, sourceOwlModel.getProjectId(),_id);
+
+        PropertyText propertyText = new PropertyText(row.getParent(), _owlModel, sourceOwlModel, PropertyText.DATA_PROPERTY);
         final StyledText text = propertyText.getStyledText();
         text.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, propertyText);
         final String[] array = getArrayFromDescription(property);
@@ -367,22 +381,22 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
         OWLGUIUtilities.enable(text, false);
         row.addWidget(text);
 
-        EntityRowHandler rowHandler = new EntityRowHandler(this, _owlModel, property, axioms) {
+        EntityRowHandler rowHandler = new EntityRowHandler(this, _owlModel, sourceOwlModel, property, axioms) {
 
             @Override
             public void savePressed() {
                 // save modified entries
                 String value = text.getText();
                 try {
-                    OWLDataProperty dataProp = _manager.parseDataProperty(value, _owlModel);
+                    OWLDataProperty dataProp = _manager.parseDataProperty(value, _localOwlModel);//NICO are you sure?
                     if (mode == SUPER) {
-                        new CreateDataProperty(_project, _ontologyUri, _id, dataProp.getIRI().toString()).run();
+                        new CreateDataProperty(_project, _sourceOwlModel.getOntologyURI(), _id, dataProp.getIRI().toString()).run();
                         initSuperSection(true);
                     } else if (mode == SUB) {
-                        new CreateDataProperty(_project, _ontologyUri, dataProp.getIRI().toString(), _id).run();
+                        new CreateDataProperty(_project, _sourceOwlModel.getOntologyURI(), dataProp.getIRI().toString(), _id).run();
                         initSubSection(true);
                     } else {
-                        new CreateEquivalentDataProperty(_project, _ontologyUri, dataProp.getIRI().toString(), value);
+                        new CreateEquivalentDataProperty(_project, _sourceOwlModel.getOntologyURI(), dataProp.getIRI().toString(), value);
                         initEquivSection(true);
                     }
 
@@ -406,9 +420,12 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                 for (LocatedAxiom a: locatedAxioms) {
                     if (a.isLocal()) {
                         owlAxioms.add(a.getAxiom());
+                    }else{
+                        owlAxioms.add(a.getAxiom());
+                        //NICO think about that
                     }
                 }
-                OWLAxiomUtils.triggerRemovePressed(owlAxioms, getEntity(), _namespaces, _id, _owlModel, WizardConstants.ADD_DEPENDENT_MODE);
+                OWLAxiomUtils.triggerRemovePressed(owlAxioms, getEntity(), _namespaces, _id, _sourceOwlModel, WizardConstants.ADD_DEPENDENT_MODE);//NICO are you sure?
                 refresh();
             }
 
@@ -445,11 +462,11 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
             parent = _equivFormComposite;
         }
         final EmptyFormRow row = new EmptyFormRow(_toolkit, parent, NUM_COLS);
-        final StyledText text = new PropertyText(row.getParent(), _owlModel, PropertyText.DATA_PROPERTY,"").getStyledText();
+        final StyledText text = new PropertyText(row.getParent(), _owlModel, _owlModel, PropertyText.DATA_PROPERTY).getStyledText();
         row.addWidget(text);
         addSimpleWidget(text);
 
-        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, null) {
+        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, _owlModel, null) {
 
             @Override
             public void savePressed() {
@@ -461,22 +478,22 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                 // add new entry
                 try {
                     String value = text.getText();
-                    OWLDataProperty DataProp = _manager.parseDataProperty(value, _owlModel);
+                    OWLDataProperty DataProp = _manager.parseDataProperty(value, _localOwlModel);//NICO are you sure?
 
                     switch (mode) {
                         case SUPER:
-                            new CreateDataProperty(_project, _ontologyUri, _id, DataProp.getIRI().toString()).run();
+                            new CreateDataProperty(_project, _sourceOwlModel.getOntologyURI(), _id, DataProp.getIRI().toString()).run();
                             initSubSection(false);
                             initSuperSection(true);
                             break;
                         case SUB:
-                            new CreateDataProperty(_project, _ontologyUri, DataProp.getIRI().toString(), _id).run();
+                            new CreateDataProperty(_project, _sourceOwlModel.getOntologyURI(), DataProp.getIRI().toString(), _id).run();
                             initSuperSection(false);
                             initSubSection(true);
                             break;
                         case EQUIV:
                             if (!DataProp.getIRI().toString().equals(_id)) {
-                                new CreateEquivalentDataProperty(_project, _ontologyUri, _id, DataProp.getIRI().toString()).run();
+                                new CreateEquivalentDataProperty(_project, _sourceOwlModel.getOntologyURI(), _id, DataProp.getIRI().toString()).run();
                                 initEquivSection(true);
                             } else {
                                 String modeString = Messages.DataPropertyTaxonomyPropertyPage_0;

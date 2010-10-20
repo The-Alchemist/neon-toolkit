@@ -19,11 +19,13 @@ import com.ontoprise.ontostudio.owl.model.OWLModel;
 public abstract class AbstractRowHandler {
 
     protected IOWLPropertyPage _propertyPage;
-    protected OWLModel _owlModel;
+    protected OWLModel _localOwlModel;
+    protected OWLModel _sourceOwlModel;
 
-    public AbstractRowHandler(IOWLPropertyPage propertyPage, OWLModel owlModel) {
+    public AbstractRowHandler(IOWLPropertyPage propertyPage, OWLModel localOwlModel, OWLModel sourceOwlModel) {
         _propertyPage = propertyPage;
-        _owlModel = owlModel;
+        _localOwlModel = localOwlModel;
+        _sourceOwlModel = sourceOwlModel;
     }
 
     public void layoutSections() {

@@ -28,10 +28,16 @@ public class NumberText extends AbstractOwlTextField {
     public static final int WIDTH = 50;
 
     /**
-	 * 
-	 */
+     * 
+     */
     public NumberText(Composite parent, OWLModel owlModel) {
-        super(parent, owlModel);
+        this(parent,owlModel,owlModel);
+    }
+    /**
+     * 
+     */
+    public NumberText(Composite parent, OWLModel localOwlModel, OWLModel sourceOwlModel) {
+        super(parent, localOwlModel, sourceOwlModel);
 
         GridData data = new GridData();
         data.widthHint = WIDTH;

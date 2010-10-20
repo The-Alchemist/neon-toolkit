@@ -57,6 +57,7 @@ import com.ontoprise.ontostudio.owl.gui.util.forms.AxiomRowHandler;
 import com.ontoprise.ontostudio.owl.gui.util.forms.EmptyFormRow;
 import com.ontoprise.ontostudio.owl.gui.util.forms.FormRow;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.DescriptionText;
+import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.GetPropertyAttribute;
@@ -457,9 +458,16 @@ public class ObjectPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         } else {
             parent = _rangeFormComposite;
         }
-        FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri,_owlModel.getProjectId(),_id);
 
-        final DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, _toolkit, null);
+        OWLModel sourceOwlModel;
+        if(imported){
+            sourceOwlModel = OWLModelFactory.getOWLModel(ontologyUri, _project);
+        }else{
+            sourceOwlModel =_owlModel;
+        }
+        FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri, sourceOwlModel.getProjectId(),_id);
+
+        final DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, sourceOwlModel, _toolkit);
         final StyledText text = descriptionText.getStyledText();
         OWLClassExpression desc = mode == DOMAIN ? ((OWLObjectPropertyDomainAxiom) axiom).getDomain() : ((OWLObjectPropertyRangeAxiom) axiom).getRange();
         addComplexText(descriptionText);
@@ -471,20 +479,20 @@ public class ObjectPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         OWLGUIUtilities.enable(text, false);
         row.addWidget(text);
 
-        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, new LocatedAxiom(axiom, true)) {
+        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, sourceOwlModel, new LocatedAxiom(axiom, true)) {
 
             @Override
             public void savePressed() {
                 // save modified entries
                 String newValue = text.getText();
                 try {
-                    OWLClassExpression newDescription = _manager.parseDescription(newValue, _owlModel); 
+                    OWLClassExpression newDescription = _manager.parseDescription(newValue, _localOwlModel);//NICO are you sure?
                     remove();
                     if (mode == DOMAIN) {
-                        new CreateObjectPropertyDomain(_project, _ontologyUri, _id, OWLUtilities.toString(newDescription)).run();
+                        new CreateObjectPropertyDomain(_project, _sourceOwlModel.getOntologyURI(), _id, OWLUtilities.toString(newDescription)).run();//NICO are you sure?
                         initDomainSection(true);
                     } else {
-                        new CreateObjectPropertyRange(_project, _ontologyUri, _id, OWLUtilities.toString(newDescription)).run();
+                        new CreateObjectPropertyRange(_project, _sourceOwlModel.getOntologyURI(), _id, OWLUtilities.toString(newDescription)).run();//NICO are you sure?
                         initRangeSection(true);
                     }
                 } catch (NeOnCoreException k2e) {
@@ -527,12 +535,12 @@ public class ObjectPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         }
         final EmptyFormRow row = new EmptyFormRow(_toolkit, parent, NUM_COLS);
 
-        DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, _toolkit, null);
+        DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, _owlModel, _toolkit);
         final StyledText text = descriptionText.getStyledText();
         row.addWidget(text);
         addComplexText(descriptionText);
 
-        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, null) {
+        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, _owlModel, null) {
 
             @Override
             public void savePressed() {
@@ -544,12 +552,12 @@ public class ObjectPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 // add new entry
                 String input = text.getText();
                 try {
-                    String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDescription(input, _owlModel));
+                    String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDescription(input, _localOwlModel));//NICO are you sure?
                     if (domainOrRange == DOMAIN) {
-                        new CreateObjectPropertyDomain(_project, _ontologyUri, _id, value).run();
+                        new CreateObjectPropertyDomain(_project, _sourceOwlModel.getOntologyURI(), _id, value).run();//NICO are you sure?
                         initDomainSection(true);
                     } else {
-                        new CreateObjectPropertyRange(_project, _ontologyUri, _id, value).run();
+                        new CreateObjectPropertyRange(_project, _sourceOwlModel.getOntologyURI(), _id, value).run();//NICO are you sure?
                         initRangeSection(true);
                     }
                 } catch (NeOnCoreException k2e) {
@@ -604,7 +612,6 @@ public class ObjectPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 
     @Override
     public void dispose() {
-        // TODO Auto-generated method stub
     }
 
     private TreeSet<String[]> getSortedSet(String[][] clazzesArray) {

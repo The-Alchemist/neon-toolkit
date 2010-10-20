@@ -42,11 +42,6 @@ import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationPropertyDomainAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLDatatype;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObject;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
@@ -59,6 +54,8 @@ import com.ontoprise.ontostudio.owl.gui.util.forms.AxiomRowHandler;
 import com.ontoprise.ontostudio.owl.gui.util.forms.EmptyFormRow;
 import com.ontoprise.ontostudio.owl.gui.util.forms.FormRow;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.ClassText;
+import com.ontoprise.ontostudio.owl.model.OWLModel;
+import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.annotationproperties.CreateAnnotationPropertyDomain;
 import com.ontoprise.ontostudio.owl.model.commands.annotationproperties.CreateAnnotationPropertyRange;
@@ -80,7 +77,6 @@ public class AnnotationPropertyPage2 extends AbstractOWLMainIDPropertyPage imple
 
     private Composite _domainFormComposite;
     private Composite _rangeFormComposite;
-    private String[] _actualDomain_Range;
 
 
     public AnnotationPropertyPage2() {
@@ -150,7 +146,6 @@ public class AnnotationPropertyPage2 extends AbstractOWLMainIDPropertyPage imple
 
     @Override
     protected String getTitle() {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -186,7 +181,6 @@ public class AnnotationPropertyPage2 extends AbstractOWLMainIDPropertyPage imple
            for (String[] domain: sortedSet) {
                String axiomText = domain[0];
                String ontologyUri = domain[1];
-               this._actualDomain_Range = domain;
                boolean isLocal = ontologyUri.equals(_ontologyUri);
                OWLAnnotationPropertyDomainAxiom dataPropertyDomain = (OWLAnnotationPropertyDomainAxiom) OWLUtilities.axiom(axiomText, _namespaces, _factory);
    
@@ -239,7 +233,6 @@ public class AnnotationPropertyPage2 extends AbstractOWLMainIDPropertyPage imple
            TreeSet<String[]> sortedSet = getSortedSet(ranges);
            for (String[] domain: sortedSet) {
                String axiomText = domain[0];
-               this._actualDomain_Range = domain;
                String ontologyUri = domain[1];
                boolean isLocal = ontologyUri.equals(_ontologyUri);
                OWLAnnotationPropertyRangeAxiom annotationPropertyRange = (OWLAnnotationPropertyRangeAxiom) OWLUtilities.axiom(axiomText, _namespaces, _factory);
@@ -267,30 +260,36 @@ public class AnnotationPropertyPage2 extends AbstractOWLMainIDPropertyPage imple
         } else {
             parent = _rangeFormComposite;
         }
-        boolean imported = !locatedAxiom.isLocal();
-        FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri,_owlModel.getProjectId(),_id);
+        boolean imported = !locatedAxiom.isLocal();        
+        OWLModel sourceOwlModel =_owlModel;
+        if(imported){
+            sourceOwlModel = OWLModelFactory.getOWLModel(ontologyUri, _project);
+        }
+
+        FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri,sourceOwlModel.getProjectId(),_id);
         OWLAxiom axiom = locatedAxiom.getAxiom();
         OWLObject desc = mode == DOMAIN ? ((OWLAnnotationPropertyDomainAxiom) axiom).getDomain() : ((OWLAnnotationPropertyRangeAxiom) axiom).getRange();
         
-        String name = null;
-        outer:
-        if(locatedAxiom != null && locatedAxiom.getAxiom() != null){
-            if (mode == DOMAIN) {
-                try {
-                    String[] split = _actualDomain_Range[0].split(" "); //$NON-NLS-1$
-                    name = split[split.length - 1].replace("]","").replace("[",""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-                } catch (NullPointerException e) {
-                }
-            } else {
-                try {
-                    String[] split = _actualDomain_Range[0].split(" "); //$NON-NLS-1$
-                    name = split[split.length - 1].replace("]","").replace("[",""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-                } catch (NullPointerException e) {
-                }
-            }
-        }
+//        String name = null;NICO remove me
+//        outer:
+//        if(locatedAxiom != null && locatedAxiom.getAxiom() != null){
+//            if (mode == DOMAIN) {
+//                try {
+//                    String[] split = _actualDomain_Range[0].split(" "); //$NON-NLS-1$
+//                    name = split[split.length - 1].replace("]","").replace("[",""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+//                } catch (NullPointerException e) {
+//                }
+//            } else {
+//                try {
+//                    String[] split = _actualDomain_Range[0].split(" "); //$NON-NLS-1$
+//                    name = split[split.length - 1].replace("]","").replace("[",""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+//                } catch (NullPointerException e) {
+//                }
+//            }
+//        }
+        
         final StyledText text;
-        ClassText classText = new ClassText(row.getParent(), _owlModel, name);
+        ClassText classText = new ClassText(row.getParent(), _owlModel, sourceOwlModel);
         text = classText.getStyledText();
         text.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, classText);
         addSimpleWidget(text);
@@ -301,7 +300,7 @@ public class AnnotationPropertyPage2 extends AbstractOWLMainIDPropertyPage imple
         OWLGUIUtilities.enable(text, false);
         row.addWidget(text);
     
-        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, new LocatedAxiom(axiom, true)) {
+        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, sourceOwlModel, new LocatedAxiom(axiom, true)) {
     
             @Override
             public void savePressed() {
@@ -311,12 +310,12 @@ public class AnnotationPropertyPage2 extends AbstractOWLMainIDPropertyPage imple
                     remove();
                    
                     if (mode == DOMAIN) {
-                        String value = OWLPlugin.getDefault().getSyntaxManager().parseUri(input, _owlModel); 
-                        new CreateAnnotationPropertyDomain(_project, _ontologyUri, _id, value).run();
+                        String value = OWLPlugin.getDefault().getSyntaxManager().parseUri(input, _localOwlModel);
+                        new CreateAnnotationPropertyDomain(_project, _sourceOwlModel.getOntologyURI(), _id, value).run();
                         initDomainSection(false);
                     } else {
-                        String value = OWLPlugin.getDefault().getSyntaxManager().parseUri(input, _owlModel); 
-                        new CreateAnnotationPropertyRange(_project, _ontologyUri, _id, value).run();
+                        String value = OWLPlugin.getDefault().getSyntaxManager().parseUri(input, _localOwlModel);
+                        new CreateAnnotationPropertyRange(_project, _sourceOwlModel.getOntologyURI(), _id, value).run();
                         initRangeSection(false);
                     }
                 } catch (NeOnCoreException ce) {
@@ -364,12 +363,12 @@ public class AnnotationPropertyPage2 extends AbstractOWLMainIDPropertyPage imple
         }
         final EmptyFormRow row = new EmptyFormRow(_toolkit, parent, NUM_COLS);
         final StyledText text;
-        ClassText classText = new ClassText(row.getParent(), _owlModel,null);
+        ClassText classText = new ClassText(row.getParent(), _owlModel,_owlModel);
         text = classText.getStyledText();
         addSimpleWidget(text);
         row.addWidget(text);
     
-        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, null) {
+        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel,_owlModel, null) {
     
             @Override
             public void savePressed() {
@@ -383,11 +382,11 @@ public class AnnotationPropertyPage2 extends AbstractOWLMainIDPropertyPage imple
                 try {
                    
                     if (mode == DOMAIN) {
-                        String value = OWLPlugin.getDefault().getSyntaxManager().parseUri(input, _owlModel);
-                        new CreateAnnotationPropertyDomain(_project, _ontologyUri, _id, value).run();
+                        String value = OWLPlugin.getDefault().getSyntaxManager().parseUri(input, _localOwlModel);
+                        new CreateAnnotationPropertyDomain(_project, _sourceOwlModel.getOntologyURI(), _id, value).run();
                     } else {
-                        String value = OWLPlugin.getDefault().getSyntaxManager().parseUri(input, _owlModel);
-                        new CreateAnnotationPropertyRange(_project, _ontologyUri, _id, value).run();
+                        String value = OWLPlugin.getDefault().getSyntaxManager().parseUri(input, _localOwlModel);
+                        new CreateAnnotationPropertyRange(_project, _sourceOwlModel.getOntologyURI(), _id, value).run();
                     }
                 } catch (NeOnCoreException ce) {
                     handleException(ce, Messages.AnnotationPropertyPropertyPage_1, text.getShell());

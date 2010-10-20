@@ -61,6 +61,8 @@ import com.ontoprise.ontostudio.owl.gui.util.forms.EmptyFormRow;
 import com.ontoprise.ontostudio.owl.gui.util.forms.FormRow;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.DatatypeText;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.DescriptionText;
+import com.ontoprise.ontostudio.owl.model.OWLModel;
+import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.GetPropertyAttribute;
 import com.ontoprise.ontostudio.owl.model.commands.OWLCommandUtils;
@@ -346,13 +348,18 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             parent = _rangeFormComposite;
         }
         boolean imported = !locatedAxiom.isLocal();
-        FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri,_owlModel.getProjectId(),_id);
+        OWLModel sourceOwlModel =_owlModel;
+        if(imported){
+            sourceOwlModel = OWLModelFactory.getOWLModel(ontologyUri, _project);
+        }
+       
+        FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri,sourceOwlModel.getProjectId(),_id);
         OWLAxiom axiom = locatedAxiom.getAxiom();
         OWLObject desc = mode == DOMAIN ? ((OWLDataPropertyDomainAxiom) axiom).getDomain() : ((OWLDataPropertyRangeAxiom) axiom).getRange();
 
         final StyledText text;
         if (mode == DOMAIN) {
-            DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, _toolkit, null);
+            DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, sourceOwlModel, _toolkit);
             text = descriptionText.getStyledText();
             text.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, descriptionText);
             addComplexText(descriptionText);
@@ -363,7 +370,7 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     name = e.toString();
                 }
             }
-            DatatypeText datatypeText = new DatatypeText(row.getParent(), _owlModel, name); //NICO property
+            DatatypeText datatypeText = new DatatypeText(row.getParent(), _owlModel, sourceOwlModel);
             text = datatypeText.getStyledText();
             text.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, datatypeText);
         }
@@ -374,7 +381,7 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         OWLGUIUtilities.enable(text, false);
         row.addWidget(text);
 
-        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, new LocatedAxiom(axiom, true)) {
+        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, sourceOwlModel, new LocatedAxiom(axiom, true)) {
 
             @Override
             public void savePressed() {
@@ -384,12 +391,12 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     remove();
                    
                     if (mode == DOMAIN) {
-                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDescription(input, _owlModel)); 
-                        new CreateDataPropertyDomain(_project, _ontologyUri, _id, value).run();
+                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDescription(input, _localOwlModel)); //NICO are you sure?
+                        new CreateDataPropertyDomain(_project, _sourceOwlModel.getOntologyURI(), _id, value).run();
                         initDomainSection(false);
                     } else {
-                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDataRange(input, _owlModel)); 
-                        new CreateDataPropertyRange(_project, _ontologyUri, _id, value).run();
+                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDataRange(input, _localOwlModel)); //NICO are you sure?
+                        new CreateDataPropertyRange(_project, _sourceOwlModel.getOntologyURI(), _id, value).run();
                         initRangeSection(false);
                     }
                 } catch (NeOnCoreException ce) {
@@ -439,16 +446,16 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         final EmptyFormRow row = new EmptyFormRow(_toolkit, parent, NUM_COLS);
         final StyledText text;
         if (mode == DOMAIN) {
-            DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, _toolkit, null);//NICO insert
+            DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, _owlModel, _toolkit);
             text = descriptionText.getStyledText();
             addComplexText(descriptionText);
         } else {
-            text = new DatatypeText(row.getParent(), _owlModel, null).getStyledText();
+            text = new DatatypeText(row.getParent(), _owlModel, _owlModel).getStyledText();
             addSimpleWidget(text);
         }
         row.addWidget(text);
 
-        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, null) {
+        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, _owlModel, null) {
 
             @Override
             public void savePressed() {
@@ -462,11 +469,11 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 try {
                    
                     if (mode == DOMAIN) {
-                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDescription(input, _owlModel));
-                        new CreateDataPropertyDomain(_project, _ontologyUri, _id, value).run();
+                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDescription(input, _localOwlModel));//NICO are you sure?
+                        new CreateDataPropertyDomain(_project, _sourceOwlModel.getOntologyURI(), _id, value).run();
                     } else {
-                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDataRange(input, _owlModel));
-                        new CreateDataPropertyRange(_project, _ontologyUri, _id, value).run();
+                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDataRange(input, _localOwlModel));//NICO are you sure?
+                        new CreateDataPropertyRange(_project, _sourceOwlModel.getOntologyURI(), _id, value).run();
                     }
                 } catch (NeOnCoreException ce) {
                     handleException(ce, Messages.DataPropertyPropertyPage2_14, text.getShell());

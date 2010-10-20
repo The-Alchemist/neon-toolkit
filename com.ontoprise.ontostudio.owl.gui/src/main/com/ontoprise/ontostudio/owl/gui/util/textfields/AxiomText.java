@@ -18,6 +18,7 @@ import com.ontoprise.ontostudio.owl.model.OWLModel;
 
 /**
  * @author mer
+ * @author Nico Stieler
  * 
  *         This class represents a StyledText field for an arbitrary string, e.g. dataproperty or annotation property value.
  * 
@@ -32,7 +33,13 @@ public class AxiomText extends AbstractOwlTextField {
      * 
      */
     public AxiomText(Composite parent, OWLModel owlModel, int cols) {
-        super(parent, owlModel, null);
+        this(parent,owlModel,owlModel,cols);
+    }
+    /**
+     * 
+     */
+    public AxiomText(Composite parent, OWLModel localOwlModel, OWLModel sourceOwlModel, int cols) {
+        super(parent, localOwlModel, sourceOwlModel);
 
         GridData data = new GridData();
         data.widthHint = cols < 4 ? WIDTH_2_COLS : WIDTH_MORE_COLS;
@@ -47,7 +54,13 @@ public class AxiomText extends AbstractOwlTextField {
      * 
      */
     public AxiomText(Composite parent, OWLModel owlModel) {
-        super(parent, owlModel, null);
+        this(parent,owlModel,owlModel);
+    }
+    /**
+     * 
+     */
+    public AxiomText(Composite parent, OWLModel localOwlModel, OWLModel sourceOwlModel) {
+        super(parent, localOwlModel, sourceOwlModel);
 
         GridData data = new GridData();
         data.verticalAlignment = SWT.FILL;

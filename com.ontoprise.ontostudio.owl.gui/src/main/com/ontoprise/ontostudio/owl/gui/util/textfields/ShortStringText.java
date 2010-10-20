@@ -29,10 +29,16 @@ public class ShortStringText extends AbstractOwlTextField {
     public static final int WIDTH = 50;
 
     /**
+     * 
+     */
+    public ShortStringText(Composite parent, OWLModel owlModel) {
+        this(parent,owlModel,owlModel);
+    }
+    /**
 	 * 
 	 */
-    public ShortStringText(Composite parent, OWLModel owlModel) {
-        super(parent, owlModel, null);
+    public ShortStringText(Composite parent, OWLModel localOwlModel, OWLModel sourceOwlModel) {
+        super(parent, localOwlModel, sourceOwlModel);
 
         GridData data = new GridData();
         data.widthHint = WIDTH;

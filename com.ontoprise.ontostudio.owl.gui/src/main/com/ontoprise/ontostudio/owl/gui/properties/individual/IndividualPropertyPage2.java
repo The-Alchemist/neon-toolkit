@@ -253,11 +253,17 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 
     private void createObjectPropertyRow(Composite parent, LocatedAxiom locatedAxiom, String ontologyUri, boolean enabled) throws NeOnCoreException {
         boolean imported = !locatedAxiom.isLocal();
+
+        OWLModel sourceOwlModel =_owlModel;
+        if(imported){
+            sourceOwlModel = OWLModelFactory.getOWLModel(ontologyUri, _project);
+        }
+       
         int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
         OWLObjectVisitorEx visitor = _manager.getVisitor(_owlModel, idDisplayStyle);
         final OWLObjectPropertyAssertionAxiom objectPropertyMember = (OWLObjectPropertyAssertionAxiom) locatedAxiom.getAxiom();
 
-        FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri,_owlModel.getProjectId(),_id);
+        FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri, sourceOwlModel.getProjectId(),_id);
         // text widgets
 
         String name = null;
@@ -266,10 +272,10 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 name = e.toString();
             }
         }
-        final StyledText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.OBJECT_PROPERTY,name).getStyledText();
+        final StyledText propertyText = new PropertyText(row.getParent(), _owlModel, sourceOwlModel, PropertyText.OBJECT_PROPERTY).getStyledText();
         row.addWidget(propertyText);
 
-        final StyledText valueText = new IndividualText(row.getParent(), _owlModel).getStyledText();
+        final StyledText valueText = new IndividualText(row.getParent(), _owlModel, sourceOwlModel).getStyledText();
         row.addWidget(valueText);
 
         final String[] propArray = (String[]) objectPropertyMember.getProperty().accept(visitor);
@@ -286,16 +292,16 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         row.addWidget(valueText);
         OWLGUIUtilities.enable(valueText, false);
 
-        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, locatedAxiom) {
+        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, sourceOwlModel, locatedAxiom) {
 
             @Override
             public void savePressed() {
                 try {
                     remove();
-                    OWLObjectPropertyExpression newProp = _manager.parseObjectProperty(propertyText.getText(), _owlModel);
-                    OWLIndividual targetIndividual = _manager.parseIndividual(valueText.getText(), _owlModel);
+                    OWLObjectPropertyExpression newProp = _manager.parseObjectProperty(propertyText.getText(), _localOwlModel);//NICO are you sure?
+                    OWLIndividual targetIndividual = _manager.parseIndividual(valueText.getText(), _localOwlModel);//NICO are you sure?
 
-                    new CreateObjectPropertyMember(_project, _ontologyUri, _id, OWLUtilities.toString(newProp), OWLUtilities.toString(targetIndividual)).run();
+                    new CreateObjectPropertyMember(_project, _sourceOwlModel.getOntologyURI(), _id, OWLUtilities.toString(newProp), OWLUtilities.toString(targetIndividual)).run();//NICO are you sure?
                 } catch (NeOnCoreException e1) {
                     handleException(e1, Messages.IndividualPropertyPage2_18, valueText.getShell());
                     propertyText.setFocus();
@@ -341,15 +347,15 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
     private Composite createEmptyObjectPropertyRow(Composite parent) {
         final EmptyFormRow row = new EmptyFormRow(_toolkit, parent, NUM_COLS);
         // text widgets
-        final StyledText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.OBJECT_PROPERTY,"").getStyledText();
+        final StyledText propertyText = new PropertyText(row.getParent(), _owlModel, _owlModel, PropertyText.OBJECT_PROPERTY).getStyledText();
         row.addWidget(propertyText);
         addSimpleWidget(propertyText);
 
-        final StyledText valueText = new IndividualText(row.getParent(), _owlModel).getStyledText();
+        final StyledText valueText = new IndividualText(row.getParent(), _owlModel, _owlModel).getStyledText();
         row.addWidget(valueText);
         addSimpleWidget(valueText);
 
-        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, null) {
+        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, _owlModel, null) {
 
             @Override
             public void savePressed() {
@@ -360,10 +366,10 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             public void addPressed() {
                 // add new entry
                 try {
-                    OWLObjectPropertyExpression newProp = _manager.parseObjectProperty(propertyText.getText(), _owlModel);
-                    OWLIndividual targetIndividual = _manager.parseIndividual(valueText.getText(), _owlModel);
+                    OWLObjectPropertyExpression newProp = _manager.parseObjectProperty(propertyText.getText(), _localOwlModel);//NICO are you sure?
+                    OWLIndividual targetIndividual = _manager.parseIndividual(valueText.getText(), _localOwlModel);//NICO are you sure?
 
-                    new CreateObjectPropertyMember(_project, _ontologyUri, _id, OWLUtilities.toString(newProp), OWLUtilities.toString(targetIndividual)).run();
+                    new CreateObjectPropertyMember(_project, _sourceOwlModel.getOntologyURI(), _id, OWLUtilities.toString(newProp), OWLUtilities.toString(targetIndividual)).run();//NICO are you sure?
                 } catch (NeOnCoreException k2e) {
                     handleException(k2e, Messages.IndividualPropertyPage2_18, valueText.getShell());
                 } catch (CommandException k2e) {
@@ -623,7 +629,12 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
      */
     private void createDataPropertyRow(Composite parent, LocatedAxiom locatedAxiom, String ontologyUri, boolean enabled) throws NeOnCoreException {
         boolean imported = !locatedAxiom.isLocal();
-        final FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri,_owlModel.getProjectId(),_id);
+        OWLModel sourceOwlModel =_owlModel;
+        if(imported){
+            sourceOwlModel = OWLModelFactory.getOWLModel(ontologyUri, _project);
+        }
+       
+        final FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri,sourceOwlModel.getProjectId(),_id);
         final OWLDataPropertyAssertionAxiom axiom = (OWLDataPropertyAssertionAxiom) locatedAxiom.getAxiom();
         List<String[]> descriptions = handleDataPropertyMemberAxiom(axiom);
 
@@ -633,7 +644,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 name = e.toString();
             }
         }
-        final StyledText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.DATA_PROPERTY, name).getStyledText();
+        final StyledText propertyText = new PropertyText(row.getParent(), _owlModel, sourceOwlModel, PropertyText.DATA_PROPERTY).getStyledText();
         row.addWidget(propertyText);
 
         final StyledText valueText = new StringText(row.getParent()).getStyledText();
@@ -645,7 +656,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 name = e.toString();
             }
         }
-        final StyledText typeText = new DatatypeText(row.getParent(), _owlModel, name).getStyledText();
+        final StyledText typeText = new DatatypeText(row.getParent(), _owlModel, sourceOwlModel).getStyledText();
         row.addWidget(typeText);
 
         final CCombo languageCombo = OWLGUIUtilities.createLanguageComboBox(row.getParent(), enabled);
@@ -655,7 +666,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         final String[] valueArray = descriptions.get(1);
         final String[] datatypeArray = descriptions.get(2);
 
-        OWLGUIUtilities.initStringOrLiteralSwitch(typeText, languageCombo, _owlModel);
+        OWLGUIUtilities.initStringOrLiteralSwitch(typeText, languageCombo, sourceOwlModel);//NICO are you sure?
         // dataProperty
         if (axiom != null) {
             String id = OWLGUIUtilities.getEntityLabel(propertyArray);
@@ -681,7 +692,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             OWLGUIUtilities.enable(typeText, false);
             String datatype = datatypeArray.length > 1 ? datatypeArray[1] : datatypeArray[0];
             try {
-                if (((OWLDatatype) _manager.parseDataRange(datatype, _owlModel)).getIRI().toString().equals(OWLConstants.RDFS_LITERAL)) { 
+                if (((OWLDatatype) _manager.parseDataRange(datatype, sourceOwlModel)).getIRI().toString().equals(OWLConstants.RDFS_LITERAL)) { //NICO are you sure?
                     showLanguange = true;
                 }
             } catch (NeOnCoreException e) {
@@ -706,23 +717,23 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             OWLGUIUtilities.enable(languageCombo, false);
         }
 
-        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, locatedAxiom) {
+        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, sourceOwlModel, locatedAxiom) {
 
             @Override
             public void savePressed() {
                 try {
                     remove();
-                    OWLDataPropertyExpression prop = _manager.parseDataProperty(propertyText.getText(), _owlModel);
+                    OWLDataPropertyExpression prop = _manager.parseDataProperty(propertyText.getText(), _localOwlModel);//NICO are you sure?
 
                     OWLDatatype type;
                     if (typeText.getText().equals("")) { //$NON-NLS-1$
                         type = OWLModelFactory.getOWLDataFactory(_project).getOWLDatatype(OWLUtilities.toIRI(OWLConstants.RDFS_LITERAL));
                     } else {
-                        type = (OWLDatatype) _manager.parseDataRange(typeText.getText(), _owlModel);
+                        type = (OWLDatatype) _manager.parseDataRange(typeText.getText(), _localOwlModel);//NICO are you sure?
                     }
 
                     String[] valueArray = new String[] {valueText.getText(), languageCombo.getText()};
-                    new CreateDataPropertyMember(_project, _ontologyUri, _id, ((OWLDataProperty)prop).getIRI().toString(), type.getIRI().toString(), valueArray).run();
+                    new CreateDataPropertyMember(_project, _sourceOwlModel.getOntologyURI(), _id, ((OWLDataProperty)prop).getIRI().toString(), type.getIRI().toString(), valueArray).run();//NICO are you sure?
                 } catch (NeOnCoreException k2e) {
                     handleException(k2e, Messages.IndividualPropertyPage2_18, valueText.getShell());
                     propertyText.setFocus();
@@ -846,7 +857,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
      */
     private Composite createEmptyDataPropertyRow(Composite parent, boolean enabled) {
         final EmptyFormRow row = new EmptyFormRow(_toolkit, parent, NUM_COLS);
-        final StyledText propertyText = new PropertyText(row.getParent(), _owlModel, PropertyText.DATA_PROPERTY,"").getStyledText();
+        final StyledText propertyText = new PropertyText(row.getParent(), _owlModel, _owlModel, PropertyText.DATA_PROPERTY).getStyledText();
         row.addWidget(propertyText);
         addSimpleWidget(propertyText);
 
@@ -854,7 +865,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         row.addWidget(valueText);
         addSimpleWidget(valueText);
 
-        final StyledText typeText = new DatatypeText(row.getParent(), _owlModel,"").getStyledText();
+        final StyledText typeText = new DatatypeText(row.getParent(), _owlModel, _owlModel).getStyledText();
         row.addWidget(typeText);
         addSimpleWidget(typeText);
 
@@ -863,7 +874,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         addSimpleWidget(languageCombo);
 
         OWLGUIUtilities.initStringOrLiteralSwitch(typeText, languageCombo, _owlModel);
-        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, null) {
+        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, _owlModel, null) {
 
             @Override
             public void savePressed() {
@@ -878,13 +889,13 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 //                    InternalParser parser = new InternalParser(_id, OWLNamespaces.EMPTY_INSTANCE, OWLModelFactory.getOWLDataFactory(_project));
 //                    OWLIndividual individual = parser.parseOWLIndividual();
                     
-                    OWLDataPropertyExpression prop = _manager.parseDataProperty(propertyText.getText(), _owlModel);
+                    OWLDataPropertyExpression prop = _manager.parseDataProperty(propertyText.getText(), _localOwlModel);//NICO are you sure?
 
                     OWLDatatype type;
                     if (typeText.getText().equals("")) { //$NON-NLS-1$
                         type = OWLModelFactory.getOWLDataFactory(_project).getOWLDatatype(OWLUtilities.toIRI(OWLConstants.RDFS_LITERAL));
                     } else {
-                        type = (OWLDatatype) _manager.parseDataRange(typeText.getText(), _owlModel);
+                        type = (OWLDatatype) _manager.parseDataRange(typeText.getText(), _localOwlModel);//NICO are you sure?
                     }
 
                     OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(_project);
@@ -900,7 +911,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     }
 
                     OWLAxiom newAxiom = factory.getOWLDataPropertyAssertionAxiom(prop, (OWLIndividual)getOWLObject(), c);
-                    new ApplyChanges(_project, _ontologyUri, new String[] {OWLUtilities.toString(newAxiom)}, new String[0]).run();
+                    new ApplyChanges(_project, _sourceOwlModel.getOntologyURI(), new String[] {OWLUtilities.toString(newAxiom)}, new String[0]).run();//NICO are you sure?
                 } catch (NeOnCoreException e1) {
                     handleException(e1, Messages.IndividualPropertyPage2_18, valueText.getShell());
                     return;
@@ -940,8 +951,6 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 
     @Override
     public void dispose() {
-        // TODO Auto-generated method stub
-
     }
 
     private TreeSet<String[]> getSortedSet(String[][] clazzesArray) {

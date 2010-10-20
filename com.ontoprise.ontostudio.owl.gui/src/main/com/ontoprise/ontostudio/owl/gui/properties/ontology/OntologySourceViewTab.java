@@ -183,7 +183,7 @@ public class OntologySourceViewTab extends AbstractOWLIdPropertyPage implements 
                 updateOwlModel();
                 if(_owlModel != null) {
                     if(_frameText == null) {
-                        _frameText = new AxiomText(_frameComp, _owlModel);
+                        _frameText = new AxiomText(_frameComp, _owlModel, _owlModel);
                         _frameText.getStyledText().setEditable(false);
                     }
                 } else {
@@ -225,7 +225,7 @@ public class OntologySourceViewTab extends AbstractOWLIdPropertyPage implements 
                 updateOwlModel();
                 if(_owlModel != null) {
                     if(_axiomText == null) {
-                        _axiomText = new AxiomText(_axiomComp, _owlModel);
+                        _axiomText = new AxiomText(_axiomComp, _owlModel, _owlModel);
                         _axiomText.getStyledText().setEditable(false);
                     }
                 } else {

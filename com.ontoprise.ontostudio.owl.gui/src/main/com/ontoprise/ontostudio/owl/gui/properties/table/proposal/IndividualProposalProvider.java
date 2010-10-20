@@ -29,11 +29,14 @@ public class IndividualProposalProvider extends AbstractOwlProposalProvider {
         super(owlModel);
     }
 
+    public IndividualProposalProvider(OWLModel localOwlModel, OWLModel sourceOwlModel) {
+        super(localOwlModel, sourceOwlModel);
+    }
     public IContentProposal[] getProposals(String contents, int position) {
         List<IContentProposal> proposals = new ArrayList<IContentProposal>();
 
         try {
-            Set<OWLIndividual> allIndividuals = _owlModel.getAllIndividuals(true);
+            Set<OWLIndividual> allIndividuals = _sourceOwlModel.getAllIndividuals(true);//NICO are you sure?
             for (OWLIndividual individual: allIndividuals) {
                 String[] array = (String[]) individual.accept(_visitor);
                 if (AbstractOwlProposalProvider.checkProposal(array, contents)) {
@@ -41,7 +44,7 @@ public class IndividualProposalProvider extends AbstractOwlProposalProvider {
                         // TODO: migration
                         throw new UnsupportedOperationException("TODO: migration"); //$NON-NLS-1$
                     }
-                    proposals.add(new IndividualProposal((OWLEntity)individual, array, position, _owlModel));
+                    proposals.add(new IndividualProposal((OWLEntity)individual, array, position, _localOwlModel));//NICO are you sure?
                 }
             }
         } catch (NeOnCoreException e) {

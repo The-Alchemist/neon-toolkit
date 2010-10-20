@@ -43,6 +43,7 @@ import com.ontoprise.ontostudio.owl.model.OWLModel;
 
 /**
  * @author mer
+ * @author Nico Stieler
  * 
  *         This class represents a StyledText field for OWL descriptions AKA complex class descriptions.
  * 
@@ -65,23 +66,34 @@ public class DescriptionText extends AbstractOwlTextField {
      */
     private int _toolbarRowSpan = 5;
 
+    /**
+     * 
+     */
     public DescriptionText(Composite parent, OWLModel owlModel, FormToolkit toolkit) {
-        this(parent, owlModel, false, toolkit, null);
+        this(parent,owlModel,owlModel, toolkit);
     }
-    
-    public DescriptionText(Composite parent, OWLModel owlModel, FormToolkit toolkit, String name) {
-        this(parent, owlModel, false, toolkit, name);
+    /**
+     * 
+     * @param parent
+     * @param localOwlModel
+     * @param sourceOwlModel
+     * @param toolkit
+     */
+    public DescriptionText(Composite parent, OWLModel localOwlModel, OWLModel sourceOwlModel, FormToolkit toolkit) {
+        this(parent, localOwlModel, sourceOwlModel, false, toolkit);
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
     public DescriptionText(Composite parent, OWLModel owlModel, boolean imported, FormToolkit toolkit) {
-        this(parent, owlModel, imported, toolkit, null);
+        this(parent,owlModel,owlModel, imported, toolkit);
     }
-    
-    public DescriptionText(Composite parent, OWLModel owlModel, boolean imported, FormToolkit toolkit, String name) {
-        super(parent, owlModel, name);
+    /**
+     * 
+     */
+    public DescriptionText(Composite parent, OWLModel localOwlModel, OWLModel sourceOwlModel, boolean imported, FormToolkit toolkit) {
+        super(parent, localOwlModel, sourceOwlModel);
 
         _toolkit = toolkit;
         GridData data = new GridData();
@@ -90,13 +102,14 @@ public class DescriptionText extends AbstractOwlTextField {
         data.horizontalAlignment = SWT.FILL;
         data.grabExcessHorizontalSpace = true;
 
-        createTextWidget(parent, data, getComplexClassProposalProvider(owlModel), true, true, imported);
+        createTextWidget(parent, data, getComplexClassProposalProvider(localOwlModel, sourceOwlModel), true, true, imported);
     }
 
-    private IContentProposalProvider getComplexClassProposalProvider(OWLModel owlModel) {
+    private IContentProposalProvider getComplexClassProposalProvider(OWLModel localOwlModel, OWLModel sourceOwlModel) {
         IContentProposalProvider provider = OWLPlugin.getDefault().getSyntaxManager().getProposalProvider();
         if (provider instanceof ManchesterSyntaxProposalProvider) {
-            ((ManchesterSyntaxProposalProvider) provider).setOwlModel(owlModel);
+            ((ManchesterSyntaxProposalProvider) provider).setLocalOwlModel(localOwlModel);
+            ((ManchesterSyntaxProposalProvider) provider).setSorceOwlModel(sourceOwlModel);
         }
         return provider;
     }

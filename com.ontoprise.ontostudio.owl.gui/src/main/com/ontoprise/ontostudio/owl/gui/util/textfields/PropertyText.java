@@ -35,14 +35,16 @@ public class PropertyText extends AbstractOwlTextField {
     public static final int ANNOTATION_PROPERTY = PropertyProposalProvider.ANNOTATION_PROPERTY_STYLE;
 
     /**
-	 * 
-	 */
+     * 
+     */
     public PropertyText(Composite parent, OWLModel owlModel, int type) {
-        this(parent, owlModel, type, null);
+        this(parent,owlModel,owlModel, type);
     }
-    
-    public PropertyText(Composite parent, OWLModel owlModel, int type, String entityName) {
-        super(parent, owlModel, entityName);
+    /**
+     * 
+     */
+    public PropertyText(Composite parent, OWLModel localOwlModel, OWLModel sourceOwlModel, int type) {
+        super(parent, localOwlModel, sourceOwlModel);
 
         GridData data = new GridData();
         data.widthHint = WIDTH;
@@ -50,6 +52,6 @@ public class PropertyText extends AbstractOwlTextField {
         data.horizontalAlignment = SWT.FILL;
         data.grabExcessHorizontalSpace = true;
 
-        createTextWidget(parent, data, new PropertyProposalProvider(owlModel, type), false, true);
+        createTextWidget(parent, data, new PropertyProposalProvider(localOwlModel, sourceOwlModel, type), false, true);
     }
 }

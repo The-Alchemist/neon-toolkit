@@ -61,6 +61,7 @@ import com.ontoprise.ontostudio.owl.gui.util.forms.EntityRowHandler;
 import com.ontoprise.ontostudio.owl.gui.util.forms.FormRow;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.DescriptionText;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.IndividualText;
+import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLModelPlugin;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
@@ -329,12 +330,12 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
         int numCols = mode == CLAZZ_MODE ? 3 : NUM_COLS;
         final EmptyFormRow row = new EmptyFormRow(_toolkit, parent, numCols);
 
-        final StyledText text = mode == CLAZZ_MODE ? getComplexClassText(row) : getIndividualText(row);
+        final StyledText text = mode == CLAZZ_MODE ? getComplexClassText(row, _owlModel) : getIndividualText(row, _owlModel);
         row.addWidget(text);
 
         AxiomRowHandler rowHandler = null;
         if (mode == DIFFERENT_FROM_MODE) {
-            rowHandler = new AxiomRowHandler(this, _owlModel, null) {
+            rowHandler = new AxiomRowHandler(this, _owlModel, _owlModel, null) {
 
                 @Override
                 public void savePressed() {
@@ -345,10 +346,10 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
                 public void addPressed() {
                     // add new entry
                     try {
-                        String otherIndividual = OWLGUIUtilities.getValidURI(text.getText(), _ontologyUri, _project);
+                        String otherIndividual = OWLGUIUtilities.getValidURI(text.getText(), _localOwlModel.getOntologyURI(), _project);//NICO are you sure?
                         if (otherIndividual != null) {
                             if (!otherIndividual.equals(_id)) {
-                                new CreateDifferentIndividuals(_project, _ontologyUri, new String[] {_id, otherIndividual}).run();
+                                new CreateDifferentIndividuals(_project, _sourceOwlModel.getOntologyURI(), new String[] {_id, otherIndividual}).run();//NICO are you sure?
                             } else {
                                 MessageDialog.openWarning(_clazzesComp.getShell(), Messages.IndividualPropertyPage2_45, Messages.IndividualTaxonomyPropertyPage_0);
                             }
@@ -370,7 +371,7 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
 
             };
         } else if (mode == SAME_AS_MODE) {
-            rowHandler = new AxiomRowHandler(this, _owlModel, null) {
+            rowHandler = new AxiomRowHandler(this, _owlModel, _owlModel, null) {
 
                 @Override
                 public void savePressed() {
@@ -381,9 +382,9 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
                 public void addPressed() {
                     // add new entry
                     try {
-                        String sameIndividual = OWLGUIUtilities.getValidURI(text.getText(), _ontologyUri, _project);
+                        String sameIndividual = OWLGUIUtilities.getValidURI(text.getText(), _localOwlModel.getOntologyURI(), _project);//NICO are you sure?
                         if (!sameIndividual.equals(_id)) {
-                            new CreateSameIndividuals(_project, _ontologyUri, new String[] {_id, sameIndividual}).run();
+                            new CreateSameIndividuals(_project, _sourceOwlModel.getOntologyURI(), new String[] {_id, sameIndividual}).run();//NICO are you sure?
                         } else {
                             MessageDialog.openWarning(_clazzesComp.getShell(), Messages.IndividualPropertyPage2_45, Messages.IndividualTaxonomyPropertyPage_1);
                         }
@@ -404,7 +405,7 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
 
             };
         } else if (mode == CLAZZ_MODE) {
-            rowHandler = new AxiomRowHandler(this, _owlModel, null) {
+            rowHandler = new AxiomRowHandler(this, _owlModel, _owlModel, null) {
 
                 @Override
                 public void savePressed() {
@@ -416,10 +417,10 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
                     // add new entry
                     try {
                         OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(_project);
-                        OWLClassExpression newValue = _manager.parseDescription(text.getText(), _owlModel);
+                        OWLClassExpression newValue = _manager.parseDescription(text.getText(), _localOwlModel);//NICO are you sure?
                         OWLIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.toIRI(_id));
                         OWLAxiom newAxiom = factory.getOWLClassAssertionAxiom((OWLClassExpression) newValue, individual);
-                        _owlModel.addAxiom(newAxiom);
+                        _sourceOwlModel.addAxiom(newAxiom);//NICO are you sure?
                     } catch (NeOnCoreException k2e) {
                         handleException(k2e, Messages.IndividualPropertyPage2_45, text.getShell());
                     }
@@ -451,14 +452,14 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
         return text;
     }
 
-    private StyledText getIndividualText(final EmptyFormRow row) {
-        StyledText text = new IndividualText(row.getParent(), _owlModel).getStyledText();
+    private StyledText getIndividualText(final EmptyFormRow row, OWLModel sourceOwlModel) {
+        StyledText text = new IndividualText(row.getParent(), _owlModel, sourceOwlModel).getStyledText();
         addSimpleWidget(text);
         return text;
     }
 
-    private StyledText getComplexClassText(EmptyFormRow row) {
-        DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, _toolkit, null);
+    private StyledText getComplexClassText(EmptyFormRow row, OWLModel sourceOwlModel) {
+        DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, sourceOwlModel, _toolkit);
         addComplexText(descriptionText);
         return descriptionText.getStyledText();
     }
@@ -507,12 +508,15 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
 
     private void createClazzRow(final LocatedAxiom axiom, String[] sourceOntologyUris, boolean imported) throws NeOnCoreException {
         String sourceOntologyUri = ""; //$NON-NLS-1$
-        if (imported) {
+        OWLModel sourceOwlModel =_owlModel;
+        if(imported){
             sourceOntologyUri = sourceOntologyUris[0];
+            sourceOwlModel = OWLModelFactory.getOWLModel(sourceOntologyUri, _project);//NICO Onto
         }
-        FormRow row = new FormRow(_toolkit, _clazzesComp, 3, imported, sourceOntologyUri,_owlModel.getProjectId(),_id);
+       
+        FormRow row = new FormRow(_toolkit, _clazzesComp, 3, imported, sourceOntologyUri,sourceOwlModel.getProjectId(),_id);
 
-        DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, _toolkit, null);
+        DescriptionText descriptionText = new DescriptionText(row.getParent(), _owlModel, sourceOwlModel, _toolkit);
         final StyledText text = descriptionText.getStyledText();
         text.setToolTipText(Messages.IndividualPropertyPage2_30);
         addComplexText(descriptionText);
@@ -525,7 +529,7 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
         OWLGUIUtilities.enable(text, false);
         row.addWidget(text);
 
-        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, axiom) {
+        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, sourceOwlModel, axiom) {
 
             @Override
             public void savePressed() {
@@ -533,11 +537,11 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
                 try {
                     String value = text.getText();
                     OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(_project);
-                    OWLClassExpression clazzDesc = _manager.parseDescription(value, _owlModel);
+                    OWLClassExpression clazzDesc = _manager.parseDescription(value, _localOwlModel);//NICO are you sure?
                     OWLIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.toIRI(_id));
                     OWLAxiom oldAxiom = factory.getOWLClassAssertionAxiom(((OWLClassAssertionAxiom) axiom.getAxiom()).getClassExpression(), individual);
                     OWLAxiom newAxiom = factory.getOWLClassAssertionAxiom(clazzDesc, individual);
-                    new ApplyChanges(_project, _ontologyUri, new String[] {OWLUtilities.toString(newAxiom)}, new String[] {OWLUtilities.toString(oldAxiom)}).run();
+                    new ApplyChanges(_project, _sourceOwlModel.getOntologyURI(), new String[] {OWLUtilities.toString(newAxiom)}, new String[] {OWLUtilities.toString(oldAxiom)}).run();//NICO are you sure?
 
                 } catch (NeOnCoreException ce) {
                     handleException(ce, Messages.IndividualPropertyPage2_45, text.getShell());
@@ -577,13 +581,16 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
             throw new UnsupportedOperationException("TODO: migration"); //$NON-NLS-1$
         }
         String sourceOnto = ""; //$NON-NLS-1$
-        if (imported) {
+        OWLModel sourceOwlModel =_owlModel;
+        if(imported){
             sourceOnto = sourceOntos[0];
+            sourceOwlModel = OWLModelFactory.getOWLModel(sourceOnto, _project); //NICO sourceOnto
         }
-        FormRow row = new FormRow(_toolkit, _differentFromComp, NUM_COLS, imported, sourceOnto,_owlModel.getProjectId(),_id);
+       
+        FormRow row = new FormRow(_toolkit, _differentFromComp, NUM_COLS, imported, sourceOnto,sourceOwlModel.getProjectId(),_id);
         int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
         OWLObjectVisitorEx visitor = _manager.getVisitor(_owlModel, idDisplayStyle);
-        IndividualText individualText = new IndividualText(row.getParent(), _owlModel);
+        IndividualText individualText = new IndividualText(row.getParent(), _owlModel, sourceOwlModel);
         final StyledText textWidget = individualText.getStyledText();
         textWidget.setToolTipText(Messages.IndividualPropertyPage2_30);
         row.addWidget(textWidget);
@@ -595,18 +602,18 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
         textWidget.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, individualText);
         OWLGUIUtilities.enable(textWidget, false);
 
-        EntityRowHandler rowHandler = new EntityRowHandler(this, _owlModel, (OWLEntity)individual, axioms) {
+        EntityRowHandler rowHandler = new EntityRowHandler(this, _owlModel, sourceOwlModel, (OWLEntity)individual, axioms) {
 
             @Override
             public void savePressed() {
                 // save modified entries
                 try {
-                    String value = OWLGUIUtilities.getValidURI(textWidget.getText(), _ontologyUri, _project);
+                    String value = OWLGUIUtilities.getValidURI(textWidget.getText(), _localOwlModel.getOntologyURI(), _project);//NICO are you sure?
                     List<LocatedAxiom> axioms = getAxioms();
                     for (LocatedAxiom oldAxiom: axioms) {
                         String oldAxiomText = OWLUtilities.toString(oldAxiom.getAxiom());
                         if (oldAxiom.isLocal()) {
-                            new EditDifferentIndividuals(_project, _ontologyUri, oldAxiomText, getEntity().getIRI().toString(), value).run();
+                            new EditDifferentIndividuals(_project, _sourceOwlModel.getOntologyURI(), oldAxiomText, getEntity().getIRI().toString(), value).run();//NICO are you sure?
                         }
                     }
                 } catch (NeOnCoreException ce) {
@@ -628,7 +635,7 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
                         owlAxioms.add(axiom);
                     }
                 }
-                OWLAxiomUtils.triggerRemovePressed(owlAxioms, getEntity(), _namespaces, _id, _owlModel, WizardConstants.ADD_DEPENDENT_MODE);
+                OWLAxiomUtils.triggerRemovePressed(owlAxioms, getEntity(), _namespaces, _id, _sourceOwlModel, WizardConstants.ADD_DEPENDENT_MODE);//NICO are you sure?
                 refresh();
             }
 
@@ -657,15 +664,17 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
             throw new UnsupportedOperationException("TODO: migration"); //$NON-NLS-1$
         }
         String sourceOnto = ""; //$NON-NLS-1$
-        if (imported) {
+        OWLModel sourceOwlModel =_owlModel;
+        if(imported){
             sourceOnto = sourceOntos[0];
+            sourceOwlModel = OWLModelFactory.getOWLModel(sourceOnto, _project);
         }
 
-        FormRow row = new FormRow(_toolkit, _sameAsComp, NUM_COLS, imported, sourceOnto,_owlModel.getProjectId(),_id);
+        FormRow row = new FormRow(_toolkit, _sameAsComp, NUM_COLS, imported, sourceOnto,sourceOwlModel.getProjectId(),_id);
         int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
         OWLObjectVisitorEx visitor = _manager.getVisitor(_owlModel, idDisplayStyle);
 
-        IndividualText text = new IndividualText(row.getParent(), _owlModel);
+        IndividualText text = new IndividualText(row.getParent(), _owlModel, sourceOwlModel);
         final StyledText textWidget = text.getStyledText();
         textWidget.setToolTipText(Messages.IndividualPropertyPage2_30);
         row.addWidget(textWidget);
@@ -677,17 +686,17 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
         textWidget.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, text);
         OWLGUIUtilities.enable(textWidget, false);
 
-        EntityRowHandler rowHandler = new EntityRowHandler(this, _owlModel, (OWLEntity)individual, axioms) {
+        EntityRowHandler rowHandler = new EntityRowHandler(this, _owlModel, sourceOwlModel, (OWLEntity)individual, axioms) {
 
             @Override
             public void savePressed() {
                 // save modified entries
                 try {
-                    String value = OWLGUIUtilities.getValidURI(textWidget.getText(), _ontologyUri, _project);
+                    String value = OWLGUIUtilities.getValidURI(textWidget.getText(), _localOwlModel.getOntologyURI(), _project);//NICO are you sure?
                     for (LocatedAxiom oldAxiom: getAxioms()) {
                         String oldAxiomText = OWLUtilities.toString(oldAxiom.getAxiom());
                         if (oldAxiom.isLocal()) {
-                            new EditEquivalentIndividuals(_project, _ontologyUri, oldAxiomText, getEntity().getIRI().toString(), value).run();
+                            new EditEquivalentIndividuals(_project, _sourceOwlModel.getOntologyURI(), oldAxiomText, getEntity().getIRI().toString(), value).run();//NICO are you sure?
                         }
                     }
                 } catch (NeOnCoreException ce) {
@@ -708,7 +717,7 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
                         owlAxioms.add(a.getAxiom());
                     }
                 }
-                OWLAxiomUtils.triggerRemovePressed(owlAxioms, getEntity(), _namespaces, _id, _owlModel, WizardConstants.ADD_DEPENDENT_MODE);
+                OWLAxiomUtils.triggerRemovePressed(owlAxioms, getEntity(), _namespaces, _id, _sourceOwlModel, WizardConstants.ADD_DEPENDENT_MODE);//NICO are you sure?
                 refresh();
             }
 
