@@ -63,7 +63,7 @@ public class CreateEditRemoveRestrictionsTest extends AbstractOWLPluginTest {
         assertUnsortedArrayEquals(new String[]{expectedAxiom.toString(), ONTOLOGY_URI}, superRestrictionHits[0]);
 
         values = new String[]{
-                OWLCommandUtils.ALL, 
+                OWLCommandUtils.ONLY, 
                 dp1, 
                 type, 
                 ""}; //$NON-NLS-1$
@@ -197,7 +197,7 @@ public class CreateEditRemoveRestrictionsTest extends AbstractOWLPluginTest {
         assertUnsortedArrayEquals(new String[]{expectedAxiom.toString(), ONTOLOGY_URI}, superRestrictionHits[0]);
 
         values = new String[]{
-                OWLCommandUtils.ALL, 
+                OWLCommandUtils.ONLY, 
                 op1, 
                 type, 
                 ""}; //$NON-NLS-1$
@@ -313,7 +313,7 @@ public class CreateEditRemoveRestrictionsTest extends AbstractOWLPluginTest {
         assertUnsortedArrayEquals(new String[]{expectedAxiom.toString(), ONTOLOGY_URI}, superRestrictionHits[0]);
 
         values = new String[]{
-                OWLCommandUtils.ALL, 
+                OWLCommandUtils.ONLY, 
                 op1, 
                 type, 
                 ""}; //$NON-NLS-1$
