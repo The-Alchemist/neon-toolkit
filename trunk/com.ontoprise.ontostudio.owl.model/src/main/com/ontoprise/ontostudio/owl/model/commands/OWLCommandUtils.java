@@ -37,12 +37,12 @@ public class OWLCommandUtils {
     public static final String EMPTY_LANGUAGE = "--"; //$NON-NLS-1$
     public static final String INCL = "INCL"; //$NON-NLS-1$
     public static final String EQUIV = "EQUIV"; //$NON-NLS-1$
-    public static final String SOME = "SOME"; //$NON-NLS-1$
-    public static final String ALL = "ALL"; //$NON-NLS-1$
-    public static final String HAS_VALUE = "HAS_VALUE"; //$NON-NLS-1$
-    public static final String AT_LEAST_MIN = "AT_LEAST/MIN"; //$NON-NLS-1$
-    public static final String AT_MOST_MAX = "AT_MOST/MAX"; //$NON-NLS-1$
-    public static final String EXACTLY_CARDINALITY = "EXACTLY/CARD."; //"EXACTLY/CARDINALITY"; //$NON-NLS-1$
+    public static final String SOME = "some"; //$NON-NLS-1$
+    public static final String ONLY = "only"; //$NON-NLS-1$
+    public static final String HAS_VALUE = "has value"; //$NON-NLS-1$
+    public static final String AT_LEAST_MIN = "min. cardinality"; //$NON-NLS-1$
+    public static final String AT_MOST_MAX = "max. cardinality"; //$NON-NLS-1$
+    public static final String EXACTLY_CARDINALITY = "exact cardinality"; //"EXACTLY/CARDINALITY"; //$NON-NLS-1$
     public static final String DATA_PROP = "dataProp"; //$NON-NLS-1$
     public static final String OBJECT_PROP = "objectProp"; //$NON-NLS-1$
 
@@ -80,7 +80,7 @@ public class OWLCommandUtils {
                     desc = factory.getOWLDataHasValue(property, OWLUtilities.constant(range, ns, factory));
                 } else {
                     OWLDataRange propertyRange = OWLUtilities.dataRange(range, ns, factory);
-                    if (quantor.equals(ALL)) {
+                    if (quantor.equals(ONLY)) {
                         desc = factory.getOWLDataAllValuesFrom((OWLDataPropertyExpression)property, (OWLDataRange)propertyRange);
                     } else if (quantor.equals(SOME)) {
                         desc = factory.getOWLDataSomeValuesFrom((OWLDataPropertyExpression)property, (OWLDataRange)propertyRange);
@@ -104,7 +104,7 @@ public class OWLCommandUtils {
                     desc = factory.getOWLObjectHasValue(property, OWLUtilities.individual(range, ns, factory));
                 } else {
                     OWLClassExpression propertyRange = OWLUtilities.description(range, ns, factory);
-                    if (quantor.equals(ALL)) {
+                    if (quantor.equals(ONLY)) {
                         desc = factory.getOWLObjectAllValuesFrom((OWLObjectPropertyExpression)property, (OWLClassExpression)propertyRange);
                     } else if (quantor.equals(SOME)) {
                         desc = factory.getOWLObjectSomeValuesFrom((OWLObjectPropertyExpression)property, (OWLClassExpression)propertyRange);
