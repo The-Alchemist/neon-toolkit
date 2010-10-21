@@ -74,7 +74,7 @@ public class RestrictionOnPropertyWriter {
 
         } else if (description instanceof OWLObjectAllValuesFrom) {
             OWLObjectAllValuesFrom newDesc = (OWLObjectAllValuesFrom) description;
-            resultArray.add(new String[] {OWLCommandUtils.ALL});
+            resultArray.add(new String[] {OWLCommandUtils.ONLY});
             resultArray.add((String[]) newDesc.getProperty().accept(visitor));
             resultArray.add((String[]) newDesc.getFiller().accept(visitor));
             resultArray.add(null);
@@ -130,7 +130,7 @@ public class RestrictionOnPropertyWriter {
 
             String[] array = (String[]) exp.accept(visitor);
 
-            resultArray.add(new String[] {OWLCommandUtils.ALL});
+            resultArray.add(new String[] {OWLCommandUtils.ONLY});
             resultArray.add(array);
             resultArray.add((String[]) newDesc.getFiller().accept(visitor));
             resultArray.add(null);

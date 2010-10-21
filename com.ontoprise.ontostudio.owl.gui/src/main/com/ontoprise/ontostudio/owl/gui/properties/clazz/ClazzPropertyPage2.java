@@ -115,7 +115,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
      */
     public static final int NUM_COLS = 7;
 
-    public static final String[] QUANTOR_TYPES = {OWLCommandUtils.SOME, OWLCommandUtils.ALL, OWLCommandUtils.HAS_VALUE, OWLCommandUtils.HAS_SELF, OWLCommandUtils.AT_LEAST_MIN, OWLCommandUtils.AT_MOST_MAX, OWLCommandUtils.EXACTLY_CARDINALITY};
+    public static final String[] QUANTOR_TYPES = {OWLCommandUtils.SOME, OWLCommandUtils.ONLY, OWLCommandUtils.HAS_VALUE, OWLCommandUtils.HAS_SELF, OWLCommandUtils.AT_LEAST_MIN, OWLCommandUtils.AT_MOST_MAX, OWLCommandUtils.EXACTLY_CARDINALITY};
 
     /*
      * JFace Forms variables
@@ -896,7 +896,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             }
             if (formRow instanceof AbstractRestrictionRow) {
                 AbstractRestrictionRow row = (AbstractRestrictionRow) formRow;
-                if (row.getRangeText().getText().trim().length() == 0 && (quantifier.equals(OWLCommandUtils.SOME) || quantifier.equals(OWLCommandUtils.HAS_VALUE) || quantifier.equals(OWLCommandUtils.ALL) || quantifier.equals(OWLCommandUtils.HAS_SELF))) {
+                if (row.getRangeText().getText().trim().length() == 0 && (quantifier.equals(OWLCommandUtils.SOME) || quantifier.equals(OWLCommandUtils.HAS_VALUE) || quantifier.equals(OWLCommandUtils.ONLY) || quantifier.equals(OWLCommandUtils.HAS_SELF))) {
                     if (row.getRangeText().getText().trim().length() == 0) {
                         message = Messages.ClazzPropertyPage2_11;
                         type = IMessageProvider.WARNING;
@@ -967,7 +967,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     || cardinalityString.equals("") && //$NON-NLS-1$
                     (quantifierString.equals(OWLCommandUtils.AT_LEAST_MIN) || quantifierString.equals(OWLCommandUtils.AT_MOST_MAX) || quantifierString.equals(OWLCommandUtils.EXACTLY_CARDINALITY))
                     || rangeString.equals("") && //$NON-NLS-1$
-                    (quantifierString.equals(OWLCommandUtils.SOME) || quantifierString.equals(OWLCommandUtils.HAS_VALUE) || quantifierString.equals(OWLCommandUtils.ALL) || quantifierString.equals(OWLCommandUtils.HAS_SELF))) {
+                    (quantifierString.equals(OWLCommandUtils.SOME) || quantifierString.equals(OWLCommandUtils.HAS_VALUE) || quantifierString.equals(OWLCommandUtils.ONLY) || quantifierString.equals(OWLCommandUtils.HAS_SELF))) {
                 button.setEnabled(false);
             } else {
                 button.setEnabled(true);

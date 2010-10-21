@@ -130,7 +130,7 @@ public class OWLGUIUtilities {
 
 	public static final String[] QUANTOR_TYPES = {
 	    OWLCommandUtils.SOME,
-	    OWLCommandUtils.ALL,
+	    OWLCommandUtils.ONLY,
 	    OWLCommandUtils.HAS_SELF,
 	    OWLCommandUtils.HAS_VALUE,
 	    OWLCommandUtils.AT_LEAST_MIN,
