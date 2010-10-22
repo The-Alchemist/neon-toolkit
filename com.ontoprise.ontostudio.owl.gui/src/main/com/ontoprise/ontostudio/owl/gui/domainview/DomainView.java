@@ -19,7 +19,6 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 import org.neontoolkit.core.exception.NeOnCoreException;
@@ -33,11 +32,13 @@ import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzFolderTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 
+/**
+ * @author Michael Erdmann
+ */
 public class DomainView extends ViewPart implements ISelectionListener {
 
     public static final String ID = "com.ontoprise.ontostudio.owl.views.domainview"; //$NON-NLS-1$
-    public static final String CONTEXT_ID = "com.ontoprise.ontostudio.owl.views.domainContext"; //$NON-NLS-1$
-
+    
     private DomainViewContentProvider _contentProvider;
     private TreeViewer _viewer;
 
@@ -61,17 +62,12 @@ public class DomainView extends ViewPart implements ISelectionListener {
         window.getSelectionService().addSelectionListener(MTreeView.ID, this);
 
         getViewSite().setSelectionProvider(_viewer);
-
-        // register context
-        IContextService service = (IContextService) getSite().getService(IContextService.class);
-        service.activateContext(CONTEXT_ID);
     }
 
     @Override
     public void dispose() {
         getViewSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(MTreeView.ID, this);
         super.dispose();
-
     }
     
     /*
@@ -79,6 +75,7 @@ public class DomainView extends ViewPart implements ISelectionListener {
      * 
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
+    @Override
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {
         if (selection instanceof StructuredSelection) {
             StructuredSelection s = (StructuredSelection) selection;
@@ -94,6 +91,7 @@ public class DomainView extends ViewPart implements ISelectionListener {
             if (o instanceof ClazzTreeElement) {
                 _clazz = (OWLClass)((ClazzTreeElement) o).getEntity();
                 _viewer.setInput(new Object[] {_clazz, _ontologyId, _projectId});
+                
             } else if (o instanceof ClazzFolderTreeElement) {
                 try {
                     _clazz = OWLModelFactory.getOWLDataFactory(_projectId).getOWLThing();
@@ -102,6 +100,7 @@ public class DomainView extends ViewPart implements ISelectionListener {
                     _viewer.setInput(null);
                     _clazz = null;
                 }
+                
             } else {
                 _viewer.setInput(null);
                 _clazz = null;
@@ -112,28 +111,5 @@ public class DomainView extends ViewPart implements ISelectionListener {
     @Override
     public void setFocus() {
         _viewer.getControl().setFocus();
-    }
-
-    public TreeViewer getTreeViewer() {
-        return _viewer;
-    }
-
-    public DomainViewContentProvider getContentProvider() {
-        return _contentProvider;
-    }
-
-    public OWLClass getSelectedClazz() {
-        return _clazz;
-    }
-
-    public void refreshView() {
-        ISelection sel = _viewer.getSelection();
-        _contentProvider.forceUpdate();
-        _viewer.setInput(_viewer.getInput());
-        _viewer.setSelection(sel, true);
-        IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
-        IWorkbenchPart part = window.getActivePage().getActivePart();
-        window.getActivePage().activate(this);
-        window.getActivePage().activate(part);
     }
 }

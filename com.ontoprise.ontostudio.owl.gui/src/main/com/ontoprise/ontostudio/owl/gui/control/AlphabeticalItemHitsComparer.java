@@ -22,11 +22,10 @@ import com.ontoprise.ontostudio.owl.model.ItemHits;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.util.Cast;
 
-@SuppressWarnings("unchecked")
-public class AlphabeticalItemHitsComparer<A extends ItemHits> implements Comparator<ItemHits> {
+public class AlphabeticalItemHitsComparer<A extends ItemHits<?,?>> implements Comparator<ItemHits<?,?>> {
 
     private final OWLModel _owlModel;
-    private OWLObjectVisitorEx _visitor;
+    private OWLObjectVisitorEx<?> _visitor;
 
     /**
 	 * 
@@ -39,7 +38,8 @@ public class AlphabeticalItemHitsComparer<A extends ItemHits> implements Compara
         
     }
 
-    public int compare(ItemHits o1, ItemHits o2) {
+    @Override
+    public int compare(ItemHits<?,?> o1, ItemHits<?,?> o2) {
         if (o1.getItem() instanceof OWLObject && o2.getItem() instanceof OWLObject) {
             OWLObject entity1 = Cast.cast(o1.getItem());
             String[] result1 = (String[]) entity1.accept(_visitor);
@@ -54,6 +54,11 @@ public class AlphabeticalItemHitsComparer<A extends ItemHits> implements Compara
     @Override
     public boolean equals(Object obj) {
         return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 
 }

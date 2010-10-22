@@ -13,7 +13,6 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 import org.neontoolkit.core.exception.NeOnCoreException;
@@ -30,12 +29,12 @@ import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 /**
  * 
  * @author Nico Stieler
+ * @author Michael Erdmann
  * Created on: 08.10.2010
  */
 public class RangeView extends ViewPart implements ISelectionListener {
 
     public static final String ID = "com.ontoprise.ontostudio.owl.views.rangeview"; //$NON-NLS-1$
-    public static final String CONTEXT_ID = "com.ontoprise.ontostudio.owl.views.rangeContext"; //$NON-NLS-1$
 
     private RangeViewContentProvider _contentProvider;
     private TreeViewer _viewer;
@@ -60,17 +59,12 @@ public class RangeView extends ViewPart implements ISelectionListener {
         window.getSelectionService().addSelectionListener(MTreeView.ID, this);
 
         getViewSite().setSelectionProvider(_viewer);
-
-        // register context
-        IContextService service = (IContextService) getSite().getService(IContextService.class);
-        service.activateContext(CONTEXT_ID);
     }
 
     @Override
     public void dispose() {
         getViewSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(MTreeView.ID, this);
         super.dispose();
-
     }
     
     /*
@@ -78,6 +72,7 @@ public class RangeView extends ViewPart implements ISelectionListener {
      * 
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
+    @Override
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 
         if (selection instanceof StructuredSelection) {
@@ -94,6 +89,7 @@ public class RangeView extends ViewPart implements ISelectionListener {
             if (o instanceof ClazzTreeElement) {
                 _clazz = (OWLClass)((ClazzTreeElement) o).getEntity();
                 _viewer.setInput(new Object[] {_clazz, _ontologyId, _projectId});
+                
             } else if (o instanceof ClazzFolderTreeElement) {
                 try {
                     _clazz = OWLModelFactory.getOWLDataFactory(_projectId).getOWLThing();
@@ -102,10 +98,10 @@ public class RangeView extends ViewPart implements ISelectionListener {
                     _viewer.setInput(null);
                     _clazz = null;
                 }
+                
             } else {
                 if(o instanceof DatatypeTreeElement){
                     Object _entity = ((DatatypeTreeElement) o).getEntity();
-                    System.out.println(_entity);
                     _viewer.setInput(new Object[] {_entity, _ontologyId, _projectId});
                 }else{
                     _viewer.setInput(null);
@@ -118,18 +114,6 @@ public class RangeView extends ViewPart implements ISelectionListener {
     @Override
     public void setFocus() {
         _viewer.getControl().setFocus();
-    }
-
-    public TreeViewer getTreeViewer() {
-        return _viewer;
-    }
-
-    public RangeViewContentProvider getContentProvider() {
-        return _contentProvider;
-    }
-
-    public OWLClass getSelectedClazz() {
-        return _clazz;
     }
 
     public void refreshView() {

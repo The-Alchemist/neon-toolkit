@@ -71,6 +71,7 @@ import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.OWLCommandUtils;
 
 /**
+ * @author Michael Erdmann
  * @author Nico Stieler
  */
 public class ManchesterSyntaxManager implements ISyntaxManager {
@@ -108,6 +109,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
     public ManchesterSyntaxManager() {
     }
 
+    @Override
     public OWLDataRange parseDataRange(String value, OWLModel owlModel) throws NeOnCoreException {
         try {
             return getManchesterOWLSyntaxEditorParser(owlModel, value).parseDataRange();
@@ -116,6 +118,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
         }
     }
 
+    @Override
     public String parseUri(String value, OWLModel owlModel) throws NeOnCoreException {
         try {
             String expandedValue = owlModel.getNamespaces().expandString(value);
@@ -142,6 +145,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
         }
     }
 
+    @Override
     public OWLClassExpression parseDescription(String value, OWLModel owlModel) throws NeOnCoreException {
         try {
 //            Logger.getLogger(getClass()).error("TODO: migration"); //$NON-NLS-1$
@@ -195,6 +199,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
             }
         }
 
+        @Override
         public OWLClass getOWLClass(String name) {
             if (name.equals("Thing") || name.equals("owl:Thing")) { //$NON-NLS-1$ //$NON-NLS-2$
                 return dataFactory.getOWLThing();
@@ -217,6 +222,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
             return OWLUtilities.toIRI(uri);//NICO changed
         }
 
+        @Override
         public OWLObjectProperty getOWLObjectProperty(String name) {
             try {
                 IRI iri;
@@ -244,6 +250,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
             return ontologies;
         }
 
+        @Override
         public OWLDataProperty getOWLDataProperty(String name) {
             try {
                 IRI iri;
@@ -264,6 +271,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
             }
         }
 
+        @Override
         public OWLNamedIndividual getOWLIndividual(String name) {
             
             //A check if a individuals is in the KB is not necessary, because this 
@@ -282,6 +290,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
             }
         }
 
+        @Override
         public OWLDatatype getOWLDatatype(String name) {
             try {
                 IRI iri;
@@ -302,6 +311,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
             }
         }
 
+        @Override
         public OWLAnnotationProperty getOWLAnnotationProperty(String name) {
             try {
                 IRI iri;
@@ -341,6 +351,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
         return parser;
     }
 
+    @Override
     public OWLLiteral parseConstant(String value, OWLModel owlModel) throws NeOnCoreException {
         try {
             return getManchesterOWLSyntaxEditorParser(owlModel, value).parseConstant();
@@ -355,6 +366,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
         }
     }
 
+    @Override
     public OWLIndividual parseIndividual(String value, OWLModel owlModel) throws NeOnCoreException {
         try {
             return getManchesterOWLSyntaxEditorParser(owlModel, value).parseIndividual();
@@ -369,6 +381,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
         }
     }
 
+    @Override
     public OWLDataProperty parseDataProperty(String value, OWLModel owlModel) throws NeOnCoreException {
         try {
             return getManchesterOWLSyntaxEditorParser(owlModel, value).parseDataProperty();
@@ -383,6 +396,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
         }
     }
 
+    @Override
     public OWLObjectPropertyExpression parseObjectProperty(String value, OWLModel owlModel) throws NeOnCoreException {
         try {
             return getManchesterOWLSyntaxEditorParser(owlModel, value).parseObjectPropertyExpression();
@@ -397,6 +411,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
         }
     }
 
+    @Override
     public List<OWLObjectPropertyExpression> parseObjectPropertyChain(String value, OWLModel owlModel) throws NeOnCoreException {
         try {
             return getManchesterOWLSyntaxEditorParser(owlModel, value).parseObjectPropertyChain();
@@ -412,6 +427,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
     }
 
 
+    @Override
     public OWLAnnotationProperty parseAnnotationProperty(String value, OWLModel owlModel) throws NeOnCoreException {
         try {
             OWLDataFactory factory = owlModel.getOWLDataFactory();
@@ -428,6 +444,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
     }
 
     
+    @Override
     public ITokenScanner getComplexClassScanner(OWLNamespaces namespaces) {
         RuleBasedScanner scanner = scanners.get(namespaces);
         if(scanner == null){
@@ -448,10 +465,12 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
         return scanner;
     }
 
+    @Override
     public IContentProposalProvider getProposalProvider() {
         return new ManchesterSyntaxProposalProvider();
     }
 
+    @Override
     public String getTextualRepresentation(OWLEntity p, OWLModel owlModel) {
         int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
         OWLObjectVisitorEx<Object> visitor = getVisitor(owlModel, idDisplayStyle);
@@ -460,6 +479,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
         return id;
     }
 
+    @Override
     public String getTextualRepresentation(OWLClassExpression p, OWLModel owlModel) {
         int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
         OWLObjectVisitorEx<Object> visitor = getVisitor(owlModel, idDisplayStyle);
@@ -468,6 +488,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
         return id;
     }
 
+    @Override
     public String getTextualRepresentation(OWLDataRange p, OWLModel owlModel) {
         int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
         OWLObjectVisitorEx<Object> visitor = getVisitor(owlModel, idDisplayStyle);
@@ -476,10 +497,12 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
         return id;
     }
 
+    @Override
     public String getSyntaxName() {
         return _syntaxName;
     }
 
+    @Override
     public void setSyntaxName(String syntaxName) {
         _syntaxName = syntaxName;
     }
@@ -530,7 +553,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
     }
 
     private void createQuotedStringRule(List<IRule> rules) {
-        rules.add(new PatternRule("\"", "\"", STRING_TOKEN, '\\', false)); 
+        rules.add(new PatternRule("\"", "\"", STRING_TOKEN, '\\', false));  //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     private void createQNameRule(List<IRule> rules, OWLNamespaces namespaces) {
@@ -560,20 +583,18 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
             _characters = Arrays.asList(characters);
         }
 
+        @Override
         public boolean isWordPart(char character) {
             return false;
         }
 
+        @Override
         public boolean isWordStart(char character) {
             return _characters.contains(character + ""); //$NON-NLS-1$
         }
     }
 
     private static class KeywordPatternRule extends PatternRule {
-
-        /** The internal buffer used for pattern detection */
-        private StringBuffer _buffer = new StringBuffer();
-
         public KeywordPatternRule(String keyword, IToken token, char escapeCharacter, boolean breaksOnEOL) {
             super(keyword, null, token, escapeCharacter, breaksOnEOL);
         }
@@ -602,17 +623,13 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
             return false;
         }
 
-        protected void unreadBuffer(ICharacterScanner scanner) {
-            _buffer.insert(0, fStartSequence);
-            for (int i = _buffer.length() - 1; i > 0; i--)
-                scanner.unread();
-        }
     }
 
     public OWLObjectVisitorEx<Object> getVisitor() {
         return getVisitor(null);
     }
 
+    @Override
     public OWLObjectVisitorEx<Object> getVisitor(OWLModel owlModel) {
         IPreferenceStore store = NeOnUIPlugin.getDefault().getPreferenceStore();
         String language = store.getString(OWLPlugin.SPECIFIC_LANGUAGE_PREFERENCE);
@@ -620,6 +637,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
         return new ManchesterSyntaxVisitor(owlModel, language);
     }
 
+    @Override
     public OWLObjectVisitorEx<Object> getVisitor(OWLModel owlModel, int idDisplayStyle) {
         IPreferenceStore store = NeOnUIPlugin.getDefault().getPreferenceStore();
         String language = store.getString(OWLPlugin.SPECIFIC_LANGUAGE_PREFERENCE);

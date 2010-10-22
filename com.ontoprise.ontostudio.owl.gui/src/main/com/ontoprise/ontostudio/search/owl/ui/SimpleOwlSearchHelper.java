@@ -37,7 +37,7 @@ import com.ontoprise.ontostudio.search.owl.ui.OwlSearchCommand.FieldTypes;
 public class SimpleOwlSearchHelper{
 
     private OWLModel _owlModel;
-    private OWLObjectVisitorEx<String[]> _visitor;
+    private OWLObjectVisitorEx<?> _visitor;
     private boolean _includeImported;
     private boolean _caseSensitive;
     private String _searchExpression;
@@ -46,7 +46,6 @@ public class SimpleOwlSearchHelper{
         this._owlModel = owlModel;
     }
 
-    @SuppressWarnings("unchecked")
     public SearchResults search(String ontologyURI, Collection<FieldTypes> fields, String searchText, boolean includeAllImported, boolean caseSensitive, int start, int maxCount) throws NeOnCoreException {
         if (fields == null || fields.size() == 0 || searchText == null || searchText.length() == 0) {
             throw new IllegalArgumentException("Search-types or search-text must not be empty"); //$NON-NLS-1$

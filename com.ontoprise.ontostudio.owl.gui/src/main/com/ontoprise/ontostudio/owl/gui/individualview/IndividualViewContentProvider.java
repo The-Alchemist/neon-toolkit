@@ -381,15 +381,12 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
                 OWLIndividual i = new InternalParser(uri, OWLNamespaces.EMPTY_INSTANCE, OWLModelFactory.getOWLDataFactory(_projectId)).parseOWLIndividual();
                 directInstances.add(IndividualItem.createNewInstance(i, _selectedClazz, _ontologyUri, _projectId));
             }
-            if (directInstances == null) {
-                _items = new IIndividualTreeElement[0];
-            } else {
-                _items = new IIndividualTreeElement[directInstances.size()];
-                int i = 0;
-                for (IIndividualTreeElement ind: directInstances) {
-                    _items[i] = ind;
-                    i++;
-                }
+
+            _items = new IIndividualTreeElement[directInstances.size()];
+            int i = 0;
+            for (IIndividualTreeElement ind: directInstances) {
+                _items[i] = ind;
+                i++;
             }
 
         } catch (CommandException e) {

@@ -194,6 +194,7 @@ public abstract class AbstractOwlTextField {
 
     private void addTraverseListener(final boolean multiLine) {
         _styledText.addTraverseListener(new TraverseListener() {
+            @Override
             public void keyTraversed(TraverseEvent e) {
                 if (e.detail == SWT.TRAVERSE_TAB_NEXT) {
                     e.doit = true;
@@ -236,21 +237,19 @@ public abstract class AbstractOwlTextField {
                 if (selectedText != null) {
                     try {
                         ISyntaxManager manager = OWLPlugin.getDefault().getSyntaxManager();
-                        local:
+                        
                         if( NeOnUIPlugin.getDefault().getIdDisplayStyle() == NeOnUIPlugin.DISPLAY_LOCAL){
-
-                            
                             Object data = _styledText.getData();
                             if(data instanceof OWLNamedObject) {
                                 selectedText = ((OWLNamedObject) data).getIRI().toString();
+                        
                             } else if(data instanceof String[]){
                                 selectedText = ((String[])data)[1];
-                            }else{
 
-                                
+                            } else {
                                 selectedText = manager.parseUri(selectedText, _localOwlModel);
                                 
-                                if(_localOwlModel.getEntity(selectedText).isEmpty())
+                                if(_localOwlModel.getEntity(selectedText).isEmpty()) {
                                     if(MessageDialog.openQuestion(null, "Change of display style is necessary", "Change of display style is necessary\nDo you want to change the display style to QName?")){
                                         NeOnUIPlugin.getDefault().getPreferenceStore().setValue(NeOnUIPlugin.ID_DISPLAY_PREFERENCE,NeOnUIPlugin.DISPLAY_QNAME);
                                         System.out.println(NeOnUIPlugin.getDefault().getIdDisplayStyle());
@@ -261,9 +260,10 @@ public abstract class AbstractOwlTextField {
                                                 return null;
                                             }
                                         };
-                                    }else{
+                                    } else {
                                         return;
                                     }
+                                }
                             }
                         }
                         selectedText = manager.parseUri(selectedText, _localOwlModel);
@@ -280,6 +280,7 @@ public abstract class AbstractOwlTextField {
         _styledText.addMouseMoveListener(new MouseMoveListener() {
             StyleRange oldRange = null;
 
+            @Override
             public void mouseMove(MouseEvent e) {
                 if ((e.stateMask & SWT.CTRL) == 0) {
                     _styledText.setCursor(null);
@@ -342,7 +343,7 @@ public abstract class AbstractOwlTextField {
                     }
                 }
                 selectedText = selectedText.trim();
-                if(selectedText.endsWith(",")) {
+                if(selectedText.endsWith(",")) { //$NON-NLS-1$
                     selectedText = selectedText.substring(0, selectedText.length()-1);
                 }
                 return selectedText;
@@ -446,7 +447,7 @@ public abstract class AbstractOwlTextField {
         public void focusGained(FocusEvent e) {
             if (_styledText.getEditable()) {
                 oldColor = _parent.getBackground();
-                _parent.setBackground(new Color(null, 250, 250, 210));
+                _parent.setBackground(OWLGUIUtilities.COLOR_FOR_IMPORTED_AXIOMS);
                 _styledText.setFocus();
                 int height = _styledText.getLineHeight() * 5 + 5;
                 GridData heightData = (GridData) _styledText.getLayoutData();
@@ -461,16 +462,9 @@ public abstract class AbstractOwlTextField {
 
         @Override
         public void focusLost(FocusEvent e) {
-            // if(oldColor != null) {
-            // _parent.setBackground(oldColor);
-            // }
-            //          
-            // if(oldHeight > -1) {
-            // GridData heightData = (GridData) _styledText.getLayoutData();
-            // heightData.heightHint = 18;
-            // _styledText.setLayoutData(heightData);
-            // layoutParents();
-            // }
+            if (_highlighting) {
+                initSyntaxHighlighting(_textViewer);
+            }
         }
 
     }

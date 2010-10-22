@@ -14,7 +14,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -109,7 +108,14 @@ import com.ontoprise.ontostudio.owl.perspectives.OWLPerspective;
  */
 public class OWLGUIUtilities {
     
+    /** the background color used when editing an axiom in an EPV */
+    public static final Color COLOR_FOR_EDITING = new Color(null, 250, 250, 210);
+    /** the background color used for imported axioms in EPV and other views*/
     public static final Color COLOR_FOR_IMPORTED_AXIOMS = new Color(null, 176, 196, 222);
+    /** the background color used for instances that are inherited */
+    public static final Color COLOR_FOR_INHERITED_FACTS = new Color(null, 200, 200, 200);
+    /** the background color for the Manchester syntax toolbar */
+    public static final Color COLOR_FOR_TOOLBAR = new Color(null, 215, 250, 250);
 
     public static final String BUTTON_LABEL_ADD = Messages.OWLGUIUtilities_0;
     public static final String BUTTON_LABEL_REMOVE = Messages.OWLGUIUtilities_1;
@@ -646,6 +652,7 @@ public class OWLGUIUtilities {
     public static void initStringOrLiteralSwitch(final StyledText typeText, final CCombo languageCombo, final OWLModel owlModel) {
 
         typeText.addModifyListener(new ModifyListener() {
+            @Override
             public void modifyText(ModifyEvent e) {
                 if (e.widget instanceof StyledText) {
                     String text = ((StyledText) e.widget).getText();
@@ -668,13 +675,6 @@ public class OWLGUIUtilities {
             }
 
         });
-    }
-
-    @SuppressWarnings("unchecked")
-    public static void removeDuplicate(List list) {
-        HashSet h = new HashSet(list);
-        list.clear();
-        list.addAll(h);
     }
 
     /**
@@ -710,17 +710,17 @@ public class OWLGUIUtilities {
      */
     public static String[] getIdArray(OWLObject owlObject, String ontologyUri, String projectId, boolean getAllValues) throws NeOnCoreException {
         if (getAllValues) {
-            OWLObjectVisitorEx visitor = OWLPlugin.getDefault().getSyntaxManager().getVisitor(OWLModelFactory.getOWLModel(ontologyUri, projectId));
+            OWLObjectVisitorEx<?> visitor = OWLPlugin.getDefault().getSyntaxManager().getVisitor(OWLModelFactory.getOWLModel(ontologyUri, projectId));
             return (String[]) owlObject.accept(visitor);
         } else {
             int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
-            OWLObjectVisitorEx visitor = OWLPlugin.getDefault().getSyntaxManager().getVisitor(OWLModelFactory.getOWLModel(ontologyUri, projectId), idDisplayStyle);
+            OWLObjectVisitorEx<?> visitor = OWLPlugin.getDefault().getSyntaxManager().getVisitor(OWLModelFactory.getOWLModel(ontologyUri, projectId), idDisplayStyle);
             return (String[]) owlObject.accept(visitor);
         }
     }
 
     public static String getSingleId(OWLEntity entity, String ontologyUri, String projectId) throws NeOnCoreException {
-        OWLObjectVisitorEx visitor = OWLPlugin.getDefault().getSyntaxManager().getVisitor(OWLModelFactory.getOWLModel(ontologyUri, projectId));
+        OWLObjectVisitorEx<?> visitor = OWLPlugin.getDefault().getSyntaxManager().getVisitor(OWLModelFactory.getOWLModel(ontologyUri, projectId));
         return ((String[]) entity.accept(visitor))[0];
     }
 
@@ -759,7 +759,7 @@ public class OWLGUIUtilities {
     public static String getUriForSorting(OWLClassExpression desc, OWLModel owlModel) {
         ISyntaxManager manager = OWLPlugin.getDefault().getSyntaxManager();
         int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
-        OWLObjectVisitorEx visitor = manager.getVisitor(owlModel, idDisplayStyle);
+        OWLObjectVisitorEx<?> visitor = manager.getVisitor(owlModel, idDisplayStyle);
         String[] resultArray = null;
         String result = ""; //$NON-NLS-1$
         if (desc instanceof OWLClass) {
@@ -901,4 +901,5 @@ public class OWLGUIUtilities {
         }
         return 0;
     }
+
 }

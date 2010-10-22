@@ -149,16 +149,13 @@ public class IndividualView extends ViewPart implements ISelectionListener {
         super.dispose();
 
     }
-
-    protected IndividualViewLabelProvider createLabelProvider() {
-        return new IndividualViewLabelProvider();
-    }
-
+    
     /*
      * (non-Javadoc)
      * 
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
+    @Override
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {
         if (selection instanceof StructuredSelection) {
             StructuredSelection s = (StructuredSelection) selection;
@@ -250,9 +247,11 @@ public class IndividualView extends ViewPart implements ISelectionListener {
         });
         text.addFocusListener(new FocusListener() {
 
+            @Override
             public void focusGained(FocusEvent e) {
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     if (!_dontProcessFocusLost) {

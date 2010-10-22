@@ -18,7 +18,7 @@ import com.ontoprise.ontostudio.owl.gui.properties.table.proposal.PropertyPropos
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 
 /**
- * @author mer
+ * @author Michael Erdmann
  * @author Nico Stieler
  * 
  *         This class represents a StyledText field for OWL properties (annotations, data, and object properties).
@@ -39,7 +39,7 @@ public class PropertyText extends AbstractOwlTextField {
      * 
      */
     public PropertyText(Composite parent, OWLModel owlModel, int type) {
-        this(parent,owlModel,owlModel, type);
+        this(parent, owlModel, owlModel, type);
     }
     /**
      * 

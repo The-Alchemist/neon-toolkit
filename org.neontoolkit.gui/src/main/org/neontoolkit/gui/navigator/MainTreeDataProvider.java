@@ -124,6 +124,7 @@ public class MainTreeDataProvider extends LabelProvider implements ITreeContentP
      * 
      * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
      */
+    @Override
     public Color getBackground(Object element) {
         assert element instanceof ITreeElement;
 
@@ -139,6 +140,7 @@ public class MainTreeDataProvider extends LabelProvider implements ITreeContentP
      * 
      * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
      */
+    @Override
     public Color getForeground(Object element) {
         assert element instanceof ITreeElement;
 
@@ -160,6 +162,7 @@ public class MainTreeDataProvider extends LabelProvider implements ITreeContentP
      * 
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      */
+    @Override
     public Object[] getElements(Object inputElement) {
         if (_rootProvider == null) {
             ITreeDataProvider[] provs = _extensionHandler.getRootProviders();
@@ -184,6 +187,7 @@ public class MainTreeDataProvider extends LabelProvider implements ITreeContentP
      * 
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
      */
+    @Override
     public Object[] getChildren(Object parentElement) {
         assert parentElement instanceof TreeElement;
 
@@ -214,6 +218,7 @@ public class MainTreeDataProvider extends LabelProvider implements ITreeContentP
      * 
      * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
      */
+    @Override
     public Object getParent(Object element) {
         return null;
     }
@@ -223,6 +228,7 @@ public class MainTreeDataProvider extends LabelProvider implements ITreeContentP
      * 
      * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
      */
+    @Override
     public boolean hasChildren(Object element) {
         assert element instanceof ITreeElement;
         ITreeElement elem = (ITreeElement) element;
@@ -247,9 +253,9 @@ public class MainTreeDataProvider extends LabelProvider implements ITreeContentP
      * 
      * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
      */
+    @Override
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
         // TODO Auto-generated method stub
-
     }
 
     public void setTopIndex(int index) {

@@ -73,7 +73,7 @@ public class OWLPlugin extends AbstractUIPlugin {
 
     public static final String FONT_WIDGET_FONT = "com.ontoprise.ontostudio.gui.widgetfont"; //$NON-NLS-1$
 
-    public static final String SHOW_NB_INSTANCES_PREFERENCE = OWLPlugin.class.getName() + ".shownbinstances";
+    public static final String SHOW_NB_INSTANCES_PREFERENCE = OWLPlugin.class.getName() + ".shownbinstances"; //$NON-NLS-1$
 
     // The shared instance.
     private static OWLPlugin _plugin;

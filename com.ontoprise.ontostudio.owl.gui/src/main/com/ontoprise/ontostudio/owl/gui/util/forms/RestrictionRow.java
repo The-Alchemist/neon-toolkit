@@ -169,20 +169,13 @@ public class RestrictionRow extends AbstractRestrictionRow {
 
         });
         if (_imported) {
-            getParent().setBackground(new Color(null, 176, 196, 222));
-//            getParent().setToolTipText(Messages.FormRow_1 + _sourceOnto);
+            getParent().setBackground(OWLGUIUtilities.COLOR_FOR_IMPORTED_AXIOMS);
 
             _editButton.setToolTipText(Messages.FormRow_1 + _sourceOnto);
             _removeButton.setToolTipText(Messages.FormRow_1 + _sourceOnto);
 
             _editButton.setText(OWLGUIUtilities.BUTTON_LABEL_EDIT_STAR);
             _removeButton.setText(OWLGUIUtilities.BUTTON_LABEL_REMOVE_STAR);
-//            _editButton.setEnabled(false);
-//            _removeButton.setEnabled(false);
-//            Control[] children = getParent().getChildren();
-//            for (Control control: children) {
-//                control.setToolTipText(Messages.FormRow_1 + _sourceOnto);
-//            }
         }
     }
 

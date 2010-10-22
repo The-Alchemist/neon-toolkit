@@ -180,7 +180,7 @@ public interface ISyntaxManager {
      * 
      * @return
      */
-    OWLObjectVisitorEx getVisitor(OWLModel owlModel);
+    OWLObjectVisitorEx<?> getVisitor(OWLModel owlModel);
 
     /**
      * Returns a visitor initialized with the passed ontology object, that will visit a <code>Predicate</code> and return a String representing the ID depending
@@ -188,5 +188,5 @@ public interface ISyntaxManager {
      * 
      * @return
      */
-    OWLObjectVisitorEx getVisitor(OWLModel owlModel, int idDisplayStyle);
+    OWLObjectVisitorEx<?> getVisitor(OWLModel owlModel, int idDisplayStyle);
 }
