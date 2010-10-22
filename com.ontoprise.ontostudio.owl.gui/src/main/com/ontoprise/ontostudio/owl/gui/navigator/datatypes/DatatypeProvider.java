@@ -58,17 +58,17 @@ public class DatatypeProvider extends DefaultTreeDataProvider {
         if (_axiomListener == null) {
             _axiomListener = new OWLAxiomListener() {
 
+                @Override
                 public void modelChanged(final OWLChangeEvent event) {
                     // in OWL mode it is impossible to check all OntologyChangeEvent that could
                     // occur here, and remove/add single tree elements accordingly, so we simply
                     // refresh the whole tree.
                     BusyIndicator.showWhile(null, new Runnable() {
+                        @Override
                         public void run() {
                             getViewer().getControl().getDisplay().syncExec(new Runnable() {
+                                @Override
                                 public void run() {
-                                    MTreeView navigator = (MTreeView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(MTreeView.ID);
-                                    StructuredSelection selection = (StructuredSelection) navigator.getTreeViewer().getSelection();
-                                    Object selectedElement = selection.getFirstElement();
                                     boolean refresh = false;
                                     for (OWLEntity entity: event.getPotentiallyAddedEntities()) {
                                         if (entity instanceof OWLDatatype) {
@@ -81,16 +81,20 @@ public class DatatypeProvider extends DefaultTreeDataProvider {
                                         }
                                     }
                                     if (refresh) {
-                                        String sourceOntoUri = OWLUtilities.toString(event.getSourceOntology().getOntologyID());
-                                        String sourceProject = event.getProjectId();
-                                        String projectId = ((IProjectElement) selectedElement).getProjectName();
-                                        String ontologyId = ((IOntologyElement) selectedElement).getOntologyUri();
-                                        if (ontologyId.equals(sourceOntoUri) && sourceProject.equals(projectId)) {
-                                            Object[] expandedElements = getViewer().getExpandedElements();
-                                            DatatypeFolderTreeElement objPropFolder = getFolder(sourceOntoUri, projectId);
-                                            getViewer().refresh(objPropFolder);
-                                            getViewer().setExpandedElements(expandedElements);
-
+                                        MTreeView navigator = (MTreeView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(MTreeView.ID);
+                                        StructuredSelection selection = (StructuredSelection) navigator.getTreeViewer().getSelection();
+                                        Object selectedElement = selection.getFirstElement();
+                                        if(selectedElement != null) {
+                                            String sourceOntoUri = OWLUtilities.toString(event.getSourceOntology().getOntologyID());
+                                            String sourceProject = event.getProjectId();
+                                            String projectId = ((IProjectElement) selectedElement).getProjectName();
+                                            String ontologyId = ((IOntologyElement) selectedElement).getOntologyUri();
+                                            if (ontologyId.equals(sourceOntoUri) && sourceProject.equals(projectId)) {
+                                                Object[] expandedElements = getViewer().getExpandedElements();
+                                                DatatypeFolderTreeElement objPropFolder = getFolder(sourceOntoUri, projectId);
+                                                getViewer().refresh(objPropFolder);
+                                                getViewer().setExpandedElements(expandedElements);
+                                            }
                                         }
                                     }
                                 }
@@ -122,6 +126,7 @@ public class DatatypeProvider extends DefaultTreeDataProvider {
      * 
      * @see com.ontoprise.ontostudio.gui.navigator.ITreeDataProvider#getChildren(com.ontoprise.ontostudio.gui.navigator.ITreeElement, int, int)
      */
+    @Override
     public ITreeElement[] getChildren(ITreeElement parentElement, int topIndex, int amount) {
         assert (parentElement instanceof IOntologyElement);
         assert (parentElement instanceof IProjectElement);
@@ -154,6 +159,7 @@ public class DatatypeProvider extends DefaultTreeDataProvider {
      * 
      * @see com.ontoprise.ontostudio.gui.navigator.ITreeDataProvider#getChildCount(com.ontoprise.ontostudio.gui.navigator.ITreeElement)
      */
+    @Override
     public int getChildCount(ITreeElement parentElement) {
         assert (parentElement instanceof IOntologyElement);
         assert (parentElement instanceof IProjectElement);
@@ -185,6 +191,7 @@ public class DatatypeProvider extends DefaultTreeDataProvider {
      * 
      * @see com.ontoprise.ontostudio.gui.navigator.ITreeDataProvider#getElements(com.ontoprise.ontostudio.gui.navigator.ITreeElement, int, int)
      */
+    @Override
     public ITreeElement[] getElements(ITreeElement parentElement, int topIndex, int amount) {
         assert (parentElement instanceof IOntologyElement);
         assert (parentElement instanceof IProjectElement);
@@ -250,6 +257,7 @@ public class DatatypeProvider extends DefaultTreeDataProvider {
      * 
      * @see com.ontoprise.ontostudio.gui.navigator.ITreeDataProvider#isDragSupported()
      */
+    @Override
     public boolean isDragSupported() {
         return true;
     }
@@ -259,6 +267,7 @@ public class DatatypeProvider extends DefaultTreeDataProvider {
      * 
      * @see com.ontoprise.ontostudio.gui.navigator.ITreeDataProvider#isDropSupported()
      */
+    @Override
     public boolean isDropSupported() {
         return true;
     }
@@ -268,6 +277,7 @@ public class DatatypeProvider extends DefaultTreeDataProvider {
      * 
      * @see com.ontoprise.ontostudio.gui.navigator.ITreeDataProvider#getPathElements(com.ontoprise.ontostudio.gui.navigator.ITreeElement)
      */
+    @Override
     public TreeElementPath[] getPathElements(ITreeElement element) {
         List<TreeElementPath> paths = new ArrayList<TreeElementPath>();
         try {
