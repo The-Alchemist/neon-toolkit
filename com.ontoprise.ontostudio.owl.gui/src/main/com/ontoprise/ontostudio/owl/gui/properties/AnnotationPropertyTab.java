@@ -66,6 +66,7 @@ import com.ontoprise.ontostudio.owl.gui.util.forms.AbstractFormRow;
 import com.ontoprise.ontostudio.owl.gui.util.forms.AxiomRowHandler;
 import com.ontoprise.ontostudio.owl.gui.util.forms.EmptyFormRow;
 import com.ontoprise.ontostudio.owl.gui.util.forms.FormRow;
+import com.ontoprise.ontostudio.owl.gui.util.textfields.AxiomText;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.DatatypeAndIndividualText;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.PropertyText;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.StringText;
@@ -150,7 +151,7 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
         
         clearComposite(_annotationsComp);
         int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
-        OWLObjectVisitorEx visitor = _manager.getVisitor(_owlModel, idDisplayStyle);
+        OWLObjectVisitorEx<?> visitor = _manager.getVisitor(_owlModel, idDisplayStyle);
         try {
             String[][] annotationValueHits;
             
@@ -203,11 +204,8 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
         GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
         rowComp.setLayoutData(layoutData);
 
-        GridData data = new GridData();
+        GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING | GridData.GRAB_HORIZONTAL);
         data.widthHint = PropertyText.WIDTH;
-        data.verticalAlignment = SWT.TOP;
-        data.horizontalAlignment = SWT.FILL;
-        data.grabExcessHorizontalSpace = true;
         Text l1 = new Text(rowComp, SWT.NONE);
         l1.setText(Messages.AnnotationsPropertyPage2_AnnotationProperty);
         Color color = _annotationsSection.getTitleBarForeground();
@@ -215,39 +213,30 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
         l1.setForeground(color);
         l1.setLayoutData(data);
 
-        data = new GridData();
+        data = new GridData(GridData.FILL_HORIZONTAL | GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING | GridData.GRAB_HORIZONTAL);
         data.widthHint = StringText.WIDTH;
-        data.verticalAlignment = SWT.TOP;
-        data.horizontalAlignment = SWT.FILL;
-        data.grabExcessHorizontalSpace = true;
         Text l2 = new Text(rowComp, SWT.NONE);
         l2.setText(Messages.AnnotationsPropertyPage2_Value);
         l2.setForeground(color);
         l2.setLayoutData(data);
 
-        data = new GridData();
+        data = new GridData(GridData.FILL_HORIZONTAL | GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING | GridData.GRAB_HORIZONTAL);
         data.widthHint = DatatypeAndIndividualText.WIDTH;
-        data.verticalAlignment = SWT.TOP;
-        data.horizontalAlignment = SWT.FILL;
-        data.grabExcessHorizontalSpace = true;
         Text l3 = new Text(rowComp, SWT.NONE);
         l3.setText(Messages.AnnotationsPropertyPage2_Type);
         l3.setForeground(color);
         l3.setLayoutData(data);
 
-        data = new GridData();
+        data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING);
         data.widthHint = OWLGUIUtilities.LANGUAGE_SELECT_BOX_WIDTH;
-        data.verticalAlignment = SWT.TOP;
-        data.horizontalAlignment = SWT.FILL;
-        data.grabExcessHorizontalSpace = true;
         Text l4 = new Text(rowComp, SWT.NONE);
         l4.setText(Messages.AnnotationsPropertyPage2_Language);
         l4.setForeground(color);
         l4.setLayoutData(data);
 
         if (showAxiomsCol) {
-            data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING | GridData.GRAB_HORIZONTAL);
-            data.widthHint = 130;
+            data = new GridData(GridData.FILL_HORIZONTAL | GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING | GridData.GRAB_HORIZONTAL);
+            data.widthHint = AxiomText.WIDTH_MORE_COLS;
             Text l5 = new Text(rowComp, SWT.NONE);
             l5.setText(Messages.ClazzPropertyPage_Restrictions_Axiom);
             l5.setForeground(color);
@@ -272,7 +261,7 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
      * 
      * @throws NeOnCoreException the KAON2 exception
      */
-    private void handleAnnotationValue(OWLObjectVisitorEx visitor, OWLAnnotationAssertionAxiom annotation, boolean imported, String sourceOnto) throws NeOnCoreException {
+    private void handleAnnotationValue(OWLObjectVisitorEx<?> visitor, OWLAnnotationAssertionAxiom annotation, boolean imported, String sourceOnto) throws NeOnCoreException {
         OWLAnnotationProperty annotationProperty = annotation.getAnnotation().getProperty();
         String[] propArray = (String[]) annotationProperty.accept(visitor);
         ArrayList<String[]> contents = new ArrayList<String[]>();
@@ -485,6 +474,7 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
         final boolean[] userChanged = {true}; //initial: false, edit: true
         propertyTextWidget.addModifyListener(new ModifyListener() {
 
+            @Override
             public void modifyText(ModifyEvent e) {
                 try {
                     if(!userChanged[0]){
@@ -528,15 +518,17 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
         });
 
         valueTextWidget.addModifyListener(new ModifyListener() {
-
+            
+            @Override
             public void modifyText(ModifyEvent e) {
                 verifyInput(formRow, propertyTextWidget, valueTextWidget, typeTextWidget);
             }
-
+            
         });
         
         typeTextWidget.addModifyListener(new ModifyListener() {
 
+            @Override
             public void modifyText(ModifyEvent e) {
                 if(systemChanged[0]){
                     systemChanged[0] = false;
@@ -623,6 +615,7 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
         
         propertyText.addModifyListener(new ModifyListener() {
 
+            @Override
             public void modifyText(ModifyEvent e) {
                 try {
                     if(!userChanged[0]){
@@ -667,6 +660,7 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
 
         valueText.addModifyListener(new ModifyListener() {
 
+            @Override
             public void modifyText(ModifyEvent e) {
                 verifyInput(formRow, propertyText, valueText, typeText);
             }
@@ -675,6 +669,7 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
 
         typeText.addModifyListener(new ModifyListener() {
 
+            @Override
             public void modifyText(ModifyEvent e) {
                 if(systemChanged[0]){
                     systemChanged[0] = false;
@@ -729,8 +724,8 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
     }
 
     /**
-     * Returns the values recently entered into the text fields. For the properties OWLGUIUtilities.getValidURI() is called, because we may have an ID without
-     * namespace.
+     * Returns the values recently entered into the text fields. For the properties OWLGUIUtilities.getValidURI() 
+     * is called, because we may have an ID without namespace.
      * 
      * @param propertyText the property text
      * @param valueText the value text
@@ -739,7 +734,7 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
      * 
      * @return the new values
      * 
-     * @throws NeOnCoreException the KAO n2 exception
+     * @throws NeOnCoreException 
      * @throws ControlException
      */
     private String[] getNewValues(final StyledText propertyText, final StyledText valueText, final StyledText typeText, final CCombo languageCombo) throws NeOnCoreException, CommandException {

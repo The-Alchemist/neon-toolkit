@@ -49,7 +49,6 @@ import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 import org.semanticweb.owlapi.model.OWLDataRange;
 import org.semanticweb.owlapi.model.OWLDatatype;
-import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
@@ -72,6 +71,7 @@ import com.ontoprise.ontostudio.owl.gui.util.forms.AbstractFormRow;
 import com.ontoprise.ontostudio.owl.gui.util.forms.AxiomRowHandler;
 import com.ontoprise.ontostudio.owl.gui.util.forms.EmptyFormRow;
 import com.ontoprise.ontostudio.owl.gui.util.forms.FormRow;
+import com.ontoprise.ontostudio.owl.gui.util.textfields.DatatypeAndIndividualText;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.DatatypeText;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.IndividualText;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.PropertyText;
@@ -263,18 +263,12 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         }
        
         int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
-        OWLObjectVisitorEx visitor = _manager.getVisitor(_owlModel, idDisplayStyle);
+        OWLObjectVisitorEx<?> visitor = _manager.getVisitor(_owlModel, idDisplayStyle);
         final OWLObjectPropertyAssertionAxiom objectPropertyMember = (OWLObjectPropertyAssertionAxiom) locatedAxiom.getAxiom();
 
         FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, ontologyUri, sourceOwlModel.getProjectId(),_id);
         // text widgets
 
-        String name = null;
-        if(locatedAxiom != null && locatedAxiom.getAxiom() != null){
-            for(OWLEntity e : locatedAxiom.getAxiom().getObjectPropertiesInSignature()){
-                name = e.toString();
-            }
-        }
         final StyledText propertyText = new PropertyText(row.getParent(), _owlModel, sourceOwlModel, PropertyText.OBJECT_PROPERTY).getStyledText();
         row.addWidget(propertyText);
 
@@ -392,6 +386,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         row.init(rowHandler);
 
         propertyText.addModifyListener(new ModifyListener() {
+            @Override
             public void modifyText(ModifyEvent e) {
                 if (propertyText.getText().trim().length() == 0) {
                     row.getCancelButton().setEnabled(false);
@@ -529,29 +524,29 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         rowComp.setLayoutData(layoutData);
         Color color = section.getTitleBarForeground();
 
-        GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING | GridData.GRAB_HORIZONTAL);
-        data.widthHint = 200; // showAxiomsCol ? 100 : 200;
+        GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING | GridData.GRAB_HORIZONTAL);
+        data.widthHint = PropertyText.WIDTH;
         Text l1 = new Text(rowComp, SWT.NONE);
         l1.setText(Messages.IndividualPropertyPage_Property);
         l1.setForeground(color);
         l1.setLayoutData(data);
 
-        data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING | GridData.GRAB_HORIZONTAL);
-        data.widthHint = 200; // showAxiomsCol ? 100 : 190;
+        data = new GridData(GridData.FILL_HORIZONTAL | GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING | GridData.GRAB_HORIZONTAL);
+        data.widthHint = StringText.WIDTH;
         Text l2 = new Text(rowComp, SWT.NONE);
         l2.setText(Messages.IndividualPropertyPage_Value);
         l2.setForeground(color);
         l2.setLayoutData(data);
 
-        data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING | GridData.GRAB_HORIZONTAL);
-        data.widthHint = 200; // showAxiomsCol ? 100 : 160;
+        data = new GridData(GridData.FILL_HORIZONTAL | GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING | GridData.GRAB_HORIZONTAL);
+        data.widthHint = DatatypeAndIndividualText.WIDTH;
         Text l3 = new Text(rowComp, SWT.NONE);
         l3.setText(Messages.IndividualPropertyPage_Type);
         l3.setForeground(color);
         l3.setLayoutData(data);
 
-        data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING | GridData.GRAB_HORIZONTAL);
-        data.widthHint = 50; // showAxiomsCol ? 32 : 32;
+        data = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.VERTICAL_ALIGN_BEGINNING);
+        data.widthHint = OWLGUIUtilities.LANGUAGE_SELECT_BOX_WIDTH;
         Text l4 = new Text(rowComp, SWT.NONE);
         l4.setText(Messages.IndividualPropertyPage_Language);
         l4.setForeground(color);
@@ -591,7 +586,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         OWLLiteral target = axiom.getObject();
 
         int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
-        OWLObjectVisitorEx visitor = _manager.getVisitor(_owlModel, idDisplayStyle);
+        OWLObjectVisitorEx<?> visitor = _manager.getVisitor(_owlModel, idDisplayStyle);
 
         String[] propArray = (String[]) axiom.getProperty().accept(visitor);
         ArrayList<String[]> contents = new ArrayList<String[]>();
@@ -641,24 +636,12 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         final OWLDataPropertyAssertionAxiom axiom = (OWLDataPropertyAssertionAxiom) locatedAxiom.getAxiom();
         List<String[]> descriptions = handleDataPropertyMemberAxiom(axiom);
 
-        String name = null;
-        if(locatedAxiom != null && locatedAxiom.getAxiom() != null){
-            for(OWLEntity e : locatedAxiom.getAxiom().getDataPropertiesInSignature()){
-                name = e.toString();
-            }
-        }
         final StyledText propertyText = new PropertyText(row.getParent(), _owlModel, sourceOwlModel, PropertyText.DATA_PROPERTY).getStyledText();
         row.addWidget(propertyText);
 
         final StyledText valueText = new StringText(row.getParent()).getStyledText();
         row.addWidget(valueText);
 
-        name = null;
-        if(locatedAxiom != null && locatedAxiom.getAxiom() != null){
-            for(OWLEntity e : locatedAxiom.getAxiom().getDatatypesInSignature()){
-                name = e.toString();
-            }
-        }
         final StyledText typeText = new DatatypeText(row.getParent(), _owlModel, sourceOwlModel).getStyledText();
         row.addWidget(typeText);
 
@@ -833,15 +816,11 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             @Override
             public void modifyText(ModifyEvent e) {
                 if(systemChanged[0]){
-//                    System.out.println("changed by system"); //$NON-NLS-1$
                     systemChanged[0] = false;
-                }
-                else{
-//                    System.out.println("changed by user"); //$NON-NLS-1$
-//                    System.out.println("=" + typeText.getText() + "="); //$NON-NLS-2$
-                    if(typeText.getText().isEmpty()){ //$NON-NLS-1$
+                } else {
+                    if(typeText.getText().isEmpty()){ 
                         userChanged[0] = false;
-                    }else{
+                    } else { 
                         userChanged[0] = true;
                     }
                 }
