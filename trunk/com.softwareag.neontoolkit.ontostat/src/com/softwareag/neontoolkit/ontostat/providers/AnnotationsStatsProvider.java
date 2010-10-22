@@ -27,10 +27,9 @@ public class AnnotationsStatsProvider extends StatsProvider {
 			return null;
 		}
 	}
-	
 
 	@Override
-    public Class getType() {
+    public Class<?> getType() {
 		return OWLAnnotationProperty.class;
 	}
 	

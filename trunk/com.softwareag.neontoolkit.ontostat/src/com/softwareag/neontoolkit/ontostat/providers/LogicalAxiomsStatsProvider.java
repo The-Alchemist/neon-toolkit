@@ -28,9 +28,8 @@ public class LogicalAxiomsStatsProvider extends StatsProvider {
 		}
 	}
 	
-
 	@Override
-    public Class getType() {
+    public Class<?> getType() {
 		return OWLAxiom.class;
 	}
 	

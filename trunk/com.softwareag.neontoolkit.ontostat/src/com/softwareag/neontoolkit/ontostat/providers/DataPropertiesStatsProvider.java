@@ -29,7 +29,7 @@ public class DataPropertiesStatsProvider extends StatsProvider {
 	}
 	
 	@Override
-	public Class getType() {
+	public Class<?> getType() {
 		return OWLDataProperty.class;
 	}
 

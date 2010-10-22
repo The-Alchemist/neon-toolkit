@@ -28,9 +28,8 @@ public class ImportedOntologiesStatsProvider extends StatsProvider {
 		}
 	}
 	
-
 	@Override
-    public Class getType() {
+    public Class<?> getType() {
 		return OWLOntology.class;
 	}
 

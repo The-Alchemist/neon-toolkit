@@ -25,7 +25,7 @@ public abstract class StatsProvider {
 	}
 	
 	public abstract Object getValue(OWLModel model);
-	public abstract Class getType();
+	public abstract Class<?> getType();
 
 	public OWLObject[] getElements(OWLModel model) {
 		return null;

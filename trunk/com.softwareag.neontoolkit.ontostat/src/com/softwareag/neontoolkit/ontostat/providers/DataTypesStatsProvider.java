@@ -28,9 +28,8 @@ public class DataTypesStatsProvider extends StatsProvider {
 		}
 	}
 	
-
 	@Override
-    public Class getType() {
+    public Class<?> getType() {
 		return OWLDatatype.class;
 	}
 	

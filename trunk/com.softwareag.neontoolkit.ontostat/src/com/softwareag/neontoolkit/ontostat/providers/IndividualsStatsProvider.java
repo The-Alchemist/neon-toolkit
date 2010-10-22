@@ -29,7 +29,7 @@ public class IndividualsStatsProvider extends StatsProvider {
 	}
 	
 	@Override
-    public Class getType() {
+    public Class<?> getType() {
 		return OWLIndividual.class;
 	}
 	
