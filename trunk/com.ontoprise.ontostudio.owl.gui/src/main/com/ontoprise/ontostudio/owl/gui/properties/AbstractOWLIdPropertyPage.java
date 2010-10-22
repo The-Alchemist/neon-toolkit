@@ -269,7 +269,7 @@ public abstract class AbstractOWLIdPropertyPage extends AbstractIDPropertyPage i
         if (!styledText.isDisposed()) {
             Composite parent = styledText.getParent();
             if (styledText.getEditable()) {
-                parent.setBackground(new Color(null, 250, 250, 210));
+                parent.setBackground(OWLGUIUtilities.COLOR_FOR_EDITING);
                 styledText.setFocus();
                 if (resize) {
                     int height = styledText.getLineHeight() * 5 + 5;
@@ -429,7 +429,7 @@ public abstract class AbstractOWLIdPropertyPage extends AbstractIDPropertyPage i
     protected void editPressed(Button editButton, Button removeButton, StyledText text) {
         editButton.setText(OWLGUIUtilities.BUTTON_LABEL_SAVE);
         removeButton.setText(OWLGUIUtilities.BUTTON_LABEL_CANCEL);
-        text.getParent().setBackground(new Color(null, 250, 250, 210));
+        text.getParent().setBackground(OWLGUIUtilities.COLOR_FOR_EDITING);
         OWLGUIUtilities.enable(text, true);
         text.setFocus();
         disableOtherButtons(new Button[] {editButton, removeButton}, _buttonsToDisable);

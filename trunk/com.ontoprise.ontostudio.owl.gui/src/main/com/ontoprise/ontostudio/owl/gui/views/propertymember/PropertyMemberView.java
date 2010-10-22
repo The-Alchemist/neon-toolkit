@@ -83,13 +83,14 @@ public class PropertyMemberView extends ViewPart implements ISelectionListener {
     private void createViewer(Composite parent) {
         final String[] titles = {Messages.PropertyMemberView_1, Messages.PropertyMemberView_2};
         
+        int w = Math.max((parent.getParent().getBounds().x-10)/2, 150);       
         _viewer = new TableViewer(parent, SWT.MULTI | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL);
         for (String title: titles) {
             TableViewerColumn column = new TableViewerColumn(_viewer, SWT.NONE);
             column.getColumn().setText(title);
             column.getColumn().setResizable(true);
             column.getColumn().setMoveable(true);
-            column.getColumn().setWidth(200);
+            column.getColumn().setWidth(w);
         }
     
         Table table = _viewer.getTable();
@@ -114,6 +115,7 @@ public class PropertyMemberView extends ViewPart implements ISelectionListener {
      * 
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
+    @Override
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {
         if (selection instanceof StructuredSelection) {
             StructuredSelection sSelection = (StructuredSelection) selection;

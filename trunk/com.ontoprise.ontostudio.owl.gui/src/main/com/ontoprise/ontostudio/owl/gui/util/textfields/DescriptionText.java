@@ -39,6 +39,7 @@ import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
 import com.ontoprise.ontostudio.owl.gui.syntax.manchester.ManchesterSyntaxConstants;
 import com.ontoprise.ontostudio.owl.gui.syntax.manchester.ManchesterSyntaxProposalProvider;
+import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 
 /**
@@ -131,12 +132,11 @@ public class DescriptionText extends AbstractOwlTextField {
 
         setToolbarBounds(parent);
         _toolbarShell.setLayout(new GridLayout());
-        Color color = new Color(null, new RGB(215, 250, 250));
-        _toolbarShell.setBackground(color);
+        _toolbarShell.setBackground(OWLGUIUtilities.COLOR_FOR_TOOLBAR);
 
         Form form = _toolkit.createForm(_toolbarShell);
         Composite body = form.getBody();
-        body.setBackground(color);
+        body.setBackground(OWLGUIUtilities.COLOR_FOR_TOOLBAR);
         GridData data = new GridData(GridData.FILL_BOTH);
         data.verticalAlignment = GridData.BEGINNING;
         data.grabExcessVerticalSpace = true;
@@ -144,7 +144,7 @@ public class DescriptionText extends AbstractOwlTextField {
         body.setLayout(new GridLayout());
         Composite buttonComp = _toolkit.createComposite(body, SWT.NONE);
         _toolkit.adapt(buttonComp);
-        buttonComp.setBackground(color);
+        buttonComp.setBackground(OWLGUIUtilities.COLOR_FOR_TOOLBAR);
         buttonComp.setLayout(new GridLayout());
 
         // FIXME link keywords with ISyntaxManager
@@ -162,13 +162,12 @@ public class DescriptionText extends AbstractOwlTextField {
         String hasValue = createKeywordLink(ManchesterSyntaxConstants.HAS_VALUE);
 
         FormText formText = _toolkit.createFormText(buttonComp, true);
-        formText.setBackground(color);
+        formText.setBackground(OWLGUIUtilities.COLOR_FOR_TOOLBAR);
         data = new GridData(GridData.FILL_HORIZONTAL);
         data.widthHint = 200;
         data.verticalAlignment = GridData.BEGINNING;
         formText.setLayoutData(data);
         formText.setWhitespaceNormalized(true);
-        color.dispose();
 
         formText.setImage(ManchesterSyntaxConstants.NOT, OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.COMPLEMENT_OF));
         formText.setImage(ManchesterSyntaxConstants.OR, OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.UNION_OF));
@@ -223,6 +222,7 @@ public class DescriptionText extends AbstractOwlTextField {
         });
 
         _toolbarShell.addMouseMoveListener(new MouseMoveListener() {
+            @Override
             public void mouseMove(MouseEvent e) {
                 if (_originalToolBarPosition == null)
                     return;
@@ -233,6 +233,7 @@ public class DescriptionText extends AbstractOwlTextField {
 
         _toolbarShell.getParent().addListener(SWT.Move, new Listener() {
 
+            @Override
             public void handleEvent(Event event) {
                 setToolbarBounds(parent);
             }

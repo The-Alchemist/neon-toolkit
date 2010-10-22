@@ -24,6 +24,7 @@ import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
  */
 public class RangeViewLabelProvider extends LabelProvider implements IColorProvider {
 
+    @Override
     public Color getBackground(Object element) {
         if (element instanceof PropertyTreeElement) {
             PropertyTreeElement item = (PropertyTreeElement) element;
@@ -34,6 +35,7 @@ public class RangeViewLabelProvider extends LabelProvider implements IColorProvi
         return null;
     }
 
+    @Override
     public Color getForeground(Object element) {
         return null;
     }

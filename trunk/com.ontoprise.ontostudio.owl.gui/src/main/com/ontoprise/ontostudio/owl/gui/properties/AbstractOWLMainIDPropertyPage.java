@@ -27,7 +27,6 @@ import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -75,16 +74,12 @@ import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.perspectives.OWLPerspective;
 
 /**
+ * @author Werner Hihn
+ * @author Michael Erdmann 
  * @author Nico Stieler
  * The Class BasicOWLEntityPropertyPage.
  */
 public abstract class AbstractOWLMainIDPropertyPage extends AbstractMainIDPropertyPage implements IOWLPropertyPage {
-
-    /** The Constant QUALIFIED_ID. */
-    protected static final int QUALIFIED_ID = 0;
-
-    /** The Constant LOCAL_NAME. */
-    protected static final int LOCAL_NAME = 1;
 
     /** The _owl model. */
     protected OWLModel _owlModel;
@@ -249,7 +244,7 @@ public abstract class AbstractOWLMainIDPropertyPage extends AbstractMainIDProper
         if (!styledText.isDisposed()) {
             Composite parent = styledText.getParent();
             if (styledText.getEditable()) {
-                parent.setBackground(new Color(null, 250, 250, 210));
+                parent.setBackground(OWLGUIUtilities.COLOR_FOR_EDITING);
                 styledText.setFocus();
                 if (resize) {
                     int height = styledText.getLineHeight() * 5 + 5;
@@ -355,6 +350,7 @@ public abstract class AbstractOWLMainIDPropertyPage extends AbstractMainIDProper
      * 
      * @return the form
      */
+    @Override
     public ScrolledForm getForm() {
         return _form;
     }
@@ -413,6 +409,7 @@ public abstract class AbstractOWLMainIDPropertyPage extends AbstractMainIDProper
     /**
      * Layout sections.
      */
+    @Override
     public void layoutSections() {
         List<Section> sections = getSections();
         if (sections != null) {
@@ -433,7 +430,7 @@ public abstract class AbstractOWLMainIDPropertyPage extends AbstractMainIDProper
     protected void editPressed(Button editButton, Button removeButton, StyledText text) {
         editButton.setText(OWLGUIUtilities.BUTTON_LABEL_SAVE);
         removeButton.setText(OWLGUIUtilities.BUTTON_LABEL_CANCEL);
-        text.getParent().setBackground(new Color(null, 250, 250, 210));
+        text.getParent().setBackground(OWLGUIUtilities.COLOR_FOR_EDITING);
         OWLGUIUtilities.enable(text, true);
         text.setFocus();
         disableOtherButtons(new Button[] {editButton, removeButton}, _buttonsToDisable);
@@ -599,6 +596,7 @@ public abstract class AbstractOWLMainIDPropertyPage extends AbstractMainIDProper
      * 
      * @see org.neontoolkit.gui.properties.IEntityPropertyPage#getImage()
      */
+    @Override
     public Image getImage() {
         return null;
     }
@@ -616,7 +614,7 @@ public abstract class AbstractOWLMainIDPropertyPage extends AbstractMainIDProper
         }
 
         int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
-        OWLObjectVisitorEx visitor = _manager.getVisitor(_owlModel, idDisplayStyle);
+        OWLObjectVisitorEx<?> visitor = _manager.getVisitor(_owlModel, idDisplayStyle);
         return (String[]) desc.accept(visitor);
     }
 
@@ -632,6 +630,7 @@ public abstract class AbstractOWLMainIDPropertyPage extends AbstractMainIDProper
 
             // Listeners for the events that change the namespace and display
             // language settings
+            @Override
             public void propertyChange(PropertyChangeEvent event) {
                 if (event.getProperty().equals(NeOnUIPlugin.ID_DISPLAY_PREFERENCE) || event.getProperty().equals(OWLPlugin.SYNTAX)) {
                     if (_id != null) {
@@ -754,6 +753,7 @@ public abstract class AbstractOWLMainIDPropertyPage extends AbstractMainIDProper
          * 
          * @see org.eclipse.ui.IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
          */
+        @Override
         public void partActivated(IWorkbenchPart part) {
             cleanup();
         }
@@ -763,6 +763,7 @@ public abstract class AbstractOWLMainIDPropertyPage extends AbstractMainIDProper
          * 
          * @see org.eclipse.ui.IPartListener#partBroughtToTop(org.eclipse.ui.IWorkbenchPart)
          */
+        @Override
         public void partBroughtToTop(IWorkbenchPart part) {
             cleanup();
         }
@@ -772,6 +773,7 @@ public abstract class AbstractOWLMainIDPropertyPage extends AbstractMainIDProper
          * 
          * @see org.eclipse.ui.IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
          */
+        @Override
         public void partClosed(IWorkbenchPart part) {
             cleanup();
         }
@@ -781,6 +783,7 @@ public abstract class AbstractOWLMainIDPropertyPage extends AbstractMainIDProper
          * 
          * @see org.eclipse.ui.IPartListener#partDeactivated(org.eclipse.ui.IWorkbenchPart)
          */
+        @Override
         public void partDeactivated(IWorkbenchPart part) {
             if (part instanceof AbstractOWLMainIDPropertyPage) {
                 cleanup();
@@ -821,6 +824,7 @@ public abstract class AbstractOWLMainIDPropertyPage extends AbstractMainIDProper
          * 
          * @see org.eclipse.ui.IWorkbenchListener#postShutdown(org.eclipse.ui.IWorkbench)
          */
+        @Override
         public void postShutdown(IWorkbench workbench) {
             cleanup();
         }
@@ -830,6 +834,7 @@ public abstract class AbstractOWLMainIDPropertyPage extends AbstractMainIDProper
          * 
          * @see org.eclipse.ui.IWorkbenchListener#preShutdown(org.eclipse.ui.IWorkbench, boolean)
          */
+        @Override
         public boolean preShutdown(IWorkbench workbench, boolean forced) {
             cleanup();
             return false;
@@ -840,6 +845,7 @@ public abstract class AbstractOWLMainIDPropertyPage extends AbstractMainIDProper
          * 
          * @see org.eclipse.ui.IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
          */
+        @Override
         public void partOpened(IWorkbenchPart part) {
             cleanup();
         }

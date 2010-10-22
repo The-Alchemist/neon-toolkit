@@ -44,14 +44,16 @@ public abstract class AbstractIDPropertyPage implements IPropertyPage {
 	/* (non-Javadoc)
 	 * @see org.neontoolkit.gui.properties.IPropertyPage#setMainPage(org.neontoolkit.gui.properties.IMainPropertyPage)
 	 */
-	public void setMainPage(IMainPropertyPage propertyPage) {
+	@Override
+    public void setMainPage(IMainPropertyPage propertyPage) {
 		_mainPage = propertyPage;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.neontoolkit.gui.properties.IPropertyPage#selectTab()
 	 */
-	public void selectTab() {
+	@Override
+    public void selectTab() {
 		initSelection();
 		refresh();
 	}

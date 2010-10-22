@@ -52,7 +52,8 @@ public abstract class AbstractSearchQuery implements ISearchQuery {
         _projects_ontologies = projects_ontologies;
 	}
 
-	public IStatus run(IProgressMonitor monitor) throws OperationCanceledException {
+	@Override
+    public IStatus run(IProgressMonitor monitor) throws OperationCanceledException {
 		final SearchResult textResult = (SearchResult) getSearchResult();
 		textResult.removeAll();
 		// Don't need to pass in working copies in 3.0 here
@@ -83,19 +84,23 @@ public abstract class AbstractSearchQuery implements ISearchQuery {
 		return new Status(IStatus.OK, SearchPlugin.getDefault().getBundle().getSymbolicName(), 0, message, null);
 	}
 
-	public String getLabel() {
+	@Override
+    public String getLabel() {
 		return Messages.AbstractSearchQuery_4; 
 	}
 
-	public boolean canRerun() {
+	@Override
+    public boolean canRerun() {
 		return true;
 	}
 
-	public boolean canRunInBackground() {
+	@Override
+    public boolean canRunInBackground() {
 		return false;
 	}
 
-	public ISearchResult getSearchResult() {
+	@Override
+    public ISearchResult getSearchResult() {
 		if (_result == null) {
 			_result = new SearchResult(this);
 		}

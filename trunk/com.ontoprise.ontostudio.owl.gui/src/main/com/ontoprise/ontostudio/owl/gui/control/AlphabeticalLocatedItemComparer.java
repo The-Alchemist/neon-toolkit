@@ -22,10 +22,9 @@ import com.ontoprise.ontostudio.owl.model.LocatedItem;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.util.Cast;
 
-@SuppressWarnings("unchecked")
-public class AlphabeticalLocatedItemComparer<A extends LocatedItem> implements Comparator<LocatedItem> {
+public class AlphabeticalLocatedItemComparer<A extends LocatedItem<?>> implements Comparator<LocatedItem<?>> {
 
-    private OWLObjectVisitorEx _visitor;
+    private OWLObjectVisitorEx<?> _visitor;
 
     /**
 	 * 
@@ -36,7 +35,8 @@ public class AlphabeticalLocatedItemComparer<A extends LocatedItem> implements C
         _visitor = manager.getVisitor(owlModel, idDisplayStyle);
     }
 
-    public int compare(LocatedItem o1, LocatedItem o2) {
+    @Override
+    public int compare(LocatedItem<?> o1, LocatedItem<?> o2) {
         OWLAxiom axiom1 = Cast.cast(o1.getItem());
         String[] result1 = (String[]) axiom1.accept(_visitor);
         OWLAxiom axiom2 = Cast.cast(o2.getItem());
