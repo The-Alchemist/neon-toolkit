@@ -1783,7 +1783,7 @@
   		targetID="com.ontoprise.ontostudio.owl.perspectives.OWLPerspective">
   		<view
           closeable="true"
-          id="com.ontoprise.ontostudio.owl.views.propertyInstancesContext"
+          id="com.ontoprise.ontostudio.owl.views.propertymemberview"
           moveable="true"
           relationship="stack"
           relative="com.ontoprise.ontostudio.owl.views.individualview"
