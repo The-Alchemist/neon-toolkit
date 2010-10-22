@@ -27,10 +27,9 @@ public class AxiomsStatsProvider extends StatsProvider {
 			return null;
 		}
 	}
-	
 
 	@Override
-    public Class getType() {
+    public Class<?> getType() {
 		return OWLAxiom.class;
 	}
 	
