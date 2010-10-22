@@ -29,6 +29,9 @@ public abstract class AxiomRowHandler extends AbstractRowHandler {
 
     private LocatedAxiom _axiom;
 
+    public AxiomRowHandler(IOWLPropertyPage page, OWLModel owlModel, LocatedAxiom axiom) {
+        this(page, owlModel, owlModel, axiom);
+    }
     public AxiomRowHandler(IOWLPropertyPage page, OWLModel localOwlModel, OWLModel sourceOwlModel, LocatedAxiom axiom) {
         super(page, localOwlModel, sourceOwlModel);
         _axiom = axiom;
