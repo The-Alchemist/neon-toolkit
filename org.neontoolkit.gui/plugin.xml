@@ -134,6 +134,31 @@
 
       </viewerContribution>
    </extension>
+    <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:file?after=New">
+         <command
+               commandId="org.neontoolkit.gui.navigator.ontology.SaveAllOntologyAction"
+               label="Save All 1"
+               style="push"
+               tooltip="Save All 2">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension point="org.eclipse.ui.editorActions"> 
+	   <editorContribution 
+	      id="org.eclipse.ui.articles.action.contribution.editor2" 
+	   targetID="org.eclipse.ui.DefaultTextEditor">
+	      <action
+	         id="org.neontoolkit.gui.navigator.ontology.SaveOntology" 
+	         label="Editor Action 1" 
+	         tooltip="Tooltip for Editor Action 1"
+	      menubarPath="file/save.ext"
+	         class="org.neontoolkit.gui.navigator.ontology.SaveOntologyAction"> 
+	      </action>
+	   </editorContribution>
+   </extension>
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
@@ -186,6 +211,14 @@
 <!--+++++++++++++++++++++++++++ NAVIGATOR EXTENSIONS+++++++++++++++++++++++-->
 <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
    
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            description="Save All 3"
+            id="org.neontoolkit.gui.navigator.ontology.SaveAllOntologyAction"
+            name="Save All 4">
+      </command>
+   </extension>
    
    <extension
          point="org.eclipse.ui.commands">
@@ -323,6 +356,10 @@
                </iterate>
             </and>
          </activeWhen>
+      </handler>
+      <handler
+            class="org.neontoolkit.gui.navigator.ontology.SaveAllOntologyAction"
+            commandId="org.neontoolkit.gui.navigator.ontology.SaveAllOntologyAction">
       </handler>
    </extension>
    <extension

@@ -150,7 +150,7 @@ public abstract class AbstractMainIDPropertyPage extends AbstractIDPropertyPage 
      * 
      */
     protected void createUriComposite() {
-
+// NICO maybe reimplement: another Layoutobjects,...
         Label label; 
         GridData data;
         _uriComposite = new Composite(_uriComposite.getParent(), SWT.NONE);

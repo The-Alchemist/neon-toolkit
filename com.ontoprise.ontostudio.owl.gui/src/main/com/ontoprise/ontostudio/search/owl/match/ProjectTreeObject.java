@@ -25,6 +25,9 @@ public class ProjectTreeObject extends TreeParent {
     public Image getImage() {
         return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.PROJECT);
     }
-
+    @Override
+    public String getProjectId(){
+        return getName();
+    }
 
 }

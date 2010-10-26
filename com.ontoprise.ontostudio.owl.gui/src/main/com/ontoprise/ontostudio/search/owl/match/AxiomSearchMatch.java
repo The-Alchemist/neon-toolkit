@@ -10,25 +10,83 @@
 
 package com.ontoprise.ontostudio.search.owl.match;
 
+
+import java.util.Set;
+
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.gui.NeOnUIPlugin;
+import org.neontoolkit.gui.navigator.ITreeDataProvider;
 import org.neontoolkit.gui.navigator.ITreeElement;
+import org.neontoolkit.gui.navigator.MTreeView;
+import org.neontoolkit.gui.navigator.TreeProviderManager;
+import org.neontoolkit.gui.properties.EntityPropertiesView;
+import org.neontoolkit.gui.properties.IMainPropertyPage;
+import org.neontoolkit.gui.properties.IPropertyPage;
 import org.neontoolkit.gui.util.PerspectiveChangeHandler;
 import org.neontoolkit.search.SearchPlugin;
+import org.neontoolkit.search.ui.NavigatorSearchMatch;
+import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLAnnotationAxiom;
+import org.semanticweb.owlapi.model.OWLAnnotationPropertyDomainAxiom;
+import org.semanticweb.owlapi.model.OWLAnnotationPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLClassAxiom;
+import org.semanticweb.owlapi.model.OWLDataPropertyAxiom;
+import org.semanticweb.owlapi.model.OWLDataPropertyCharacteristicAxiom;
+import org.semanticweb.owlapi.model.OWLDataPropertyDomainAxiom;
+import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
+import org.semanticweb.owlapi.model.OWLDatatypeDefinitionAxiom;
+import org.semanticweb.owlapi.model.OWLDeclarationAxiom;
+import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
+import org.semanticweb.owlapi.model.OWLDisjointObjectPropertiesAxiom;
+import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
+import org.semanticweb.owlapi.model.OWLEquivalentDataPropertiesAxiom;
+import org.semanticweb.owlapi.model.OWLEquivalentObjectPropertiesAxiom;
+import org.semanticweb.owlapi.model.OWLIndividualAxiom;
+import org.semanticweb.owlapi.model.OWLInverseObjectPropertiesAxiom;
+import org.semanticweb.owlapi.model.OWLNaryIndividualAxiom;
+import org.semanticweb.owlapi.model.OWLObjectPropertyAxiom;
+import org.semanticweb.owlapi.model.OWLObjectPropertyCharacteristicAxiom;
+import org.semanticweb.owlapi.model.OWLObjectPropertyDomainAxiom;
+import org.semanticweb.owlapi.model.OWLObjectPropertyRangeAxiom;
+import org.semanticweb.owlapi.model.OWLPropertyAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLSubAnnotationPropertyOfAxiom;
+import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
+import org.semanticweb.owlapi.model.OWLSubDataPropertyOfAxiom;
+import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
+import org.semanticweb.owlapi.model.OWLSubPropertyChainOfAxiom;
 
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
 import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.individualview.IndividualView;
 import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
+import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzHierarchyProvider;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement;
+import com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab;
+import com.ontoprise.ontostudio.owl.gui.properties.annotationProperty.AnnotationPropertyPage2;
+import com.ontoprise.ontostudio.owl.gui.properties.clazz.ClazzTaxonomyPropertyPage2;
+import com.ontoprise.ontostudio.owl.gui.properties.dataProperty.DataPropertyPropertyPage2;
+import com.ontoprise.ontostudio.owl.gui.properties.dataProperty.DataPropertyTaxonomyPropertyPage;
+import com.ontoprise.ontostudio.owl.gui.properties.datatypes.DatatypePropertyPage;
+import com.ontoprise.ontostudio.owl.gui.properties.individual.IndividualPropertyPage2;
+import com.ontoprise.ontostudio.owl.gui.properties.individual.IndividualTaxonomyPropertyPage;
+import com.ontoprise.ontostudio.owl.gui.properties.objectProperty.ObjectPropertyPropertyPage2;
+import com.ontoprise.ontostudio.owl.gui.properties.objectProperty.ObjectPropertyTaxonomyPropertyPage;
+import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
+import com.ontoprise.ontostudio.owl.model.OWLModel;
+import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.perspectives.OWLPerspective;
 
 /**
@@ -80,219 +138,499 @@ public class AxiomSearchMatch extends OwlSearchMatch {
         }
         return _individualView;
     }
+  /*
+   * TODO (maybe - need to be discussed):
+   * jump to the "other" entity
+   * 
+   * if you are looking for the references (Find References) you maybe want to see entries of the "other" entity
+   * 
+   * e.g.
+   * Find References of C:
+   * 
+   * C subclassOf D 
+   * --> so far: jumps to the Taxonomy of C 
+   * --> perhaps of interest: Taxonomy of D
+   * 
+   * greater effort
+   */
+    
     
     @SuppressWarnings("unchecked")
     @Override
     public void show(int index) {
         PerspectiveChangeHandler.switchPerspective(OWLPerspective.ID);
-        if(getMatch() instanceof IIndividualTreeElement) {
+        EntityPropertiesView epv = null;
+//        String perspective = OWLPerspective.ID; //needed for 
+        IPropertyPage tab = null;
+//        OWLEntity jumpToEntity = null;
+        ClassSearchMatch classMatch = null;
+
+        
+        if(getMatch() instanceof IIndividualTreeElement && getInstanceView() != null){
+            IIndividualTreeElement match = (IIndividualTreeElement)getMatch();
+            OWLClass clazz = null;
+            String ontology = match.getOntologyUri();
+            String project = match.getProjectName();
+            Set<OWLEntity> entities = null;
+            try {
+                entities = OWLModelFactory.getOWLModel(ontology, project).getEntity(match.getClazz());
+            } catch (NeOnCoreException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            if(entities != null){
+                for(OWLEntity entity : entities){
+                    if(entity instanceof OWLClass){
+                        clazz = (OWLClass) entity;
+                        break;
+                    }
+                }
+            }
+            ITreeDataProvider provider = TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class);
+            ClazzTreeElement clazzTreeElement = new ClazzTreeElement(clazz, ontology, project, provider);
+            classMatch = new ClassSearchMatch(clazzTreeElement);
+
+//          jump to IndividualView
             if (getInstanceView() != null) {
-//                _individualView.selectionChanged(
-//                        NavigatorSearchMatch.getNavigator(), 
-//                        new StructuredSelection(_classMatch.getMatch()));
+                PerspectiveChangeHandler.switchPerspective(OWLPerspective.ID);
+                _individualView.selectionChanged(
+                        NavigatorSearchMatch.getNavigator(), 
+                        new StructuredSelection(classMatch.getMatch()));
                 _individualView.getTreeViewer().setSelection(new StructuredSelection(getMatch()));
             }
+            try{
+//                perspective = OWLPerspective.ID;
+                epv = getPropertyView();
+                IPropertyPage currentTab = epv.getCurrentSelectedTab();
+                IMainPropertyPage mainTab = null;
+                
+                if(currentTab == null)//NICO to fix, starting with the second click currentTab is null
+                    throw new NullPointerException();
+                
+                if(currentTab instanceof IMainPropertyPage){
+                    mainTab = (IMainPropertyPage) currentTab;
+                }else{
+                    mainTab = currentTab.getMainPage();
+                }
+    //          jump to correct Tab
+                if(_axiom instanceof OWLIndividualAxiom){
+        //          OWLDataPropertyAssertionAxiom
+        //          OWLNegativeDataPropertyAssertionAxiom
+        //          OWLObjectPropertyAssertionAxiom
+        //          OWLNegativeObjectPropertyAssertionAxiom
+                if(_axiom instanceof OWLPropertyAssertionAxiom){
+                        if(mainTab != null){
+                            if(mainTab instanceof IndividualPropertyPage2){
+                                tab = mainTab;
+                            }else{
+                                for(IPropertyPage page : mainTab.getSubPages()){
+                                    if(page instanceof IndividualPropertyPage2){
+                                        tab = page;
+                                        break;
+                                    }
+                                }
+                            }
+                        }  
+                    }else{ 
+                        //          OWLDifferentIndividualsAxiom
+                        //          OWLSameIndividualAxiom
+                        if(_axiom instanceof OWLNaryIndividualAxiom){
+                            if(mainTab != null){
+                                if(mainTab instanceof IndividualTaxonomyPropertyPage){
+                                    tab = mainTab;
+                                }else{
+                                    for(IPropertyPage page : mainTab.getSubPages()){
+                                        if(page instanceof IndividualTaxonomyPropertyPage){
+                                            tab = page;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }  
+                        }else{
+                            if(_axiom instanceof OWLClassAssertionAxiom){
+                                if(mainTab != null){
+                                    if(mainTab instanceof IndividualTaxonomyPropertyPage){
+                                        tab = mainTab;
+                                    }else{
+                                        for(IPropertyPage page : mainTab.getSubPages()){
+                                            if(page instanceof IndividualTaxonomyPropertyPage){
+                                                tab = page;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }  
+                            }else{
+                                System.out.println(_axiom.getClass() + " not supported yet(OWLIndividualAxiom)"); //$NON-NLS-1$
+                                }
+                            }
+                        }
+                }else{
+                    if(_axiom instanceof OWLDeclarationAxiom){
+                        if(mainTab != null){
+                            if(mainTab instanceof IndividualTaxonomyPropertyPage){
+                                tab = mainTab;
+                            }else{
+                                for(IPropertyPage page : mainTab.getSubPages()){
+                                    if(page instanceof IndividualTaxonomyPropertyPage){
+                                        tab = page;
+                                        break;
+                                    }
+                                }
+                            }
+                        }  
+                    }
+                }
+            }catch (Exception e) {
+                System.out.println("############# does not jump to the correct Tab for sure #############"); //$NON-NLS-1$ TODO: has to be done
+                //nothing to do: does not jump to the correct Tab for sure
+            }
+            if(epv != null && tab != null){
+                epv.setCurrentSelectedTab(tab);
+            }
         } else {
+            super.show(index);
+            if(_axiom instanceof OWLClassAxiom){
+                if(getMatch() instanceof ClazzTreeElement){
+//                    perspective = OWLPerspective.ID;
+                    epv = getPropertyView();
+                    IPropertyPage currentTab = epv.getCurrentSelectedTab();
+                    IMainPropertyPage mainTab = null;
+                    if(currentTab instanceof IMainPropertyPage){
+                        mainTab = (IMainPropertyPage) currentTab;
+                    }else{
+                        mainTab = currentTab.getMainPage();
+                    }
+                    if(_axiom instanceof OWLSubClassOfAxiom){
+        //                    OWLSubClassOfAxiom subClassAxiom = ((OWLSubClassOfAxiom)_axiom);
+        //                    ClazzTreeElement match = (ClazzTreeElement)getMatch();
+        //                    Set<OWLClass> subClasses = subClassAxiom.getSubClass().getClassesInSignature();
+        //                    Set<OWLClass> superClasses = subClassAxiom.getSuperClass().getClassesInSignature();
+                            
+        //                    findEntityInSigniture:
+        //                    {
+        //                        for(OWLClass subClass : subClasses){
+        //                            System.out.println(subClass.getIRI());
+        //                            if(subClass.getIRI().toString().equals(match.getId())){
+        //                                System.out.println("gefunden");
+        //                                for(OWLClass superClass : superClasses){
+        //                                    jumpToEntity = superClass;
+        //                                    break findEntityInSigniture;
+        //                                }
+        //                            }else{
+        //                                System.out.println("nicht gefunden");
+        //                            }
+        //                        }
+        //                        for(OWLClass superClass : superClasses){
+        //                            System.out.println(superClass.getIRI());
+        //                            if(superClass.getIRI().toString().equals(match.getId())){
+        //                                System.out.println("gefunden");
+        //                                for(OWLClass subClass : subClasses){
+        //                                    jumpToEntity = superClass;
+        //                                    break findEntityInSigniture;
+        //                                }
+        //                            }else{
+        //                                System.out.println("nicht gefunden");
+        //                            }
+        //                        }
+        //                        jumpToEntity = (OWLClass)match.getEntity();
+        //                    }
+        
+                            if(mainTab != null){
+                                for(IPropertyPage page : mainTab.getSubPages()){
+                                    if(page instanceof ClazzTaxonomyPropertyPage2){
+                                        tab = page;
+                                        break;
+                                    }
+                                }
+                            }
+        //                }
+                    }else{
+                        if(_axiom instanceof OWLDisjointClassesAxiom){
+                            if(mainTab != null){
+                                for(IPropertyPage page : mainTab.getSubPages()){
+                                    if(page instanceof ClazzTaxonomyPropertyPage2){
+                                        tab = page;
+                                        break;
+                                    }
+                                }
+                            }  
+                        }else{
+                            if(_axiom instanceof OWLEquivalentClassesAxiom){
+                                if(mainTab != null){
+                                    for(IPropertyPage page : mainTab.getSubPages()){
+                                        if(page instanceof ClazzTaxonomyPropertyPage2){
+                                            tab = page;
+                                            break;
+                                        }
+                                    }
+                                }  
+                            }else{
+                                System.out.println(_axiom.getClass() + " not supported yet(OWLClassAxiom)"); //$NON-NLS-1$
+                                /*
+                                 * TODO: space for not supported:
+                                 *      - OWLDisjointUnionAxiom
+                                 *      - OWLNaryAxiom
+                                 */
+                            }
+                        }
+                    }
+                }
+            }else{
+                if(_axiom instanceof OWLObjectPropertyAxiom){
+                    if(getMatch() instanceof ObjectPropertyTreeElement){
+//                        perspective = OWLPerspective.ID;
+                        epv = getPropertyView();
+                        IPropertyPage currentTab = epv.getCurrentSelectedTab();
+                        IMainPropertyPage mainTab = null;
+                        if(currentTab instanceof IMainPropertyPage){
+                            mainTab = (IMainPropertyPage) currentTab;
+                        }else{
+                            mainTab = currentTab.getMainPage();
+                        }
+                    if(_axiom instanceof OWLDisjointObjectPropertiesAxiom 
+                            || _axiom instanceof OWLEquivalentObjectPropertiesAxiom 
+                            || _axiom instanceof OWLInverseObjectPropertiesAxiom 
+                            || _axiom instanceof OWLSubObjectPropertyOfAxiom 
+                            || _axiom instanceof OWLSubPropertyChainOfAxiom){
+                            if(mainTab != null){
+                                if(mainTab instanceof ObjectPropertyTaxonomyPropertyPage){
+                                    tab = mainTab;
+                                }else{
+                                    for(IPropertyPage page : mainTab.getSubPages()){
+                                        if(page instanceof ObjectPropertyTaxonomyPropertyPage){
+                                            tab = page;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }else{                    
+    //                      OWLAsymmetricObjectPropertyAxiom
+    //                      OWLFunctionalObjectPropertyAxiom
+    //                      OWLInverseFunctionalObjectPropertyAxiom
+    //                      OWLIrreflexiveObjectPropertyAxiom
+    //                      OWLReflexiveObjectPropertyAxiom
+    //                      OWLSymmetricObjectPropertyAxiom
+    //                      OWLTransitiveObjectPropertyAxiom
+                            if(_axiom instanceof OWLObjectPropertyCharacteristicAxiom){
+                                if(mainTab != null){
+                                    if(mainTab instanceof ObjectPropertyPropertyPage2){
+                                        tab = mainTab;
+                                    }else{
+                                        for(IPropertyPage page : mainTab.getSubPages()){
+                                            if(page instanceof ObjectPropertyPropertyPage2){
+                                                tab = page;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }else{
+                                if(_axiom instanceof OWLObjectPropertyDomainAxiom ||
+                                    _axiom instanceof OWLObjectPropertyRangeAxiom){
+                                    if(mainTab != null){
+                                        if(mainTab instanceof ObjectPropertyPropertyPage2){
+                                            tab = mainTab;
+                                        }else{
+                                            for(IPropertyPage page : mainTab.getSubPages()){
+                                                if(page instanceof ObjectPropertyPropertyPage2){
+                                                    tab = page;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }  
+                                }else{
+                                    System.out.println(_axiom.getClass() + " not supported yet(OWLObjectPropertyAxiom)"); //$NON-NLS-1$
+                                }
+                            }
+                        }
+                    }
+                }else{
+                    if(_axiom instanceof OWLDataPropertyAxiom){
+                        if(getMatch() instanceof DataPropertyTreeElement){
+//                            perspective = OWLPerspective.ID;
+                            epv = getPropertyView();
+                            IPropertyPage currentTab = epv.getCurrentSelectedTab();
+                            IMainPropertyPage mainTab = null;
+                            if(currentTab instanceof IMainPropertyPage){
+                                mainTab = (IMainPropertyPage) currentTab;
+                            }else{
+                                mainTab = currentTab.getMainPage();
+                            }
+//                          OWLFunctionalDataPropertyAxiom
+                        if(_axiom instanceof OWLDataPropertyCharacteristicAxiom){
+                                if(mainTab != null){
+                                    if(mainTab instanceof DataPropertyPropertyPage2){
+                                        tab = mainTab;
+                                    }else{
+                                        for(IPropertyPage page : mainTab.getSubPages()){
+                                            if(page instanceof DataPropertyPropertyPage2){
+                                                tab = page;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }  
+                            }else{
+                                if(_axiom instanceof OWLDataPropertyDomainAxiom 
+                                        || _axiom instanceof OWLDataPropertyRangeAxiom){
+                                    if(mainTab != null){
+                                        if(mainTab instanceof DataPropertyPropertyPage2){
+                                            tab = mainTab;
+                                        }else{
+                                            for(IPropertyPage page : mainTab.getSubPages()){
+                                                if(page instanceof DataPropertyPropertyPage2){
+                                                    tab = page;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }  
+                                }else{
+                                    if(_axiom instanceof OWLEquivalentDataPropertiesAxiom
+//                                                || _axiom instanceof OWLDisjointDataPropertiesAxiom
+                                            || _axiom instanceof OWLSubDataPropertyOfAxiom){
+                                        if(mainTab != null){
+                                            if(mainTab instanceof DataPropertyTaxonomyPropertyPage){
+                                                tab = mainTab;
+                                            }else{
+                                                for(IPropertyPage page : mainTab.getSubPages()){
+                                                    if(page instanceof DataPropertyTaxonomyPropertyPage){
+                                                        tab = page;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }   
+                                    }else{
+                                        System.out.println(_axiom.getClass() + " not supported yet(OWLDataPropertyAxiom)"); //$NON-NLS-1$
+                                    }
+                                }
+                            }
+                        }
+                    }else{
+                        if(_axiom instanceof OWLAnnotationAxiom){
+                            if(getMatch() instanceof AnnotationPropertyTreeElement){
+//                                perspective = OWLPerspective.ID;
+                                epv = getPropertyView();
+                                IPropertyPage currentTab = epv.getCurrentSelectedTab();
+                                IMainPropertyPage mainTab = null;
+                                if(currentTab instanceof IMainPropertyPage){
+                                    mainTab = (IMainPropertyPage) currentTab;
+                                }else{
+                                    mainTab = currentTab.getMainPage();
+                                }
+                                if(_axiom instanceof OWLAnnotationAssertionAxiom){
+                                    if(mainTab != null){
+                                        if(mainTab instanceof AnnotationPropertyPage2){
+                                            tab = mainTab;
+                                        }else{
+                                            for(IPropertyPage page : mainTab.getSubPages()){
+                                                if(page instanceof AnnotationPropertyPage2){
+                                                    tab = page;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }  
+                                }else{
+                                    if(_axiom instanceof OWLAnnotationPropertyDomainAxiom 
+                                            || _axiom instanceof OWLAnnotationPropertyRangeAxiom){
+                                        if(mainTab != null){
+                                            if(mainTab instanceof AnnotationPropertyPage2){
+                                                tab = mainTab;
+                                            }else{
+                                                for(IPropertyPage page : mainTab.getSubPages()){
+                                                    if(page instanceof AnnotationPropertyPage2){
+                                                        tab = page;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }  
+                                    }else{
+                                        if(_axiom instanceof OWLSubAnnotationPropertyOfAxiom){
+                                            if(mainTab != null){
+                                                if(mainTab instanceof SourceViewTab){
+                                                    tab = mainTab;
+                                                }else{
+                                                    for(IPropertyPage page : mainTab.getSubPages()){//TODO later taxonomy
+                                                        if(page instanceof SourceViewTab){
+                                                            tab = page;
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }    
+                                        }else{
+                                            System.out.println(_axiom.getClass() + " not supported yet(OWLDataPropertyAxiom)"); //$NON-NLS-1$
+                                        }
+                                    }
+                                }
+                            }
+                        }else{
+                            if(_axiom instanceof OWLDatatypeDefinitionAxiom){
+                                if(getMatch() instanceof DatatypeTreeElement){
+//                                    perspective = OWLPerspective.ID;
+                                    epv = getPropertyView();
+                                    IPropertyPage currentTab = epv.getCurrentSelectedTab();
+                                    IMainPropertyPage mainTab = null;
+                                    if(currentTab instanceof IMainPropertyPage){
+                                        mainTab = (IMainPropertyPage) currentTab;
+                                    }else{
+                                        mainTab = currentTab.getMainPage();
+                                    }
+                                    if(mainTab != null){
+                                        if(mainTab instanceof DatatypePropertyPage){
+                                            tab = mainTab;
+                                        }else{
+                                            for(IPropertyPage page : mainTab.getSubPages()){
+                                                if(page instanceof DatatypePropertyPage){
+                                                    tab = page;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }  
+                                }
+                            }
+                            else{
+                                if(_axiom instanceof OWLDeclarationAxiom){//NICO
+                                    //nothing to do : no specific tab should be used
+                                }else{
+                                    System.out.println("###################: " + _axiom.getClass()); //$NON-NLS-1$
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            //change tab to tab
+            if(epv != null && tab != null){
+                epv.setCurrentSelectedTab(tab);
+            }
             super.show(index);
         }
     }
 
-//    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     @Override
     public String toString() {
-
+        AbstractOwlEntityTreeElement element = (AbstractOwlEntityTreeElement) getMatch();
+        try {
+            if(element != null) {
+                OWLModel owlModel = OWLModelFactory.getOWLModel(element.getOntologyUri(), element.getProjectName());
+                int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
+                Object accept = _axiom.accept(OWLPlugin.getDefault().getSyntaxManager().getVisitor(owlModel, idDisplayStyle));
+                return OWLGUIUtilities.getEntityLabel((String[]) accept).toString();
+            }
+        }catch (NeOnCoreException e) {
+          // nothing to do
+        }
         return _axiom.toString();
-//        AbstractOwlEntityTreeElement element = (AbstractOwlEntityTreeElement) getMatch();
-//
-//        String subject = ""; //$NON-NLS-1$
-//        String axiomString = ""; //$NON-NLS-1$
-//        String projectName = ""; //$NON-NLS-1$
-//        String ontology = ""; //$NON-NLS-1$
-//
-//        try {
-//            if(element != null) {
-//                OWLModel owlModel = OWLModelFactory.getOWLModel(element.getOntologyUri(), element.getProjectName());
-//                int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
-//                OWLObjectVisitorEx visitor = OWLPlugin.getDefault().getSyntaxManager().getVisitor(owlModel, idDisplayStyle);
-//                subject = OWLGUIUtilities.getEntityLabel((String[]) element.getEntity().accept(visitor));
-//                axiomString = OWLGUIUtilities.getEntityLabel((String[]) _axiom.accept(visitor));
-//                projectName = element.getProjectName();
-//                ontology = element.getOntologyUri();
-//                return _axiom.toString();
-////////                return subject + ": " + axiomString + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_0 + ontology + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_1 + projectName + "]  "; //$NON-NLS-1$ //$NON-NLS-2$
-//////                String output;
-////////                if(_axiom instanceof 
-////////                        OWLAnnotationAssertionAxiom, 
-////////                        OWLAnnotationAxiom, 
-////////                        OWLAnnotationPropertyDomainAxiom, 
-////////                        OWLAnnotationPropertyRangeAxiom, 
-////////                        OWLAsymmetricObjectPropertyAxiom, 
-////////                        OWLClassAssertionAxiom, 
-////////                        OWLClassAxiom, 
-////////                        OWLDataPropertyAssertionAxiom, 
-////////                        OWLDataPropertyAxiom, 
-////////                        OWLDataPropertyCharacteristicAxiom, 
-////////                        OWLDataPropertyDomainAxiom, 
-////////                        OWLDataPropertyRangeAxiom, 
-////////                        OWLDatatypeDefinitionAxiom, 
-////////                        OWLDeclarationAxiom, 
-////////                        OWLDifferentIndividualsAxiom, 
-////////                        OWLDisjointClassesAxiom, 
-////////                        OWLDisjointDataPropertiesAxiom, 
-////////                        OWLDisjointObjectPropertiesAxiom, 
-////////                        OWLDisjointUnionAxiom, 
-////////                        OWLEquivalentClassesAxiom, 
-////////                        OWLEquivalentDataPropertiesAxiom, 
-////////                        OWLEquivalentObjectPropertiesAxiom, 
-////////                        OWLFunctionalDataPropertyAxiom, 
-////////                        OWLFunctionalObjectPropertyAxiom, 
-////////                        OWLHasKeyAxiom, 
-////////                        OWLIndividualAxiom, 
-////////                        OWLInverseFunctionalObjectPropertyAxiom, 
-////////                        OWLInverseObjectPropertiesAxiom, 
-////////                        OWLIrreflexiveObjectPropertyAxiom, 
-////////                        OWLLogicalAxiom, 
-////////                        OWLNaryAxiom, 
-////////                        OWLNaryClassAxiom, 
-////////                        OWLNaryIndividualAxiom, 
-////////                        OWLNaryPropertyAxiom<P>, 
-////////                        OWLNegativeDataPropertyAssertionAxiom, 
-////////                        OWLNegativeObjectPropertyAssertionAxiom, 
-////////                        OWLObjectPropertyAssertionAxiom, 
-////////                        OWLObjectPropertyAxiom, 
-////////                        OWLObjectPropertyCharacteristicAxiom, 
-////////                        OWLObjectPropertyDomainAxiom, 
-////////                        OWLObjectPropertyRangeAxiom, 
-////////                        OWLPropertyAssertionAxiom<P,O>, 
-////////                        OWLPropertyAxiom, 
-////////                        OWLPropertyDomainAxiom<P>, 
-////////                        OWLPropertyRangeAxiom<P,R>, 
-////////                        OWLReflexiveObjectPropertyAxiom, 
-////////                        OWLSameIndividualAxiom, 
-////////                        OWLSubAnnotationPropertyOfAxiom, 
-////////                        OWLSubClassOfAxiom, 
-////////                        OWLSubDataPropertyOfAxiom, 
-////////                        OWLSubObjectPropertyOfAxiom, 
-////////                        OWLSubPropertyAxiom<P>, 
-////////                        OWLSubPropertyChainOfAxiom, 
-////////                        OWLSymmetricObjectPropertyAxiom, 
-////////                        OWLTransitiveObjectPropertyAxiom, 
-////////                        OWLUnaryPropertyAxiom<P>, 
-////////                        SWRLRule;
-//////                output = _axiom.toString();
-////////                System.out.println("xxxxxxxxxxxxxxxxxxx");
-////////                System.out.println(output);
-//////                
-//////                if(_axiom.toString().contains("Declaration")){
-////////                    Declaration(OWLClass(<http://www.aktors.org/ontology/support#Thing>))
-//////                    String[][] spo = new String[3][3];
-//////                    int s0,s1,s2,s3;
-//////                    s0 = 0;
-//////                    s1 = output.indexOf("Declaration(");
-//////                    s2 = output.lastIndexOf("(");
-//////                    s3 = output.indexOf("))");
-//////                    
-//////                    spo[0][0] = output.substring(s0, s1+12);
-//////                    spo[1][0] = output.substring(s1+12, s2+1);
-//////                    spo[2][0] = output.substring(s2+1, s3);
-//////
-//////                    spo[0][1] = spo[0][0];
-//////                    spo[0][2] = spo[0][0];
-//////                    spo[1][1] = spo[1][0];
-//////                    spo[1][2] = spo[1][0];
-//////                    if( spo[2][0].contains("#")){
-//////                        String help = new String(spo[2][0]);
-//////                        if(help.startsWith("<"))
-//////                            help = help.substring(1);
-//////                        if(help.endsWith(">"))
-//////                            help = help.substring(0,help.length()-1);
-//////                        String[] split = help.split("#");
-////////                        OWLGUIUtilities.getEntityLabel()
-////////                        OWLGUIUtilities.get
-//////                        spo[2][1] = split[1];
-//////                        spo[2][2] = split[0].substring(split[0].lastIndexOf("/") + 1) + ":" + split[1];
-//////                        
-//////                    }else{
-//////                        spo[2][1] = spo[2][0];
-//////                        spo[2][2] = spo[2][0];
-//////                    }
-//////                    String ending = "))" + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_0 + ontology + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_1 + projectName + "]  ";//$NON-NLS-1$
-//////                    String[] out = new String[]{spo[0][0] + spo[1][0] + spo[2][0] + ending,spo[0][1] + spo[1][1] + spo[2][1] + ending,spo[0][2] + spo[1][2] + spo[2][2] + ending};
-////////                    System.out.println(OWLGUIUtilities.getEntityLabel(out));
-//////                    return OWLGUIUtilities.getEntityLabel(out);
-//////                }else{
-//////                    String[][] spo = new String[3][3];
-//////                    int s0,s1,s2,s3;
-//////                    s0 = 0;
-//////                    s1 = output.indexOf("(");
-//////                    s2 = output.indexOf(" ");
-//////                    s3 = output.indexOf(")");
-//////                    
-//////                    spo[1][0] = output.substring(s0, s1);
-//////                    spo[0][0] = output.substring(s1+1, s2);
-//////                    spo[2][0] = output.substring(s2+1, s3);
-//////                    
-//////                    if( spo[0][0].contains("#")){
-//////                        String help = new String(spo[0][0]);
-//////                        if(help.startsWith("<"))
-//////                            help = help.substring(1);
-//////                        if(help.endsWith(">"))
-//////                            help = help.substring(0,help.length()-1);
-//////                        String[] split = help.split("#");
-////////                        OWLGUIUtilities.getEntityLabel()
-////////                        OWLGUIUtilities.get
-//////                        spo[0][1] = split[1];
-//////                        spo[0][2] = split[0].substring(split[0].lastIndexOf("/") + 1) + ":" + split[1];
-//////                        
-//////                    }else{
-//////                        spo[0][1] = spo[0][0];
-//////                        spo[0][2] = spo[0][0];
-//////                    }
-//////
-//////                    if( spo[1][0].contains("#")){
-//////                        String help = new String(spo[1][0]);
-//////                        if(help.startsWith("<"))
-//////                            help = help.substring(1);
-//////                        if(help.endsWith(">"))
-//////                            help = help.substring(0,help.length()-1);
-//////                        String[] split = help.split("#");
-////////                        OWLGUIUtilities.getEntityLabel()
-////////                        OWLGUIUtilities.get
-//////                        spo[1][1] = split[1];
-//////                        spo[1][2] = split[0].substring(split[0].lastIndexOf("/") + 1) + ":" + split[1];
-//////                        
-//////                    }else{
-//////                        spo[1][1] = spo[1][0];
-//////                        spo[1][2] = spo[1][0];
-//////                    }
-//////
-//////                    if( spo[2][0].contains("#")){
-//////                        String help = new String(spo[2][0]);
-//////                        if(help.startsWith("<"))
-//////                            help = help.substring(1);
-//////                        if(help.endsWith(">"))
-//////                            help = help.substring(0,help.length()-1);
-//////                        String[] split = help.split("#");
-////////                        OWLGUIUtilities.getEntityLabel()
-////////                        OWLGUIUtilities.get
-//////                        spo[2][1] = split[1];
-//////                        spo[2][2] = split[0].substring(split[0].lastIndexOf("/") + 1) + ":" + split[1];
-//////                        
-//////                    }else{
-//////                        spo[2][1] = spo[2][0];
-//////                        spo[2][2] = spo[2][0];
-//////                    }
-////////                    System.out.println(s + ", " + p  + ", " + o);
-//////                    output = subject + ": " + axiomString + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_0 + ontology + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_1 + projectName + "]  "; //$NON-NLS-1$ //$NON-NLS-2$
-////////                    output = _axiom + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_0 + ontology + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_1 + projectName + "]  "; //$NON-NLS-1$
-//////                    output = OWLGUIUtilities.getEntityLabel(spo[0]) + " " + OWLGUIUtilities.getEntityLabel(spo[1])  + " " + OWLGUIUtilities.getEntityLabel(spo[2])+ com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_0 + ontology + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_1 + projectName + "]  ";  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
-//////                    return output;
-////                }
-//            }
-//        } catch (NeOnCoreException e) {
-//            // nothing to do
-//        }
-//        return _axiom.toString();
     }
 
     /*
@@ -303,7 +641,7 @@ public class AxiomSearchMatch extends OwlSearchMatch {
     @SuppressWarnings("unchecked")
     @Override
     public void setFocus() {
-        if (getInstanceView() != null &&  (getMatch() instanceof IIndividualTreeElement)) {
+        if ((getMatch() instanceof IIndividualTreeElement) && getInstanceView() != null) {
             _individualView.setFocus();
         } else {
             super.setFocus();
@@ -325,4 +663,63 @@ public class AxiomSearchMatch extends OwlSearchMatch {
         return _axiom.hashCode();
     }
 
+//    OWLAnnotationAssertionAxiom, 
+//    OWLAnnotationAxiom, 
+//    OWLAnnotationPropertyDomainAxiom, 
+//    OWLAnnotationPropertyRangeAxiom, 
+//    OWLAsymmetricObjectPropertyAxiom, 
+//    OWLClassAssertionAxiom, 
+//    OWLClassAxiom, 
+//    OWLDataPropertyAssertionAxiom, 
+//    OWLDataPropertyAxiom, 
+//    OWLDataPropertyCharacteristicAxiom, 
+//    OWLDataPropertyDomainAxiom, 
+//    OWLDataPropertyRangeAxiom, 
+//    OWLDatatypeDefinitionAxiom, 
+//    OWLDeclarationAxiom, 
+//    OWLDifferentIndividualsAxiom, 
+//    OWLDisjointClassesAxiom, 
+//    OWLDisjointDataPropertiesAxiom, 
+//    OWLDisjointObjectPropertiesAxiom, 
+//    OWLDisjointUnionAxiom, 
+//    OWLEquivalentClassesAxiom, 
+//    OWLEquivalentDataPropertiesAxiom, 
+//    OWLEquivalentObjectPropertiesAxiom, 
+//    OWLFunctionalDataPropertyAxiom, 
+//    OWLFunctionalObjectPropertyAxiom, 
+//    OWLHasKeyAxiom, 
+//    OWLIndividualAxiom, 
+//    OWLInverseFunctionalObjectPropertyAxiom, 
+//    OWLInverseObjectPropertiesAxiom, 
+//    OWLIrreflexiveObjectPropertyAxiom, 
+//    OWLLogicalAxiom, 
+//    OWLNaryAxiom, 
+//    OWLNaryClassAxiom, 
+//    OWLNaryIndividualAxiom, 
+//    OWLNaryPropertyAxiom<P>, 
+//    OWLNegativeDataPropertyAssertionAxiom, 
+//    OWLNegativeObjectPropertyAssertionAxiom, 
+//    OWLObjectPropertyAssertionAxiom, 
+//    OWLObjectPropertyAxiom, 
+//    OWLObjectPropertyCharacteristicAxiom, 
+//    OWLObjectPropertyDomainAxiom, 
+//    OWLObjectPropertyRangeAxiom, 
+//    OWLPropertyAssertionAxiom<P,O>, 
+//    OWLPropertyAxiom, 
+//    OWLPropertyDomainAxiom<P>, 
+//    OWLPropertyRangeAxiom<P,R>, 
+//    OWLReflexiveObjectPropertyAxiom, 
+//    OWLSameIndividualAxiom, 
+//    OWLSubAnnotationPropertyOfAxiom, 
+//    OWLSubClassOfAxiom, 
+//    OWLSubDataPropertyOfAxiom, 
+//    OWLSubObjectPropertyOfAxiom, 
+//    OWLSubPropertyAxiom<P>, 
+//    OWLSubPropertyChainOfAxiom, 
+//    OWLSymmetricObjectPropertyAxiom, 
+//    OWLTransitiveObjectPropertyAxiom, 
+//    OWLUnaryPropertyAxiom<P>, 
+//    SWRLRule;
+
+    
 }
