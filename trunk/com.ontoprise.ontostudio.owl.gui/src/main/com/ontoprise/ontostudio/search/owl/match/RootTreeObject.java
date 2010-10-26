@@ -29,4 +29,8 @@ public class RootTreeObject extends TreeParent {
     public void setParent(ITreeParent parent){
     }
 
+    @Override
+    public String getProjectId(){
+        return null;
+    }
 }

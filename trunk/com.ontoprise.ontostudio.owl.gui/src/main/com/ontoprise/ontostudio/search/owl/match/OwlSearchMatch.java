@@ -68,8 +68,8 @@ public abstract class OwlSearchMatch extends NavigatorSearchMatch implements ITr
      */
     @Override
     public void show(int index) {
-        PerspectiveChangeHandler.switchPerspective(OWLPerspective.ID);
         super.show(index);
+        PerspectiveChangeHandler.switchPerspective(OWLPerspective.ID);
     }
 
     @Override
@@ -128,5 +128,9 @@ public abstract class OwlSearchMatch extends NavigatorSearchMatch implements ITr
     }
     public int numberOfLeafs(){
         return 1;
+    }
+    @Override
+    public String getProjectId(){
+        return parent.getProjectId();
     }
 }

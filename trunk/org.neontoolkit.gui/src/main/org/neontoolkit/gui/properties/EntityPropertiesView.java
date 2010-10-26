@@ -229,7 +229,12 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
 						        		subFolder.setSelection(0);
 						        	}
 							        _oldMainPage = (IMainPropertyPage)page;
-	
+
+
+//		                            for(CTabItem item : subFolder.getItems()){
+//                                        System.out.println(item.getText());
+//                                        System.out.println(item.getData().toString());
+//		                            }//NICO remove me
 							        _currentSelectedTab = ((PropertyPageInfo)subFolder.getSelection().getData()).getPropertyPage();
                                     _container.setSelection(tabItem);
 							        _oldMainPage.setSelection(part, sel);
@@ -246,7 +251,8 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
 				        }
 				    }
 				}
-				showEmptyPage();
+				if(sel.isEmpty())
+				    showEmptyPage();
 			}
 		};
 	}
@@ -293,7 +299,8 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
 				return;
 			}
 		}
-		showEmptyPage();
+		if(selection.isEmpty())
+	        showEmptyPage();
 	}
 	
 	private boolean isSubSelection(IStructuredSelection selection) {
@@ -312,7 +319,7 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
 	    return true;
 	}
 	
-	private void showEmptyPage() {
+	private void showEmptyPage() {//NICO Has be redone: Bug 19(WORD)
 		if (!_noSelectionPage.getControl().isDisposed()) {
             if (_oldMainPage != null && !_oldMainPage.isDisposed()) {
                 _oldMainPage.resetSelection();
@@ -352,13 +359,8 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
                 public void widgetSelected(SelectionEvent e) {
                 	PropertyPageInfo data = (PropertyPageInfo)e.item.getData();
                 	try {
-                		if(_currentSelectedTab != null) {
-                			_currentSelectedTab.deSelectTab();
-                		}
-						_currentSelectedTab = data.getPropertyPage();
-						_currentSelectedTab.selectTab();
+                		setCurrentSelectedTab(data.getPropertyPage());
 					} catch (CoreException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
                 }
@@ -481,5 +483,73 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
     
     public Map<String,IPropertyPage> getPropertyPagesForTesting() {
         return PROPERTY_PAGES_FOR_TESTING;
+    }
+    public void setCurrentSelectedTab(IPropertyPage tab){
+        if(_currentSelectedTab != null) {
+            _currentSelectedTab.deSelectTab();
+        }
+        _currentSelectedTab = tab;
+        _currentSelectedTab.selectTab();
+        selectIt(tab);
+    }
+    /**
+     * 
+     */
+    private void selectIt (IPropertyPage tab) {
+        for (int i = 0; i < _propertyActivators.length; i++) {
+            if (_propertyActivators[i].matches(_selection.getFirstElement())) {
+                try {
+                    IPropertyPage page = _propertyActivators[i].getPropertyPage();
+                    
+                    CTabItem tabItem = getTab(_propertyActivators[i]);
+                    if (tabItem != null) {
+                        // bring entity properties view to the top, if open
+                        IViewPart view = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(EntityPropertiesView.ID);
+                        if (view != null) {
+                            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().bringToTop(view);
+                        }
+                        
+                        Control[] children = ((Composite)tabItem.getControl()).getChildren();
+                        CTabFolder subFolder = null;
+                        for (int j=0; j<children.length && subFolder == null; j++) {
+                            if (children[j] instanceof CTabFolder) {
+                                subFolder = (CTabFolder)children[j];
+                            }
+                        }
+                        if (subFolder != null) {
+                            if (subFolder.getSelectionIndex() == -1) {
+                                subFolder.setSelection(0);
+                            }
+                            int index = 0;
+                            _oldMainPage = (IMainPropertyPage)page;
+                            CTabItem[] items = subFolder.getItems();
+                            for(int k = 0; k < items.length; k++){
+                                Object data = items[k].getData();
+                                if(data instanceof PropertyPageInfo){
+                                    PropertyPageInfo info = (PropertyPageInfo)data;
+                                    if(info.getPropertyPage().equals(tab)){
+                                        index = k;
+                                        break;
+                                    }
+                                        
+                                }
+                            }
+                            subFolder.setSelection(index);
+                            _currentSelectedTab = ((PropertyPageInfo)subFolder.getSelection().getData()).getPropertyPage();
+                            _container.setSelection(tabItem);
+                        }
+                        return;
+                    }
+                } catch (Exception ce) {
+                    new NeonToolkitExceptionHandler().handleException(Messages.EntityPropertiesView_2, ce, getViewSite().getShell());
+                }
+            }
+        }
+//        if(sel.isEmpty())
+//            showEmptyPage();
+    }
+
+    public IPropertyPage getCurrentSelectedTab(){
+        return _currentSelectedTab;
     }
 }

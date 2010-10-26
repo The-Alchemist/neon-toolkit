@@ -14,9 +14,9 @@ import org.eclipse.swt.graphics.Image;
  */
 public abstract class TreeParent implements ITreeParent {
     
-    private ArrayList<ITreeObject> children;
-    private String name;
-    private ITreeParent parent;
+    protected ArrayList<ITreeObject> children;
+    protected String name;
+    protected ITreeParent parent;
 
     public TreeParent(String name) {
         children = new ArrayList<ITreeObject>();
@@ -85,5 +85,10 @@ public abstract class TreeParent implements ITreeParent {
 
     @Override
     public void show(int index) {
+    }
+
+    @Override
+    public String getProjectId(){
+        return parent.getProjectId();
     }
 }

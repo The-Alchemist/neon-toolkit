@@ -19,6 +19,7 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.neontoolkit.gui,
  org.neontoolkit.gui.action,
  org.neontoolkit.gui.exception,
+ org.neontoolkit.gui.internal.properties,
  org.neontoolkit.gui.navigator,
  org.neontoolkit.gui.navigator.actions,
  org.neontoolkit.gui.navigator.elements,

@@ -140,6 +140,7 @@ public class EmptyPropertyPage implements IEntityPropertyPage, IPropertyPage {
 	 * @see org.neontoolkit.gui.properties2.IPropertyPage#selectTab()
 	 */
 	public void selectTab() {
+	    System.out.println("empty page selected"); //$NON-NLS-1$
 	}
 
 	/* (non-Javadoc)
