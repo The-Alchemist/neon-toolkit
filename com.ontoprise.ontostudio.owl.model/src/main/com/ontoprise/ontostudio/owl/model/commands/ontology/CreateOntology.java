@@ -10,8 +10,6 @@
 
 package com.ontoprise.ontostudio.owl.model.commands.ontology;
 
-import java.net.URI;
-
 import org.eclipse.core.resources.IProject;
 import org.neontoolkit.core.NeOnCorePlugin;
 import org.neontoolkit.core.command.CommandException;

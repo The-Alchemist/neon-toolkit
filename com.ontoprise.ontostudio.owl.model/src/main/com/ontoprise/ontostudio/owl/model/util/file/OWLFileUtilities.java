@@ -12,7 +12,6 @@ package com.ontoprise.ontostudio.owl.model.util.file;
 
 import java.io.InputStreamReader;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;

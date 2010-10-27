@@ -14,8 +14,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.neontoolkit.core.NeOnCorePlugin;
-import org.neontoolkit.core.command.LoggedCommand;
 import org.neontoolkit.core.command.CommandException;
+import org.neontoolkit.core.command.LoggedCommand;
 
 /*
  * Created on 13.06.2008

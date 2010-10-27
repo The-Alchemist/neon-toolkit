@@ -11,15 +11,14 @@
 package org.neontoolkit.core;
 
 import java.lang.reflect.InvocationTargetException;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 
-import org.junit.runners.model.InitializationError;
 import org.junit.runners.Suite;
+import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.RunnerBuilder;
 
 /**

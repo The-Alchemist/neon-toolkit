@@ -12,13 +12,12 @@ import org.eclipse.swt.graphics.Image;
  * Created on: 28.09.2010
  */
 public interface ITreeObject extends IAdaptable {
-    public abstract String getName();
-    public abstract void setParent(ITreeParent parent);
-    public abstract ITreeParent getParent();
-    public abstract String toString();
-    public abstract int numberOfLeafs();
-    public abstract Image getImage();
-    public abstract void show(int index);
-    public abstract void setFocus();
-    public abstract String getProjectId();
+    public String getName();
+    public void setParent(ITreeParent parent);
+    public ITreeParent getParent();
+    public int numberOfLeafs();
+    public Image getImage();
+    public void show(int index);
+    public void setFocus();
+    public String getProjectId();
 }

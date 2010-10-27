@@ -18,7 +18,6 @@ import java.util.Set;
 
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
-import org.neontoolkit.core.project.AbstractOntologyProject;
 
 /**
  * @author Dirk Wenke

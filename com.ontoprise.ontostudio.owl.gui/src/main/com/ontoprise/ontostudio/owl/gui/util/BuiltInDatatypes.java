@@ -14,9 +14,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collections;
-
-import sun.io.ByteToCharConverter;
 
 import com.ontoprise.ontostudio.owl.model.OWLConstants;
 import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
@@ -139,8 +136,8 @@ public class BuiltInDatatypes {
         }
     }
 
-    /**[Definition:]   unsignedByte is ·derived· from unsignedShort by setting the value of 
-     * ·maxInclusive· to be 255. The ·base type· of unsignedByte is unsignedShort. 
+    /**[Definition:]   unsignedByte is ï¿½derivedï¿½ from unsignedShort by setting the value of 
+     * ï¿½maxInclusiveï¿½ to be 255. The ï¿½base typeï¿½ of unsignedByte is unsignedShort. 
      * @author janiko
      *
      */
@@ -175,8 +172,8 @@ public class BuiltInDatatypes {
         }
     }
 
-    /**[Definition:]   unsignedShort is ·derived· from unsignedInt by setting the value 
-     * of ·maxInclusive· to be 65535. The ·base type· of unsignedShort is unsignedInt. 
+    /**[Definition:]   unsignedShort is ï¿½derivedï¿½ from unsignedInt by setting the value 
+     * of ï¿½maxInclusiveï¿½ to be 65535. The ï¿½base typeï¿½ of unsignedShort is unsignedInt. 
      * @author janiko
      *
      */
@@ -211,8 +208,8 @@ public class BuiltInDatatypes {
         }
     }
     
-    /**[Definition:]   unsignedInt is ·derived· from unsignedLong by setting the value 
-     * of ·maxInclusive· to be 4294967295. The ·base type· of unsignedInt is unsignedLong. 
+    /**[Definition:]   unsignedInt is ï¿½derivedï¿½ from unsignedLong by setting the value 
+     * of ï¿½maxInclusiveï¿½ to be 4294967295. The ï¿½base typeï¿½ of unsignedInt is unsignedLong. 
      * @author janiko
      *
      */
@@ -253,8 +250,8 @@ public class BuiltInDatatypes {
     }
 
     
-    /**[Definition:]   unsignedLong is ·derived· from nonNegativeInteger by setting the value 
-     * of ·maxInclusive· to be 18446744073709551615. The ·base type· of unsignedLong is nonNegativeInteger. 
+    /**[Definition:]   unsignedLong is ï¿½derivedï¿½ from nonNegativeInteger by setting the value 
+     * of ï¿½maxInclusiveï¿½ to be 18446744073709551615. The ï¿½base typeï¿½ of unsignedLong is nonNegativeInteger. 
      * @author janiko
      *
      */

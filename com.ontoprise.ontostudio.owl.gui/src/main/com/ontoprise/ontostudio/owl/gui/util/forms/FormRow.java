@@ -10,9 +10,9 @@
 
 package com.ontoprise.ontostudio.owl.gui.util.forms;
 
-import org.eclipse.jface.dialogs.Dialog;
 import java.util.List;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -29,13 +29,12 @@ import org.semanticweb.owlapi.model.OWLAxiom;
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.properties.LocatedAxiom;
+import com.ontoprise.ontostudio.owl.gui.util.CheckboxDialog;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.AxiomText;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLModelPlugin;
-
-import com.ontoprise.ontostudio.owl.gui.util.CheckboxDialog;
 
 /**
  * @author Nico Stieler

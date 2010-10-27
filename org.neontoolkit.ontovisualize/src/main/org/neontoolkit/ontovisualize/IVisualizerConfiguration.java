@@ -12,8 +12,11 @@ package org.neontoolkit.ontovisualize;
 
 import java.util.ArrayList;
 
+import net.sourceforge.jpowergraph.Edge;
 import net.sourceforge.jpowergraph.Legend;
 import net.sourceforge.jpowergraph.Node;
+import net.sourceforge.jpowergraph.painters.AbstractEdgePainter;
+import net.sourceforge.jpowergraph.painters.NodePainter;
 import net.sourceforge.jpowergraph.pane.JGraphPane;
 
 import org.neontoolkit.gui.navigator.elements.AbstractOntologyTreeElement;

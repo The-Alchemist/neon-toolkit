@@ -11,8 +11,8 @@
 package org.neontoolkit.gui.properties;
 
 import org.eclipse.jface.action.Action;
-import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.Messages;
+import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.SharedImages;
 
 /* 

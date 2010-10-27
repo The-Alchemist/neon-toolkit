@@ -42,7 +42,7 @@ import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLModelPlugin;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.annotationproperties.GetRootAnnotationProperties;
-import com.ontoprise.ontostudio.owl.model.commands.annotationproperties.GetSubAnnotationProperties; //import com.ontoprise.ontostudio.owl.model.commands.dataproperties.GetSubDataProperties;
+import com.ontoprise.ontostudio.owl.model.commands.annotationproperties.GetSubAnnotationProperties;
 import com.ontoprise.ontostudio.owl.model.event.OWLAxiomListener;
 import com.ontoprise.ontostudio.owl.model.event.OWLChangeEvent;
 
