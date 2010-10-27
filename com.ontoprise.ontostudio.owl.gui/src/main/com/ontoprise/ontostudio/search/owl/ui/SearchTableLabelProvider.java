@@ -59,6 +59,9 @@ public class SearchTableLabelProvider extends LabelProvider implements ITableLab
 	    
 	}
 
+    /**
+     * for TableSearch
+     */
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
 	 */
@@ -78,10 +81,31 @@ public class SearchTableLabelProvider extends LabelProvider implements ITableLab
         }
         return s.toString();
 	}
-	
+	/**
+	 * for TreeSearch
+	 */
 	@Override
     public String getText(Object element){
         StringBuffer s = new StringBuffer(element.toString()); //content
+//        System.out.println(element.toString());
+//        if(element instanceof OwlSearchMatch){
+//            OwlSearchMatch sM = (OwlSearchMatch) element;
+//            
+//            if(sM.getMatch() instanceof TreeElement){
+//                String projectId = ((OwlSearchMatch) element).getProjectId();
+//                if(projectId != null){
+//                    try {
+//                    InternalParser intPars = new InternalParser(element.toString(),OWLNamespaces.EMPTY_INSTANCE,OWLModelFactory.getOWLDataFactory(projectId));
+//                    OWLAxiom out = intPars.parseOWLAxiom();
+//                    System.out.println(out);
+//                    } catch (InternalParserException e) {
+//                        e.printStackTrace();
+//                    } catch (NeOnCoreException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        }
         if(element instanceof TreeParent){
             int results = ((TreeParent)element).numberOfLeafs();
             s.append(" ("); //$NON-NLS-1$
