@@ -153,8 +153,9 @@ public class AnnotationValuesSearchMatch extends OwlSearchMatch {
         if(end != _value.length()) {
             value += "..."; //$NON-NLS-1$
         }
-        
-        return subject + ": " + prop +" = "+ value + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_0 + element.getOntologyUri() + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_1 + element.getProjectName() + "]  "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$    }
+        System.out.println(subject + ": " + prop +" = "+ value);//$NON-NLS-1$ //$NON-NLS-2$
+        return subject + ": " + prop +" = "+ value;//$NON-NLS-1$ //$NON-NLS-2$
+//      + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_0 + element.getOntologyUri() + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_1 + element.getProjectName() + "]  ";  //$NON-NLS-3$    }
     }
 
     /*
