@@ -18,8 +18,8 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.Messages;
+import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.navigator.AbstractComplexTreeViewer;
 import org.neontoolkit.gui.navigator.ITreeDataProvider;
 import org.neontoolkit.gui.navigator.ITreeElement;

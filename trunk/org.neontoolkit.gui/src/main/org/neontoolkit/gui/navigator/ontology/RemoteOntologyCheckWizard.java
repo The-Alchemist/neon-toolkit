@@ -11,7 +11,6 @@
 package org.neontoolkit.gui.navigator.ontology;
 
 import java.net.URI;
-import java.net.URL;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;

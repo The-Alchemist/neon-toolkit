@@ -19,9 +19,9 @@ import javax.wvcm.ControllableFolder;
 import javax.wvcm.Folder;
 import javax.wvcm.Location;
 import javax.wvcm.PropertyNameList;
+import javax.wvcm.PropertyNameList.PropertyName;
 import javax.wvcm.Resource;
 import javax.wvcm.WvcmException;
-import javax.wvcm.PropertyNameList.PropertyName;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;

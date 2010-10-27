@@ -9,8 +9,8 @@
  ******************************************************************************/
 
 package org.neontoolkit.search.ui;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.jface.action.Action;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.neontoolkit.search.Messages;
 

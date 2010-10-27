@@ -11,11 +11,9 @@
 package com.ontoprise.ontostudio.owl.gui.individualview;
 
 import org.neontoolkit.gui.navigator.ITreeElement;
-import org.neontoolkit.gui.navigator.elements.IEntityElement;
 import org.neontoolkit.gui.navigator.elements.IOntologyElement;
 import org.neontoolkit.gui.navigator.elements.IProjectElement;
 import org.neontoolkit.gui.navigator.elements.IQualifiedIDElement;
-import org.neontoolkit.gui.navigator.ontology.IOntologyTreeElement;
 import org.semanticweb.owlapi.model.OWLIndividual;
 
 /**Interface for all OWL individuals. 

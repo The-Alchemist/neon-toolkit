@@ -33,9 +33,9 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
+import com.ontoprise.ontostudio.search.owl.ui.OwlSearchCommand.FieldTypes;
 import com.ontoprise.ontostudio.search.owl.ui.SearchElement;
 import com.ontoprise.ontostudio.search.owl.ui.SearchResults;
-import com.ontoprise.ontostudio.search.owl.ui.OwlSearchCommand.FieldTypes;
 
 
 public class FindReferencesHelper {

@@ -10,10 +10,10 @@
 
 package org.neontoolkit.gui.navigator.elements;
 
+import java.util.ArrayList;
+
 import org.neontoolkit.gui.navigator.ITreeElement;
 import org.neontoolkit.gui.navigator.ITreeElementPath;
-
-import java.util.ArrayList;
 
 /* 
  * Created on: 13.07.2005

@@ -11,8 +11,8 @@
 package org.neontoolkit.core.command.project;
 
 import org.neontoolkit.core.NeOnCorePlugin;
-import org.neontoolkit.core.command.LoggedCommand;
 import org.neontoolkit.core.command.CommandException;
+import org.neontoolkit.core.command.LoggedCommand;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.core.project.IOntologyProject;
 

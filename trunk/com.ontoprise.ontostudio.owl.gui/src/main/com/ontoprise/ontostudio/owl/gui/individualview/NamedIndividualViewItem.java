@@ -10,16 +10,10 @@
  ******************************************************************************/
 package com.ontoprise.ontostudio.owl.gui.individualview;
 
-import org.eclipse.core.resources.IProject;
-import org.neontoolkit.core.exception.NeOnCoreException;
-import org.neontoolkit.gui.navigator.ITreeDataProvider;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
 import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
-import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
-import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 
 /**
  * @author janiko
