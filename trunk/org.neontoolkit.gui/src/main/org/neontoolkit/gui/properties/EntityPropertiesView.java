@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jface.viewers.TreePath;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.action.IAction;
@@ -24,6 +26,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.custom.CTabFolder;
@@ -48,9 +51,10 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.neontoolkit.gui.Messages;
 import org.neontoolkit.gui.NeOnUIPlugin;
-import org.neontoolkit.gui.SharedImages;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.neontoolkit.gui.internal.properties.PropertyPageInfo;
+import org.neontoolkit.gui.navigator.elements.IOntologyElement;
+import org.neontoolkit.gui.navigator.elements.IProjectElement;
 
 /* 
  * Created on: 31.01.2005
@@ -69,8 +73,8 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
     private static Map<String,IPropertyPage> PROPERTY_PAGES_FOR_TESTING = new HashMap<String,IPropertyPage>(); 
 
     private PropertyPageInfo[] _propertyActivators;
-    
-	private CTabFolder _container;
+
+    private CTabFolder _container;
 	private CTabItem _noSelectionPage;
 
 	private IStructuredSelection _selection;
@@ -230,11 +234,6 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
 						        	}
 							        _oldMainPage = (IMainPropertyPage)page;
 
-
-//		                            for(CTabItem item : subFolder.getItems()){
-//                                        System.out.println(item.getText());
-//                                        System.out.println(item.getData().toString());
-//		                            }//NICO remove me
 							        _currentSelectedTab = ((PropertyPageInfo)subFolder.getSelection().getData()).getPropertyPage();
                                     _container.setSelection(tabItem);
 							        _oldMainPage.setSelection(part, sel);
@@ -270,6 +269,26 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
 	 * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
 	 */
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+
+        if(selection.isEmpty()){
+            @SuppressWarnings("unused")
+            String projectName = null , ontologyName = null;
+            if(selection instanceof TreeSelection){
+                TreeSelection treeSelection = (TreeSelection) _selection;
+                for(TreePath path : treeSelection.getPaths()){
+
+                    Object x = path.getSegment(path.getSegmentCount()-1);
+                    if(x instanceof IProjectElement){
+                        projectName = ((IProjectElement) x).getProjectName();
+                    }
+                    if(x instanceof IOntologyElement){
+                        ontologyName = ((IOntologyElement) x).getOntologyUri();
+                    }
+                }
+            }
+            //NICO if _selection is deleted, you can select the one of its parents: super entity, ontology, project
+            showEmptyPage();
+        }
 	    if (_activePart == null) {
 	        _activePart = getSite().getPage().getActivePart();
 	    }
@@ -299,8 +318,6 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
 				return;
 			}
 		}
-		if(selection.isEmpty())
-	        showEmptyPage();
 	}
 	
 	private boolean isSubSelection(IStructuredSelection selection) {
@@ -320,14 +337,15 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
 	}
 	
 	private void showEmptyPage() {//NICO Has be redone: Bug 19(WORD)
-		if (!_noSelectionPage.getControl().isDisposed()) {
-            if (_oldMainPage != null && !_oldMainPage.isDisposed()) {
-                _oldMainPage.resetSelection();
-                _oldMainPage = null;
-            }
-            setTitleImage(NeOnUIPlugin.getDefault().getImageRegistry().get(SharedImages.ONTOLOGY));
-			_container.setSelection(_noSelectionPage);
-		}
+	    System.out.println("showEmptyPage"); //$NON-NLS-1$
+//		if (!_noSelectionPage.getControl().isDisposed()) {
+//            if (_oldMainPage != null && !_oldMainPage.isDisposed()) {
+//                _oldMainPage.resetSelection();
+//                _oldMainPage = null;
+//            }
+//            setTitleImage(NeOnUIPlugin.getDefault().getImageRegistry().get(SharedImages.ONTOLOGY));
+//			_container.setSelection(_noSelectionPage);
+//		}
 
 	}
 
@@ -551,5 +569,11 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
 
     public IPropertyPage getCurrentSelectedTab(){
         return _currentSelectedTab;
+    }
+    /**
+     * @return the _propertyActivators
+     */
+    public PropertyPageInfo[] getPropertyActivators() {
+        return _propertyActivators;
     }
 }

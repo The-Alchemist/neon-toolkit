@@ -10,12 +10,17 @@
 
 package com.ontoprise.ontostudio.search.owl.match;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.NeOnUIPlugin;
+import org.neontoolkit.gui.internal.properties.PropertyPageInfo;
+import org.neontoolkit.gui.properties.EntityPropertiesView;
+import org.neontoolkit.gui.properties.IMainPropertyPage;
+import org.neontoolkit.gui.properties.IPropertyPage;
 import org.neontoolkit.gui.util.PerspectiveChangeHandler;
 import org.neontoolkit.search.Messages;
 import org.neontoolkit.search.SearchPlugin;
@@ -27,12 +32,14 @@ import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
 import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.individualview.IndividualView;
+import com.ontoprise.ontostudio.owl.gui.individualview.NamedIndividualViewItem;
 import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement;
+import com.ontoprise.ontostudio.owl.gui.properties.AnnotationPropertyTab;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
@@ -48,6 +55,7 @@ import com.ontoprise.ontostudio.owl.perspectives.OWLPerspective;
  */
 /**
  * @author Dirk Wenke
+ * @author Nico Stieler
  */
 
 public class DataPropertyValuesSearchMatch extends OwlSearchMatch {
@@ -109,14 +117,140 @@ public class DataPropertyValuesSearchMatch extends OwlSearchMatch {
      * 
      * @see com.ontoprise.ontostudio.search.flogic.match.SearchMatch#show(int)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void show(int index) {
         PerspectiveChangeHandler.switchPerspective(OWLPerspective.ID);
-        if (getInstanceView() != null) {
-            _individualView.selectionChanged(
-                    NavigatorSearchMatch.getNavigator(), 
-                    new StructuredSelection(_classMatch.getMatch()));
-            _individualView.getTreeViewer().setSelection(new StructuredSelection(getMatch()));
+        EntityPropertiesView epv = null;
+        IPropertyPage tab = null;
+        if (getMatch() instanceof IIndividualTreeElement) {
+            if (getInstanceView() != null) {
+                _individualView.selectionChanged(NavigatorSearchMatch.getNavigator(), new StructuredSelection(_classMatch.getMatch()));
+                _individualView.getTreeViewer().setSelection(new StructuredSelection(getMatch()));
+            }
+            try{
+                epv = getPropertyView();
+                String classId = NamedIndividualViewItem.class.toString();
+                IMainPropertyPage mainTab = null;
+                if(classId != null){
+                    String beginClassId = "class "; //$NON-NLS-1$
+                    if(classId.startsWith(beginClassId)){
+                        classId = classId.substring(beginClassId.length());
+                    }
+                    for(PropertyPageInfo page : epv.getPropertyActivators()){
+                        try{
+                            if(classId.equals(page.getActivator())){
+                                if(page.getPropertyPage() instanceof IMainPropertyPage){
+                                    mainTab = (IMainPropertyPage) page.getPropertyPage();
+                                    break;
+                                }else{
+                                    mainTab = page.getPropertyPage().getMainPage();
+                                    break;
+                                }
+                            }
+                        } catch (CoreException e) {
+                        }
+                    }
+                }
+                if(mainTab == null){
+                    IPropertyPage currentTab = epv.getCurrentSelectedTab();
+                    if(currentTab == null)//NICO to fix, starting with the second click currentTab is null
+                        throw new NullPointerException();
+                    
+                    if(currentTab instanceof IMainPropertyPage){
+                        mainTab = (IMainPropertyPage) currentTab;
+                    }else{
+                        mainTab = currentTab.getMainPage();
+                    }
+                }
+  //          jump to correct Tab
+              if(mainTab != null){
+                  if(mainTab instanceof AnnotationPropertyTab){
+                      tab = mainTab;
+                  }else{
+                      for(IPropertyPage page : mainTab.getSubPages()){
+                          if(page instanceof AnnotationPropertyTab){
+                              tab = page;
+                              break;
+                          }
+                      }
+                  }
+              }  
+            }catch (Exception e) {
+                System.out.println("############# does not jump to the correct Tab for sure(Annotation) #############"); //$NON-NLS-1$ TODO: has to be done
+                //nothing to do: does not jump to the correct Tab for sure
+            }
+            if(epv != null && tab != null){
+                epv.setCurrentSelectedTab(tab);
+            }
+        } else {
+            super.show(index);
+            String classId = null;
+            if (getMatch() instanceof ClazzTreeElement) {
+                classId = ClazzTreeElement.class.toString();
+            } else if (getMatch() instanceof ObjectPropertyTreeElement) {
+                classId = ObjectPropertyTreeElement.class.toString();
+            } else if (getMatch() instanceof DataPropertyTreeElement) {
+                classId = DataPropertyTreeElement.class.toString();
+            } else if (getMatch() instanceof AnnotationPropertyTreeElement) {
+                classId = AnnotationPropertyTreeElement.class.toString();
+            } else if (getMatch() instanceof DatatypeTreeElement) {
+                classId = DatatypeTreeElement.class.toString();
+            }
+            IMainPropertyPage mainTab = null;
+            if(classId != null){
+                String beginClassId = "class "; //$NON-NLS-1$
+                if(classId.startsWith(beginClassId)){
+                    classId = classId.substring(beginClassId.length());
+                }
+                epv = getPropertyView();
+                for(PropertyPageInfo page : epv.getPropertyActivators()){
+                    try{
+                        if(classId.equals(page.getActivator())){
+                            if(page.getPropertyPage() instanceof IMainPropertyPage){
+                                mainTab = (IMainPropertyPage) page.getPropertyPage();
+                                break;
+                            }else{
+                                mainTab = page.getPropertyPage().getMainPage();
+                                break;
+                            }
+                        }
+                    } catch (CoreException e) {
+                    }
+                }
+            }
+            if(mainTab == null && epv != null){
+                IPropertyPage currentTab = epv.getCurrentSelectedTab();
+                if(currentTab instanceof IMainPropertyPage){
+                    mainTab = (IMainPropertyPage) currentTab;
+                }else{
+                    mainTab = currentTab.getMainPage();
+                }
+            }
+            if (getMatch() instanceof ClazzTreeElement
+                    || getMatch() instanceof ObjectPropertyTreeElement
+                    || getMatch() instanceof DataPropertyTreeElement
+                    || getMatch() instanceof AnnotationPropertyTreeElement
+                    || getMatch() instanceof DatatypeTreeElement) {
+
+                if(mainTab != null){
+                    if(mainTab instanceof AnnotationPropertyTab){
+                        tab = mainTab;
+                    }else{
+                        for(IPropertyPage page : mainTab.getSubPages()){
+                            if(page instanceof AnnotationPropertyTab){
+                                tab = page;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            //change tab to tab
+            if(epv != null && tab != null){
+                epv.setCurrentSelectedTab(tab);
+            }
+            super.show(index);
         }
     }
 
@@ -157,9 +291,6 @@ public class DataPropertyValuesSearchMatch extends OwlSearchMatch {
             value += "..."; //$NON-NLS-1$
         }
 
-        String out = subject + ": " + prop +" = "+ value; //$NON-NLS-1$ //$NON-NLS-2$
-//        + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_0 + element.getOntologyUri() + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_1 + element.getProjectName() + "]  "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        System.out.println(out);
         return subject + ": " + prop +" = "+ value; //$NON-NLS-1$ //$NON-NLS-2$
 //       + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_0 + element.getOntologyUri() + com.ontoprise.ontostudio.owl.gui.Messages.DataPropertyValuesSearchMatch_1 + element.getProjectName() + "]  "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }

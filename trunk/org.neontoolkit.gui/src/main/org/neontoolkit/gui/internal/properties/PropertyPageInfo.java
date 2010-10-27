@@ -29,6 +29,7 @@ import org.neontoolkit.gui.properties.MainPropertyPageWrapper;
  * Keywords: UI, EntityPropertyPage, Properties
  */
 /**
+ * @author Nico Stieler
  * This is a helper class for the extensions of the entityProperties extension point.
  */
 public class PropertyPageInfo {
@@ -125,5 +126,11 @@ public class PropertyPageInfo {
         	}
         }
         return _propertyPage;
+    }
+    /**
+     * @return the _activator
+     */
+    public String getActivator() {
+        return _activator;
     }
 }
