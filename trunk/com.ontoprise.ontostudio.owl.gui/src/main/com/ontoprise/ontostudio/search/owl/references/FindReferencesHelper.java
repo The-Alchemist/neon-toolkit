@@ -11,12 +11,14 @@
 package com.ontoprise.ontostudio.search.owl.references;
 
 import java.util.ArrayList;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.AxiomType;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnnotationSubject;
@@ -36,8 +38,10 @@ import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.search.owl.ui.OwlSearchCommand.FieldTypes;
 import com.ontoprise.ontostudio.search.owl.ui.SearchElement;
 import com.ontoprise.ontostudio.search.owl.ui.SearchResults;
-
-
+ 
+/**
+  * @author Nico Stieler
+  */
 public class FindReferencesHelper {
 
     public static SearchResults search(OWLEntity entity, String project) throws NeOnCoreException {
@@ -140,19 +144,45 @@ public class FindReferencesHelper {
         return FieldTypes.ONTOLOGY;
     }
 
-    
+
     /**
-     * @param entity
+     * @param axiom
+     * @param ontology
+     * @param project
      * @return
+     * @throws NeOnCoreException 
+     * 
+     * finds the Subject of the Axiom, also in case it is just an IRI
+     * 
      */
-    public static OWLEntity findSubject(OWLAxiom axiom) {
+    public static OWLEntity findSubject(OWLAxiom axiom, String ontology, String project) throws NeOnCoreException {
   
         SubjectExtractionVisitor subjectVisitor = new SubjectExtractionVisitor();
         axiom.accept(subjectVisitor);
         
         if(subjectVisitor.getSubject() instanceof OWLEntity) {
             return (OWLEntity)subjectVisitor.getSubject();
-        } 
+        }else if(subjectVisitor.getSubject() instanceof IRI){
+            for(OWLEntity entity : OWLModelFactory.getOWLModel(ontology, project).getEntity(subjectVisitor.getSubject().toString())){
+                return entity;
+            }
+        }
+        return null;
+    }
+    /**
+     * @param axiom
+     * @return
+     * 
+     * finds the Subject of the Axiom
+     * 
+     */
+    public static OWLEntity findSubject(OWLAxiom axiom) {
+  
+        SubjectExtractionVisitor subjectVisitor = new SubjectExtractionVisitor();
+        axiom.accept(subjectVisitor);
+        
+        if(subjectVisitor.getSubject() instanceof OWLEntity)
+            return (OWLEntity)subjectVisitor.getSubject();
         return null;
     }
 

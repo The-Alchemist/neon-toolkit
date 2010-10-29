@@ -133,4 +133,8 @@ public abstract class OwlSearchMatch extends NavigatorSearchMatch implements ITr
     public String getProjectId(){
         return parent.getProjectId();
     }
+    @Override
+    public void setFocus(){
+        super.setFocus();
+    }
 }
