@@ -10,13 +10,18 @@
 
 package com.ontoprise.ontostudio.search.owl.match;
 
+import java.util.Set;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.graphics.Image;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.internal.properties.PropertyPageInfo;
+import org.neontoolkit.gui.navigator.ITreeDataProvider;
 import org.neontoolkit.gui.navigator.ITreeElement;
+import org.neontoolkit.gui.navigator.MTreeView;
+import org.neontoolkit.gui.navigator.TreeProviderManager;
 import org.neontoolkit.gui.properties.EntityPropertiesView;
 import org.neontoolkit.gui.properties.IMainPropertyPage;
 import org.neontoolkit.gui.properties.IPropertyPage;
@@ -27,6 +32,7 @@ import org.semanticweb.owlapi.model.OWLAnnotationAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationPropertyDomainAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLClassAxiom;
 import org.semanticweb.owlapi.model.OWLDataPropertyAxiom;
@@ -38,6 +44,7 @@ import org.semanticweb.owlapi.model.OWLDeclarationAxiom;
 import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
 import org.semanticweb.owlapi.model.OWLDisjointDataPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLDisjointObjectPropertiesAxiom;
+import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
 import org.semanticweb.owlapi.model.OWLEquivalentDataPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLEquivalentObjectPropertiesAxiom;
@@ -60,11 +67,13 @@ import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
 import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.individualview.NamedIndividualViewItem;
 import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
+import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzHierarchyProvider;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement;
+import com.ontoprise.ontostudio.owl.gui.properties.AnnotationPropertyTab;
 import com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab;
 import com.ontoprise.ontostudio.owl.gui.properties.annotationProperty.AnnotationPropertyPage2;
 import com.ontoprise.ontostudio.owl.gui.properties.clazz.ClazzTaxonomyPropertyPage2;
@@ -143,6 +152,9 @@ public class AxiomSearchMatch extends OWLComplexSearchMatch {
         
         if(getMatch() instanceof IIndividualTreeElement && getInstanceView() != null){//INDIVIDUALS
             if (getInstanceView() != null) {
+                MTreeView nav = NavigatorSearchMatch.getNavigator();
+                ClassSearchMatch classMatch = getClassMatch();
+                Object match = getClassMatch().getMatch();
                 _individualView.selectionChanged(NavigatorSearchMatch.getNavigator(), new StructuredSelection(getClassMatch().getMatch()));
                 _individualView.getTreeViewer().setSelection(new StructuredSelection(getMatch()));
             }
@@ -261,6 +273,8 @@ public class AxiomSearchMatch extends OWLComplexSearchMatch {
                 return page instanceof IndividualTaxonomyPropertyPage;
             }else if(_axiom instanceof OWLClassAssertionAxiom){
                 return page instanceof IndividualTaxonomyPropertyPage;
+            }else if(_axiom instanceof OWLAnnotationAssertionAxiom){
+                return page instanceof AnnotationPropertyTab; 
             }
         }else if(_axiom instanceof OWLDeclarationAxiom){
                 return page instanceof IndividualTaxonomyPropertyPage;
@@ -311,20 +325,22 @@ public class AxiomSearchMatch extends OWLComplexSearchMatch {
                 return page instanceof DataPropertyTaxonomyPropertyPage;   
             }
 //                else System.out.println(_axiom.getClass() + " not supported yet(OWLDataPropertyAxiom)"); //$NON-NLS-1$
-        }else if(_axiom instanceof OWLAnnotationAxiom){
-            if(getMatch() instanceof AnnotationPropertyTreeElement){
-                if(_axiom instanceof OWLAnnotationAssertionAxiom){
-                    return page instanceof AnnotationPropertyPage2;  
-                }else if(_axiom instanceof OWLAnnotationPropertyDomainAxiom 
-                            || _axiom instanceof OWLAnnotationPropertyRangeAxiom){
-                    return page instanceof AnnotationPropertyPage2; 
-                }else if(_axiom instanceof OWLSubAnnotationPropertyOfAxiom){
-                    return page instanceof SourceViewTab;    //TODO later taxonomy
-                }
-//                    else System.out.println(_axiom.getClass() + " not supported yet(OWLDataPropertyAxiom)"); //$NON-NLS-1$
+        }else if(_axiom instanceof OWLAnnotationAxiom && getMatch() instanceof AnnotationPropertyTreeElement){
+//            if(_axiom instanceof OWLAnnotationAssertionAxiom){
+//                return page instanceof AnnotationPropertyPage2;  
+//            }else 
+            if(_axiom instanceof OWLAnnotationPropertyDomainAxiom 
+                    || _axiom instanceof OWLAnnotationPropertyRangeAxiom){
+                return page instanceof AnnotationPropertyPage2; 
+            }else if(_axiom instanceof OWLSubAnnotationPropertyOfAxiom){
+                return page instanceof SourceViewTab;    //TODO later taxonomy
             }
+//                    else System.out.println(_axiom.getClass() + " not supported yet(OWLDataPropertyAxiom)"); //$NON-NLS-1$
+//            }
         }else if(_axiom instanceof OWLDatatypeDefinitionAxiom && getMatch() instanceof DatatypeTreeElement){
             return page instanceof DatatypePropertyPage;  
+        }else if(_axiom instanceof OWLAnnotationAssertionAxiom){
+                return page instanceof AnnotationPropertyTab; 
         }
 
 //                System.out.println(_axiom.getClass() + " not supported yet"); //$NON-NLS-1$
@@ -360,5 +376,32 @@ public class AxiomSearchMatch extends OWLComplexSearchMatch {
     @Override
     public int hashCode() {
         return _axiom.hashCode();
+    }
+    @SuppressWarnings("unchecked")
+    @Override
+    protected ClassSearchMatch getClassMatch() {
+        IIndividualTreeElement match = (IIndividualTreeElement) getMatch();
+        OWLClass clazz = null;
+        String ontology = match.getOntologyUri();
+        String project = match.getProjectName();
+        Set<OWLEntity> entities = null;
+        try {
+            entities = OWLModelFactory.getOWLModel(ontology, project).getEntity(match.getClazz());
+        } catch (NeOnCoreException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        if (entities != null) {
+            for (OWLEntity entity: entities) {
+                if (entity instanceof OWLClass) {
+                    clazz = (OWLClass) entity;
+                    break;
+                }
+            }
+        }
+        ITreeDataProvider provider = TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class);
+        ClazzTreeElement clazzTreeElement = new ClazzTreeElement(clazz, ontology, project, provider);
+        _classMatch = new ClassSearchMatch(clazzTreeElement);
+        return super.getClassMatch();
     }
 }

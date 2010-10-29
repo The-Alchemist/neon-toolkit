@@ -337,7 +337,7 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
 	}
 	
 	private void showEmptyPage() {//NICO Has be redone: Bug 19(WORD)
-	    System.out.println("showEmptyPage"); //$NON-NLS-1$
+//	    System.out.println("showEmptyPage"); //$NON-NLS-1$
 //		if (!_noSelectionPage.getControl().isDisposed()) {
 //            if (_oldMainPage != null && !_oldMainPage.isDisposed()) {
 //                _oldMainPage.resetSelection();

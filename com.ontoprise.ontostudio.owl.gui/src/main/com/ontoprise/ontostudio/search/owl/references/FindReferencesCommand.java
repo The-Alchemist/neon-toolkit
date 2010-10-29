@@ -78,26 +78,32 @@ public class FindReferencesCommand extends AbstractSearchCommand{
     }
     
     private Match[] getReferences() throws NeOnCoreException {
-        List<Match> matches = new ArrayList<Match>();
-        
-        SearchResults results = FindReferencesHelper.search(_entity, getProject());
-        for (SearchElement result: results.getResults()) {
-            addSearchMatches(result, matches);
+        try{
+            List<Match> matches = new ArrayList<Match>();
+            
+            SearchResults results = FindReferencesHelper.search(_entity, getProject());
+            for (SearchElement result: results.getResults()) 
+                addSearchMatches(result, matches);
+    
+            return matches.toArray(new Match[matches.size()]);
+        }catch (NeOnCoreException e) {
+            e.printStackTrace();
+            throw e;
+        }catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-
-        return matches.toArray(new Match[matches.size()]);
     }
 
 
     private void addSearchMatches(SearchElement element, List<Match> resultList) {
-        String ontology = element.getOntologyUri(); 
-        String project = getProject();
-        OWLAxiom axiom = element.getAxiom();
-        OWLEntity entity = FindReferencesHelper.findSubject(axiom);
-        FieldTypes elementType = FindReferencesHelper.findType(entity);
-        IRI entityUri = entity.getIRI();
-        
         try {
+            String ontology = element.getOntologyUri(); 
+            String project = getProject();
+            OWLAxiom axiom = element.getAxiom();
+            OWLEntity entity = FindReferencesHelper.findSubject(axiom, ontology, project);
+            FieldTypes elementType = FindReferencesHelper.findType(entity);
+            IRI entityUri = entity.getIRI();
             OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(project);
 
             ITreeElement elem = null;
