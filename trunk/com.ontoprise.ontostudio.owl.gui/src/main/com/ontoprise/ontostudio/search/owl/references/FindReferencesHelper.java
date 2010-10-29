@@ -146,13 +146,13 @@ public class FindReferencesHelper {
 
 
     /**
-     * @param axiom
-     * @param ontology
-     * @param project
+     * @param axiom - the source axiom
+     * @param ontology - the source ontology, where the subject can be found
+     * @param project - the source project, where the subject can be found 
      * @return
      * @throws NeOnCoreException 
      * 
-     * finds the Subject of the Axiom, also in case it is just an IRI
+     * finds the subject of the axiom, also in case it is just an IRI
      * 
      */
     public static OWLEntity findSubject(OWLAxiom axiom, String ontology, String project) throws NeOnCoreException {
@@ -170,10 +170,10 @@ public class FindReferencesHelper {
         return null;
     }
     /**
-     * @param axiom
+     * @param axiom - the source axiom, to find it's subject
      * @return
      * 
-     * finds the Subject of the Axiom
+     * finds the subject of the axiom
      * 
      */
     public static OWLEntity findSubject(OWLAxiom axiom) {
