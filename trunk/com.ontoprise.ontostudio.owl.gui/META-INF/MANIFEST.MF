@@ -7,8 +7,7 @@ Bundle-Version: 2.3.2
 Bundle-ClassPath: ontostudio-owleditor-gui.jar
 Bundle-Vendor: %ontoprise
 Bundle-Localization: plugin
-Require-Bundle: org.junit4;bundle-version="4.3.1",
- com.ontoprise.ontostudio.owl.model,
+Require-Bundle: com.ontoprise.ontostudio.owl.model,
  com.ontoprise.dependencies,
  org.semanticweb.owl;bundle-version="1.0.0",
  org.eclipse.core.runtime,

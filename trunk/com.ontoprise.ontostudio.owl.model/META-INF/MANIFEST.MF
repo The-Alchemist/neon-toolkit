@@ -15,8 +15,7 @@ Require-Bundle: com.ontoprise.dependencies,
  org.eclipse.core.resources;bundle-version="3.3.1",
  org.neontoolkit.refactor,
  org.neontoolkit.gui,
- org.neontoolkit.core,
- org.junit4;bundle-version="4.5.0"
+ org.neontoolkit.core
 Bundle-ActivationPolicy: lazy
 Export-Package: com.ontoprise.ontostudio.owl.model,
  com.ontoprise.ontostudio.owl.model.commands,

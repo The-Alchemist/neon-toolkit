@@ -135,28 +135,10 @@ public class NeOnUIPlugin extends LoggingUIPlugin {
         initDropHandlerExtPoint();
         initEntityPropertiesExtPoint();
         initDatamodelPropertiesExtensionPoint();
-        disableUnneededCapability();
         initEarlyStartup();
         plugin = this;
     }
 
-    /**
-     * 
-     */
-    private void disableUnneededCapability() {
-        // Bug 13383
-//        if (!PluginTest.hasWorkbench()) {
-//            return;
-//        }
-//        IWorkbenchActivitySupport workbenchActivitySupport = PlatformUI.getWorkbench().getActivitySupport();
-//        IActivityManager activityManager = workbenchActivitySupport.getActivityManager();
-//        Set enabledActivityIds = new HashSet(activityManager.getEnabledActivityIds());
-//        enabledActivityIds.remove("org.eclipse.team"); //$NON-NLS-1$
-//        enabledActivityIds.remove("org.eclipse.team.cvs"); //$NON-NLS-1$
-//        enabledActivityIds.remove("org.eclipse.javaDevelopment"); //$NON-NLS-1$
-//        enabledActivityIds.remove("org.eclipse.plugInDevelopment"); //$NON-NLS-1$
-//        workbenchActivitySupport.setEnabledActivityIds(enabledActivityIds);
-    }
 
     /*
      * (non-Javadoc)
@@ -227,7 +209,7 @@ public class NeOnUIPlugin extends LoggingUIPlugin {
                 if (checkInterfaces(next.getAttribute("dragClass"), dragSource.getClass())) { //$NON-NLS-1$
                     addDropHandler = true;
                 }
-                // check for dragSource beeing a subclass of dragClass
+                // check for dragSource being a subclass of dragClass
                 Class<?> dragSuperClass = dragSource.getClass().getSuperclass();
                 while (dragSuperClass != null && !addDropHandler) {
                     if (next.getAttribute("dragClass").equals(dragSuperClass.getName())) { //$NON-NLS-1$
@@ -243,7 +225,7 @@ public class NeOnUIPlugin extends LoggingUIPlugin {
             if (addDropHandler && next.getAttribute("dropClass").equals(dropTarget.getClass().getName())) { //$NON-NLS-1$
                 addDropHandler = true;
             } else if (addDropHandler && acceptDropSubclasses != null && Boolean.parseBoolean(acceptDropSubclasses)) {
-                // check for dropTarget beeing a subclass of dropClass
+                // check for dropTarget being a subclass of dropClass
                 addDropHandler = checkInterfaces(next.getAttribute("dropClass"), dragSource.getClass()); //$NON-NLS-1$
                 Class<?> dropSuperClass = dropTarget.getClass().getSuperclass();
                 while (dropSuperClass != null && !addDropHandler) {
@@ -494,6 +476,7 @@ public class NeOnUIPlugin extends LoggingUIPlugin {
 
         // sort the providers according to the priority
         Collections.sort(_providerList, new Comparator<IConfigurationElement>() {
+            @Override
             public int compare(IConfigurationElement o1, IConfigurationElement o2) {
                 int prio1 = getPriority(o1);
                 int prio2 = getPriority(o2);
