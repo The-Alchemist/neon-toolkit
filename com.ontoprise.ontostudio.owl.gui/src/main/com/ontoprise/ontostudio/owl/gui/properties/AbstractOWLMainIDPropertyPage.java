@@ -401,7 +401,9 @@ public abstract class AbstractOWLMainIDPropertyPage extends AbstractMainIDProper
         if (composite != null) {
             Control[] ctr = composite.getChildren();
             for (Control control: ctr) {
-                control.dispose();
+                if(control!=null) {
+                    control.dispose();
+                }
             }
         }
     }

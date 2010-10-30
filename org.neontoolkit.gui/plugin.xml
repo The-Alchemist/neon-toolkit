@@ -357,10 +357,12 @@
             </and>
          </activeWhen>
       </handler>
+<!--
       <handler
             class="org.neontoolkit.gui.navigator.ontology.SaveAllOntologyAction"
             commandId="org.neontoolkit.gui.navigator.ontology.SaveAllOntologyAction">
       </handler>
+-->
    </extension>
    <extension
          point="org.eclipse.core.expressions.propertyTesters">

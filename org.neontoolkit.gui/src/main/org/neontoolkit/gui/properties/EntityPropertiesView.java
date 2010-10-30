@@ -268,7 +268,8 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
 	 */
-	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+	@Override
+    public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 
         if(selection.isEmpty()){
             @SuppressWarnings("unused")
