@@ -13,19 +13,6 @@
       </application>
    </extension>
    <extension
-         id="product0"
-         name="NeOn Toolkit"
-         point="org.eclipse.core.runtime.products">
-      <product
-            application="org.neontoolkit.application.application"
-            name="NeOn Toolkit">
-         <property
-               name="windowImages"
-               value="icons/neon_16x16.png,icons/neon_16x16.png">
-         </property>
-      </product>
-   </extension>
-   <extension
          point="org.eclipse.ui.intro">
       <intro
             class="org.eclipse.ui.intro.config.CustomizableIntroPart"
@@ -70,7 +57,7 @@
          </property>
          <property
                name="startupForegroundColor"
-               value="FFFF80">
+               value="000000">
          </property>
          <property
                name="startupMessageRect"
