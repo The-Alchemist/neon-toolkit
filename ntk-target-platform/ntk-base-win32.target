@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.5"?>
+<?pde version="3.6"?>
 
 <target name="ntk-base-win32">
 <locations>
-<location path="${project_loc}/ntk-base-plugins" type="Directory"/>
 <location path="${project_loc}/delta-packs/Win32" type="Directory"/>
+<location path="${project_loc}/eclipse-platform-3.5.2-plugins" type="Directory"/>
 </locations>
 <environment>
 <os>win32</os>
