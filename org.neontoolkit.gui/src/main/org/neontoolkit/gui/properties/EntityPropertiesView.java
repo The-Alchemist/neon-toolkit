@@ -275,7 +275,7 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
             @SuppressWarnings("unused")
             String projectName = null , ontologyName = null;
             if(selection instanceof TreeSelection){
-                TreeSelection treeSelection = (TreeSelection) _selection;
+                TreeSelection treeSelection = (TreeSelection) selection; 
                 for(TreePath path : treeSelection.getPaths()){
 
                     Object x = path.getSegment(path.getSegmentCount()-1);
