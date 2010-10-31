@@ -13,7 +13,7 @@ body {
 	font-family:Tahoma;
 	font-size: 12px;
 	color:#000000;
-	background-image:url("./titlebanner.gif");
+	background-image:url("images/titlebanner.gif");
 	background-repeat: repeat-x;
 	} 
 	
@@ -21,7 +21,7 @@ h1 {
 	text-align:left;
 	font-size: 16pt;
 	font-weight:normal;
-	color:#E5E5E5;
+	color:#FFFFFF;
 	} 
 
 h4 {

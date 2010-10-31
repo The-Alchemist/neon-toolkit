@@ -11,32 +11,104 @@ import org.eclipse.ui.IWorkbenchWindow;
 
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
+	// for the Help Menu
     private IWorkbenchAction introAction;
+    private IWorkbenchAction helpAction;
+    private IWorkbenchAction searchHelpAction;
+    private IWorkbenchAction aboutAction;
+
+	// for the Windows Menu
+    private IWorkbenchAction openPerspectiveAction;
+    private IWorkbenchAction showViewAction;
+    private IWorkbenchAction resetPerspectiveAction;
+    private IWorkbenchAction preferencesAction;
     
-	public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
+    // for the File Menu
+    private IWorkbenchAction newAction;
+    private IWorkbenchAction saveAction;
+    private IWorkbenchAction saveAllAction;
+//    private IWorkbenchAction switchWorkspaceAction;
+//    private IWorkbenchAction restartAction;
+    private IWorkbenchAction importAction;
+    private IWorkbenchAction exportAction;
+    private IWorkbenchAction exitAction;
+
+    public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
 		super(configurer);
 	}
 
 	protected void makeActions(IWorkbenchWindow window) {
+		// for the Help Menu
 		introAction = ActionFactory.INTRO.create(window);
 		register(introAction);
+		helpAction = ActionFactory.HELP_CONTENTS.create(window);
+		register(helpAction);
+		searchHelpAction = ActionFactory.HELP_SEARCH.create(window);
+		register(searchHelpAction);
+		aboutAction = ActionFactory.ABOUT.create(window);
+		register(aboutAction);
+		
+		// for the Windows Menu
+		openPerspectiveAction = ActionFactory.OPEN_PERSPECTIVE_DIALOG.create(window);
+		register(openPerspectiveAction);
+		showViewAction = ActionFactory.SHOW_VIEW_MENU.create(window);
+		register(showViewAction);
+		resetPerspectiveAction = ActionFactory.RESET_PERSPECTIVE.create(window);
+		register(resetPerspectiveAction);
+		preferencesAction = ActionFactory.PREFERENCES.create(window);
+		register(preferencesAction);
+		
+		// for the File Menu
+		newAction = ActionFactory.NEW.create(window);
+		register(newAction);
+		saveAction = ActionFactory.SAVE.create(window);
+		register(saveAction);
+		saveAllAction = ActionFactory.SAVE_ALL.create(window);
+		register(saveAllAction);
+//		switchWorkspaceAction = ActionFactory.NEW.create(window);
+//		register(switchWorkspaceAction);
+//		restartAction = ActionFactory.REVERT.create(window);
+//		register(restartAction);
+		importAction = ActionFactory.IMPORT.create(window);
+		register(importAction);
+		exportAction = ActionFactory.EXPORT.create(window);
+		register(exportAction);
+		exitAction = ActionFactory.QUIT.create(window);
+		register(exitAction);		
 	}
 
 	protected void fillMenuBar(IMenuManager menuBar) {
+		// File Menu
+		MenuManager fileMenu = new MenuManager("&File", IWorkbenchActionConstants.M_FILE);
+		fileMenu.add(newAction);
+		fileMenu.add(saveAction);
+		fileMenu.add(saveAllAction);
+//		fileMenu.add(switchWorkspaceAction);
+//		fileMenu.add(restartAction);
+		fileMenu.add(importAction);
+		fileMenu.add(exportAction);
+		fileMenu.add(exitAction);
+
+		MenuManager searchMenu = new MenuManager("&Search", "search");
 		
-//		MenuManager fileMenu = new MenuManager("&File", IWorkbenchActionConstants.M_FILE);
-//		MenuManager searchMenu = new MenuManager("&Search", "search");
-//		MenuManager windowMenu = new MenuManager("&Window", IWorkbenchActionConstants.M_WINDOW);
+		// Window Menu
+		MenuManager windowMenu = new MenuManager("&Window", IWorkbenchActionConstants.M_WINDOW);
+		windowMenu.add(openPerspectiveAction);
+		windowMenu.add(showViewAction);
+		windowMenu.add(resetPerspectiveAction);
+		windowMenu.add(preferencesAction);
 
 		// Help
 		MenuManager helpMenu = new MenuManager("&Help", IWorkbenchActionConstants.M_HELP);
 		helpMenu.add(introAction);
+		helpMenu.add(helpAction);
+		helpMenu.add(searchHelpAction);
+		helpMenu.add(aboutAction);
 		
-//		menuBar.add(fileMenu);
-//		menuBar.add(searchMenu);
-//		menuBar.add(windowMenu);
-		menuBar.add(helpMenu);
-
+		menuBar.add(fileMenu);
+		menuBar.add(searchMenu);
+		menuBar.add(windowMenu);
+		menuBar.insertAfter(IWorkbenchActionConstants.M_WINDOW, helpMenu);
 	}
 
 }
