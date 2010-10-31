@@ -13,7 +13,7 @@
       </application>
    </extension>
    <extension
-         id="product"
+         id="product0"
          name="NeOn Toolkit"
          point="org.eclipse.core.runtime.products">
       <product
@@ -57,6 +57,46 @@
             content="ext.xml"
             configId="org.neontoolkit.application.configId">
       </configExtension>
+   </extension>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.neontoolkit.application.application"
+            name="NeOn Toolkit">
+         <property
+               name="appName"
+               value="NeOn Toolkit">
+         </property>
+         <property
+               name="startupForegroundColor"
+               value="FFFF80">
+         </property>
+         <property
+               name="startupMessageRect"
+               value="7,252,445,20">
+         </property>
+         <property
+               name="startupProgressRect"
+               value="5,275,445,15">
+         </property>
+         <property
+               name="preferenceCustomization"
+               value="plugin_customization.ini">
+         </property>
+         <property
+               name="aboutImage"
+               value="icons/neon_large.png">
+         </property>
+         <property
+               name="aboutText"
+               value="NeOnToolkit\n\&#x0A;\n\&#x0A;Version: {featureVersion}\n\&#x0A;Build id: {0}\n\&#x0A;\n\&#x0A;Distributed by the NeOn Technologies Foundation Ltd.\n\&#x0A;Please visit http://www.neon-toolkit.org/\n\&#x0A;\n\&#x0A;The NeOn Toolkit bundle is licensed under the Eclipse Public License (EPL) version 1.0. \n\&#x0A;Individual plugins are also usually provided under EPL. \n\&#x0A;The license agreements associated with individual plugins can be found under \n\&#x0A;Help/Software Updates/Manage Configuration.../.\n\&#x0A;\n\&#x0A;This product includes software developed by the\n\&#x0A;Apache Software Foundation http://www.apache.org/\n\&#x0A;as well as other open-source components.\n\&#x0A;See the licenses folder for applicable 3rd-party licenses.\n\">
+         </property>
+         <property
+               name="windowImages"
+               value="icons/neon_16x16.png,icons/neon_32x32.png,icons/neon_48x48.bmp,icons/neon_64x64.png,icons/neon_128x128.png">
+         </property>
+      </product>
    </extension>
 
 </plugin>
