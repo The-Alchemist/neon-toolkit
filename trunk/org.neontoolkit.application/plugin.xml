@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         id="application"
+         name="NeOn Toolkit"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="org.neontoolkit.application.intro.Application">
+         </run>
+      </application>
+   </extension>
+   <extension
+         id="product"
+         name="NeOn Toolkit"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.neontoolkit.application.application"
+            name="NeOn Toolkit">
+         <property
+               name="windowImages"
+               value="icons/neon_16x16.png,icons/neon_16x16.png">
+         </property>
+      </product>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro">
+      <intro
+            class="org.eclipse.ui.intro.config.CustomizableIntroPart"
+            id="org.neontoolkit.application.intro">
+      </intro>
+      <introProductBinding
+            introId="org.neontoolkit.application.intro"
+            productId="org.neontoolkit.application.product">
+      </introProductBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro.config">
+      <config
+            introId="org.neontoolkit.application.intro"
+            content="introContent.xml"
+            id="org.neontoolkit.application.configId">
+         <presentation
+               home-page-id="root">
+            <implementation
+                  kind="html"
+                  os="win32,linux,macosx">
+            </implementation>
+         </presentation>
+      </config>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro.configExtension">
+      <configExtension
+            content="ext.xml"
+            configId="org.neontoolkit.application.configId">
+      </configExtension>
+   </extension>
+
+</plugin>
