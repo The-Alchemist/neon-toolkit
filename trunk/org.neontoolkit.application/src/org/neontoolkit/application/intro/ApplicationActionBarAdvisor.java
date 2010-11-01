@@ -1,9 +1,12 @@
 package org.neontoolkit.application.intro;
 
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
+import org.eclipse.ui.actions.ContributionItemFactory;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -19,7 +22,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
 	// for the Windows Menu
     private IWorkbenchAction openPerspectiveAction;
-    private IWorkbenchAction showViewAction;
+    private MenuManager viewMenu; 
     private IWorkbenchAction resetPerspectiveAction;
     private IWorkbenchAction preferencesAction;
     
@@ -51,8 +54,11 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		// for the Windows Menu
 		openPerspectiveAction = ActionFactory.OPEN_PERSPECTIVE_DIALOG.create(window);
 		register(openPerspectiveAction);
-		showViewAction = ActionFactory.SHOW_VIEW_MENU.create(window);
-		register(showViewAction);
+		
+        viewMenu = new MenuManager("&Show View");
+        IContributionItem viewList = ContributionItemFactory.VIEWS_SHORTLIST.create(window);
+        viewMenu.add(viewList);
+
 		resetPerspectiveAction = ActionFactory.RESET_PERSPECTIVE.create(window);
 		register(resetPerspectiveAction);
 		preferencesAction = ActionFactory.PREFERENCES.create(window);
@@ -85,8 +91,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		fileMenu.add(saveAllAction);
 //		fileMenu.add(switchWorkspaceAction);
 //		fileMenu.add(restartAction);
+		fileMenu.add(new Separator());
 		fileMenu.add(importAction);
 		fileMenu.add(exportAction);
+		fileMenu.add(new Separator());
 		fileMenu.add(exitAction);
 
 		MenuManager searchMenu = new MenuManager("&Search", "search");
@@ -94,21 +102,33 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		// Window Menu
 		MenuManager windowMenu = new MenuManager("&Window", IWorkbenchActionConstants.M_WINDOW);
 		windowMenu.add(openPerspectiveAction);
-		windowMenu.add(showViewAction);
+		windowMenu.add(viewMenu);
 		windowMenu.add(resetPerspectiveAction);
 		windowMenu.add(preferencesAction);
-
+		
 		// Help
 		MenuManager helpMenu = new MenuManager("&Help", IWorkbenchActionConstants.M_HELP);
 		helpMenu.add(introAction);
 		helpMenu.add(helpAction);
 		helpMenu.add(searchHelpAction);
+		helpMenu.add(new Separator());
 		helpMenu.add(aboutAction);
 		
 		menuBar.add(fileMenu);
 		menuBar.add(searchMenu);
 		menuBar.add(windowMenu);
 		menuBar.insertAfter(IWorkbenchActionConstants.M_WINDOW, helpMenu);
+		
+		disableRunMenu(menuBar);
+	}
+
+	private void disableRunMenu(IMenuManager menuBar) {
+		menuBar.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+
+		final MenuManager runMenuManager = new MenuManager("&Run", "org.eclipse.ui.run");
+		menuBar.add(runMenuManager);
+		runMenuManager.setActionDefinitionId("org.eclipse.ui.run");
+//		runMenuManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
 }
