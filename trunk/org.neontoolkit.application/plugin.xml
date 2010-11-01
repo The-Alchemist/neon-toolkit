@@ -86,4 +86,93 @@
       </product>
    </extension>
 
+
+	<!-- =====================================================  -->
+	<!-- Using Capabilities to disable unneeded Eclipse stuff   -->
+	<!-- =====================================================  -->
+	<extension
+         point="org.eclipse.ui.activities">
+
+         <activity
+         	name="Eclipse File Search Page"
+         	description="Eclipse File Search Page"
+         	id="com.ontoprise.ontostudio.eclipseFileSearchPage">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseFileSearchPage"
+         	pattern=".*org\.eclipse\.search/org.eclipse.search.OpenFileSearchPage">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseFileSearchPage"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+         <activity
+         	name="Eclipse Text Search Stuff"
+         	description="Eclipse Text Search Stuff"
+         	id="com.ontoprise.ontostudio.eclipseTextSearchStuff">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseTextSearchStuff"
+         	pattern=".*org\.eclipse\.search/textSearchSubMenu">
+         </activityPatternBinding>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseTextSearchStuff"
+         	pattern=".*org\.eclipse\.search/org.eclipse.search.TextSearchFile">
+         </activityPatternBinding>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseTextSearchStuff"
+         	pattern=".*org\.eclipse\.search/org.eclipse.search.TextSearchProject">
+         </activityPatternBinding>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseTextSearchStuff"
+         	pattern=".*org\.eclipse\.search/org.eclipse.search.TextSearchWorkspace">
+         </activityPatternBinding>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseTextSearchStuff"
+         	pattern=".*org\.eclipse\.search/org.eclipse.search.TextSearchWorkingSet">
+         </activityPatternBinding>         
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseTextSearchStuff"
+         	pattern=".*org\.eclipse\.search/org.eclipse.search.internal.ui.text.TextSearchPage">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseTextSearchStuff"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+         
+
+		<!-- Run Menu -->
+         <activity
+         	name="Eclipse UI External Tools"
+         	description="Eclipse UI External Tools"
+         	id="com.ontoprise.ontostudio.eclipseUI.externaltools">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.externaltools"
+         	pattern=".*org\.eclipse\.ui\.externaltools/.*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.externaltools"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+        <activity
+         	name="Eclipse Debug"
+         	description="Eclipse Debug Functionality"
+         	id="com.ontoprise.ontostudio.eclipseDebug">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseDebug"
+         	pattern=".*org\.eclipse\.debug\.ui/.*">
+         </activityPatternBinding>         
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseDebug"
+         	pattern=".*org\.eclipse\.debug/.*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseDebug"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+	</extension>
+  
 </plugin>
