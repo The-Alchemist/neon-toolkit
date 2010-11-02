@@ -328,4 +328,82 @@ public class SearchTreeContentProvider implements ITreeContentProvider,IStructur
     public void clear() {
         searchResultPage.getViewer().refresh();
     }
+    /**
+     * 
+     * @param match - base match
+     * @return the next match of match
+     */
+    public OwlSearchMatch getNextMatch(OwlSearchMatch match){
+        OwlSearchMatch firstMatch = null;
+        boolean actualFound = false;
+        
+        for(ITreeObject project : invisibleRoot.getChildren()){
+            if(project instanceof ITreeParent){//project
+                for(ITreeObject ontology : ((ITreeParent)project).getChildren()){
+                    if(ontology instanceof ITreeParent){//ontology
+                        for(ITreeObject object : ((ITreeParent)ontology).getChildren()){
+                            if(object instanceof OwlSearchMatch){//entity
+                                OwlSearchMatch entity = (OwlSearchMatch)object;
+                                if(firstMatch == null) 
+                                    firstMatch = entity;
+                                if(actualFound)
+                                    return entity;
+                                if(match.equals(entity))
+                                    actualFound = true;
+                                
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if(actualFound)
+            return firstMatch;
+        return match;//NICO null or old??
+    }
+    /**
+     * 
+     * @param match - base match
+     * @return the previous match of match
+     */
+    public OwlSearchMatch getPreviousMatch(OwlSearchMatch match){
+        OwlSearchMatch previousMatch = null;
+        boolean firstMatch = true;
+        boolean getLast = false;
+        
+        while(!getLast){
+            for(ITreeObject project : invisibleRoot.getChildren()){
+                if(project instanceof ITreeParent){//project
+                    for(ITreeObject ontology : ((ITreeParent)project).getChildren()){
+                        if(ontology instanceof ITreeParent){//ontology
+                            for(ITreeObject object : ((ITreeParent)ontology).getChildren()){
+                                if(object instanceof OwlSearchMatch){//entity
+                                    OwlSearchMatch entity = (OwlSearchMatch)object;
+                                    if(firstMatch) {
+                                        if(match.equals(entity))
+                                            getLast = true;
+                                        firstMatch = false;
+                                    }else if(match.equals(entity))
+                                        return previousMatch;
+                                    previousMatch = entity;
+                                    
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if(getLast){
+            try {
+                ITreeParent lastProject = (ITreeParent) invisibleRoot.getChildren()[invisibleRoot.getChildren().length-1];
+                ITreeParent lastOntology = (ITreeParent) lastProject.getChildren()[lastProject.getChildren().length-1];
+                return (OwlSearchMatch) lastOntology.getChildren()[lastOntology.getChildren().length-1];
+            } catch (Exception e) {
+                // nothing todo
+            }
+        }
+        return match;//NICO null or old??
+    }
+    
 }

@@ -38,6 +38,7 @@ import org.neontoolkit.search.ui.OpenSearchPreferencesAction;
 import org.neontoolkit.search.ui.SearchMatch;
 
 import com.ontoprise.ontostudio.search.owl.match.ITreeObject;
+import com.ontoprise.ontostudio.search.owl.match.OwlSearchMatch;
 
 /**
  * @author Nico Stieler
@@ -157,7 +158,7 @@ public class OWLSearchResultPage extends AbstractTextSearchViewPage implements I
         Object element = ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
         if (element instanceof SearchMatch) {
             SearchMatch match = (SearchMatch)element;
-            if (_currentPathIndex >= 0 && _currentPathIndex < match.getOccurenceCount()) {
+            if (_currentPathIndex >= 0 && _currentPathIndex < match.getOccurenceCount()) {//NICO necessary ???
                 return match;
             }
         }
@@ -170,12 +171,20 @@ public class OWLSearchResultPage extends AbstractTextSearchViewPage implements I
     }
 
     private void gotoNextMatch(boolean activateEditor) {
-        _currentPathIndex++;
-        SearchMatch nextMatch = getSelectedMatch();
-        if (nextMatch == null) {
-            _currentPathIndex = 0;
-            navigateNext(true);
-        }
+//        Match currentMatch = getCurrentMatch();
+//        if(currentMatch != null){
+//            Object currentSearchMatch = currentMatch.getElement();
+//            System.out.println("currentMatch: " + currentSearchMatch);
+//            if(currentSearchMatch != null && currentSearchMatch instanceof OwlSearchMatch){
+//                SearchMatch nextMatch = _contentProvider.getNextMatch((OwlSearchMatch)currentSearchMatch);
+//                System.out.println("nextMatch: " + nextMatch);
+//                if (nextMatch != null) {
+////                    _currentPathIndex = 0;
+                    navigateNext(true);
+//                    showMatch(nextMatch);
+//                }
+//            }
+//        }
         showCurrentMatch();
     }
     
@@ -190,23 +199,31 @@ public class OWLSearchResultPage extends AbstractTextSearchViewPage implements I
     }
 
     private void gotoPreviousMatch(boolean activateEditor) {
-        _currentPathIndex--;
-        SearchMatch nextMatch = getSelectedMatch();
-        if (nextMatch == null) {
-            navigateNext(false);
-            _currentPathIndex = 0;
-            nextMatch = getSelectedMatch();
-            if (nextMatch != null) {
-                _currentPathIndex = nextMatch.getOccurenceCount()-1;
-            }
-        }
+//        Match currentMatch = getCurrentMatch();
+//        if(currentMatch != null){
+//            Object currentSearchMatch = currentMatch.getElement();
+//            System.out.println("currentMatch: " + currentSearchMatch);
+//            if(currentSearchMatch != null && currentSearchMatch instanceof OwlSearchMatch){
+//                SearchMatch previousMatch = _contentProvider.getPreviousMatch((OwlSearchMatch)currentSearchMatch);
+//                System.out.println("previousMatch: " + previousMatch);
+//                if (previousMatch != null) {
+//                    showMatch(previousMatch);
+                    navigateNext(false);
+//                    _currentPathIndex = 0;
+//                    nextMatch = getSelectedMatch();
+//                    if (nextMatch != null) {
+//                        _currentPathIndex = nextMatch.getOccurenceCount()-1;
+//                    }
+//                }
+//            }
+//        }
         showCurrentMatch();
     }
 
 
     @SuppressWarnings("restriction")
     private void navigateNext(boolean forward) {
-        org.eclipse.search2.internal.ui.basic.views.INavigate navigator = new org.eclipse.search2.internal.ui.basic.views.TableViewerNavigator((TableViewer) getViewer());
+        org.eclipse.search2.internal.ui.basic.views.INavigate navigator = new org.eclipse.search2.internal.ui.basic.views.TreeViewerNavigator(this,(TreeViewer) getViewer());
         navigator.navigateNext(forward);
     }
 
