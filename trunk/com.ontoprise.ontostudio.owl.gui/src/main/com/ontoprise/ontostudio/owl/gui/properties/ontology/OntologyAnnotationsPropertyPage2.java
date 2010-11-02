@@ -34,6 +34,7 @@ import org.eclipse.ui.forms.widgets.ColumnLayoutData;
 import org.eclipse.ui.forms.widgets.Section;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.core.util.IRIUtils;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.semanticweb.owlapi.model.IRI;
@@ -243,6 +244,7 @@ public class OntologyAnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage 
                         if(!(ranges == null || ranges.isEmpty())){
                             for(IRI range : ranges){
                                 systemChanged[0] = true;
+//                                typeText.setText(IRIUtils.ensureValidIRISyntax(range.toString()));
                                 typeText.setText(range.toString());
                                 break;
                             }
@@ -546,6 +548,7 @@ public class OntologyAnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage 
                         if(!(ranges == null || ranges.isEmpty())){
                             for(IRI range : ranges){
                                 systemChanged[0] = true;
+//                                typeText.setText(IRIUtils.ensureValidIRISyntax(range.toString()));
                                 typeText.setText(range.toString());
                                 break;
                             }
