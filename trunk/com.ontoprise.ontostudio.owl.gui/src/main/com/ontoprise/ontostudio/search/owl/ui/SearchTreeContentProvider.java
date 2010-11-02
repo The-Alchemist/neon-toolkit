@@ -16,6 +16,7 @@ import org.neontoolkit.gui.navigator.elements.TreeElement;
 
 import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
 import com.ontoprise.ontostudio.search.owl.match.ITreeObject;
+import com.ontoprise.ontostudio.search.owl.match.ITreeParent;
 import com.ontoprise.ontostudio.search.owl.match.OntologyTreeObject;
 import com.ontoprise.ontostudio.search.owl.match.OwlSearchMatch;
 import com.ontoprise.ontostudio.search.owl.match.ProjectTreeObject;
@@ -60,18 +61,18 @@ public class SearchTreeContentProvider implements ITreeContentProvider,IStructur
 //        System.out.println("parent: "+ parent);
 //        if(parent instanceof SearchResult)
 //            System.out.println("\tparent: "+ ((SearchResult)parent).getMatchCount());
-        try {
-            Thread.sleep(500);//NICO 
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(500);//NICO 
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 //            System.out.println("parent: "+ parent);
 //            if(parent instanceof SearchResult)
 //                System.out.println("\tparent: "+ ((SearchResult)parent).getMatchCount());
         
         if(parent.equals(this.result) && parent instanceof SearchResult){
             if(parent != null){
-//                TreeParent invisibleRoot = new TreeParent("");
+                this.invisibleRoot = new RootTreeObject();
                 LinkedList<ProjectTreeObject> projectArray = new LinkedList<ProjectTreeObject>();
                 LinkedList<LinkedList<OntologyTreeObject>> projectOntologyArray = new LinkedList<LinkedList<OntologyTreeObject>>();
                 for(Object match : ((SearchResult)parent).getElements()){
@@ -154,11 +155,6 @@ public class SearchTreeContentProvider implements ITreeContentProvider,IStructur
     }
 
     public boolean hasChildren(Object parent) {
-//        System.out.println("------------------hasChildren-------------------");
-//        System.out.println("parent: "+ parent);
-//        if(parent instanceof SearchResult)
-//            System.out.println("\tparent: "+ ((SearchResult)parent).getMatchCount());
-
         if(parent instanceof SearchResult){
             if(parent != null){
                 return this.invisibleRoot.hasChildren();
@@ -194,7 +190,35 @@ public class SearchTreeContentProvider implements ITreeContentProvider,IStructur
                 removed.add(updatedElements[i]);
                 removeCount++;
             }
+        }   
+        outer:
+        for(Object match : removed){
+            for(ITreeObject project : invisibleRoot.getChildren()){
+                int projectCounter = 0;
+                if(project instanceof ITreeParent)
+                    for(ITreeObject ontology : ((ITreeParent)project).getChildren()){
+                        int ontologyCounter = 0;
+                        if(ontology instanceof ITreeParent)
+                            for(ITreeObject entity : ((ITreeParent)ontology).getChildren()){
+                                if(entity instanceof OwlSearchMatch){
+                                    OwlSearchMatch owlSearchMatch = (OwlSearchMatch)entity;
+                                    if(owlSearchMatch.equals(match)){
+                                        viewer.remove(new Object[]{project,ontology,owlSearchMatch});
+
+                                        if(((ITreeParent)ontology).numberOfLeafs() == ++ontologyCounter)
+                                            viewer.remove(new Object[]{project,ontology});
+                                        if(((ITreeParent)project).numberOfLeafs() == ++projectCounter)
+                                            viewer.remove(new Object[]{project});
+                                        continue outer;
+                                    }
+                                }
+                            }
+                    }
+            }
         }
+        
+        
+        
 //        System.out.println("------------------elementsChanged-------------------");
 //        System.out.println("added: " + added.size());
 //        for(Object match : added)
@@ -286,15 +310,7 @@ public class SearchTreeContentProvider implements ITreeContentProvider,IStructur
 //                }
 //            }   
 //        }
-//        for(Object match : removed){
-//            System.out.println("-----------remove-------------"); //$NON-NLS-1$
-//            AbstractOwlEntityTreeElement element = (AbstractOwlEntityTreeElement) ((OwlSearchMatch)match).getMatch();
-//            System.out.println("Project: " + element.getProjectName());
-//            System.out.println("\tOntology: " + element.getOntologyUri());
-//            System.out.println("\t\tEntityName: " + element.getId());
-////            Object[] treePath = new Object[]{element.getProjectName(),element.getOntologyUri()};//project and ontology   classes   or   treeelements
-////            viewer.add(treePath,match);   
-//        }
+        
 ////      viewer.add(added.toArray(), null);
 ////      viewer.update(updated.toArray(), null); //NICO has be done, see added
 ////        viewer.remove(removed.toArray()); //NICO has be done, see added
@@ -302,32 +318,14 @@ public class SearchTreeContentProvider implements ITreeContentProvider,IStructur
 
 
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-//        System.out.println("-----------------------------------inputChanged-------------------------------");
-//        System.out.println("viewer: "+ viewer);
-//        if(viewer instanceof TreeViewer)
-//            System.out.println("\tviewer: "+ ((TreeViewer)viewer).getTree().getSize());
-//        this.viewer = viewer;
         result = (SearchResult) newInput;
-        //NICO result --> tree
-        if(newInput == null){
+//        if(newInput == null){
             this.invisibleRoot = new RootTreeObject();
-//            System.out.println("---------------start------------------");
-        }
-//        if(result != null)
-//            for(Object match : result.getElements()){
-//                AbstractOwlEntityTreeElement element = (AbstractOwlEntityTreeElement) ((OwlSearchMatch)match).getMatch();
-//                System.out.println(element);
-//                System.out.println(element.getLocalName());
-//                System.out.println(element.getOntologyUri());
-//                System.out.println(element.getProjectName());
-//    //            System.out.println(element.g);
-//            }
-        
+//            viewer.
         return;
     }
 
     public void clear() {
-//        System.out.println("------------------clear-------------------");
         searchResultPage.getViewer().refresh();
     }
 }

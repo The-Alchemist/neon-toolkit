@@ -13,7 +13,9 @@ package com.ontoprise.ontostudio.search.owl.ui;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -25,6 +27,9 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.search.ui.IContextMenuConstants;
 import org.eclipse.search.ui.ISearchResultPage;
 import org.eclipse.search.ui.text.AbstractTextSearchViewPage;
+import org.eclipse.search.ui.text.Match;
+import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IMemento;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.IPageSite;
 import org.neontoolkit.gui.NeOnUIPlugin;
@@ -41,7 +46,6 @@ import com.ontoprise.ontostudio.search.owl.match.ITreeObject;
 public class OWLSearchResultPage extends AbstractTextSearchViewPage implements ISearchResultPage {
 
     private SearchTreeContentProvider _contentProvider;
-//    private SearchTableContentProvider _contentProvider;
     private SearchTableLabelProvider _labelProvider;
     private int _currentPathIndex = 0;
     
@@ -59,7 +63,7 @@ public class OWLSearchResultPage extends AbstractTextSearchViewPage implements I
     public OWLSearchResultPage() {
         super(AbstractTextSearchViewPage.FLAG_LAYOUT_TREE);
     }
-    
+	
     @Override
     public void init(IPageSite pageSite) {
         super.init(pageSite);
@@ -231,4 +235,39 @@ public class OWLSearchResultPage extends AbstractTextSearchViewPage implements I
         SafeRunner.run(runnable);
     }
 
+    @Override
+    public void internalRemoveSelected() {
+        // TODO Auto-generated method stub
+        super.internalRemoveSelected();
+    }
+    @Override
+    public void restoreState(IMemento memento) {
+        // TODO Auto-generated method stub
+        super.restoreState(memento);
+    }
+    @Override
+    public void setActionBars(IActionBars actionBars) {
+        // TODO Auto-generated method stub
+        super.setActionBars(actionBars);
+    }
+    @Override
+    protected void fillContextMenu(IMenuManager mgr) {
+        // TODO Auto-generated method stub
+        super.fillContextMenu(mgr);
+    }
+    @Override
+    protected void fillToolbar(IToolBarManager tbm) {
+        // TODO Auto-generated method stub
+        super.fillToolbar(tbm);
+    }
+    @Override
+    public Match[] getDisplayedMatches(Object element) {
+        // TODO Auto-generated method stub
+        return super.getDisplayedMatches(element);
+    }
+    @Override
+    protected IDialogSettings getSettings() {
+        // TODO Auto-generated method stub
+        return super.getSettings();
+    }
 }
