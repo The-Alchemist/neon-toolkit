@@ -39,6 +39,7 @@ import org.eclipse.ui.forms.widgets.ColumnLayoutData;
 import org.eclipse.ui.forms.widgets.Section;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.core.util.IRIUtils;
 import org.neontoolkit.gui.IHelpContextIds;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
@@ -499,7 +500,7 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
                         if(!(ranges == null || ranges.isEmpty())){
                             for(IRI range : ranges){
                                 systemChanged[0] = true;
-                                typeTextWidget.setText(range.toString());
+                                typeTextWidget.setText(IRIUtils.ensureValidIRISyntax(range.toString()));
                                 break;
                             }
                         }else{
@@ -622,7 +623,7 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
                         ISyntaxManager manager = OWLPlugin.getDefault().getSyntaxManager();
                         String uri = manager.parseUri(propertyText.getText(), _owlModel);
                         LinkedList<IRI> ranges = new LinkedList<IRI>(new GetAnnotationPropertyRanges(_project, _ontologyUri,uri).getURIOfResults());
-
+                        
                         Set<OWLModel> models = _owlModel.getAllImportedOntologies();
                         for(OWLModel om : models){
                             try{
@@ -640,7 +641,7 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
                         if(!(ranges == null || ranges.isEmpty())){
                             for(IRI range : ranges){
                                 systemChanged[0] = true;
-                                typeText.setText(range.toString());
+                                typeText.setText(IRIUtils.ensureValidIRISyntax(range.toString()));
                                 break;
                             }
                         }else{
