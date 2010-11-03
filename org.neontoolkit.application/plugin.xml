@@ -77,7 +77,7 @@
          </property>
          <property
                name="aboutText"
-               value="NeOn Toolkit 2.3.3&#x0D;&#x0A;&#x0D;&#x0A;Distributed by the NeOn Technologies Foundation Ltd.&#x0D;&#x0A;http://www.neon-toolkit.org/&#x0D;&#x0A;&#x0D;&#x0A;The NeOn Toolkit bundle is licensed under the Eclipse Public License &#x0D;&#x0A;(EPL) version 1.0. Individual plugins are also usually provided under &#x0D;&#x0A;EPL.  Please check the license agreements associated with individual &#x0D;&#x0A;plugins by going to  Help &gt; Software Updates &gt; Manage Configuration&#x0D;&#x0A;&#x0D;&#x0A;This product includes software developed by the Apache Software Foundation &#x0D;&#x0A;http://www.apache.org/">
+               value="NeOn Toolkit 2.3.3&#x0A;&#x0A;Distributed by the NeOn Technologies Foundation Ltd.&#x0A;http://www.neon-toolkit.org/&#x0A;&#x0A;The NeOn Toolkit bundle is licensed under the Eclipse Public License &#x0A;(EPL) version 1.0. Individual plugins are also usually provided under &#x0A;EPL.  Please check the license agreements associated with individual &#x0A;plugins by going to  Help &gt; Software Updates &gt; Manage Configuration&#x0A;&#x0A;This product includes software developed by the Apache Software Foundation &#x0A;http://www.apache.org/">
          </property>
          <property
                name="windowImages"
