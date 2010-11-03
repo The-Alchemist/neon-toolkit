@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.neontoolkit.core.feature"
+      id="org.neontoolkit.core-feature"
       label="NeOn Toolkit Core"
       version="2.3.3"
       provider-name="NeOn Technologies Foundation Ltd."
