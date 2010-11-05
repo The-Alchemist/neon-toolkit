@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.neontoolkit.core-feature"
+      id="org.neontoolkit.core.feature"
       label="NeOn Toolkit Core"
       version="2.3.3"
       provider-name="NeOn Technologies Foundation Ltd."
-      plugin="org.neontoolkit.application">
+      plugin="org.neontoolkit.application"
+      image="neon_120.jpg">
 
-   <copyright url="http://www.neon-toolkit.org">
-      The NeOn Toolkit is open source and uses the Ecplipse Public license.
+   <description>
+      The NeOn toolkit is a state-of-the-art, open source multi-platform
+ontology engineering environment, which provides comprehensive
+support for the ontology engineering life-cycle.
+   </description>
+
+   <copyright>
+      The NeOn Toolkit is open source and uses the Ecplipse Public
+license.
    </copyright>
 
    <license url="http://www.eclipse.org/legal/epl-v10.html">
