@@ -18,6 +18,7 @@
 <project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/trunk/org.neontoolkit.io,org.neontoolkit.io"/>
 <project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/trunk/org.neontoolkit.jpowergraph,org.neontoolkit.jpowergraph"/>
 <project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/trunk/org.neontoolkit.ontovisualize,org.neontoolkit.ontovisualize"/>
+<project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/trunk/org.neontoolkit.plugin,org.neontoolkit.plugin"/>
 <project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/trunk/org.neontoolkit.refactor,org.neontoolkit.refactor"/>
 <project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/trunk/org.neontoolkit.search,org.neontoolkit.search"/>
 <project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/trunk/org.neontoolkit.swt,org.neontoolkit.swt"/>
@@ -45,5 +46,6 @@
 <item elementID="=org.neontoolkit.refactor" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.neontoolkit.application" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.semanticweb.owl" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.neontoolkit.plugin" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 </workingSets>
 </psf>
