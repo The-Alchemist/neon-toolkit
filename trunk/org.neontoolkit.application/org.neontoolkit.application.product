@@ -38,8 +38,8 @@ http://www.apache.org/
 
    <splash
       location="org.neontoolkit.application"
-      startupProgressRect="5,275,445,15"
-      startupMessageRect="7,252,445,20"
+      startupProgressRect="200,2,388,12"
+      startupMessageRect="202,16,388,20"
       startupForegroundColor="000000" />
    <launcher name="NeOn_Toolkit">
       <linux icon="/org.neontoolkit.application/icons/neon.xpm"/>
