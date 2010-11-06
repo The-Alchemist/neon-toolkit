@@ -1,5 +1,7 @@
 package org.neontoolkit.application.intro;
 
+import org.eclipse.core.commands.Command;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -9,11 +11,17 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.actions.ContributionItemFactory;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
+import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
+    // for the Search Menu
+    private IWorkbenchAction searchAction;
+    
 	// for the Help Menu
     private IWorkbenchAction introAction;
     private IWorkbenchAction helpAction;
@@ -22,6 +30,12 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
 	// for the Windows Menu
     private IWorkbenchAction openPerspectiveAction;
+    private IWorkbenchAction customizePerspectiveAction;
+    private IWorkbenchAction savePerspectiveAction;
+    private IWorkbenchAction closePerspectiveAction;
+    private IWorkbenchAction closeAllPerspectivesAction;
+//    private IWorkbenchAction closeAllPerspectivesAction;
+//    private IWorkbenchAction closeAllPerspectivesAction;
     private MenuManager viewMenu; 
     private IWorkbenchAction resetPerspectiveAction;
     private IWorkbenchAction preferencesAction;
@@ -30,7 +44,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IWorkbenchAction newAction;
     private IWorkbenchAction saveAction;
     private IWorkbenchAction saveAllAction;
-//    private IWorkbenchAction switchWorkspaceAction;
+    private IWorkbenchAction switchWorkspaceAction;
 //    private IWorkbenchAction restartAction;
     private IWorkbenchAction importAction;
     private IWorkbenchAction exportAction;
@@ -41,6 +55,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 	}
 
 	protected void makeActions(IWorkbenchWindow window) {
+		
 		// for the Help Menu
 		introAction = ActionFactory.INTRO.create(window);
 		register(introAction);
@@ -54,7 +69,19 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		// for the Windows Menu
 		openPerspectiveAction = ActionFactory.OPEN_PERSPECTIVE_DIALOG.create(window);
 		register(openPerspectiveAction);
-		
+
+		customizePerspectiveAction = ActionFactory.EDIT_ACTION_SETS.create(window);
+		register(customizePerspectiveAction);
+		savePerspectiveAction = ActionFactory.SAVE_PERSPECTIVE.create(window);
+		register(savePerspectiveAction);
+		closeAllPerspectivesAction = ActionFactory.CLOSE_ALL_PERSPECTIVES.create(window);
+		register(closeAllPerspectivesAction);
+		closePerspectiveAction = ActionFactory.CLOSE_PERSPECTIVE.create(window);
+		register(closePerspectiveAction);
+		savePerspectiveAction = ActionFactory.SAVE_PERSPECTIVE.create(window);
+		register(savePerspectiveAction);
+		customizePerspectiveAction = ActionFactory.EDIT_ACTION_SETS.create(window);
+		register(customizePerspectiveAction);
         viewMenu = new MenuManager("&Show View");
         IContributionItem viewList = ContributionItemFactory.VIEWS_SHORTLIST.create(window);
         viewMenu.add(viewList);
@@ -65,13 +92,17 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		register(preferencesAction);
 		
 		// for the File Menu
-		newAction = ActionFactory.NEW.create(window);
+		newAction = ActionFactory.NEW_WIZARD_DROP_DOWN.create(window);
+		newAction.setText("New");
+		newAction.setImageDescriptor(null);
+		
+		
 		register(newAction);
 		saveAction = ActionFactory.SAVE.create(window);
 		register(saveAction);
 		saveAllAction = ActionFactory.SAVE_ALL.create(window);
 		register(saveAllAction);
-//		switchWorkspaceAction = ActionFactory.NEW.create(window);
+//		switchWorkspaceAction = IDEActionFactory.OPEN_WORKSPACE.create(window);
 //		register(switchWorkspaceAction);
 //		restartAction = ActionFactory.REVERT.create(window);
 //		register(restartAction);
@@ -80,7 +111,12 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		exportAction = ActionFactory.EXPORT.create(window);
 		register(exportAction);
 		exitAction = ActionFactory.QUIT.create(window);
-		register(exitAction);		
+		register(exitAction);
+		
+		
+		// for the Search Menu
+		searchAction = ActionFactory.EDIT_ACTION_SETS.create(window);
+		register(searchAction);
 	}
 
 	protected void fillMenuBar(IMenuManager menuBar) {
@@ -88,7 +124,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		MenuManager fileMenu = new MenuManager("&File", IWorkbenchActionConstants.M_FILE);
 		fileMenu.add(newAction);
 		fileMenu.add(saveAction);
-		fileMenu.add(saveAllAction);
+//		fileMenu.add(saveAllAction);
 //		fileMenu.add(switchWorkspaceAction);
 //		fileMenu.add(restartAction);
 		fileMenu.add(new Separator());
@@ -97,13 +133,17 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		fileMenu.add(new Separator());
 		fileMenu.add(exitAction);
 
-		MenuManager searchMenu = new MenuManager("&Search", "search");
 		
 		// Window Menu
 		MenuManager windowMenu = new MenuManager("&Window", IWorkbenchActionConstants.M_WINDOW);
-		windowMenu.add(openPerspectiveAction);
 		windowMenu.add(viewMenu);
-		windowMenu.add(resetPerspectiveAction);
+		windowMenu.add(new Separator());
+		windowMenu.add(openPerspectiveAction);
+		windowMenu.add(customizePerspectiveAction);
+		windowMenu.add(closeAllPerspectivesAction);
+		windowMenu.add(closePerspectiveAction);
+		windowMenu.add(savePerspectiveAction);
+		windowMenu.add(new Separator());
 		windowMenu.add(preferencesAction);
 		
 		// Help
@@ -114,21 +154,14 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		helpMenu.add(new Separator());
 		helpMenu.add(aboutAction);
 		
-		menuBar.add(fileMenu);
-		menuBar.add(searchMenu);
-		menuBar.add(windowMenu);
-		menuBar.insertAfter(IWorkbenchActionConstants.M_WINDOW, helpMenu);
+		MenuManager searchMenu = new MenuManager("&Search", "org.eclipse.search.menu");
 		
-		disableRunMenu(menuBar);
-	}
+		menuBar.add(fileMenu);
+		menuBar.insertAfter(IWorkbenchActionConstants.M_FILE, searchMenu);
+		menuBar.add(windowMenu);
+		menuBar.add(helpMenu);
+		
 
-	private void disableRunMenu(IMenuManager menuBar) {
-		menuBar.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-
-		final MenuManager runMenuManager = new MenuManager("&Run", "org.eclipse.ui.run");
-		menuBar.add(runMenuManager);
-		runMenuManager.setActionDefinitionId("org.eclipse.ui.run");
-//		runMenuManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
 }
