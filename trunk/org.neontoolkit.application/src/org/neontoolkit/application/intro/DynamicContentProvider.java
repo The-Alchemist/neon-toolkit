@@ -44,7 +44,4 @@ public class DynamicContentProvider implements IIntroXHTMLContentProvider {
     public void dispose() {
 
     }
-
-
-
 }
