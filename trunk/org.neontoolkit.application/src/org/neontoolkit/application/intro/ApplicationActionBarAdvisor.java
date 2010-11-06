@@ -153,12 +153,15 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		helpMenu.add(searchHelpAction);
 		helpMenu.add(new Separator());
 		helpMenu.add(aboutAction);
-		
+
 		MenuManager searchMenu = new MenuManager("&Search", "org.eclipse.search.menu");
+		MenuManager runMenu = new MenuManager("&Run", "org.eclipse.ui.run");
+		runMenu.add(aboutAction);
 		
 		menuBar.add(fileMenu);
 		menuBar.insertAfter(IWorkbenchActionConstants.M_FILE, searchMenu);
 		menuBar.add(windowMenu);
+		menuBar.insertAfter(IWorkbenchActionConstants.M_WINDOW, runMenu);
 		menuBar.add(helpMenu);
 		
 
