@@ -161,7 +161,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		menuBar.add(fileMenu);
 		menuBar.insertAfter(IWorkbenchActionConstants.M_FILE, searchMenu);
 		menuBar.add(windowMenu);
-		menuBar.insertAfter(IWorkbenchActionConstants.M_WINDOW, runMenu);
+		menuBar.insertBefore(IWorkbenchActionConstants.M_WINDOW, runMenu);
 		menuBar.add(helpMenu);
 		
 
