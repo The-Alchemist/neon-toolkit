@@ -7,7 +7,7 @@
       plugin="org.neontoolkit.application"
       image="neon_120.jpg">
 
-   <description>
+   <description url="http://NeOn-Toolkit.org/plugins/2.3.2">
       The NeOn toolkit is a state-of-the-art, open source multi-platform
 ontology engineering environment, which provides comprehensive
 support for the ontology engineering life-cycle.
@@ -110,6 +110,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
 
    <url>
       <update label="NeOn Toolkit Update Site" url="http://neon-toolkit.org/plugins/2.3.2"/>
+      <discovery label="More NeOn Toolkit Features" url="http://neon-toolkit.org/plugins/2.3.2"/>
    </url>
 
    <plugin
