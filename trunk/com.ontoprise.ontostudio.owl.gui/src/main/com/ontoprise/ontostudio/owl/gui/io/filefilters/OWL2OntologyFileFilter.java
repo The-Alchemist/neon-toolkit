@@ -60,6 +60,6 @@ public class OWL2OntologyFileFilter extends AbstractOWLFileFilter {
      */
     @Override
     public String getDescription() {
-        return "OLW2 in RDF/XML ( " + WILDCARD_EXTENSIONS + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+        return "OWL2 in RDF/XML ( " + WILDCARD_EXTENSIONS + ")"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 }
