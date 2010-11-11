@@ -134,7 +134,7 @@
 
       </viewerContribution>
    </extension>
-    <extension
+<!--    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
             locationURI="menu:file?after=New">
@@ -146,6 +146,7 @@
          </command>
       </menuContribution>
    </extension>
+   -->
    <extension point="org.eclipse.ui.editorActions"> 
 	   <editorContribution 
 	      id="org.eclipse.ui.articles.action.contribution.editor2" 
