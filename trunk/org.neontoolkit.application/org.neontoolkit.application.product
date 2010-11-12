@@ -26,7 +26,7 @@ http://www.apache.org/
 
    <launcherArgs>
       <programArgs>-clean</programArgs>
-      <vmArgs>-Dlog4j.configuration=file:./log4j.properties
+      <vmArgs>-Dlog4j.configuration=file:./log/log4j.properties
 -DentityExpansionLimit=64000000
 -Xms250m
 -Xmx520m
