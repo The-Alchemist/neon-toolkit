@@ -131,6 +131,7 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
 
             //Listenes to the events that change the namespace and display
             // language settings
+            @Override
             public void propertyChange(PropertyChangeEvent event) {
                 if (event.getProperty().equals(NeOnUIPlugin.ID_DISPLAY_PREFERENCE)) {
                     CTabItem sel = _container.getSelection();
@@ -199,7 +200,8 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
 	
 	public Runnable getSelectionRunnable(final IWorkbenchPart part, final IStructuredSelection sel) {
 		return new Runnable() {
-			public void run() {
+			@Override
+            public void run() {
 				if (_currentSelectedTab != null) {
 					_currentSelectedTab.deSelectTab();
 					_currentSelectedTab = null;

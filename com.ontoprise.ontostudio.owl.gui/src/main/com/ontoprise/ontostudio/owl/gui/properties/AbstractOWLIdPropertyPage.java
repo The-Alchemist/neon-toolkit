@@ -130,6 +130,7 @@ public abstract class AbstractOWLIdPropertyPage extends AbstractIDPropertyPage i
     /**
      * Layout sections.
      */
+    @Override
     public void layoutSections() {
         List<Section> sections = getSections();
         if (sections != null) {

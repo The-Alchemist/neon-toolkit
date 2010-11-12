@@ -663,14 +663,14 @@ public abstract class AbstractOWLMainIDPropertyPage extends AbstractMainIDProper
         super.initSelection();
 
         Object first = getSelection().getFirstElement();
-        if (first instanceof AbstractOwlEntityTreeElement) {
+        if(first instanceof IIndividualTreeElement){
+            IIndividualTreeElement element = (IIndividualTreeElement)first;
+            _owlObject = element.getIndividual();
+            _treeElement = element;
+        } else if (first instanceof AbstractOwlEntityTreeElement) {
             // the owl entities
             AbstractOwlEntityTreeElement element = (AbstractOwlEntityTreeElement) first;
             _owlObject = element.getEntity();
-            _treeElement = element;
-        } else if(first instanceof IIndividualTreeElement){
-            IIndividualTreeElement element = (IIndividualTreeElement)first;
-            _owlObject = element.getIndividual();
             _treeElement = element;
         }
         updateOwlModel();

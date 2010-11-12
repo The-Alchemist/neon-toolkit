@@ -41,6 +41,7 @@ public class AnonymousIndividualViewItem extends AbstractOntologyTreeElement imp
      * @return
      * @see com.ontoprise.ontostudio.owl.gui.individualview.IndividualItem#getClazz()
      */
+    @Override
     public String getClazz() {
         return _individualItem.getClazz();
     }
@@ -61,6 +62,7 @@ public class AnonymousIndividualViewItem extends AbstractOntologyTreeElement imp
      * @return
      * @see com.ontoprise.ontostudio.owl.gui.individualview.IndividualItem#getId()
      */
+    @Override
     public String getId() {
         return _individualItem.getId();
     }
@@ -71,6 +73,7 @@ public class AnonymousIndividualViewItem extends AbstractOntologyTreeElement imp
      * @return
      * @see com.ontoprise.ontostudio.owl.gui.individualview.IndividualItem#getIndividual()
      */
+    @Override
     public OWLAnonymousIndividual getIndividual() {
         return _individualItem.getIndividual();
     }
@@ -81,6 +84,7 @@ public class AnonymousIndividualViewItem extends AbstractOntologyTreeElement imp
      * @return
      * @see com.ontoprise.ontostudio.owl.gui.individualview.IndividualItem#isDirect()
      */
+    @Override
     public boolean isDirect() {
         return _individualItem.isDirect();
     }
@@ -91,6 +95,7 @@ public class AnonymousIndividualViewItem extends AbstractOntologyTreeElement imp
      * @param s
      * @see com.ontoprise.ontostudio.owl.gui.individualview.IndividualItem#setIndividualId(java.lang.String)
      */
+    @Override
     public void setIndividualId(String s) {
         _individualItem.setIndividualId(s);
     }
