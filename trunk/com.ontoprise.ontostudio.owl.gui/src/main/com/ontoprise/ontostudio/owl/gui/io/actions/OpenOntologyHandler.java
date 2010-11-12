@@ -13,7 +13,6 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
@@ -35,14 +34,8 @@ public class OpenOntologyHandler extends AbstractHandler{
         // StructuredSelection for use by the wizard.
         StructuredSelection currentSelection = null;
         
-        
-        if (currentSelection != null && currentSelection instanceof TreeSelection) {
-        currentSelection = new StructuredSelection(((TreeSelection) currentSelection).toArray());
-        }
-
         // get the wizard from the child class.
         IWorkbenchWizard wizard = constructWizard();
-
 
         // Get the workbench and initialize, the wizard.
         IWorkbench workbench = PlatformUI.getWorkbench();
