@@ -444,8 +444,7 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
     /* (non-Javadoc)
 	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 	 */
-    @SuppressWarnings("unchecked")
-	@Override
+    @Override
 	public Object getAdapter(Class adapter) {
 		if (_container != null && _container.getSelection() != null && _container.getSelection().getData() instanceof IAdaptable) {
 			Object ad = ((IAdaptable) _container.getSelection().getData()).getAdapter(adapter);

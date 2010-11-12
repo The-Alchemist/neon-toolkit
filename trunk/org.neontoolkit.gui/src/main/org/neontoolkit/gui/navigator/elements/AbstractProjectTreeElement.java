@@ -60,7 +60,6 @@ public abstract class AbstractProjectTreeElement extends TreeElement implements 
         return _projectName;
     }
     
-    @SuppressWarnings("unchecked")
     @Override
     public Object getAdapter(Class adapter) {
         if (adapter == IProject.class) {
