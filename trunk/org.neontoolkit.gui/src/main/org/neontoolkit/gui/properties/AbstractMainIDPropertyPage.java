@@ -91,14 +91,16 @@ public abstract class AbstractMainIDPropertyPage extends AbstractIDPropertyPage 
 	/* (non-Javadoc)
 	 * @see org.neontoolkit.gui.properties.IMainPropertyPage#addSubPage(org.neontoolkit.gui.properties.IPropertyPage)
 	 */
-	public void addSubPage(IPropertyPage page) {
+	@Override
+    public void addSubPage(IPropertyPage page) {
 		_children.add(page);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.neontoolkit.gui.properties.IMainPropertyPage#createGlobalContents(org.eclipse.swt.widgets.Composite)
 	 */
-	public Composite createGlobalContents(Composite parent) {
+	@Override
+    public Composite createGlobalContents(Composite parent) {
     	Group group = new Group(parent, SWT.NONE);
 //    	group.setText(Messages.AbstractMainIDPropertyPage_3);
     	group.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false));
@@ -196,35 +198,40 @@ public abstract class AbstractMainIDPropertyPage extends AbstractIDPropertyPage 
     /* (non-Javadoc)
 	 * @see org.neontoolkit.gui.properties.IMainPropertyPage#getPart()
 	 */
-	public IWorkbenchPart getPart() {
+	@Override
+    public IWorkbenchPart getPart() {
 		return _part;
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.neontoolkit.gui.properties.IMainPropertyPage#getSelectedPart()
 	 */
-	public IWorkbenchPart getSelectedPart() {
+	@Override
+    public IWorkbenchPart getSelectedPart() {
 		return _selectedPart;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.neontoolkit.gui.properties.IMainPropertyPage#getSelection()
 	 */
-	public IStructuredSelection getSelection() {
+	@Override
+    public IStructuredSelection getSelection() {
 		return _selection;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.neontoolkit.gui.properties.IMainPropertyPage#getSubPages()
 	 */
-	public IPropertyPage[] getSubPages() {
+	@Override
+    public IPropertyPage[] getSubPages() {
 		return _children.toArray(new IPropertyPage[0]);
 	}
 
 	/* (non-Javadoc)
 	 * @see org.neontoolkit.gui.properties.IPropertyPage#createContents(org.eclipse.swt.widgets.Composite)
 	 */
-	public Composite createContents(Composite parent) {
+	@Override
+    public Composite createContents(Composite parent) {
         //create the parent composite
         _composite = new Composite(parent, SWT.NONE);
         _composite.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
@@ -281,14 +288,16 @@ public abstract class AbstractMainIDPropertyPage extends AbstractIDPropertyPage 
 	/* (non-Javadoc)
 	 * @see org.neontoolkit.gui.properties.IPropertyPage#isDisposed()
 	 */
-	public boolean isDisposed() {
+	@Override
+    public boolean isDisposed() {
 		return _composite == null || _composite.isDisposed();
 	}
 
 	/* (non-Javadoc)
 	 * @see org.neontoolkit.gui.properties.IPropertyPage#refresh()
 	 */
-	public void refresh() {
+	@Override
+    public void refresh() {
 	    selectIdTopControl();
 		refreshIdArea();
 		refreshComponents();
@@ -297,9 +306,11 @@ public abstract class AbstractMainIDPropertyPage extends AbstractIDPropertyPage 
 	/* (non-Javadoc)
 	 * @see org.neontoolkit.gui.properties.IPropertyPage#update()
 	 */
-	public void update() {
+	@Override
+    public void update() {
 		_composite.getDisplay().syncExec(new Runnable() {
-			public void run() {
+			@Override
+            public void run() {
 				selectIdTopControl();
 				updateComponents();
 			}
@@ -369,6 +380,7 @@ public abstract class AbstractMainIDPropertyPage extends AbstractIDPropertyPage 
     /* (non-Javadoc)
      * @see org.neontoolkit.gui.properties.IMainPropertyPage#setPart(org.eclipse.ui.IWorkbenchPart)
      */
+    @Override
     public void setPart(IWorkbenchPart part) {
     	_part = part;
     }
@@ -376,6 +388,7 @@ public abstract class AbstractMainIDPropertyPage extends AbstractIDPropertyPage 
     /* (non-Javadoc)
      * @see com.ontoprise.ontostudio.flogic.ui.properties.AbstractIDPropertyPage#setSelection(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.IStructuredSelection)
      */
+    @Override
     public void setSelection(IWorkbenchPart part, IStructuredSelection selection) {
         switchPerspective();
     	if (selection != getSelection()) {

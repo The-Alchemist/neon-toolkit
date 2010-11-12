@@ -27,15 +27,17 @@ public class IndividualItem<T extends OWLIndividual>{
     private String _clazz;
 
     protected IndividualItem(T individual, String clazzUri, String ontologyUri, String projectName) {
-
         _id = OWLUtilities.toString(individual);
         _individual = individual;
         _clazz = clazzUri;
     }
     
     public static IIndividualTreeElement<?> createNewInstance(OWLIndividual individual, String clazzUri, String ontologyUri, String projectName){
-        if(individual instanceof OWLNamedIndividual) return new NamedIndividualViewItem((OWLNamedIndividual)individual, clazzUri, ontologyUri, projectName);
-        else return new AnonymousIndividualViewItem((OWLAnonymousIndividual)individual, clazzUri, ontologyUri, projectName);
+        if(individual instanceof OWLNamedIndividual) { 
+            return new NamedIndividualViewItem((OWLNamedIndividual)individual, clazzUri, ontologyUri, projectName);
+        } else { 
+            return new AnonymousIndividualViewItem((OWLAnonymousIndividual)individual, clazzUri, ontologyUri, projectName);
+        }
     }
 
     public void setIndividualId(String s) {
