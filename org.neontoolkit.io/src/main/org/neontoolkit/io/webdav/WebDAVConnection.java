@@ -369,8 +369,8 @@ public class WebDAVConnection {
 
 	class UIOperation implements Runnable {
 	    public boolean _canceled = false;
-		@SuppressWarnings("unchecked")
-		public void run() {
+		@Override
+        public void run() {
 			String password = ""; //$NON-NLS-1$
 			String user = ""; //$NON-NLS-1$
 	        HashMap info = (HashMap) Platform.getAuthorizationInfo(getServerURL(), getRealm(), "Basic"); //$NON-NLS-1$
@@ -424,14 +424,15 @@ public class WebDAVConnection {
          * @param realm
          *            The authentication realm for the provider.
          */
+        @Override
         public Authentication getAuthentication(String realm, Integer retryCount) {
             return _authentication;
         }
 
         class AuthenticationImpl implements Authentication {
 
-            @SuppressWarnings("unchecked")
-			public String password() {
+            @Override
+            public String password() {
                 String pwd = ""; //$NON-NLS-1$
                 HashMap info = (HashMap) Platform.getAuthorizationInfo(getServerURL(), getRealm(), "Basic"); //$NON-NLS-1$
                 if (info != null && info.containsKey("password")) { //$NON-NLS-1$
@@ -440,8 +441,8 @@ public class WebDAVConnection {
                 return pwd;
             }
 
-            @SuppressWarnings("unchecked")
-			public String loginName() {
+            @Override
+            public String loginName() {
                 String user = ""; //$NON-NLS-1$
                 HashMap info = (HashMap) Platform.getAuthorizationInfo(getServerURL(), getRealm(), "Basic"); //$NON-NLS-1$
                 if (info != null && info.containsKey("user")) { //$NON-NLS-1$

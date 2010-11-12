@@ -547,7 +547,6 @@ public class NeOnUIPlugin extends LoggingUIPlugin {
         return prio;
     }
     
-    @SuppressWarnings("unchecked")
     public IDatamodelConfigurationGroup[] getDatamodelConfigurationGroups() {
         if (_configurationGroups == null) {
             _configurationGroups = new HashSet<IConfigurationElement>();
