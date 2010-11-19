@@ -31,6 +31,8 @@ Require-Bundle: org.eclipse.ui,
  com.ontoprise.ontostudio.owl.gui.ontologyimportsgraph;bundle-version="2.3.2",
  com.ontoprise.ontostudio.owl.help;bundle-version="2.3.2",
  com.ontoprise.ontostudio.owl.model;bundle-version="2.3.2",
- com.ontoprise.ontostudio.owl.visualize;bundle-version="2.3.2"
+ com.ontoprise.ontostudio.owl.visualize;bundle-version="2.3.2",
+ org.eclipse.ui.ide;bundle-version="3.5.2",
+ org.eclipse.core.resources;bundle-version="3.5.2"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
