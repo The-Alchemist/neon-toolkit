@@ -20,6 +20,7 @@ import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -96,6 +97,7 @@ public class Application implements IApplication {
 			return false;
 		}
 		String urlText = extractURLFromLine(line);
+		urlText = createCorrectStringFormatForURLFromConfigFile(urlText);
 		URL url;
 		try {
 			url = new URL(urlText);
@@ -166,7 +168,7 @@ public class Application implements IApplication {
 					FileWriter fstream = new FileWriter(Application.directory + Application.connector + Application.configFileName);
 					BufferedWriter out = new BufferedWriter(fstream);
 					line0 = "#" + currentDateWithDatePattern();
-					line5 = recentWorkspace + createCorrectStringFormatForURL(url);
+					line5 = recentWorkspace + createCorrectStringFormatFromURL(url);
 					out.write(line0); out.newLine();
 					out.write(line1); out.newLine();
 					out.write(line2); out.newLine();
@@ -188,7 +190,7 @@ public class Application implements IApplication {
 	 * @param url - URL to transfer to a string
 	 * @return string of the URL in the correct format
 	 */
-	private String createCorrectStringFormatForURL(URL url) {
+	private String createCorrectStringFormatFromURL(URL url) {
 		 String urlString = url.toString();
 		 String prefix = "file:/";
 		 String suffix = "/";
@@ -202,6 +204,25 @@ public class Application implements IApplication {
 		return urlString;
 	}
 
+	/**
+	 * determines and returns a string in the correct format for the URL based on the text of the configuration file
+	 * 
+	 * @param input - to transfer to a string for a URL
+	 * @return string of the URL in the correct format
+	 */
+	private String createCorrectStringFormatForURLFromConfigFile(String input) {
+		 String urlString = input;
+		 String prefix = "file:/";
+		 String suffix = "/";
+		 if(!urlString.startsWith(prefix))
+			 urlString = prefix + urlString;
+		 if(!urlString.endsWith(suffix))
+			 urlString = urlString + suffix;
+
+		 urlString = urlString.replace("\\:" , ":");
+		 urlString = urlString.replace("\\\\", "/");
+		return urlString;
+	}
 	/**
 	 * determines and returns a string of the current date in the given pattern
 	 * 
