@@ -276,6 +276,7 @@ import org.eclipse.ui.menus.CommandContributionItemParameter;
 import org.eclipse.ui.menus.IMenuService;
 
 /**
+ * @author Nico Stieler
  * Adds actions to a workbench window.
  * this class is heavily based on org.eclipse.ui.internal.ide.WorkbenchActionBuilder from the Eclipse IDE
  */
