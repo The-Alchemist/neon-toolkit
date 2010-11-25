@@ -23,7 +23,7 @@ public class CheckboxDialog extends Dialog {
     private String _messageText;
     private String _titleText;
     private String _preferencesValue;
-    private boolean check;
+    private boolean _check;
 
     /**
      * @param parentShell
@@ -35,7 +35,19 @@ public class CheckboxDialog extends Dialog {
         _titleText = titleText;
         _preferencesValue = preferencesValue;
         
-        check = OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(_preferencesValue);
+        _check = OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(_preferencesValue);
+    }
+    /**
+     * @param parentShell
+     * @throws CheckPreferencesFirstException 
+     */
+    public CheckboxDialog(Shell parent, String titleText, String messageText, boolean check){
+        super(parent);
+        _messageText = messageText;
+        _titleText = titleText;
+        _preferencesValue = null;
+        
+        _check = check;
     }
 
 
@@ -60,12 +72,12 @@ public class CheckboxDialog extends Dialog {
 
         final Button checkbox = new Button(comp, SWT.CHECK);
         checkbox.setText("don't ask me again");
-        checkbox.setSelection(check);
+        checkbox.setSelection(_check);
         SelectionListener listener = new SelectionListener() {
             
             @Override
             public void widgetSelected(SelectionEvent event) {
-                check = checkbox.getSelection();
+                _check = checkbox.getSelection();
             }
             
             @Override
@@ -84,8 +96,8 @@ public class CheckboxDialog extends Dialog {
     @SuppressWarnings("deprecation")
     @Override
     protected void okPressed() {
-        if(check)
-            OWLModelPlugin.getDefault().getPluginPreferences().setValue(_preferencesValue, check); 
+        if(_check && _preferencesValue != null)
+            OWLModelPlugin.getDefault().getPluginPreferences().setValue(_preferencesValue, _check); 
         super.okPressed();
     }
     @Override
