@@ -118,7 +118,11 @@ public class SearchTreeContentProvider implements ITreeContentProvider,IStructur
             Object[] out = this.invisibleRoot.getChildren();
             return out;
         } else {
-            return new Object[0];
+            if(parent instanceof TreeParent){
+                return ((TreeParent)parent).getChildren();
+            }else{
+                return new Object[0];
+            }    
         }
     }
 
