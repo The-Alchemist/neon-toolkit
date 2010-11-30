@@ -56,6 +56,7 @@ public class OWLPreferencePage extends PreferencePage implements IWorkbenchPrefe
     private Button _showActualOntology; 
     private Button _editImportedAxiomsWithoutAsking; 
     private Button _removeImportedAxiomsWithoutAsking; 
+    private Button _showRestrictionsInClassTaxonomyTab; 
 
     /*
      * (non-Javadoc)
@@ -77,27 +78,31 @@ public class OWLPreferencePage extends PreferencePage implements IWorkbenchPrefe
 
 
         _importedCheckbox = new Button(groupGeneral, SWT.CHECK);
-        _importedCheckbox.setText(Messages.OWLPreferencePage_0); 
+        _importedCheckbox.setText(Messages.OWLPreferencePage_0_0); 
 
         boolean enabled = _prefs.getBoolean(OWLModelPlugin.SHOW_IMPORTED);
         _importedCheckbox.setSelection(enabled);
 
         _showAxiomsCheckbox = new Button(groupGeneral, SWT.CHECK);
-        _showAxiomsCheckbox.setText(Messages.OWLPreferencePage_4); 
+        _showAxiomsCheckbox.setText(Messages.OWLPreferencePage_0_1); 
 
         boolean showAxioms = _prefs.getBoolean(OWLModelPlugin.SHOW_AXIOMS);
         _showAxiomsCheckbox.setSelection(showAxioms);
 
         _displayToolbar = new Button(groupGeneral, SWT.CHECK);
-        _displayToolbar.setText(Messages.OWLPreferencePage_5); 
+        _displayToolbar.setText(Messages.OWLPreferencePage_0_2); 
         enabled = _prefs.getBoolean(OWLModelPlugin.USE_TOOLBAR);
         _displayToolbar.setSelection(enabled);
         
         _showActualOntology = new Button(groupGeneral, SWT.CHECK);
-        _showActualOntology.setText(Messages.OWLPreferencePage_6); 
+        _showActualOntology.setText(Messages.OWLPreferencePage_0_3); 
         enabled = _prefs.getBoolean(OWLModelPlugin.SHOW_ACTUAL_ONTOLOGY);
         _showActualOntology.setSelection(enabled);
 
+        _showRestrictionsInClassTaxonomyTab = new Button(groupGeneral, SWT.CHECK);
+        _showRestrictionsInClassTaxonomyTab.setText(Messages.OWLPreferencePage_0_4); 
+        enabled = _prefs.getBoolean(OWLModelPlugin.SHOW_RESTRICTION_IN_CLASS_TAXONOMY_TAB);
+        _showRestrictionsInClassTaxonomyTab.setSelection(enabled);
         
         //group dialog
         Group groupDialog = new Group(parent, SWT.NONE);
@@ -112,15 +117,15 @@ public class OWLPreferencePage extends PreferencePage implements IWorkbenchPrefe
         groupDialog.setLayout(fillLayout);
 
         _editImportedAxiomsWithoutAsking = new Button(groupDialog, SWT.CHECK);
-        _editImportedAxiomsWithoutAsking.setText(Messages.OWLPreferencePage_7); 
+        _editImportedAxiomsWithoutAsking.setText(Messages.OWLPreferencePage_1_0); 
         enabled = _prefs.getBoolean(OWLModelPlugin.EDIT_IMPORTED_AXIOMS_WITHOUT_ASKING);
         _editImportedAxiomsWithoutAsking.setSelection(enabled);
         
         _removeImportedAxiomsWithoutAsking = new Button(groupDialog, SWT.CHECK);
-        _removeImportedAxiomsWithoutAsking.setText(Messages.OWLPreferencePage_8); 
+        _removeImportedAxiomsWithoutAsking.setText(Messages.OWLPreferencePage_1_1); 
         enabled = _prefs.getBoolean(OWLModelPlugin.REMOVE_IMPORTED_AXIOMS_WITHOUT_ASKING);
         _removeImportedAxiomsWithoutAsking.setSelection(enabled);
-
+        
         Set<ISyntaxManager> syntaxManagers = OWLPlugin.getDefault().getRegisteredSyntaxManagers();
         String[] managers = new String[syntaxManagers.size()];
         int i = 0;
@@ -181,6 +186,7 @@ public class OWLPreferencePage extends PreferencePage implements IWorkbenchPrefe
                 _prefs.setValue(OWLModelPlugin.SHOW_ACTUAL_ONTOLOGY, getShowActualOntology());
                 _prefs.setValue(OWLModelPlugin.EDIT_IMPORTED_AXIOMS_WITHOUT_ASKING, getEditImportedAxiomsWithoutAsking());
                 _prefs.setValue(OWLModelPlugin.REMOVE_IMPORTED_AXIOMS_WITHOUT_ASKING, getRemoveImportedAxiomsWithoutAsking());
+                _prefs.setValue(OWLModelPlugin.SHOW_RESTRICTION_IN_CLASS_TAXONOMY_TAB, getShowRestrictionsInClassTaxonomyTab());
             }
 
         });
@@ -195,6 +201,9 @@ public class OWLPreferencePage extends PreferencePage implements IWorkbenchPrefe
     }
     private boolean getRemoveImportedAxiomsWithoutAsking() {
         return _removeImportedAxiomsWithoutAsking.getSelection();
+    }
+    private boolean getShowRestrictionsInClassTaxonomyTab() {
+        return _showRestrictionsInClassTaxonomyTab.getSelection();
     }
     private boolean getUseToolbar() {
         return _displayToolbar.getSelection();
@@ -221,6 +230,7 @@ public class OWLPreferencePage extends PreferencePage implements IWorkbenchPrefe
         _prefs.setValue(OWLModelPlugin.SHOW_ACTUAL_ONTOLOGY, false);
         _prefs.setValue(OWLModelPlugin.EDIT_IMPORTED_AXIOMS_WITHOUT_ASKING, false);
         _prefs.setValue(OWLModelPlugin.REMOVE_IMPORTED_AXIOMS_WITHOUT_ASKING, false);
+        _prefs.setValue(OWLModelPlugin.SHOW_RESTRICTION_IN_CLASS_TAXONOMY_TAB, false);
 
         _importedCheckbox.setSelection(false);
         _showAxiomsCheckbox.setSelection(false);
@@ -228,6 +238,7 @@ public class OWLPreferencePage extends PreferencePage implements IWorkbenchPrefe
         _showActualOntology.setSelection(false);
         _editImportedAxiomsWithoutAsking.setSelection(false);
         _removeImportedAxiomsWithoutAsking.setSelection(false);
+        _showRestrictionsInClassTaxonomyTab.setSelection(false);
         _syntaxChooser.setSelection(OWLPlugin.DEFAULT_SYNTAX);
     }
 }

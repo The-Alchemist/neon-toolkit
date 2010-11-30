@@ -54,12 +54,17 @@ import com.ontoprise.ontostudio.owl.gui.util.forms.FormRow;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.DescriptionText;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
+import com.ontoprise.ontostudio.owl.model.OWLModelPlugin;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.ApplyChanges;
 import com.ontoprise.ontostudio.owl.model.commands.clazz.GetDisjointClazzHits;
 import com.ontoprise.ontostudio.owl.model.commands.clazz.GetEquivalentClazzHits;
+import com.ontoprise.ontostudio.owl.model.commands.clazz.GetEquivalentClazzHitsWithoutRestrictionHits;
+import com.ontoprise.ontostudio.owl.model.commands.clazz.GetEquivalentRestrictionHits;
 import com.ontoprise.ontostudio.owl.model.commands.clazz.GetSubDescriptionHits;
 import com.ontoprise.ontostudio.owl.model.commands.clazz.GetSuperDescriptionHits;
+import com.ontoprise.ontostudio.owl.model.commands.clazz.GetSuperDescriptionHitsWithoutRestrictionHits;
+import com.ontoprise.ontostudio.owl.model.commands.clazz.GetSuperRestrictionHits;
 import com.ontoprise.ontostudio.owl.model.util.OWLAxiomUtils;
 /**
  * 
@@ -136,6 +141,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
      */
     private void createSuperDescriptionsArea(Composite composite) {
         _superClazzesSection = _toolkit.createSection(composite, Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
+
         _superClazzesSection.setText(Messages.ClazzPropertyPage_SuperClazzes);
         _superClazzesSection.addExpansionListener(new ExpansionAdapter() {
             @Override
@@ -241,7 +247,33 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
     }
 
     protected String[][] getSuperDescriptionHits() throws CommandException {
-        return new GetSuperDescriptionHits(_project, _ontologyUri, _id).getResults();
+    	if(OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(OWLModelPlugin.SHOW_RESTRICTION_IN_CLASS_TAXONOMY_TAB)){
+            return new GetSuperDescriptionHits(_project, _ontologyUri, _id).getResults();
+    	}else{
+            try{
+                int counter = 0;
+                 try {
+                     GetSuperRestrictionHits getSuperRestrictionHits = new GetSuperRestrictionHits(_project, _ontologyUri, _id);
+                    if(getSuperRestrictionHits != null){
+                        String[][] value = getSuperRestrictionHits.getResults();
+                        if(value != null){
+                            counter = value.length;
+                        }
+                    }
+                } catch (CommandException e1) {
+                    //nothing to do
+                }
+                if(counter != 0){
+                    _superClazzesSection.setText(Messages.ClazzPropertyPage_SuperClazzes_Without_Restriction_0
+                            + counter
+                            + " " //$NON-NLS-1$
+                            + Messages.ClazzPropertyPage_SuperClazzes_Without_Restriction_1);
+                }
+            }catch(Exception e){
+                //nothing to do
+            }
+            return new GetSuperDescriptionHitsWithoutRestrictionHits(_project, _ontologyUri, _id).getResults();
+    	}
     }
 
     protected String[][] getSubDescriptionHits() throws CommandException {
@@ -311,7 +343,33 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
     }
 
     protected String[][] getEquivalentClazzHits() throws CommandException {
-        return new GetEquivalentClazzHits(_project, _ontologyUri, _id).getResults();
+        if(OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(OWLModelPlugin.SHOW_RESTRICTION_IN_CLASS_TAXONOMY_TAB)){
+            return new GetEquivalentClazzHits(_project, _ontologyUri, _id).getResults();
+        }else{
+            try{
+                int counter = 0;
+                 try {
+                    GetEquivalentRestrictionHits getEquivalentRestrictionHits = new GetEquivalentRestrictionHits(_project, _ontologyUri, _id);
+                    if(getEquivalentRestrictionHits != null){
+                        String[][] value = getEquivalentRestrictionHits.getResults();
+                        if(value != null){
+                            counter = value.length;
+                        }
+                    }
+                } catch (CommandException e1) {
+                    //nothing to do
+                }
+                if(counter != 0){
+                    _equivClazzesSection.setText(Messages.ClazzPropertyPage_EquivalentClazzes_Without_Restriction_0
+                            + counter
+                            + " " //$NON-NLS-1$
+                            + Messages.ClazzPropertyPage_EquivalentClazzes_Without_Restriction_1);
+                }
+            }catch(Exception e){
+                //nothing to do
+            }
+            return new GetEquivalentClazzHitsWithoutRestrictionHits(_project, _ontologyUri, _id).getResults();
+        }
     }
 
     protected String[][] getDisjointDescriptionHits() throws CommandException {

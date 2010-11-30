@@ -790,9 +790,31 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
     }
 
     @Override
+    public Set<ItemHits<OWLClassExpression,OWLEquivalentClassesAxiom>> getEquivalentDescriptionHitsWithoutRestrictionHits(String superClazzUri) throws NeOnCoreException {
+        try {
+            return _model.getEquivalentDescriptionHitsWithoutRestrictionHits(superClazzUri);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+
+    @Override
     public Set<OWLClassExpression> getEquivalentRestrictions(String classId) throws NeOnCoreException {
         try {
             return _model.getEquivalentRestrictions(classId);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+
+    @Override
+    public Set<OWLClassExpression> getEquivalentDescriptionsWithoutRestrictions(String classId) throws NeOnCoreException {
+        try {
+            return _model.getEquivalentDescriptionsWithoutRestrictions(classId);
         } catch (NeOnCoreException e) {
             throw checkConnectionFailure(e);
         } catch (RuntimeException e) {
@@ -1462,6 +1484,16 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
     }
 
     @Override
+    public Set<ItemHits<OWLClassExpression,OWLSubClassOfAxiom>> getSuperDescriptionHitsWithoutRestrictionHits(String superClazzUri) throws NeOnCoreException {
+        try {
+            return _model.getSuperDescriptionHitsWithoutRestrictionHits(superClazzUri);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+    @Override
     public Set<ItemHits<OWLClassExpression,OWLSubClassOfAxiom>> getSuperRestrictionHits(String superClazzUri) throws NeOnCoreException {
         try {
             return _model.getSuperRestrictionHits(superClazzUri);
@@ -1482,7 +1514,18 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
             throw checkConnectionFailure(e);
         }
     }
-
+    
+    @Override
+    public Set<OWLClassExpression> getSuperDescriptionsWithoutRestrictions(String classId) throws NeOnCoreException {
+        try {
+            return _model.getSuperDescriptionsWithoutRestrictions(classId);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+    
     @Override
     public boolean isClosed() throws NeOnCoreException {
         try {
