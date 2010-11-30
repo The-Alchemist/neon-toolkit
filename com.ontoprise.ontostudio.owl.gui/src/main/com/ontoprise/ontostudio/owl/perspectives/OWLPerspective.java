@@ -13,6 +13,9 @@ package com.ontoprise.ontostudio.owl.perspectives;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
+import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.internal.PageLayout;
 import org.neontoolkit.gui.navigator.MTreeView;
 import org.neontoolkit.gui.properties.EntityPropertiesView;
 
@@ -27,14 +30,18 @@ public class OWLPerspective implements IPerspectiveFactory {
     public static final String ID = "com.ontoprise.ontostudio.owl.perspectives.OWLPerspective"; //$NON-NLS-1$
 
     public void defineActions(IPageLayout layout) {
-
+        if(layout instanceof PageLayout){
+            PageLayout pageLayout = (PageLayout)layout;
+            pageLayout.addHiddenMenuItemId(IWorkbenchActionConstants.M_LAUNCH);
+        }
+        
         // Add shown views
         layout.addShowViewShortcut(OWLPlugin.OWL_ONTOLOGY_NAVIGATOR);
         layout.addShowViewShortcut(MTreeView.ID);
         layout.addShowViewShortcut(IndividualView.ID);
         layout.addShowViewShortcut(EntityPropertiesView.ID);
         layout.addShowViewShortcut("org.eclipse.help.ui.HelpView"); //$NON-NLS-1$
-
+        System.out.println(layout.getDescriptor().getDescription());
         layout.addActionSet(OWLPlugin.TOOLBARACTIONS);
 
     }

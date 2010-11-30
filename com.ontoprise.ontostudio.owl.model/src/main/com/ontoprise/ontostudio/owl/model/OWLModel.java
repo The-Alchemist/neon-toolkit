@@ -348,8 +348,26 @@ public interface OWLModel {
      * @return a list of all equivalent descriptions (excluding named classes and excluding restrictions) of passed class
      * @throws NeOnCoreException
      */
+    public Set<OWLClassExpression> getEquivalentDescriptionsWithoutRestrictions(String classId) throws NeOnCoreException;
+    /**
+     * 
+     * @param classId
+     * @param ontologyId
+     * @param projectId the project ID representing a KAON2Connection
+     * @return a list of all equivalent descriptions (excluding named classes and excluding restrictions) of passed class
+     * @throws NeOnCoreException
+     */
     public Set<OWLClassExpression> getEquivalentDescriptions(String classId) throws NeOnCoreException;
 
+    /**
+     * 
+     * @param classId
+     * @param ontologyId
+     * @param projectId the project ID representing a KAON2Connection
+     * @return a list of all restriction of which passed class is a subclass
+     * @throws NeOnCoreException
+     */
+    public Set<OWLClassExpression> getSuperDescriptionsWithoutRestrictions(String classId) throws NeOnCoreException;
     /**
      * 
      * @param classId
@@ -931,6 +949,7 @@ public interface OWLModel {
     Set<ItemHits<OWLIndividual,OWLDifferentIndividualsAxiom>> getDifferentIndividualHits(String individualUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLEquivalentDataPropertiesAxiom>> getEquivalentDataPropertyHits(String propertyUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLEquivalentClassesAxiom>> getEquivalentRestrictionHits(String superClazzUri) throws NeOnCoreException;
+    Set<ItemHits<OWLClassExpression,OWLEquivalentClassesAxiom>> getEquivalentDescriptionHitsWithoutRestrictionHits(String superClazzUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLInverseObjectPropertiesAxiom>> getInverseObjectPropertyHits(String propertyUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLObjectPropertyRangeAxiom>> getObjectPropertyRangeDescriptionHits(String propertyUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLSubClassOfAxiom>> getSubDescriptionHits(String superClazzUri) throws NeOnCoreException;
@@ -950,6 +969,7 @@ public interface OWLModel {
     boolean isRootDataProperty(OWLDataProperty prop) throws NeOnCoreException;
     Set<ItemHits<OWLDataProperty,OWLSubDataPropertyOfAxiom>> getSubDataPropertyHits(String propertyUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLSubClassOfAxiom>> getSuperRestrictionHits(String superClazzUri) throws NeOnCoreException;
+    Set<ItemHits<OWLClassExpression,OWLSubClassOfAxiom>> getSuperDescriptionHitsWithoutRestrictionHits(String superClazzUri) throws NeOnCoreException;
     
     Set<ItemHits<IRI,OWLAnnotationPropertyDomainAxiom>> getAnnotationPropertyDomainHits(String propertyUri) throws NeOnCoreException;
     Set<ItemHits<IRI,OWLAnnotationPropertyRangeAxiom>> getAnnotationPropertyRangeHits(String propertyUri) throws NeOnCoreException;
