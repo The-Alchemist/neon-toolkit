@@ -281,11 +281,17 @@ public class OWLModelCore implements OWLModel {
             return OWLUtilities.isRestriction(item);
         }
     };
-    
+
     /** A filter returning true iff a given <code>Description</code> is a restriction on a property. */
     private static final Filter<OWLClassExpression> NO_RESTRICTION_FILTER = new Filter<OWLClassExpression>() {
         public boolean matches(OWLClassExpression item) {
             return !OWLUtilities.isRestriction(item);
+        }
+    };
+    /** A filter returning true iff a given <code>Description</code> is a restriction on a property. */
+    private static final Filter<OWLClassExpression> COMPLEX_DESCRIPTION_AND_NO_RESTRICTION_FILTER = new Filter<OWLClassExpression>() {
+        public boolean matches(OWLClassExpression item) {
+            return (!OWLUtilities.isRestriction(item) && !(item instanceof OWLClass));
         }
     };
 
@@ -1111,7 +1117,7 @@ public class OWLModelCore implements OWLModel {
     private final ItemCollector<OWLClassExpression,OWLEquivalentClassesAxiom> EquivalentClasses_descriptions_ComplexDescriptionsOnly_Collector = new ItemCollectorCore<OWLClassExpression,OWLEquivalentClassesAxiom>("descriptions", OWLClassExpression.class, COMPLEX_DESCRIPTION_FILTER);
     private final ItemCollector<OWLClassExpression,OWLEquivalentClassesAxiom> EquivalentClasses_descriptions_NamedDescriptionsOnly_Collector = new ItemCollectorCore<OWLClassExpression,OWLEquivalentClassesAxiom>("descriptions", OWLClassExpression.class, NAMED_DESCRIPTION_FILTER);
     private final ItemCollector<OWLClassExpression,OWLEquivalentClassesAxiom> EquivalentClasses_descriptions_RestrictionsOnly_Collector = new ItemCollectorCore<OWLClassExpression,OWLEquivalentClassesAxiom>("descriptions", OWLClassExpression.class, RESTRICTION_FILTER);
-    private final ItemCollector<OWLClassExpression,OWLEquivalentClassesAxiom> EquivalentClasses_descriptions_No_Restrictions_Collector = new ItemCollectorCore<OWLClassExpression,OWLEquivalentClassesAxiom>("descriptions", OWLClassExpression.class, NO_RESTRICTION_FILTER);
+    private final ItemCollector<OWLClassExpression,OWLEquivalentClassesAxiom> EquivalentClasses_descriptions_No_Restrictions_Collector = new ItemCollectorCore<OWLClassExpression,OWLEquivalentClassesAxiom>("descriptions", OWLClassExpression.class, COMPLEX_DESCRIPTION_AND_NO_RESTRICTION_FILTER);
     private final ItemCollector<OWLObjectPropertyExpression,OWLEquivalentObjectPropertiesAxiom> EquivalentObjectProperties_namedObjectProperties_Collector = new ItemCollectorCore<OWLObjectPropertyExpression,OWLEquivalentObjectPropertiesAxiom>("objectProperties", OWLObjectPropertyExpression.class, OBJECT_PROPERTY_FILTER);
     private final ItemCollector<OWLDataPropertyExpression,OWLEquivalentDataPropertiesAxiom> EquivalentDataProperties_namedDataProperties_Collector = new ItemCollectorCore<OWLDataPropertyExpression,OWLEquivalentDataPropertiesAxiom>("dataProperties", OWLDataPropertyExpression.class, DATA_PROPERTY_FILTER);
     private final ItemCollector<OWLClassExpression,OWLDataPropertyDomainAxiom> DataPropertyDomain_domain_Collector = new ItemCollectorCore<OWLClassExpression,OWLDataPropertyDomainAxiom>("domain", OWLClassExpression.class);
@@ -1714,7 +1720,7 @@ public class OWLModelCore implements OWLModel {
     @Override
     public Set<ItemHits<OWLClassExpression,OWLEquivalentClassesAxiom>> getEquivalentDescriptionHits(String classId) throws NeOnCoreException {
         return EquivalentClasses_descriptions_ComplexDescriptionsOnly_Collector.getItemHits(EquivalentClasses_descriptions_Request, autoBox(owlClass(classId)), owlClass(classId));
-    }
+    }//NICO
 
     @Override
     public Set<OWLClassExpression> getSuperRestrictions(String classId) throws NeOnCoreException {
@@ -1753,7 +1759,7 @@ public class OWLModelCore implements OWLModel {
     @Override
     public Set<ItemHits<OWLClassExpression,OWLEquivalentClassesAxiom>> getEquivalentDescriptionHitsWithoutRestrictionHits(String classId) throws NeOnCoreException {
         return EquivalentClasses_descriptions_No_Restrictions_Collector.getItemHits(EquivalentClasses_descriptions_Request, autoBox(owlClass(classId)), owlClass(classId));
-    }
+    }//NICO
 
 
     @Override
