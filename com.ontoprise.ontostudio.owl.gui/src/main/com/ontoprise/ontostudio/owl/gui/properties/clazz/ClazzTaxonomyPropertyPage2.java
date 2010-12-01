@@ -248,6 +248,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
 
     protected String[][] getSuperDescriptionHits() throws CommandException {
     	if(OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(OWLModelPlugin.SHOW_RESTRICTION_IN_CLASS_TAXONOMY_TAB)){
+            _superClazzesSection.setText(Messages.ClazzPropertyPage_SuperClazzes);
             return new GetSuperDescriptionHits(_project, _ontologyUri, _id).getResults();
     	}else{
             try{
@@ -264,10 +265,15 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
                     //nothing to do
                 }
                 if(counter != 0){
-                    _superClazzesSection.setText(Messages.ClazzPropertyPage_SuperClazzes_Without_Restriction_0
-                            + counter
-                            + " " //$NON-NLS-1$
-                            + Messages.ClazzPropertyPage_SuperClazzes_Without_Restriction_1);
+                    String text = Messages.ClazzPropertyPage_SuperClazzes_Without_Restriction_0;
+                    text += counter;
+                    text += " "; //$NON-NLS-1$
+                    if(counter > 1){
+                        text += Messages.ClazzPropertyPage_SuperClazzes_Without_Restriction_1;
+                    }else{
+                        text += Messages.ClazzPropertyPage_SuperClazz_Without_Restriction_1;
+                    }
+                    _superClazzesSection.setText(text);
                 }
             }catch(Exception e){
                 //nothing to do
@@ -344,6 +350,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
 
     protected String[][] getEquivalentClazzHits() throws CommandException {
         if(OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(OWLModelPlugin.SHOW_RESTRICTION_IN_CLASS_TAXONOMY_TAB)){
+            _equivClazzesSection.setText(Messages.ClazzPropertyPage_EquivalentClazzes);
             return new GetEquivalentClazzHits(_project, _ontologyUri, _id).getResults();
         }else{
             try{
@@ -360,10 +367,15 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
                     //nothing to do
                 }
                 if(counter != 0){
-                    _equivClazzesSection.setText(Messages.ClazzPropertyPage_EquivalentClazzes_Without_Restriction_0
-                            + counter
-                            + " " //$NON-NLS-1$
-                            + Messages.ClazzPropertyPage_EquivalentClazzes_Without_Restriction_1);
+                    String text = Messages.ClazzPropertyPage_EquivalentClazzes_Without_Restriction_0;
+                    text += counter;
+                    text += " "; //$NON-NLS-1$
+                    if(counter > 1){
+                        text += Messages.ClazzPropertyPage_EquivalentClazzes_Without_Restriction_1;
+                    }else{
+                        text += Messages.ClazzPropertyPage_EquivalentClazz_Without_Restriction_1;
+                    }
+                    _equivClazzesSection.setText(text);
                 }
             }catch(Exception e){
                 //nothing to do

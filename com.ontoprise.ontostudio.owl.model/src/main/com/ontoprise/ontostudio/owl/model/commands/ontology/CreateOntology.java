@@ -53,7 +53,7 @@ public class CreateOntology extends DatamodelCommand {
                 
                 // Manchester context
                 IProject project = NeOnCorePlugin.getDefault().getProject(getProjectName());
-                if (fileName == null || "".equals(fileName)) {
+                if (fileName == null || "".equals(fileName)) { //$NON-NLS-1$
                     fileName = ontologyProject.getNewOntologyFilenameFromURI(ontologyURI, null);
                 }
                 String physicalUri = project.getFile(fileName).getLocationURI().toString();
@@ -67,10 +67,10 @@ public class CreateOntology extends DatamodelCommand {
                 ontologyProject.addOntology(ontologyURI);
 
                 try {
-                    if (defaultNamespace != null && !"".equals(defaultNamespace)) {
+                    if (defaultNamespace != null && !"".equals(defaultNamespace)) { //$NON-NLS-1$
                         ontologyProject.setDefaultNamespace(ontologyURI, defaultNamespace);
                     }
-                    ontologyProject.setNamespacePrefix(ontologyURI, "owl", OWLNamespaces.OWL_NS);
+                    ontologyProject.setNamespacePrefix(ontologyURI, "owl", OWLNamespaces.OWL_NS); //$NON-NLS-1$
                     ontologyProject.setNamespacePrefix(ontologyURI, "owl",OWLNamespaces.OWL_NS); //$NON-NLS-1$
                     ontologyProject.setNamespacePrefix(ontologyURI, "owl2",org.semanticweb.owlapi.vocab.Namespaces.OWL2.toString()); //$NON-NLS-1$
                     ontologyProject.setNamespacePrefix(ontologyURI, "swrl",OWLNamespaces.SWRL_NS); //$NON-NLS-1$

@@ -63,10 +63,12 @@ public class Messages extends NLS {
     public static String ClazzPropertyPage_SuperClazzes;
     public static String ClazzPropertyPage_SuperClazzes_Without_Restriction_0;
     public static String ClazzPropertyPage_SuperClazzes_Without_Restriction_1;
+    public static String ClazzPropertyPage_SuperClazz_Without_Restriction_1;
 	public static String ClazzPropertyPage_SubClazzes;
     public static String ClazzPropertyPage_EquivalentClazzes;
     public static String ClazzPropertyPage_EquivalentClazzes_Without_Restriction_0;
     public static String ClazzPropertyPage_EquivalentClazzes_Without_Restriction_1;
+    public static String ClazzPropertyPage_EquivalentClazz_Without_Restriction_1;
 	public static String ClazzPropertyPage_DisjointClasses;
 	public static String IndividualPropertyPage_Property;
 	public static String IndividualPropertyPage_Value;
