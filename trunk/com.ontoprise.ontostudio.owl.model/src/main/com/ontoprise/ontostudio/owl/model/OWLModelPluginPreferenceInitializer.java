@@ -29,7 +29,7 @@ public class OWLModelPluginPreferenceInitializer extends AbstractPreferenceIniti
         store.setDefault(OWLModelPlugin.SHOW_IMPORTED, true);
         store.setDefault(OWLModelPlugin.SHOW_AXIOMS, false);
         store.setDefault(OWLModelPlugin.USE_TOOLBAR, false);
-        store.setDefault(OWLModelPlugin.SHOW_ACTUAL_ONTOLOGY, true); 
+        store.setDefault(OWLModelPlugin.SHOW_ACTUAL_ONTOLOGY, false); 
         store.setDefault(OWLModelPlugin.EDIT_IMPORTED_AXIOMS_WITHOUT_ASKING, false); 
         store.setDefault(OWLModelPlugin.REMOVE_IMPORTED_AXIOMS_WITHOUT_ASKING, false); 
         store.setDefault(OWLModelPlugin.SHOW_RESTRICTION_IN_CLASS_TAXONOMY_TAB, false); 
