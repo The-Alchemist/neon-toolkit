@@ -17,6 +17,30 @@ public class Messages extends NLS {
 	public static String Application_configurationFile_configFileName;
 	public static String Application_datePattern;
 	public static String Application_defaultWorkspace;
+	public static String Application_promptForWorkspace_title;
+	public static String Application_promptForWorkspace_message;
+	public static String StringFormatter_prefix_URL;
+	public static String StringFormatter_suffix_URL;
+	public static String StringFormatter_colon_URL;
+	public static String StringFormatter_colon_config;
+	public static String StringFormatter_slash_URL;
+	public static String StringFormatter_slash_config;
+	
+	public static String IDEApplication_workspaceMandatoryTitle;
+	public static String IDEApplication_workspaceMandatoryMessage;
+	public static String IDEApplication_workspaceInUseTitle;
+	public static String IDEApplication_workspaceInUseMessage;
+	public static String IDEApplication_workspaceEmptyTitle;
+	public static String IDEApplication_workspaceEmptyMessage;
+	public static String IDEApplication_workspaceInvalidTitle;
+	public static String IDEApplication_workspaceInvalidMessage;
+	public static String IDEApplication_workspaceCannotBeSetTitle;
+	public static String IDEApplication_workspaceCannotBeSetMessage;
+	public static String IDEApplication_workspaceCannotLockTitle;
+	public static String IDEApplication_workspaceCannotLockMessage;
+	public static String IDEApplication_versionTitle;
+	public static String IDEApplication_versionMessage_1;
+	public static String IDEApplication_versionMessage_2;
 
 	static {
 		// initialize resource bundle
