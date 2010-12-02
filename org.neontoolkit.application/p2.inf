@@ -1,0 +1,2 @@
+instructions.configure=\
+addRepository(type:0,location:http${#58}//neon-toolkit.org/plugins/2.3.3);
