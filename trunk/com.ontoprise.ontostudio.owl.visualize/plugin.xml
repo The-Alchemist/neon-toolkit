@@ -100,10 +100,10 @@
             objectClass="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement"
             id="com.ontoprise.ontostudio.gui.navigator.actions">
         <menu
-         		id="visualize.visOnto"
-         		label="Visualize Ontology..."
-         		path="navigator.vizOnto">
-         	<seperator name="VisOnto"/>
+         		id="visualize.visClass"
+         		label="Visualize Class..."
+         		path="navigator.vizClass">
+         	<seperator name="VisClass"/>
          </menu>
          <action
                class="com.ontoprise.ontostudio.owl.visualize.action.ShowInVisualizerOWLAction"
@@ -111,7 +111,7 @@
                icon="icons/Graph.gif"
                id="com.ontoprise.ontostudio.rdf.visualize.actions.ShowInVisualizerOWLAction"
                label="%inVisualizer"
-               menubarPath="visualize.visOnto/VisOnto"
+               menubarPath="visualize.visClass/VisClass"
                tooltip="%inVisualizer">
          </action>
       </objectContribution>
