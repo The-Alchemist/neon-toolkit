@@ -9,6 +9,7 @@
 <project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/trunk/com.ontoprise.ontostudio.owl.visualize,com.ontoprise.ontostudio.owl.visualize"/>
 <project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/trunk/com.softwareag.neontoolkit.ontostat,com.softwareag.neontoolkit.ontostat"/>
 <project reference="0.9.3,https://neon-plugins.googlecode.com/svn/trunk/it.essepuntato.semanticweb.neontoolkit.kcevisualizer,it.essepuntato.semanticweb.neontoolkit.kcevisualizer"/>
+<project reference="0.9.3,https://neon-plugins.googlecode.com/svn/trunk/org.neontoolkit.kcevisualizer.feature"/>
 <project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/trunk/ntk-target-platform,ntk-target-platform"/>
 <project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/trunk/org.neontoolkit.application,org.neontoolkit.application"/>
 <project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/trunk/org.neontoolkit.core,org.neontoolkit.core"/>
@@ -39,6 +40,7 @@
 <item elementID="=org.neontoolkit.jpowergraph" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=org.neontoolkit.io" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item elementID="=it.essepuntato.semanticweb.neontoolkit.kcevisualizer" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item factoryID="=org.neontoolkit.kcevisualizer.feature" type="4"/>
 <item elementID="=com.ontoprise.ontostudio.owl.gui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
 <item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/ntk-target-platform" type="4"/>
 <item elementID="=org.neontoolkit.search" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
