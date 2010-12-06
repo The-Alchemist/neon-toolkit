@@ -496,9 +496,9 @@ public class OWLModelCore implements OWLModel {
             return result;
         }
     }; 
-    private final AxiomRequest<OWLDataPropertyRangeAxiom> DataPropertyRange_range_Request = new AxiomRequestCore<OWLDataPropertyRangeAxiom>(AxiomType.DATA_PROPERTY_RANGE, "range") {//NICO inserted
+    private final AxiomRequest<OWLDataPropertyRangeAxiom> DataPropertyRange_range_Request = new AxiomRequestCore<OWLDataPropertyRangeAxiom>(AxiomType.DATA_PROPERTY_RANGE, "range") {
         @Override
-        protected Iterable<OWLDataPropertyRangeAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {//NICO habs gefunden: OWLCLassException/OWLDatatype
+        protected Iterable<OWLDataPropertyRangeAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
             OWLDatatype dataType = (OWLDatatype)parameters[0];
             Set<OWLDataPropertyRangeAxiom> result = new LinkedHashSet<OWLDataPropertyRangeAxiom>();
             for (OWLDataPropertyRangeAxiom axiom: ontology.getAxioms(AxiomType.DATA_PROPERTY_RANGE)) {
@@ -589,7 +589,7 @@ public class OWLModelCore implements OWLModel {
     }; 
 
 
-    private final AxiomRequest<OWLAnnotationPropertyRangeAxiom> AnnotationPropertyRange_range_Request = new AxiomRequestCore<OWLAnnotationPropertyRangeAxiom>(AxiomType.ANNOTATION_PROPERTY_RANGE, "range") {//NICO inserted
+    private final AxiomRequest<OWLAnnotationPropertyRangeAxiom> AnnotationPropertyRange_range_Request = new AxiomRequestCore<OWLAnnotationPropertyRangeAxiom>(AxiomType.ANNOTATION_PROPERTY_RANGE, "range") {
         @Override
         protected Iterable<OWLAnnotationPropertyRangeAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
             Set<OWLAnnotationPropertyRangeAxiom> result = new LinkedHashSet<OWLAnnotationPropertyRangeAxiom>();
@@ -737,7 +737,7 @@ public class OWLModelCore implements OWLModel {
             return result;
         }
     }; 
-    private final AxiomRequest<OWLObjectPropertyRangeAxiom> ObjectPropertyRange_range_Request = new AxiomRequestCore<OWLObjectPropertyRangeAxiom>(AxiomType.OBJECT_PROPERTY_RANGE, "range") {//NICO inserted
+    private final AxiomRequest<OWLObjectPropertyRangeAxiom> ObjectPropertyRange_range_Request = new AxiomRequestCore<OWLObjectPropertyRangeAxiom>(AxiomType.OBJECT_PROPERTY_RANGE, "range") {
         @Override
         protected Iterable<OWLObjectPropertyRangeAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
             OWLClassExpression clazz = (OWLClassExpression)parameters[0];
@@ -1151,9 +1151,9 @@ public class OWLModelCore implements OWLModel {
     private final ItemCollector<OWLObjectProperty,OWLObjectPropertyDomainAxiom> ObjectPropertyDomain_property_Collector = new ItemCollectorCore<OWLObjectProperty,OWLObjectPropertyDomainAxiom>("objectProperty", OWLObjectProperty.class);
     private final ItemCollector<OWLAnnotationProperty,OWLAnnotationPropertyDomainAxiom> AnnotationPropertyDomain_property_Collector = new ItemCollectorCore<OWLAnnotationProperty,OWLAnnotationPropertyDomainAxiom>("annotationProperty", OWLAnnotationProperty.class);
 
-    private final ItemCollector<OWLDataProperty,OWLDataPropertyRangeAxiom> DataPropertyRange_property_Collector = new ItemCollectorCore<OWLDataProperty,OWLDataPropertyRangeAxiom>("dataProperty", OWLDataProperty.class); //NICO inserted
-    private final ItemCollector<OWLObjectProperty,OWLObjectPropertyRangeAxiom> ObjectPropertyRange_property_Collector = new ItemCollectorCore<OWLObjectProperty,OWLObjectPropertyRangeAxiom>("objectProperty", OWLObjectProperty.class);//NICO inserted
-    private final ItemCollector<OWLAnnotationProperty,OWLAnnotationPropertyRangeAxiom> AnnotationPropertyRange_property_Collector = new ItemCollectorCore<OWLAnnotationProperty,OWLAnnotationPropertyRangeAxiom>("annotationProperty", OWLAnnotationProperty.class);//NICO inserted
+    private final ItemCollector<OWLDataProperty,OWLDataPropertyRangeAxiom> DataPropertyRange_property_Collector = new ItemCollectorCore<OWLDataProperty,OWLDataPropertyRangeAxiom>("dataProperty", OWLDataProperty.class); 
+    private final ItemCollector<OWLObjectProperty,OWLObjectPropertyRangeAxiom> ObjectPropertyRange_property_Collector = new ItemCollectorCore<OWLObjectProperty,OWLObjectPropertyRangeAxiom>("objectProperty", OWLObjectProperty.class);
+    private final ItemCollector<OWLAnnotationProperty,OWLAnnotationPropertyRangeAxiom> AnnotationPropertyRange_property_Collector = new ItemCollectorCore<OWLAnnotationProperty,OWLAnnotationPropertyRangeAxiom>("annotationProperty", OWLAnnotationProperty.class);
     
     
     /** A map of <code>ItemCollectorVisitor</code> indexed by the member name for which they collect items. */
@@ -1720,7 +1720,7 @@ public class OWLModelCore implements OWLModel {
     @Override
     public Set<ItemHits<OWLClassExpression,OWLEquivalentClassesAxiom>> getEquivalentDescriptionHits(String classId) throws NeOnCoreException {
         return EquivalentClasses_descriptions_ComplexDescriptionsOnly_Collector.getItemHits(EquivalentClasses_descriptions_Request, autoBox(owlClass(classId)), owlClass(classId));
-    }//NICO
+    }
 
     @Override
     public Set<OWLClassExpression> getSuperRestrictions(String classId) throws NeOnCoreException {
@@ -1759,7 +1759,7 @@ public class OWLModelCore implements OWLModel {
     @Override
     public Set<ItemHits<OWLClassExpression,OWLEquivalentClassesAxiom>> getEquivalentDescriptionHitsWithoutRestrictionHits(String classId) throws NeOnCoreException {
         return EquivalentClasses_descriptions_No_Restrictions_Collector.getItemHits(EquivalentClasses_descriptions_Request, autoBox(owlClass(classId)), owlClass(classId));
-    }//NICO
+    }
 
 
     @Override
@@ -2003,7 +2003,7 @@ public class OWLModelCore implements OWLModel {
         return domains;
     }
 //    @Override //NICO removed
-//    public Set<OWLClassExpression> getRangeDescriptions(String propertyId) throws NeOnCoreException {//NICO inserted
+//    public Set<OWLClassExpression> getRangeDescriptions(String propertyId) throws NeOnCoreException {
 //        // TODO (tkr 20080409): make this a bit nicer by making an entity request for propertyId and iteration over the result
 //        Set<OWLClassExpression> ranges = ObjectPropertyRange_range_Collector.getItems(ObjectPropertyRange_objectProperty_Request, autoBox(objectProperty(propertyId)));
 //        ranges.addAll(DataPropertyRange_range_Collector.getItems(DataPropertyRange_dataProperty_Request, autoBox(dataProperty(propertyId))));
@@ -2017,7 +2017,7 @@ public class OWLModelCore implements OWLModel {
         return properties;            
     }
     @Override
-    public Set<OWLAnnotationProperty> getAnnotationPropertiesForRange(String classId) throws NeOnCoreException {//NICO inserted
+    public Set<OWLAnnotationProperty> getAnnotationPropertiesForRange(String classId) throws NeOnCoreException {
         Set<OWLAnnotationProperty> properties =
             AnnotationPropertyRange_property_Collector.getItems(AnnotationPropertyRange_range_Request, autoBox(owlClass(classId)));
         return properties;            
@@ -2030,7 +2030,7 @@ public class OWLModelCore implements OWLModel {
         return properties;            
     }
     @Override
-    public Set<ItemHits<OWLAnnotationProperty,OWLAnnotationPropertyRangeAxiom>> getAnnotationPropertiesForRangeHits(String classId) throws NeOnCoreException {//NICO inserted
+    public Set<ItemHits<OWLAnnotationProperty,OWLAnnotationPropertyRangeAxiom>> getAnnotationPropertiesForRangeHits(String classId) throws NeOnCoreException {
         Set<ItemHits<OWLAnnotationProperty,OWLAnnotationPropertyRangeAxiom>> properties =
             AnnotationPropertyRange_property_Collector.getItemHits(AnnotationPropertyRange_range_Request, autoBox(owlClass(classId)));
         return properties;            
@@ -2061,13 +2061,13 @@ public class OWLModelCore implements OWLModel {
     }
 
     @Override
-    public Set<OWLDataProperty> getDataPropertiesForRange(String classId) throws NeOnCoreException{//NICO inserted
+    public Set<OWLDataProperty> getDataPropertiesForRange(String classId) throws NeOnCoreException{
         Set<OWLDataProperty> properties =
             DataPropertyRange_property_Collector.getItems(DataPropertyRange_range_Request, autoBox(owlClass(classId)));
         return properties;           
     }
     @Override
-    public Set<ItemHits<OWLDataProperty,OWLDataPropertyRangeAxiom>> getDataPropertiesForRangeHits(String classId) throws NeOnCoreException {//NICO inserted
+    public Set<ItemHits<OWLDataProperty,OWLDataPropertyRangeAxiom>> getDataPropertiesForRangeHits(String classId) throws NeOnCoreException {
         Set<ItemHits<OWLDataProperty,OWLDataPropertyRangeAxiom>> properties =
             DataPropertyRange_property_Collector.getItemHits(DataPropertyRange_range_Request, autoBox(owlDatatype(classId)));
         return properties;            
@@ -2080,7 +2080,7 @@ public class OWLModelCore implements OWLModel {
         return properties;            
     }
     @Override
-    public Set<OWLObjectProperty> getObjectPropertiesForRange(String classId) throws NeOnCoreException{//NICO inserted
+    public Set<OWLObjectProperty> getObjectPropertiesForRange(String classId) throws NeOnCoreException{
         Set<OWLObjectProperty> properties =
             ObjectPropertyRange_property_Collector.getItems(ObjectPropertyRange_range_Request, autoBox(owlClass(classId)));
         return properties;            
@@ -2094,7 +2094,7 @@ public class OWLModelCore implements OWLModel {
     }
 
     @Override
-    public Set<ItemHits<OWLObjectProperty,OWLObjectPropertyRangeAxiom>> getObjectPropertiesForRangeHits(String classId) throws NeOnCoreException {//NICO inserted
+    public Set<ItemHits<OWLObjectProperty,OWLObjectPropertyRangeAxiom>> getObjectPropertiesForRangeHits(String classId) throws NeOnCoreException {
         Set<ItemHits<OWLObjectProperty,OWLObjectPropertyRangeAxiom>> properties =
             ObjectPropertyRange_property_Collector.getItemHits(ObjectPropertyRange_range_Request, autoBox(owlClass(classId)));
         return properties;            
@@ -2107,7 +2107,7 @@ public class OWLModelCore implements OWLModel {
     }
 
     @Override
-    public Set<ItemHits<OWLClassExpression,OWLObjectPropertyRangeAxiom>> getObjectPropertyRangeHits(String propertyId) throws NeOnCoreException {//NICO inserted
+    public Set<ItemHits<OWLClassExpression,OWLObjectPropertyRangeAxiom>> getObjectPropertyRangeHits(String propertyId) throws NeOnCoreException {
         // TODO (tkr 20080409): make this a bit nicer by making an entity request for propertyId and iteration over the result
         Set<ItemHits<OWLClassExpression,OWLObjectPropertyRangeAxiom>> ranges = ObjectPropertyRange_range_Collector.getItemHits(ObjectPropertyRange_objectProperty_Request, autoBox(objectProperty(propertyId)));
         return ranges;
@@ -2120,7 +2120,7 @@ public class OWLModelCore implements OWLModel {
         return domains;
     }
 //    @Override //NICO removed
-//    public Set<ItemHits<OWLClassExpression,OWLDataPropertyRangeAxiom>> getDataPropertyRangeHits(String propertyId) throws NeOnCoreException {//NICO inserted
+//    public Set<ItemHits<OWLClassExpression,OWLDataPropertyRangeAxiom>> getDataPropertyRangeHits(String propertyId) throws NeOnCoreException {
 //        // TODO (tkr 20080409): make this a bit nicer by making an entity request for propertyId and iteration over the result
 //        Set<ItemHits<OWLClassExpression,OWLDataPropertyRangeAxiom>> ranges = DataPropertyRange_range_Collector.getItemHits(DataPropertyRange_dataProperty_Request, autoBox(dataProperty(propertyId)));
 //        return ranges;
@@ -2519,7 +2519,7 @@ public class OWLModelCore implements OWLModel {
     }
     private OWLDatatype owlDatatype(String uri) throws NeOnCoreException {
         OWLDatatype oWLDatatype = getOWLDataFactory().getOWLDatatype(OWLUtilities.toIRI(uri));
-        System.out.println(oWLDatatype);//NICO remove
+        System.out.println(oWLDatatype);
         return oWLDatatype;
 //        return getOWLDataFactory().getOWLDatatype(OWLUtilities.toIRI(uri));
     }

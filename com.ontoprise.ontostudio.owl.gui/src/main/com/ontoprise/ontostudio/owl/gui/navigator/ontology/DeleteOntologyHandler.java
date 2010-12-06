@@ -134,7 +134,6 @@ public class DeleteOntologyHandler extends AbstractConfirmDeleteHandler {
                     }
                 }
             } catch (NeOnCoreException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }

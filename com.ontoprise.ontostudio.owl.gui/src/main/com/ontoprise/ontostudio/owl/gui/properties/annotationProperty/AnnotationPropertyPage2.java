@@ -273,24 +273,6 @@ public class AnnotationPropertyPage2 extends AbstractOWLMainIDPropertyPage imple
         OWLAxiom axiom = locatedAxiom.getAxiom();
         OWLObject desc = mode == DOMAIN ? ((OWLAnnotationPropertyDomainAxiom) axiom).getDomain() : ((OWLAnnotationPropertyRangeAxiom) axiom).getRange();
         
-//        String name = null;NICO remove me
-//        outer:
-//        if(locatedAxiom != null && locatedAxiom.getAxiom() != null){
-//            if (mode == DOMAIN) {
-//                try {
-//                    String[] split = _actualDomain_Range[0].split(" "); //$NON-NLS-1$
-//                    name = split[split.length - 1].replace("]","").replace("[",""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-//                } catch (NullPointerException e) {
-//                }
-//            } else {
-//                try {
-//                    String[] split = _actualDomain_Range[0].split(" "); //$NON-NLS-1$
-//                    name = split[split.length - 1].replace("]","").replace("[",""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-//                } catch (NullPointerException e) {
-//                }
-//            }
-//        }
-        
         final StyledText text;
         ClassText classText = new ClassText(row.getParent(), _owlModel, sourceOwlModel);
         text = classText.getStyledText();
