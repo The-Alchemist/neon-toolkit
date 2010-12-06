@@ -760,7 +760,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
                     if (a.isLocal()) {
                         owlAxioms.add(a.getAxiom());
                     }else{
-                        owlAxioms.add(a.getAxiom());//NICO think about that
+                        owlAxioms.add(a.getAxiom());
                     }
                 }
                 OWLAxiomUtils.triggerRemovePressed(owlAxioms, OWLUtilities.toString(description), _namespaces, _id, _sourceOwlModel);

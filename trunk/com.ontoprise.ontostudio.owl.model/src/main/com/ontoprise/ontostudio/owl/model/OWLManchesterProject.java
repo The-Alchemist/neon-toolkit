@@ -525,8 +525,12 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                                 // Change the null URI into the physicalURI so that NeOn Toolkit is happy.
                                 OWLOntologyID newID = new OWLOntologyID(event.getDocumentIRI());
                                 try {
-                                    _ontologyManager.applyChange(new SetOntologyID(onto, newID));
-                                    owlOntologyUris.put(newID, event.getDocumentIRI().toString());
+//                                    if(onto != null && newID != null){
+                                        _ontologyManager.applyChange(new SetOntologyID(onto, newID));
+                                        owlOntologyUris.put(newID, event.getDocumentIRI().toString());
+//                                    }else{
+//                                        //NICO has to be implemented
+//                                    }                              
                                 } catch (OWLOntologyChangeException e) {
                                     e.printStackTrace();
                                 }

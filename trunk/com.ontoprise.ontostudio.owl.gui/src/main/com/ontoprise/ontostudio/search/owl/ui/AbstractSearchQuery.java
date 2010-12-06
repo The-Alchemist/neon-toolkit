@@ -64,10 +64,6 @@ public abstract class AbstractSearchQuery implements ISearchQuery {
             try {
                 if(project_ontology.length == 2){
                     Match[] matches = getSearchCommand(project_ontology[0], project_ontology[1]).getResults();
-//                    for (Match match: matches) {
-//                        System.out.println(match.getElement());//NICO remove
-//                        textResult.addMatch(match);
-//                    }
                     textResult.addMatches(matches);
                 }
                 if (monitor.isCanceled()) {

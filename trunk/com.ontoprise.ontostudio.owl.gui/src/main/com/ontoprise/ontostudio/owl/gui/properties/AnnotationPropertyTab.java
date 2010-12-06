@@ -348,10 +348,6 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
         valueTextWidget.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, valueText);
         formRow.addWidget(valueTextWidget);
         
-//        String type = ""; //$NON-NLS-1$//NICO remove me
-//        if(!annotation.getValue().getDatatypesInSignature().isEmpty()){
-//            type = annotation.getValue().getDatatypesInSignature().toArray()[0].toString();
-//        }
         DatatypeAndIndividualText typeText = new DatatypeAndIndividualText(formRow.getParent(), _owlModel, sourceOwlModel);
         final StyledText typeTextWidget = typeText.getStyledText();
         typeTextWidget.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, typeText);
@@ -360,7 +356,7 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
         final CCombo languageCombo = OWLGUIUtilities.createLanguageComboBox(formRow.getParent(), false);
         formRow.addWidget(languageCombo);
 
-        OWLGUIUtilities.initStringOrLiteralSwitch(typeTextWidget, languageCombo, sourceOwlModel);//NICO are you sure?
+        OWLGUIUtilities.initStringOrLiteralSwitch(typeTextWidget, languageCombo, sourceOwlModel);
 
         final String[] propertyArray = descriptions == null ? new String[0] : descriptions.get(0);
         final String[] valueArray = descriptions == null ? new String[0] : descriptions.get(1);
@@ -426,7 +422,7 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
             public void savePressed() {
                 try {
                     String[] values = getNewValues(propertyTextWidget, valueTextWidget, typeTextWidget, languageCombo);
-                    new EditEntityAnnotation(_project, _sourceOwlModel.getOntologyURI(), _id, OWLUtilities.toString(getAxiom()), values).run();//NICO are you sure?
+                    new EditEntityAnnotation(_project, _sourceOwlModel.getOntologyURI(), _id, OWLUtilities.toString(getAxiom()), values).run();
                     
                 } catch (NeOnCoreException k2e) {
                     handleException(k2e, Messages.AnnotationsPropertyPage2_15, propertyTextWidget.getShell());
@@ -587,9 +583,9 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
                     String[] newValues = getNewValues(propertyText, valueText, typeText, languageCombo);
                     if(getMainPage().getSelection().getFirstElement() instanceof AnonymousIndividualViewItem){
                         AnonymousIndividualViewItem individualViewItem = (AnonymousIndividualViewItem)getMainPage().getSelection().getFirstElement();
-                        new AddAnonymousIndividualAnnotation(_project, _sourceOwlModel.getOntologyURI(), individualViewItem.getIndividual(), newValues).run();//NICO are you sure?
+                        new AddAnonymousIndividualAnnotation(_project, _sourceOwlModel.getOntologyURI(), individualViewItem.getIndividual(), newValues).run();
                     } else {
-                        new AddEntityAnnotation(_project, _sourceOwlModel.getOntologyURI(), _id, newValues).run();//NICO are you sure?
+                        new AddEntityAnnotation(_project, _sourceOwlModel.getOntologyURI(), _id, newValues).run();
                     }
                 } catch (NeOnCoreException k2e) {
                     handleException(k2e, Messages.AnnotationsPropertyPage2_25, languageCombo.getShell());

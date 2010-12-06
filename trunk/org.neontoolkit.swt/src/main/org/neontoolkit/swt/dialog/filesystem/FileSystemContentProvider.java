@@ -59,7 +59,6 @@ public class FileSystemContentProvider implements ITreeContentProvider {
 					return result.toArray();
 				}
 			} catch (CoreException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
