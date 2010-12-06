@@ -48,11 +48,11 @@ public class DatatypeAndIndividualProposalProvider extends AbstractOwlProposalPr
         Set<String> datatypes = OWLConstants.OWL_DATATYPE_URIS;
         Set<OWLDatatype> datatypesFromModel;
         try {
-            datatypesFromModel = _sourceOwlModel.getAllDatatypes();//NICO are you sure?
+            datatypesFromModel = _sourceOwlModel.getAllDatatypes();
             for (OWLDatatype datatype: datatypesFromModel) {
                 String[] array = (String[]) datatype.accept(_visitor);
                 if (AbstractOwlProposalProvider.checkProposal(array, contents)) {
-                    datatypeProposals.add(new DatatypeProposal(datatype, array, position, _localOwlModel));//NICO are you sure?
+                    datatypeProposals.add(new DatatypeProposal(datatype, array, position, _localOwlModel));
                 }
             }
         } catch (NeOnCoreException e) {
@@ -63,14 +63,14 @@ public class DatatypeAndIndividualProposalProvider extends AbstractOwlProposalPr
             if (!datatypeUri.equals(NULL_DATATYPE)) { // bugfix for #10099
                 OWLDatatype datatype;
                 try {
-                    datatype = _sourceOwlModel.getOWLDataFactory().getOWLDatatype(OWLUtilities.toIRI(datatypeUri));//NICO are you sure?
+                    datatype = _sourceOwlModel.getOWLDataFactory().getOWLDatatype(OWLUtilities.toIRI(datatypeUri));
                 } catch (NeOnCoreException e) {
                     throw new RuntimeException(e);
                 }
                 if (!datatypesFromModel.contains(datatype)) {
                     String[] array = (String[]) datatype.accept(_visitor);
                     if (AbstractOwlProposalProvider.checkProposal(array, contents)) {
-                        datatypeProposals.add(new DatatypeProposal(datatype, array, position, _localOwlModel));//NICO are you sure?
+                        datatypeProposals.add(new DatatypeProposal(datatype, array, position, _localOwlModel));
                     }
                 }
             }

@@ -58,7 +58,6 @@ public class SearchResultPage extends AbstractTextSearchViewPage implements ISea
 
 	public SearchResultPage() {
 		super(AbstractTextSearchViewPage.FLAG_LAYOUT_FLAT);
-		//NICO change FLAG: FLAT --> TREE
 		
 	}
 	

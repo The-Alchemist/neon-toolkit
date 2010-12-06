@@ -548,7 +548,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     // save modified entries
                     try {
                         String[] values = getNewValues(quantifierCombo, propertyTextWidget, row.getRangeText(), cardinalityText);
-                        new EditRestriction(_project, _sourceOwlModel.getOntologyURI(), clazzType, _id, values, OWLUtilities.toString(description)).run();//NICO are you sure?
+                        new EditRestriction(_project, _sourceOwlModel.getOntologyURI(), clazzType, _id, values, OWLUtilities.toString(description)).run();
                     } catch (NeOnCoreException k2e) {
                         handleException(k2e, Messages.ClazzPropertyPage2_30, _equivRestrictionsComp.getShell());
                         rangeTextWidget.setFocus();
@@ -775,7 +775,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             if (input.trim().equals("")) { //$NON-NLS-1$
                 return;
             }
-            OWLDataProperty prop = manager.parseDataProperty(input, sourceOwlModel);//NICO are you sure?
+            OWLDataProperty prop = manager.parseDataProperty(input, sourceOwlModel);
             boolean isDataProperty = new IsDataProperty(_project, _ontologyUri, prop.getIRI().toString()).isDataProperty();
             if (isDataProperty) {
                 if (hasValue) {
@@ -784,7 +784,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     finalRangeText = new DatatypeText(formRow.getParent(), _owlModel, sourceOwlModel).getStyledText();
                 }
             } else {
-                OWLObjectPropertyExpression objProp = manager.parseObjectProperty(input, sourceOwlModel);//NICO are you sure?
+                OWLObjectPropertyExpression objProp = manager.parseObjectProperty(input, sourceOwlModel);
                 boolean isObjectProperty = new IsObjectProperty(_project, _ontologyUri, OWLUtilities.toString(objProp)).isObjectProperty();
                 if (isObjectProperty) {
                     if (hasValue) {

@@ -295,10 +295,10 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             public void savePressed() {
                 try {
                     remove();
-                    OWLObjectPropertyExpression newProp = _manager.parseObjectProperty(propertyText.getText(), _localOwlModel);//NICO are you sure?
-                    OWLIndividual targetIndividual = _manager.parseIndividual(valueText.getText(), _localOwlModel);//NICO are you sure?
+                    OWLObjectPropertyExpression newProp = _manager.parseObjectProperty(propertyText.getText(), _localOwlModel);
+                    OWLIndividual targetIndividual = _manager.parseIndividual(valueText.getText(), _localOwlModel);
 
-                    new CreateObjectPropertyMember(_project, _sourceOwlModel.getOntologyURI(), _id, OWLUtilities.toString(newProp), OWLUtilities.toString(targetIndividual)).run();//NICO are you sure?
+                    new CreateObjectPropertyMember(_project, _sourceOwlModel.getOntologyURI(), _id, OWLUtilities.toString(newProp), OWLUtilities.toString(targetIndividual)).run();
                 } catch (NeOnCoreException e1) {
                     handleException(e1, Messages.IndividualPropertyPage2_18, valueText.getShell());
                     propertyText.setFocus();
@@ -363,10 +363,10 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             public void addPressed() {
                 // add new entry
                 try {
-                    OWLObjectPropertyExpression newProp = _manager.parseObjectProperty(propertyText.getText(), _localOwlModel);//NICO are you sure?
-                    OWLIndividual targetIndividual = _manager.parseIndividual(valueText.getText(), _localOwlModel);//NICO are you sure?
+                    OWLObjectPropertyExpression newProp = _manager.parseObjectProperty(propertyText.getText(), _localOwlModel);
+                    OWLIndividual targetIndividual = _manager.parseIndividual(valueText.getText(), _localOwlModel);
 
-                    new CreateObjectPropertyMember(_project, _sourceOwlModel.getOntologyURI(), _id, OWLUtilities.toString(newProp), OWLUtilities.toString(targetIndividual)).run();//NICO are you sure?
+                    new CreateObjectPropertyMember(_project, _sourceOwlModel.getOntologyURI(), _id, OWLUtilities.toString(newProp), OWLUtilities.toString(targetIndividual)).run();
                 } catch (NeOnCoreException k2e) {
                     handleException(k2e, Messages.IndividualPropertyPage2_18, valueText.getShell());
                 } catch (CommandException k2e) {
@@ -652,7 +652,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         final String[] valueArray = descriptions.get(1);
         final String[] datatypeArray = descriptions.get(2);
 
-        OWLGUIUtilities.initStringOrLiteralSwitch(typeText, languageCombo, sourceOwlModel);//NICO are you sure?
+        OWLGUIUtilities.initStringOrLiteralSwitch(typeText, languageCombo, sourceOwlModel);
         // dataProperty
         if (axiom != null) {
             String id = OWLGUIUtilities.getEntityLabel(propertyArray);
@@ -678,7 +678,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             OWLGUIUtilities.enable(typeText, false);
             String datatype = datatypeArray.length > 1 ? datatypeArray[1] : datatypeArray[0];
             try {
-                if (((OWLDatatype) _manager.parseDataRange(datatype, sourceOwlModel)).getIRI().toString().equals(OWLConstants.RDFS_LITERAL)) { //NICO are you sure?
+                if (((OWLDatatype) _manager.parseDataRange(datatype, sourceOwlModel)).getIRI().toString().equals(OWLConstants.RDFS_LITERAL)) { 
                     showLanguange = true;
                 }
             } catch (NeOnCoreException e) {
@@ -709,17 +709,17 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             public void savePressed() {
                 try {
                     remove();
-                    OWLDataPropertyExpression prop = _manager.parseDataProperty(propertyText.getText(), _localOwlModel);//NICO are you sure?
+                    OWLDataPropertyExpression prop = _manager.parseDataProperty(propertyText.getText(), _localOwlModel);
 
                     OWLDatatype type;
                     if (typeText.getText().equals("")) { //$NON-NLS-1$
                         type = OWLModelFactory.getOWLDataFactory(_project).getOWLDatatype(OWLUtilities.toIRI(OWLConstants.RDFS_LITERAL));
                     } else {
-                        type = (OWLDatatype) _manager.parseDataRange(typeText.getText(), _localOwlModel);//NICO are you sure?
+                        type = (OWLDatatype) _manager.parseDataRange(typeText.getText(), _localOwlModel);
                     }
 
                     String[] valueArray = new String[] {valueText.getText(), languageCombo.getText()};
-                    new CreateDataPropertyMember(_project, _sourceOwlModel.getOntologyURI(), _id, ((OWLDataProperty)prop).getIRI().toString(), type.getIRI().toString(), valueArray).run();//NICO are you sure?
+                    new CreateDataPropertyMember(_project, _sourceOwlModel.getOntologyURI(), _id, ((OWLDataProperty)prop).getIRI().toString(), type.getIRI().toString(), valueArray).run();
                 } catch (NeOnCoreException k2e) {
                     handleException(k2e, Messages.IndividualPropertyPage2_18, valueText.getShell());
                     propertyText.setFocus();
@@ -871,13 +871,13 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 //                    InternalParser parser = new InternalParser(_id, OWLNamespaces.EMPTY_INSTANCE, OWLModelFactory.getOWLDataFactory(_project));
 //                    OWLIndividual individual = parser.parseOWLIndividual();
                     
-                    OWLDataPropertyExpression prop = _manager.parseDataProperty(propertyText.getText(), _localOwlModel);//NICO are you sure?
+                    OWLDataPropertyExpression prop = _manager.parseDataProperty(propertyText.getText(), _localOwlModel);
 
                     OWLDatatype type;
                     if (typeText.getText().equals("")) { //$NON-NLS-1$
                         type = OWLModelFactory.getOWLDataFactory(_project).getOWLDatatype(OWLUtilities.toIRI(OWLConstants.RDFS_LITERAL));
                     } else {
-                        type = (OWLDatatype) _manager.parseDataRange(typeText.getText(), _localOwlModel);//NICO are you sure?
+                        type = (OWLDatatype) _manager.parseDataRange(typeText.getText(), _localOwlModel);
                     }
 
                     OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(_project);
@@ -893,7 +893,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     }
 
                     OWLAxiom newAxiom = factory.getOWLDataPropertyAssertionAxiom(prop, (OWLIndividual)getOWLObject(), c);
-                    new ApplyChanges(_project, _sourceOwlModel.getOntologyURI(), new String[] {OWLUtilities.toString(newAxiom)}, new String[0]).run();//NICO are you sure?
+                    new ApplyChanges(_project, _sourceOwlModel.getOntologyURI(), new String[] {OWLUtilities.toString(newAxiom)}, new String[0]).run();
                 } catch (NeOnCoreException e1) {
                     handleException(e1, Messages.IndividualPropertyPage2_18, valueText.getShell());
                     return;

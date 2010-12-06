@@ -45,7 +45,7 @@ public abstract class AbstractOwlProposalProvider implements IContentProposalPro
             _namespace = OWLNamespaces.INSTANCE;
         }
         // always use QName for autocompletion (see http://buggy.ontoprise.de/bugs/show_bug.cgi?id=10525)
-        _visitor =  OWLPlugin.getDefault().getSyntaxManager().getVisitor(_localOwlModel, NeOnUIPlugin.DISPLAY_QNAME); //NICO are you sure?
+        _visitor =  OWLPlugin.getDefault().getSyntaxManager().getVisitor(_localOwlModel, NeOnUIPlugin.DISPLAY_QNAME); 
     }
 
     public static boolean checkProposal(String[] array, String contents) {

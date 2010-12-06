@@ -50,7 +50,7 @@ public class ClazzProposalProvider extends AbstractOwlProposalProvider {
             for (OWLClass clazz: allClasses) {
                 String[] array = (String[]) clazz.accept(_visitor);
                 if (AbstractOwlProposalProvider.checkProposal(array, contents)) {
-                    proposals.add(new ClazzProposal(clazz, array, position, _localOwlModel));//NICO are you sure?
+                    proposals.add(new ClazzProposal(clazz, array, position, _localOwlModel));
                 }
             }
         } catch (NeOnCoreException e) {

@@ -307,7 +307,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                 // save modified entries
                 String value = textWidget.getText();
                 try {
-                    OWLDataProperty dataProp = _manager.parseDataProperty(value, _localOwlModel);//NICO are you sure?
+                    OWLDataProperty dataProp = _manager.parseDataProperty(value, _localOwlModel);
                     remove();
                     if (mode == SUPER) {
                         new CreateDataProperty(_project, _sourceOwlModel.getOntologyURI(), _id, dataProp.getIRI().toString()).run();
@@ -391,7 +391,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                 // save modified entries
                 String value = text.getText();
                 try {
-                    OWLDataProperty dataProp = _manager.parseDataProperty(value, _localOwlModel);//NICO are you sure?
+                    OWLDataProperty dataProp = _manager.parseDataProperty(value, _localOwlModel);
                     if (mode == SUPER) {
                         new CreateDataProperty(_project, _sourceOwlModel.getOntologyURI(), _id, dataProp.getIRI().toString()).run();
                         initSuperSection(true);
@@ -427,7 +427,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                         owlAxioms.add(a.getAxiom());//NICO think about that
                     }
                 }
-                OWLAxiomUtils.triggerRemovePressed(owlAxioms, getEntity(), _namespaces, _id, _sourceOwlModel, WizardConstants.ADD_DEPENDENT_MODE);//NICO are you sure?
+                OWLAxiomUtils.triggerRemovePressed(owlAxioms, getEntity(), _namespaces, _id, _sourceOwlModel, WizardConstants.ADD_DEPENDENT_MODE);
                 refresh();
             }
 
@@ -480,7 +480,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                 // add new entry
                 try {
                     String value = text.getText();
-                    OWLDataProperty DataProp = _manager.parseDataProperty(value, _localOwlModel);//NICO are you sure?
+                    OWLDataProperty DataProp = _manager.parseDataProperty(value, _localOwlModel);
 
                     switch (mode) {
                         case SUPER:
