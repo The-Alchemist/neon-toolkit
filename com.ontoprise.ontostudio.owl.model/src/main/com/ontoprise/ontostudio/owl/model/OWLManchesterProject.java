@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.InternalNeOnException;
@@ -525,12 +526,25 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                                 // Change the null URI into the physicalURI so that NeOn Toolkit is happy.
                                 OWLOntologyID newID = new OWLOntologyID(event.getDocumentIRI());
                                 try {
-//                                    if(onto != null && newID != null){
-                                        _ontologyManager.applyChange(new SetOntologyID(onto, newID));
-                                        owlOntologyUris.put(newID, event.getDocumentIRI().toString());
-//                                    }else{
-//                                        //NICO has to be implemented
-//                                    }                              
+                                    //NICO has to be implemented
+                                    if(onto != null){
+                                        if(newID != null){
+                                            _ontologyManager.applyChange(new SetOntologyID(onto, newID));
+                                            owlOntologyUris.put(newID, event.getDocumentIRI().toString());
+                                        }else{
+                                            MessageDialog.openWarning(null, Messages.OWLManchasterProject_OntologyCantBeSet, Messages.OWLManchasterProject_OntologyCantBeSet_NewOID); 
+                                            exception.set(new OWLOntologyCreationException(Messages.OWLManchasterProject_OntologyCantBeSet_NewOID));
+                                            
+                                        }
+                                    }else{
+                                        if(newID == null){
+                                            MessageDialog.openWarning(null, Messages.OWLManchasterProject_OntologyCantBeSet, Messages.OWLManchasterProject_OntologyCantBeSet_NewOID_Onto); 
+                                            exception.set(new OWLOntologyCreationException(Messages.OWLManchasterProject_OntologyCantBeSet_NewOID_Onto));
+                                        }else{
+                                            MessageDialog.openWarning(null, Messages.OWLManchasterProject_OntologyCantBeSet, Messages.OWLManchasterProject_OntologyCantBeSet_Onto); 
+                                            exception.set(new OWLOntologyCreationException(Messages.OWLManchasterProject_OntologyCantBeSet_Onto));
+                                        }
+                                    }                              
                                 } catch (OWLOntologyChangeException e) {
                                     e.printStackTrace();
                                 }

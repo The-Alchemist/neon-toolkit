@@ -13,12 +13,21 @@ package com.ontoprise.ontostudio.owl.model;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-public class Messages {
+import org.eclipse.osgi.util.NLS;
+
+
+public class Messages  extends NLS {
 
     private static final String BUNDLE_NAME = "com.ontoprise.ontostudio.owl.model.messages"; //$NON-NLS-1$
 
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
+    public static String OWLManchasterProject_OntologyCantBeSet;
+    public static String OWLManchasterProject_OntologyCantBeSet_NewOID;
+    public static String OWLManchasterProject_OntologyCantBeSet_Onto;
+    public static String OWLManchasterProject_OntologyCantBeSet_NewOID_Onto;
+
+    
     private Messages() {
     }
 
@@ -28,5 +37,10 @@ public class Messages {
         } catch (MissingResourceException e) {
             return '!' + key + '!';
         }
+    }
+    
+    static {
+        // load message values from bundle file
+        NLS.initializeMessages(BUNDLE_NAME, Messages.class);
     }
 }
