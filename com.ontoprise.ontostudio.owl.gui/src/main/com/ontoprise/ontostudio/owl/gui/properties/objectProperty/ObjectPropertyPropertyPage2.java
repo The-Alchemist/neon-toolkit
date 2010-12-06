@@ -489,13 +489,13 @@ public class ObjectPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 // save modified entries
                 String newValue = text.getText();
                 try {
-                    OWLClassExpression newDescription = _manager.parseDescription(newValue, _localOwlModel);//NICO are you sure?
+                    OWLClassExpression newDescription = _manager.parseDescription(newValue, _localOwlModel);
                     remove();
                     if (mode == DOMAIN) {
-                        new CreateObjectPropertyDomain(_project, _sourceOwlModel.getOntologyURI(), _id, OWLUtilities.toString(newDescription)).run();//NICO are you sure?
+                        new CreateObjectPropertyDomain(_project, _sourceOwlModel.getOntologyURI(), _id, OWLUtilities.toString(newDescription)).run();
                         initDomainSection(true);
                     } else {
-                        new CreateObjectPropertyRange(_project, _sourceOwlModel.getOntologyURI(), _id, OWLUtilities.toString(newDescription)).run();//NICO are you sure?
+                        new CreateObjectPropertyRange(_project, _sourceOwlModel.getOntologyURI(), _id, OWLUtilities.toString(newDescription)).run();
                         initRangeSection(true);
                     }
                 } catch (NeOnCoreException k2e) {
@@ -555,12 +555,12 @@ public class ObjectPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 // add new entry
                 String input = text.getText();
                 try {
-                    String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDescription(input, _localOwlModel));//NICO are you sure?
+                    String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDescription(input, _localOwlModel));
                     if (domainOrRange == DOMAIN) {
-                        new CreateObjectPropertyDomain(_project, _sourceOwlModel.getOntologyURI(), _id, value).run();//NICO are you sure?
+                        new CreateObjectPropertyDomain(_project, _sourceOwlModel.getOntologyURI(), _id, value).run();
                         initDomainSection(true);
                     } else {
-                        new CreateObjectPropertyRange(_project, _sourceOwlModel.getOntologyURI(), _id, value).run();//NICO are you sure?
+                        new CreateObjectPropertyRange(_project, _sourceOwlModel.getOntologyURI(), _id, value).run();
                         initRangeSection(true);
                     }
                 } catch (NeOnCoreException k2e) {

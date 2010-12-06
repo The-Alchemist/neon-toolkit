@@ -60,11 +60,11 @@ public class PropertyProposalProvider extends AbstractOwlProposalProvider {
             Set<OWLAnnotationProperty> annotProps = new HashSet<OWLAnnotationProperty>();
 
             if ((_style & OBJECT_PROPERTY_STYLE) > 0) {
-                objectProps = _sourceOwlModel.getAllObjectProperties(true);//NICO are you sure?
+                objectProps = _sourceOwlModel.getAllObjectProperties(true);
 
                 try {
-                    objectProps.add(_sourceOwlModel.getOWLDataFactory().getOWLTopObjectProperty());//NICO are you sure?
-                    objectProps.add(_sourceOwlModel.getOWLDataFactory().getOWLBottomObjectProperty());//NICO are you sure?
+                    objectProps.add(_sourceOwlModel.getOWLDataFactory().getOWLTopObjectProperty());
+                    objectProps.add(_sourceOwlModel.getOWLDataFactory().getOWLBottomObjectProperty());
                 } catch (Exception e) {
                     //ignore
                 }
@@ -72,18 +72,18 @@ public class PropertyProposalProvider extends AbstractOwlProposalProvider {
                 for (OWLObjectProperty prop: objectProps) {
                     String[] array = (String[]) prop.accept(_visitor);
                     if (AbstractOwlProposalProvider.checkProposal(array, contents)) {
-                        objectProposals.add(new ObjectPropertyProposal(prop, array, position, _localOwlModel));//NICO are you sure?
+                        objectProposals.add(new ObjectPropertyProposal(prop, array, position, _localOwlModel));
                     }
                 }
 
             }
 
             if ((_style & DATA_PROPERTY_STYLE) > 0) {
-                dataProps = _sourceOwlModel.getAllDataProperties(true);//NICO are you sure?
+                dataProps = _sourceOwlModel.getAllDataProperties(true);
                 
                 try {
-                    dataProps.add(_sourceOwlModel.getOWLDataFactory().getOWLTopDataProperty());//NICO are you sure?
-                    dataProps.add(_sourceOwlModel.getOWLDataFactory().getOWLBottomDataProperty());//NICO are you sure?
+                    dataProps.add(_sourceOwlModel.getOWLDataFactory().getOWLTopDataProperty());
+                    dataProps.add(_sourceOwlModel.getOWLDataFactory().getOWLBottomDataProperty());
                 } catch (Exception e) {
                     //ignore
                 }
@@ -91,7 +91,7 @@ public class PropertyProposalProvider extends AbstractOwlProposalProvider {
                 for (OWLDataProperty prop: dataProps) {
                     String[] array = (String[]) prop.accept(_visitor);
                     if (AbstractOwlProposalProvider.checkProposal(array, contents)) {
-                        dataProposals.add(new DataPropertyProposal(prop, array, position, _localOwlModel));//NICO are you sure?
+                        dataProposals.add(new DataPropertyProposal(prop, array, position, _localOwlModel));
                     }
                 }
             }
@@ -100,16 +100,16 @@ public class PropertyProposalProvider extends AbstractOwlProposalProvider {
                 // standard annotation properties
                 List<OWLAnnotationProperty> standardAnnotationProperties = new ArrayList<OWLAnnotationProperty>();
                 for (String prop: OntoStudioOWLConstants.OWL_STANDARD_ANNOTATION_PROPERTIES) {
-                    standardAnnotationProperties.add(_sourceOwlModel.getOWLDataFactory().getOWLAnnotationProperty(OWLUtilities.toIRI(prop)));//NICO are you sure?
+                    standardAnnotationProperties.add(_sourceOwlModel.getOWLDataFactory().getOWLAnnotationProperty(OWLUtilities.toIRI(prop)));
                 }
 
-                annotProps = _sourceOwlModel.getAllAnnotationProperties(true);//NICO are you sure?
+                annotProps = _sourceOwlModel.getAllAnnotationProperties(true);
                 annotProps.addAll(standardAnnotationProperties);
 
                 for (OWLAnnotationProperty prop: annotProps) {
                     String[] array = (String[]) prop.accept(_visitor);
                     if (AbstractOwlProposalProvider.checkProposal(array, contents)) {
-                        annotProposals.add(new AnnotationPropertyProposal(prop, array, position, _localOwlModel));//NICO are you sure?
+                        annotProposals.add(new AnnotationPropertyProposal(prop, array, position, _localOwlModel));
                     }
                 }
             }

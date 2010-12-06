@@ -55,7 +55,7 @@ public class ManchesterSyntaxProposalProvider implements IContentProposalProvide
         
         List<IContentProposal> proposals = new ArrayList<IContentProposal>();
 
-        ManchesterSyntaxContextReader contextReader = new ManchesterSyntaxContextReader(contents.substring(0, position), _localOwlModel);//NICO are you sure?
+        ManchesterSyntaxContextReader contextReader = new ManchesterSyntaxContextReader(contents.substring(0, position), _localOwlModel);
         String current = contextReader.getLastToken();
         int result = contextReader.getResult();
 
@@ -115,22 +115,22 @@ public class ManchesterSyntaxProposalProvider implements IContentProposalProvide
     }
 
     private List<IContentProposal> addClasses(String currentToken, int position) {
-        ClazzProposalProvider provider = new ClazzProposalProvider(_localOwlModel,_sourceOwlModel);//NICO are you sure?
+        ClazzProposalProvider provider = new ClazzProposalProvider(_localOwlModel,_sourceOwlModel);
         return Arrays.asList(provider.getProposals(currentToken, position));
     }
 
     private List<IContentProposal> addProperties(String currentToken, int position) {
-        AbstractOwlProposalProvider provider = new PropertyProposalProvider(_localOwlModel,_sourceOwlModel, PropertyProposalProvider.DATA_PROPERTY_STYLE | PropertyProposalProvider.OBJECT_PROPERTY_STYLE);//NICO are you sure?
+        AbstractOwlProposalProvider provider = new PropertyProposalProvider(_localOwlModel,_sourceOwlModel, PropertyProposalProvider.DATA_PROPERTY_STYLE | PropertyProposalProvider.OBJECT_PROPERTY_STYLE);
         return Arrays.asList(provider.getProposals(currentToken, position));
     }
 
     private List<IContentProposal> addDatatypes(String currentToken, int position) {
-        DatatypeProposalProvider provider = new DatatypeProposalProvider(_localOwlModel,_sourceOwlModel);//NICO are you sure?
+        DatatypeProposalProvider provider = new DatatypeProposalProvider(_localOwlModel,_sourceOwlModel);
         return Arrays.asList(provider.getProposals(currentToken, position));
     }
 
     private List<IContentProposal> addIndividuals(String currentToken, int position) {
-        IndividualProposalProvider provider = new IndividualProposalProvider(_localOwlModel,_sourceOwlModel);//NICO are you sure?
+        IndividualProposalProvider provider = new IndividualProposalProvider(_localOwlModel,_sourceOwlModel);
         return Arrays.asList(provider.getProposals(currentToken, position));
     }
 

@@ -394,11 +394,11 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     remove();
                    
                     if (mode == DOMAIN) {
-                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDescription(input, _localOwlModel)); //NICO are you sure?
+                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDescription(input, _localOwlModel));
                         new CreateDataPropertyDomain(_project, _sourceOwlModel.getOntologyURI(), _id, value).run();
                         initDomainSection(false);
                     } else {
-                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDataRange(input, _localOwlModel)); //NICO are you sure?
+                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDataRange(input, _localOwlModel));
                         new CreateDataPropertyRange(_project, _sourceOwlModel.getOntologyURI(), _id, value).run();
                         initRangeSection(false);
                     }
@@ -472,10 +472,10 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 try {
                    
                     if (mode == DOMAIN) {
-                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDescription(input, _localOwlModel));//NICO are you sure?
+                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDescription(input, _localOwlModel));
                         new CreateDataPropertyDomain(_project, _sourceOwlModel.getOntologyURI(), _id, value).run();
                     } else {
-                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDataRange(input, _localOwlModel));//NICO are you sure?
+                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDataRange(input, _localOwlModel));
                         new CreateDataPropertyRange(_project, _sourceOwlModel.getOntologyURI(), _id, value).run();
                     }
                 } catch (NeOnCoreException ce) {

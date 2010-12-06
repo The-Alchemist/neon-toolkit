@@ -97,7 +97,7 @@ public abstract class OwlURIProposal implements IContentProposal {
         // uri local qname label
         StringBuffer sb = new StringBuffer();
         if (_array.length == 2) {
-            OWLObjectVisitorEx visitor = OWLPlugin.getDefault().getSyntaxManager().getVisitor(_owlModel);//NICO are you sure
+            OWLObjectVisitorEx visitor = OWLPlugin.getDefault().getSyntaxManager().getVisitor(_owlModel);
             String[] completeIDArray = (String[]) _entity.accept(visitor);
             if (completeIDArray.length == 4) {
                 sb.append(Messages.OwlURIProposal_0  + "\t\t\t" + completeIDArray[0] + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -118,7 +118,7 @@ public abstract class OwlURIProposal implements IContentProposal {
             }
         }
         try {
-            Set<OWLAnnotationValue> comments = _owlModel.getAnnotations(_entity.getIRI().toString(),OntoStudioOWLConstants.RDFS_COMMENT);//NICO are you sure
+            Set<OWLAnnotationValue> comments = _owlModel.getAnnotations(_entity.getIRI().toString(),OntoStudioOWLConstants.RDFS_COMMENT);
             if(comments.size()>0) {
                 sb.append("--------------------------------------------------\n"); //$NON-NLS-1$
             }

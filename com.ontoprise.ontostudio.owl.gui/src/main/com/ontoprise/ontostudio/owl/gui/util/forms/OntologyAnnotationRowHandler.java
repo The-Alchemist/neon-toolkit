@@ -50,7 +50,7 @@ public abstract class OntologyAnnotationRowHandler extends AbstractRowHandler {
     }
     
     protected void removeOldAnnotation() throws NeOnCoreException, CommandException {
-        new RemoveOntologyAnnotation(_sourceOwlModel.getProjectId(), _sourceOwlModel.getOntologyURI(), _annotationPropertyText, _annotationValueText, _language, _datatype).run();//NICO are you sure?
+        new RemoveOntologyAnnotation(_sourceOwlModel.getProjectId(), _sourceOwlModel.getOntologyURI(), _annotationPropertyText, _annotationValueText, _language, _datatype).run();
     }
 
 }

@@ -394,7 +394,7 @@ public class OWLGUIUtilities {
             if (o instanceof AbstractOwlTextField) {
                 AbstractOwlTextField textField = (AbstractOwlTextField) o;
                 if (textField != null) {
-                    textField.setProposalAdapterEnabled(enabled);//NICO autocomplete
+                    textField.setProposalAdapterEnabled(enabled);
                 }
             }
         } else {
