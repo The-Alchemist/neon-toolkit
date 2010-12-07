@@ -15,6 +15,8 @@
 				<topic href="html/owl_annotation_properties.html" label="Annotation Properties"></topic>
 				<topic href="html/owl_datatypes.html" label="Datatypes"></topic>
 				<topic href="html/owl_individuals.html" label="Individuals"></topic>
+    <topic href="html/imported_ontologies_information.html" label="Functionality for imported ontologies">
+    </topic>
 			</topic>
 			<topic href="html/manchester_syntax.html" label="Manchester Syntax"></topic>
 			<topic href="html/search.html" label="Search"></topic>

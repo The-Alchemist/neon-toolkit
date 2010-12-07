@@ -62,6 +62,7 @@
     <context id="OWL_IMPORT_ONTOLOGY" title="Import an Ontology">
        <description>How to load an ontology</description>
        <topic href="html/import_ontology.html" label="Import an Ontology"/>
+       <topic href="html/imported_ontologies_information.html" label="Functionality for imported ontologies"/>
     </context>
     
     <context id="OWL_EXPORT_ONTOLOGY" title="Export an Ontology">
@@ -80,6 +81,9 @@
     <context id="RANGE_VIEW" title="Range View">
        <description>Range View</description>
        <topic href="html/range_view.html" label="Range View"/>
+    </context>
+    <context id="IMPORTED_ONTOLOGIES_INFORMATION">
+       <topic href="html/imported_ontologies_information.html" label="Functionality for imported ontologies"/>
     </context>
     
   <!-- 
