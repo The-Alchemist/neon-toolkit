@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: %Bundle-Name
+Bundle-Name: NeOn Toolkit
 Bundle-SymbolicName: org.neontoolkit.application; singleton:=true
-Bundle-Version: 2.3.3
+Bundle-Version: 2.4
 Bundle-Activator: org.neontoolkit.application.Activator
-Bundle-Vendor: %Bundle-Vendor
+Bundle-Vendor: NeOn Technologies Foundation Ltd.
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.intro,

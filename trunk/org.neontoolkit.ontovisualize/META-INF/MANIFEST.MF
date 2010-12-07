@@ -3,10 +3,10 @@ Eclipse-RegisterBuddy: dependencies
 Bundle-ManifestVersion: 2
 Bundle-Name: %ontovisualizePlugin
 Bundle-SymbolicName: org.neontoolkit.ontovisualize;singleton:=true
-Bundle-Version: 2.3.2
+Bundle-Version: 2.4
 Bundle-ClassPath: neontoolkit-ontovisualize.jar
 Bundle-Activator: org.neontoolkit.ontovisualize.OntovisualizePlugin
-Bundle-Vendor: %ontoprise
+Bundle-Vendor: %neonFoundation
 Bundle-Localization: plugin
 Export-Package: org.neontoolkit.ontovisualize,
  org.neontoolkit.ontovisualize.actions,

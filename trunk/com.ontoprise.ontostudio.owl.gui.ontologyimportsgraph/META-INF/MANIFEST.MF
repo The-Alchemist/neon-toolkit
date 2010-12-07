@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %plugin.name
 Bundle-SymbolicName: com.ontoprise.ontostudio.owl.gui.ontologyimportsgraph;singleton:=true
-Bundle-Version: 2.3.2
+Bundle-Version: 2.4
 Bundle-Localization: plugin
 Bundle-Activator: com.ontoprise.ontostudio.owl.gui.ontologyimportsgraph.Activator
-Bundle-Vendor: %ontoprise
+Bundle-Vendor: %neonFoundation
 Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.forms,
  org.eclipse.core.runtime,

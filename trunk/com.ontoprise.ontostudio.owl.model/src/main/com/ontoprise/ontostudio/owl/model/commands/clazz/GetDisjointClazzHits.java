@@ -26,6 +26,7 @@ import com.ontoprise.ontostudio.owl.model.commands.OWLOntologyRequestCommand;
 
 /**
  * @author werner
+ * @author Nico Stieler
  *
  */
 public class GetDisjointClazzHits extends OWLOntologyRequestCommand {
@@ -47,8 +48,8 @@ public class GetDisjointClazzHits extends OWLOntologyRequestCommand {
         String clazzUri = (String) getArgument(2);
 
         try {
-            Set<ItemHits<OWLClassExpression,OWLDisjointClassesAxiom>> equivalentClassHits = getOwlModel().getDisjointDescriptionHits(clazzUri);
-            for (ItemHits<OWLClassExpression,OWLDisjointClassesAxiom> hit: equivalentClassHits) {
+            Set<ItemHits<OWLClassExpression,OWLDisjointClassesAxiom>> disjointClassHits = getOwlModel().getDisjointDescriptionHits(clazzUri);
+            for (ItemHits<OWLClassExpression,OWLDisjointClassesAxiom> hit: disjointClassHits) {
                 Set<LocatedItem<OWLDisjointClassesAxiom>> axioms = hit.getAxioms();
                 for (LocatedItem<OWLDisjointClassesAxiom> axiom: axioms) {
                     String[] result = new String[]{OWLUtilities.toString(axiom.getItem()), axiom.getOntologyURI()};

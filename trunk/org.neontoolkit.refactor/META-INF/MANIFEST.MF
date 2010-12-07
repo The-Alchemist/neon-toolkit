@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Refactor Plug-in
 Bundle-SymbolicName: org.neontoolkit.refactor;singleton:=true
-Bundle-Version: 2.3.2
-Bundle-Vendor: ontoprise GmbH
+Bundle-Version: 2.4
+Bundle-Vendor: NeOn Technologies Foundation Ltd
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.ltk.core.refactoring,
