@@ -3,9 +3,9 @@ Eclipse-RegisterBuddy: dependencies
 Bundle-ManifestVersion: 2
 Bundle-Name: %plugin.name
 Bundle-SymbolicName: org.neontoolkit.core;singleton:=true
-Bundle-Version: 2.3.2
+Bundle-Version: 2.4
 Bundle-Activator: org.neontoolkit.core.NeOnCorePlugin
-Bundle-Vendor: %ontoprise
+Bundle-Vendor: %neonFoundation
 Bundle-Localization: plugin
 Require-Bundle: com.ontoprise.dependencies;bundle-version="5.3.1",
  org.eclipse.core.runtime;bundle-version="3.5.0",
