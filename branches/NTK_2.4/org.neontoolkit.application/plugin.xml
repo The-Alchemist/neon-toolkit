@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         id="application"
+         name="NeOn Toolkit"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="org.neontoolkit.application.intro.Application">
+         </run>
+      </application>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro">
+      <intro
+            class="org.eclipse.ui.intro.config.CustomizableIntroPart"
+            id="org.neontoolkit.application.intro">
+      </intro>
+      <introProductBinding
+            introId="org.neontoolkit.application.intro"
+            productId="org.neontoolkit.application.product">
+      </introProductBinding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro.config">
+      <config
+            introId="org.neontoolkit.application.intro"
+            content="introContent.xml"
+            id="org.neontoolkit.application.configId">
+         <presentation
+               home-page-id="root">
+            <implementation
+                  kind="html"
+                  os="win32,linux,macosx">
+            </implementation>
+         </presentation>
+      </config>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro.configExtension">
+      <configExtension
+            content="ext.xml"
+            configId="org.neontoolkit.application.configId">
+      </configExtension>
+   </extension>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.neontoolkit.application.application"
+            name="NeOn Toolkit">
+         <property
+               name="appName"
+               value="NeOn Toolkit">
+         </property>
+         <property
+               name="startupForegroundColor"
+               value="000000">
+         </property>
+         <property
+               name="startupMessageRect"
+               value="202,16,396,20">
+         </property>
+         <property
+               name="startupProgressRect"
+               value="200,2,398,12">
+         </property>
+         <property
+               name="preferenceCustomization"
+               value="plugin_customization.ini">
+         </property>
+         <property
+               name="aboutImage"
+               value="icons/neon_large.png">
+         </property>
+         <property
+               name="aboutText"
+               value="NeOn Toolkit&#x0A;Version: 2.4&#x0A;&#x0A;Distributed by the NeOn Technologies Foundation Ltd. - http://www.neon-foundation.org/&#x0A;&#x0A;The NeOn Toolkit bundle is licensed under the Eclipse Public License (EPL) version 1.0. Individual plugins are also usually provided under EPL. The license agreements associated with individual plugins can be found under &quot;Installation Details&quot; below.&#x0A;&#x0A;This product includes software developed by the Apache Software Foundation - http://www.apache.org/ as well as other open-source components. See the license folder for applicable 3rd-party licenses.">
+         </property>
+         <property
+               name="windowImages"
+               value="icons/neon_16x16.png,icons/neon_32x32.png,icons/neon_48x48.bmp,icons/neon_64x64.png,icons/neon_128x128.png">
+         </property>
+      </product>
+   </extension>
+
+
+	<!-- =====================================================  -->
+	<!-- Using Capabilities to disable unneeded Eclipse stuff   -->
+	<!-- =====================================================  -->
+	<extension
+         point="org.eclipse.ui.activities">
+
+         <activity
+         	name="Eclipse File Search Page"
+         	description="Eclipse File Search Page"
+         	id="com.ontoprise.ontostudio.eclipseFileSearchPage">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseFileSearchPage"
+         	pattern=".*org\.eclipse\.search/org.eclipse.search.OpenFileSearchPage">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseFileSearchPage"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+
+         <activity
+         	name="Eclipse Text Search Stuff"
+         	description="Eclipse Text Search Stuff"
+         	id="com.ontoprise.ontostudio.eclipseTextSearchStuff">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseTextSearchStuff"
+         	pattern=".*org\.eclipse\.search/textSearchSubMenu">
+         </activityPatternBinding>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseTextSearchStuff"
+         	pattern=".*org\.eclipse\.search/org.eclipse.search.TextSearchFile">
+         </activityPatternBinding>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseTextSearchStuff"
+         	pattern=".*org\.eclipse\.search/org.eclipse.search.TextSearchProject">
+         </activityPatternBinding>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseTextSearchStuff"
+         	pattern=".*org\.eclipse\.search/org.eclipse.search.TextSearchWorkspace">
+         </activityPatternBinding>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseTextSearchStuff"
+         	pattern=".*org\.eclipse\.search/org.eclipse.search.TextSearchWorkingSet">
+         </activityPatternBinding>         
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseTextSearchStuff"
+         	pattern=".*org\.eclipse\.search/org.eclipse.search.internal.ui.text.TextSearchPage">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseTextSearchStuff"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+         
+
+		<!-- Run Menu -->
+         <activity
+         	name="Eclipse UI External Tools"
+         	description="Eclipse UI External Tools"
+         	id="com.ontoprise.ontostudio.eclipseUI.externaltools">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.externaltools"
+         	pattern=".*org\.eclipse\.ui\.externaltools/.*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseUI.externaltools"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+        <activity
+         	name="Eclipse Debug"
+         	description="Eclipse Debug Functionality"
+         	id="com.ontoprise.ontostudio.eclipseDebug">
+         </activity>
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseDebug"
+         	pattern=".*org\.eclipse\.debug\.ui/.*">
+         </activityPatternBinding>         
+         <activityPatternBinding
+         	activityId="com.ontoprise.ontostudio.eclipseDebug"
+         	pattern=".*org\.eclipse\.debug/.*">
+         </activityPatternBinding>
+         <categoryActivityBinding
+         	activityId="com.ontoprise.ontostudio.eclipseDebug"
+         	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
+         </categoryActivityBinding>
+	</extension>
+  
+</plugin>

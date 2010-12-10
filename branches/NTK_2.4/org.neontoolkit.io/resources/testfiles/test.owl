@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    ontology: "http://www.test.org"#""
+        date: Fri Apr 22 14:07:12 CEST 2005
+-->
+<rdf:RDF
+   xmlns:oxml="http://schema.ontoprise.com/oxml/core/2.1#"
+   xmlns:a="http://www.test.org#"
+   xmlns:owl="http://www.w3.org/2002/07/owl#"
+   xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+   xmlns:xs="http://www.w3.org/2001/XMLSchema#"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:noNS="http://schema.ontoprise.com/rdf/core/noNSdefined#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xml:base="http://www.test.org">
+  <owl:Ontology
+     rdf:about="http://www.test.org#"/>
+  <owl:Class rdf:about="http://www.test.org#Meta"/>
+  <owl:Class rdf:about="http://www.test.org#Ontology"/>
+  <owl:Class rdf:about="http://www.test.org#AnnotationObject"/>
+  <owl:Class rdf:about="http://www.test.org#Subterm">
+    <rdfs:subClassOf rdf:resource="http://www.test.org#Ontology"/>
+  </owl:Class>
+  <owl:Class rdf:about="http://www.test.org#Otherterm">
+    <rdfs:subClassOf rdf:resource="http://www.test.org#Ontology"/>
+  </owl:Class>
+  <owl:Class rdf:about="http://www.test.org#Subotherterm">
+    <rdfs:subClassOf rdf:resource="http://www.test.org#Otherterm"/>
+  </owl:Class>
+  <owl:DatatypeProperty rdf:about="http://www.test.org#URL"/>
+  <owl:Class rdf:about="http://www.test.org#AnnotationObject">
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="http://www.test.org#URL"/>
+        <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">0</owl:minCardinality>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:DatatypeProperty rdf:about="http://www.test.org#Document"/>
+  <owl:Class rdf:about="http://www.test.org#AnnotationObject">
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="http://www.test.org#Document"/>
+        <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">0</owl:minCardinality>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:DatatypeProperty rdf:about="http://www.test.org#Relation"/>
+  <owl:Class rdf:about="http://www.test.org#AnnotationObject">
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="http://www.test.org#Relation"/>
+        <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">0</owl:minCardinality>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:DatatypeProperty rdf:about="http://www.test.org#Term"/>
+  <owl:Class rdf:about="http://www.test.org#AnnotationObject">
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="http://www.test.org#Term"/>
+        <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">0</owl:minCardinality>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:DatatypeProperty rdf:about="http://www.test.org#Reference"/>
+  <owl:Class rdf:about="http://www.test.org#AnnotationObject">
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="http://www.test.org#Reference"/>
+        <owl:allValuesFrom rdf:resource="http://www.test.org#Meta"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">0</owl:minCardinality>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:DatatypeProperty rdf:about="http://www.test.org#Comment"/>
+  <owl:Class rdf:about="http://www.test.org#AnnotationObject">
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="http://www.test.org#Comment"/>
+        <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">0</owl:minCardinality>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <owl:DatatypeProperty rdf:about="http://www.test.org#Type"/>
+  <owl:Class rdf:about="http://www.test.org#AnnotationObject">
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="http://www.test.org#Type"/>
+        <owl:allValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">0</owl:minCardinality>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+  <rdf:Description rdf:about="http://www.test.org#&#34;Instance of Subotherterm&#34;">
+    <rdf:type rdf:resource="http://www.test.org#Subotherterm"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.test.org#&#34;Instance of Ontology&#34;">
+    <rdf:type rdf:resource="http://www.test.org#Ontology"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.test.org#Ontology">
+    <rdf:type rdf:resource="http://www.test.org#Meta"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.test.org#Subotherterm">
+    <rdf:type rdf:resource="http://www.test.org#Meta"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.test.org#Otherterm">
+    <rdf:type rdf:resource="http://www.test.org#Meta"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.test.org#Subterm">
+    <rdf:type rdf:resource="http://www.test.org#Meta"/>
+  </rdf:Description>
+</rdf:RDF>
