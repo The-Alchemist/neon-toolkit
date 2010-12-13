@@ -19,6 +19,7 @@ import org.neontoolkit.gui.navigator.ITreeDataProvider;
 import org.neontoolkit.gui.navigator.ITreeElement;
 import org.neontoolkit.gui.navigator.MTreeView;
 import org.neontoolkit.gui.navigator.TreeProviderManager;
+import org.neontoolkit.gui.navigator.elements.AbstractOntologyTreeElement;
 import org.neontoolkit.gui.properties.IPropertyPage;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -32,6 +33,7 @@ import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzHierarchyProvider;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeTreeElement;
+import com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement;
@@ -75,7 +77,7 @@ public class AnnotationValuesSearchMatch extends OWLValueSearchMatch {
     @SuppressWarnings("unchecked")
     @Override
     public Image getImage() {
-        AbstractOwlEntityTreeElement element = (AbstractOwlEntityTreeElement) getMatch();
+        AbstractOntologyTreeElement element = (AbstractOntologyTreeElement) getMatch();
         if (element instanceof ClazzTreeElement) {
             return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.CLAZZ);
         } else if (element instanceof IIndividualTreeElement) {
@@ -86,6 +88,8 @@ public class AnnotationValuesSearchMatch extends OWLValueSearchMatch {
             return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.DATA_PROPERTY);
         } else if (element instanceof AnnotationPropertyTreeElement) {
             return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.ANNOTATION_PROPERTY);
+        } else if (element instanceof OntologyTreeElement) {
+            return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.ONTOLOGY);
         } else if (element instanceof DatatypeTreeElement) {
             return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.DATATYPE);
         }
@@ -98,7 +102,7 @@ public class AnnotationValuesSearchMatch extends OWLValueSearchMatch {
     @Override
     public String toString() {
         int L = 20;
-        AbstractOwlEntityTreeElement element = (AbstractOwlEntityTreeElement) getMatch();
+        AbstractOntologyTreeElement element = (AbstractOntologyTreeElement) getMatch();
 
         String subject = "Obj"; //$NON-NLS-1$
         String prop = "P"; //$NON-NLS-1$
@@ -108,7 +112,11 @@ public class AnnotationValuesSearchMatch extends OWLValueSearchMatch {
             int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
             OWLObjectVisitorEx visitor = OWLPlugin.getDefault().getSyntaxManager().getVisitor(owlModel, idDisplayStyle);
             prop = OWLGUIUtilities.getEntityLabel((String[]) _property.accept(visitor));
-            subject = OWLGUIUtilities.getEntityLabel((String[]) element.getEntity().accept(visitor));
+            if(element instanceof AbstractOwlEntityTreeElement) {
+                subject = OWLGUIUtilities.getEntityLabel((String[]) ((AbstractOwlEntityTreeElement)element).getEntity().accept(visitor));
+            } else {//in this case the match is for an ontology
+                subject = OWLGUIUtilities.getEntityLabel((String[]) (owlModel.getOntology().accept(visitor)));
+            }
         } catch (NeOnCoreException e) {
             // nothing to do
         }

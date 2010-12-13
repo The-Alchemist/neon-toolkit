@@ -38,7 +38,12 @@ public class OntologyTreeElement extends AbstractOntologyTreeElement implements 
             OntologyTreeElement that = (OntologyTreeElement) arg0;
             res = _dataProvider == that._dataProvider && equal(getOntologyUri(), that.getOntologyUri()) && equal(getProjectName(), that.getProjectName());
         } else {
-            res = false;
+            if(arg0.getClass() == getClass()){ //needed for jump from search result to ntology 
+                OntologyTreeElement that = (OntologyTreeElement) arg0;
+                res = equal(getOntologyUri(), that.getOntologyUri()) && equal(getProjectName(), that.getProjectName());
+            }else{
+                res = false;
+            }
         }
         return res;
     }

@@ -13,19 +13,9 @@ package com.ontoprise.ontostudio.search.owl.ui;
 import org.neontoolkit.search.command.AbstractSearchCommand;
 import org.neontoolkit.search.ui.Scope;
 
-import com.ontoprise.ontostudio.search.owl.ui.OwlSearchCommand.SearchArea;
+import com.ontoprise.ontostudio.search.owl.ui.OwlSearchCommand.SearchScope;
 
-/* 
- * Created on 04.04.2008
- * @author Dirk Wenke
- * Edited on 15.09.2010
- * @author Nico Stieler
- *
- * Function:
- * Keywords:
- */
 /**
- * Type comment
  * @author Dirk Wenke
  * @author Nico Stieler
  */
@@ -46,11 +36,11 @@ public class OwlSearchQuery extends AbstractSearchQuery {
 
     @Override
     protected AbstractSearchCommand getSearchCommand(String project, String ontology) {
-        SearchArea searchArea;
+        SearchScope searchArea;
         if(ontology == null){
-            searchArea = SearchArea.PROJECT;
+            searchArea = SearchScope.PROJECT;
         }else{
-            searchArea = SearchArea.ONTOLOGY;
+            searchArea = SearchScope.ONTOLOGY;
         }
         return new OwlSearchCommand(project, ontology, _expression, _searchFlags, _caseSensitive,searchArea);
     }

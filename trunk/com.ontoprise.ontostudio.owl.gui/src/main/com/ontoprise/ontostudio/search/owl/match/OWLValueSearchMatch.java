@@ -5,27 +5,24 @@ package com.ontoprise.ontostudio.search.owl.match;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.neontoolkit.gui.internal.properties.PropertyPageInfo;
 import org.neontoolkit.gui.navigator.ITreeElement;
 import org.neontoolkit.gui.properties.EntityPropertiesView;
 import org.neontoolkit.gui.properties.IMainPropertyPage;
 import org.neontoolkit.gui.properties.IPropertyPage;
 import org.neontoolkit.gui.util.PerspectiveChangeHandler;
-import org.neontoolkit.search.SearchPlugin;
 import org.neontoolkit.search.ui.NavigatorSearchMatch;
 
 import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
-import com.ontoprise.ontostudio.owl.gui.individualview.IndividualView;
 import com.ontoprise.ontostudio.owl.gui.individualview.NamedIndividualViewItem;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeTreeElement;
+import com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.properties.AnnotationPropertyTab;
+import com.ontoprise.ontostudio.owl.gui.properties.ontology.OntologyAnnotationsPropertyPage2;
 import com.ontoprise.ontostudio.owl.perspectives.OWLPerspective;
 
 /**
@@ -127,6 +124,8 @@ public abstract class OWLValueSearchMatch extends OWLComplexSearchMatch {
                 entityId = AnnotationPropertyTreeElement.class.toString();
             } else if (getMatch() instanceof DatatypeTreeElement) {
                 entityId = DatatypeTreeElement.class.toString();
+            } else if (getMatch() instanceof OntologyTreeElement) { //NICO Ontology
+                entityId = OntologyTreeElement.class.toString();
             }
             IMainPropertyPage mainTab = null;
             if(entityId != null){
@@ -172,6 +171,22 @@ public abstract class OWLValueSearchMatch extends OWLComplexSearchMatch {
                             if(page instanceof AnnotationPropertyTab){
                                 tab = page;
                                 break;
+                            }
+                        }
+                    }
+                }
+            }else{
+                if (getMatch() instanceof OntologyTreeElement) {
+
+                    if(mainTab != null){
+                        if(mainTab instanceof OntologyAnnotationsPropertyPage2){
+                            tab = mainTab;
+                        }else{
+                            for(IPropertyPage page : mainTab.getSubPages()){
+                                if(page instanceof OntologyAnnotationsPropertyPage2){
+                                    tab = page;
+                                    break;
+                                }
                             }
                         }
                     }

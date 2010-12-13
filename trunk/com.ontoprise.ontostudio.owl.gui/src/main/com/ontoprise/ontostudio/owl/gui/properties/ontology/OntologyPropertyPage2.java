@@ -244,7 +244,7 @@ public class OntologyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             allOntos = NeOnCorePlugin.getDefault().getOntologyProject(_project).getAvailableOntologyURIs();
             for (String onto: allOntos) {
                 // ignore the ontology we are editing
-                if (!onto.equals(_owlModel.getOntologyURI())) {
+                if (onto != null && !onto.equals(_owlModel.getOntologyURI())) {
                     ontos.add(onto);
                 }
             }
