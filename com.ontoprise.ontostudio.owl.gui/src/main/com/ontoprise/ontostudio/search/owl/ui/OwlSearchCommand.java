@@ -12,6 +12,7 @@ package com.ontoprise.ontostudio.search.owl.ui;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -36,6 +37,7 @@ import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLIndividual;
+import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -79,7 +81,7 @@ public class OwlSearchCommand extends AbstractSearchCommand {
 
 
     private int _searchFlags;
-    private SearchArea _searchArea;
+    private SearchScope _searchScope;
     private String _ontologyId;
 
     //Reimplementation of EntityTypes which is used in the generic class AbstractSearchCommand, EntityTypes has only FLogic types.
@@ -105,17 +107,16 @@ public class OwlSearchCommand extends AbstractSearchCommand {
         }
     }
 
-    //Reimplementation of EntityTypes which is used in the generic class AbstractSearchCommand, EntityTypes has only FLogic types.
-    public enum SearchArea{ONTOLOGY,PROJECT}
-        
+    public enum SearchScope{ ONTOLOGY, PROJECT }
+    
     /**
      * @param project_or_onotlogy
      * @param expression
      * @param caseSensitive
      */
-    public OwlSearchCommand(String project, String onotlogyId, String expression, boolean caseSensitive, SearchArea searchArea) {
+    public OwlSearchCommand(String project, String onotlogyId, String expression, boolean caseSensitive, SearchScope searchArea) {
         super(project, expression, caseSensitive);
-        this._searchArea = searchArea;
+        this._searchScope = searchArea;
         this._ontologyId = onotlogyId;
     }
 
@@ -125,10 +126,10 @@ public class OwlSearchCommand extends AbstractSearchCommand {
      * @param flags
      * @param sensitive
      */
-    public OwlSearchCommand(String project, String onotlogyId, String expression, int searchFlags, boolean caseSensitive, SearchArea searchArea) {
+    public OwlSearchCommand(String project, String onotlogyId, String expression, int searchFlags, boolean caseSensitive, SearchScope searchArea) {
         super(project, expression, caseSensitive);
         this._searchFlags = searchFlags;
-        this._searchArea = searchArea;
+        this._searchScope = searchArea;
         this._ontologyId = onotlogyId;
     }
 
@@ -182,20 +183,8 @@ public class OwlSearchCommand extends AbstractSearchCommand {
 
     protected Match[] getOWLResults(String project_or_onotlogy, Set<FieldTypes> types) throws NeOnCoreException {
         List<Match> matches = new ArrayList<Match>();
-//        
-//        for (OWLModel owlModel: OWLModelFactory.getOWLModels(project)) {
-//            SimpleOwlSearchHelper searchHelper = new SimpleOwlSearchHelper(owlModel);
-//            String searchExpression = getExpression();
-//            
-//            SearchResults results = searchHelper.search(owlModel.getOntologyURI(), types, searchExpression, false, isCaseSensitive(), 0, 999);
-//            for (SearchElement result: results.getResults()) {
-//                addSearchMatches(project, result, matches);
-//            }
-//        }
-//
-//        OWLGUIUtilities.removeDuplicate(matches);
-//        
-        switch(_searchArea){
+
+        switch(_searchScope){
             case ONTOLOGY:
                 matches = getOWLResultsForOntology(types,OWLModelFactory.getOWLModel(_ontologyId,getProject()));
                 break;
@@ -213,7 +202,6 @@ public class OwlSearchCommand extends AbstractSearchCommand {
     protected List<Match> getOWLResultsForOntology(Set<FieldTypes> types, OWLModel owlModel){
         List<Match> matches = new ArrayList<Match>();
         
-
         SimpleOwlSearchHelper searchHelper = new SimpleOwlSearchHelper(owlModel);
         String searchExpression = getExpression();
         
@@ -305,53 +293,57 @@ public class OwlSearchCommand extends AbstractSearchCommand {
                         OWLDataPropertyAssertionAxiom axiom = (OWLDataPropertyAssertionAxiom)element.getAxiom();
                         OWLIndividual subject = axiom.getSubject();
                         OWLDataPropertyExpression prop = axiom.getProperty();
-
+    
                         classes = OWLModelFactory.getOWLModel(ontology, project).getClasses(OWLUtilities.toString(subject));
                         ClassSearchMatch classMatch = null;
                         for (OWLClass c: classes) {
                             classMatch = new ClassSearchMatch(new ClazzTreeElement(c, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class)));
                             elem = IndividualItem.createNewInstance(subject, c.getIRI().toString(), ontology, project);
-
+    
                             int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
                             OWLObjectVisitorEx visitor = OWLPlugin.getDefault().getSyntaxManager().getVisitor(owlModel, idDisplayStyle);
                             String value = OWLGUIUtilities.getEntityLabel((String[]) axiom.getObject().accept(visitor));
-
+    
                             add(new Match(
                                     new DataPropertyValuesSearchMatch((IIndividualTreeElement) elem, classMatch, getExpression(), value, prop), 
                                     0, getExpression().length()), 
                                 resultList);
-
+    
                             break; // only add the match once
                         }
-                        
                         break;
                     }
                     
-                case ANNOTATION_VALUES:
-                {
-                    OWLAnnotationAssertionAxiom axiom = (OWLAnnotationAssertionAxiom)element.getAxiom();
-                    OWLEntity subject = owlModel.getEntity(axiom.getSubject().toString()).iterator().next();
-                    OWLAnnotationProperty prop = axiom.getProperty();
-
-                    elem = findTypeForEntity(subject, ontology, project);
-
-                    int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
-                    OWLObjectVisitorEx visitor = OWLPlugin.getDefault().getSyntaxManager().getVisitor(owlModel, idDisplayStyle);
-                    String value = OWLGUIUtilities.getEntityLabel((String[]) axiom.getValue().accept(visitor));
-                    
-                    add(new Match(
-                            new AnnotationValuesSearchMatch(elem, prop, value, getExpression()), 
-                            0, getExpression().length()), 
-                        resultList);
-                    break;
+                case ANNOTATION_VALUES: 
+                    {
+                        OWLAnnotationAssertionAxiom axiom = (OWLAnnotationAssertionAxiom)element.getAxiom();
+                        OWLObject subject;
+                        Iterator<OWLEntity> possibleSubjects = owlModel.getEntity(axiom.getSubject().toString()).iterator();
+                        if(possibleSubjects.hasNext()) {
+                            subject = possibleSubjects.next();
+                        } else {
+                            subject = owlModel.getOntology(); //subject is the ontology by default
+                        }
+                        OWLAnnotationProperty prop = axiom.getProperty();
+    
+                        elem = findTypeForEntity(subject, ontology, project);
+    
+                        int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
+                        OWLObjectVisitorEx visitor = OWLPlugin.getDefault().getSyntaxManager().getVisitor(owlModel, idDisplayStyle);
+                        String value = OWLGUIUtilities.getEntityLabel((String[]) axiom.getValue().accept(visitor));
+                        
+                        add(new Match(
+                                new AnnotationValuesSearchMatch(elem, prop, value, getExpression()), 
+                                0, getExpression().length()), 
+                            resultList);
+                        break;
                     }
-                    
                 case DATATYPES:
                     OWLDatatype datatype = factory.getOWLDatatype(OWLUtilities.toIRI(element.getEntityUri()));
                     elem = new DatatypeTreeElement(datatype, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, DatatypeProvider.class));
                     add(new Match(new DatatypeSearchMatch((DatatypeTreeElement) elem), 0, getExpression().length()), resultList);
                     break;
-                    
+
                 case ONTOLOGY:
                     break;
                     
@@ -375,7 +367,7 @@ public class OwlSearchCommand extends AbstractSearchCommand {
      * @param entity
      * @return
      */
-    private ITreeElement findTypeForEntity(OWLEntity entity, String ontology, String project) {
+    private ITreeElement findTypeForEntity(OWLObject entity, String ontology, String project) {
         if(entity instanceof OWLClass) {
             return new ClazzTreeElement((OWLClass)entity, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class));
             

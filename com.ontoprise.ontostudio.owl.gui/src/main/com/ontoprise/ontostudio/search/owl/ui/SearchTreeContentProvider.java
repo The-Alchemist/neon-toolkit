@@ -1,5 +1,5 @@
 /**
- *
+ * Written by the NeOn Technology Foundation Ltd.
  */
 package com.ontoprise.ontostudio.search.owl.ui;
 
@@ -12,9 +12,9 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.neontoolkit.gui.navigator.ITreeDataProvider;
+import org.neontoolkit.gui.navigator.elements.AbstractOntologyTreeElement;
 import org.neontoolkit.gui.navigator.elements.TreeElement;
 
-import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
 import com.ontoprise.ontostudio.search.owl.match.ITreeObject;
 import com.ontoprise.ontostudio.search.owl.match.ITreeParent;
 import com.ontoprise.ontostudio.search.owl.match.OntologyTreeObject;
@@ -64,12 +64,18 @@ public class SearchTreeContentProvider implements ITreeContentProvider,IStructur
     @SuppressWarnings("null")
     @Override
     public Object[] getChildren(Object parent) {
+
         if (parent.equals(this.result) && parent instanceof SearchResult) {
+            try {   
+                Thread.sleep(500);//NICO   
+            } catch (InterruptedException e) {   
+                e.printStackTrace();   
+            } 
             this.invisibleRoot = new RootTreeObject();
             LinkedList<ProjectTreeObject> projectArray = new LinkedList<ProjectTreeObject>();
             LinkedList<LinkedList<OntologyTreeObject>> projectOntologyArray = new LinkedList<LinkedList<OntologyTreeObject>>();
             for (Object match: ((SearchResult) parent).getElements()) {
-                AbstractOwlEntityTreeElement element = (AbstractOwlEntityTreeElement) ((OwlSearchMatch) match).getMatch();
+                AbstractOntologyTreeElement element = (AbstractOntologyTreeElement) ((OwlSearchMatch) match).getMatch();
                 if (match instanceof TreeElement) {
                     TreeElement te = ((TreeElement) match);
                     ITreeDataProvider p = te.getProvider();

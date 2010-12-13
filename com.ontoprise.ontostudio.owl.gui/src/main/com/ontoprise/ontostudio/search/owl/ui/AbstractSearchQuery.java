@@ -25,16 +25,6 @@ import org.neontoolkit.search.SearchPlugin;
 import org.neontoolkit.search.command.AbstractSearchCommand;
 
 
-
-/* 
- * Created on 15.04.2005
- * Created by Dirk Wenke 
- *
- * Function:
- * Keywords:
- *
- */
-
 /**
  * @author Dirk Wenke
  * @author Nico Stieler
@@ -65,6 +55,19 @@ public abstract class AbstractSearchQuery implements ISearchQuery {
                 if(project_ontology.length == 2){
                     Match[] matches = getSearchCommand(project_ontology[0], project_ontology[1]).getResults();
                     textResult.addMatches(matches);
+//                    for(Match match: matches){
+//                        if(match.getElement() instanceof OwlSearchMatch){
+//                            OwlSearchMatch owlSearchMatch = (OwlSearchMatch) match.getElement();
+//                            
+//                            if (owlSearchMatch.getMatch()  instanceof AbstractOwlEntityTreeElement) {//NICO no Ontologies
+//                                textResult.addMatch(match);
+//                            }else{
+//                                System.out.println(owlSearchMatch);
+//                            }
+//                        }else{
+//                            System.out.println(match);
+//                        }
+//                    }
                 }
                 if (monitor.isCanceled()) {
                     throw new OperationCanceledException();

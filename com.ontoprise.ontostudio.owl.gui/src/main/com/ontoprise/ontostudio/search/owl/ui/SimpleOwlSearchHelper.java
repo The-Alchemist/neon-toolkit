@@ -14,10 +14,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.NeOnUIPlugin;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLAnnotationValue;
+import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLIndividual;
@@ -76,8 +81,11 @@ public class SimpleOwlSearchHelper{
                 owlObjects.addAll(compareToSearchExpression(_owlModel.getAllAnnotationProperties(_includeImported), type));
                 break;
             case ANNOTATION_VALUES:
-                // TODO ontology annotations
-                owlObjects.addAll(compareToAnnotationSearchExpression(_owlModel.getAllAnnotationAxioms(_includeImported)));
+                Set<OWLAnnotationAssertionAxiom> annotationAxioms = _owlModel.getAllAnnotationAxioms(_includeImported);
+                owlObjects.addAll(compareToAnnotationSearchExpression(annotationAxioms));
+
+                Set<OWLAnnotation> ontoAnnotations = _owlModel.getOntology().getAnnotations();
+                owlObjects.addAll(compareToOntoAnnotationSearchExpression(ontoAnnotations));
                 break;
             case CLASSES:
                 owlObjects.addAll(compareToSearchExpression(_owlModel.getAllClasses(_includeImported), type)); 
@@ -97,7 +105,7 @@ public class SimpleOwlSearchHelper{
             case OBJECT_PROPERTIES:
                 owlObjects.addAll(compareToSearchExpression(_owlModel.getAllObjectProperties(_includeImported), type));   
                 break;
-            case ONTOLOGY:
+            case ONTOLOGY: 
                 owlObjects.addAll(compareToOntologySearchExpression(OWLModelFactory.getOWLModels(_owlModel.getProjectId())));  
                 break;
             default:
@@ -147,19 +155,49 @@ public class SimpleOwlSearchHelper{
         List<SearchElement> result = new ArrayList<SearchElement>();
 
         for (OWLAnnotationAssertionAxiom axiom: axioms) {
-            String annotationValue = axiom.getValue().toString();
-            if(containsSearchExpression(annotationValue)) {
-                OWLEntity entity = _owlModel.getEntity(axiom.getSubject().toString()).iterator().next();
-                result.add(new SearchElement(_owlModel.getOntologyURI(), 
-                        axiom, 
-                        FieldTypes.ANNOTATION_VALUES, 
-                        ((String[])entity.accept(_visitor))[0], 
-                        annotationValue));
+            OWLAnnotationValue annotationValue = axiom.getValue();
+            String annotationValueString = annotationValue.toString();
+            // TODO, the annotationValue can have different types, 
+            //       with toString() this distinction is lost, e.g. plain literal.toString() includes the language, e.g. @de
+            if(containsSearchExpression(annotationValueString)) {
+                Set<OWLEntity> entities = _owlModel.getEntity(axiom.getSubject().toString());
+                if(!entities.isEmpty()){
+
+                    OWLEntity entity = _owlModel.getEntity(axiom.getSubject().toString()).iterator().next();
+                    result.add(new SearchElement(_owlModel.getOntologyURI(), 
+                            axiom, 
+                            FieldTypes.ANNOTATION_VALUES, 
+                            ((String[])entity.accept(_visitor))[0], 
+                            annotationValueString));
+                }
             }
         }
         return result;
     }
 
+    private List<SearchElement> compareToOntoAnnotationSearchExpression(Collection<OWLAnnotation> annotations) throws NeOnCoreException {
+        OWLDataFactory factory =_owlModel.getOntology().getOWLOntologyManager().getOWLDataFactory();
+    
+        List<SearchElement> result = new ArrayList<SearchElement>();
+    
+        for (OWLAnnotation annotationValue: annotations) {
+            String annotationValueString = annotationValue.toString();
+            // TODO, the annotationValue can have different types, 
+            //       with toString() this distinction is lost, e.g. plain literal.toString() includes the language, e.g. @de
+            if(containsSearchExpression(annotationValueString)) {
+                
+                OWLAnnotationAssertionAxiom axiom = factory.getOWLAnnotationAssertionAxiom(IRI.create(_owlModel.getOntologyURI()), annotationValue);
+    
+                result.add(new SearchElement(_owlModel.getOntologyURI(), 
+                    axiom, 
+                    FieldTypes.ANNOTATION_VALUES, 
+                    ((String[])_owlModel.getOntology().accept(_visitor))[0], 
+                    annotationValueString));
+            }
+        }
+        return result;
+    }
+    
     private List<SearchElement> compareToDataValueSearchExpression(Collection<OWLDataPropertyAssertionAxiom> axioms) throws NeOnCoreException{
         List<SearchElement> result = new ArrayList<SearchElement>();
 
