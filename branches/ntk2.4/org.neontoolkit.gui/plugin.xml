@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.1"?>
+<plugin>
+
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++ EXTENSION POINTS ++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+   <extension-point id="extendableTreeProvider" 
+   		name="Provider for the OntologyNavigator" 
+   		schema="schema/extendableTreeProvider.exsd"/>
+
+   <extension-point id="entityProperties" 
+   		name="Entity Property View Extension" 
+   		schema="schema/entityProperties.exsd"/>
+
+   <extension-point id="extendableDropHandler" 
+   		name="DropHandler for the OntologyNavigator" 
+   		schema="schema/extendableDropHandler.exsd"/>
+   		
+   <extension-point id="resultPage" name="Page to present results in the result view" schema="schema/resultPage.exsd"/>
+   <extension-point id="datamodelProperties" name="Configuration Groups for datamodel types" schema="schema/datamodelProperties.exsd"/>
+   		
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++ PREFERENCES +++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+	<extension point="org.eclipse.core.runtime.preferences">
+		<initializer class="org.neontoolkit.gui.internal.preferences.PreferenceInitializer"/>
+	</extension>
+    <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.neontoolkit.gui.internal.preferences.LanguagePreferencePage"
+            id="org.neontoolkit.gui.internal.preferences.LanguagePreferencePage"
+            name="%languagePreferences"
+            category="com.ontoprise.ontostudio.owl.gui.preferences.OWLPreferencePage"/>
+      <page
+            name="%ontoLanguages"
+            class="org.neontoolkit.gui.internal.preferences.OntologyLanguagesPreferencePage"
+            id="org.neontoolkit.gui.internal.preferences.OntologyLanguagesPreferencePage"
+            category="com.ontoprise.ontostudio.owl.gui.preferences.OWLPreferencePage"/>
+   </extension>
+
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++    VIEWS    +++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="org.neontoolkit.gui.views.general"
+            name="%basic"/>
+      <view
+            name="%ontologyNavigator"
+            icon="icons/schemaview.gif"
+            category="org.neontoolkit.gui.views.general"
+            class="org.neontoolkit.gui.navigator.MTreeView"
+            id="org.neontoolkit.gui.views.navigator">
+      </view>
+      <view
+            name="%resultView"
+            icon="icons/common/results.gif"
+            category="org.neontoolkit.gui.views.general"
+            class="org.neontoolkit.gui.result.ResultView"
+            id="org.neontoolkit.gui.views.resultview">
+      </view>
+      <view
+            name="%entityPropertiesView"
+            icon="icons/entitypropertiesview.gif"
+            category="org.neontoolkit.gui.views.general"
+            class="org.neontoolkit.gui.properties.EntityPropertiesView"
+            id="org.neontoolkit.gui.views.propertiesview">
+      </view>
+	<category
+		id="org.neontoolkit.plugin.AnnotationDocumentation"
+		name="%viewCategoryAnnotationDocumentation"/>
+	<category
+		id="org.neontoolkit.plugin.HumanOntologyInteraction"
+		name="%viewCategoryHumanOntologyInteraction"/>
+	<category
+		id="org.neontoolkit.plugin.ModularizationCustomization"
+		name="%viewCategoryModularizationCustomization"/>
+	<category
+		id="org.neontoolkit.plugin.OntologyDynamics"
+		name="%viewCategoryOntologyDynamics"/>
+	<category
+		id="org.neontoolkit.plugin.OntologyEvaluation"
+		name="%viewCategoryOntologyEvaluation"/>
+	<category
+		id="org.neontoolkit.plugin.OntologyMatching"
+		name="%viewCategoryOntologyMatching"/>
+	<category
+		id="org.neontoolkit.plugin.Development"
+		name="%viewCategoryDevelopment"/>
+	<category
+		id="org.neontoolkit.plugin.ReasoningInference"
+		name="%viewCategoryReasoningInference"/>
+	<category
+		id="org.neontoolkit.plugin.Reuse"
+		name="%viewCategoryReuse"/>
+	<category
+		id="org.neontoolkit.plugin.KnowledgeAcquisistion"
+		name="%viewCategoryKnowledgeAcquisistion"/>
+	<category
+		id="org.neontoolkit.plugin.Management"
+		name="%viewCategoryManagement"/>
+   </extension>
+
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++  PROPERTY PAGES +++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+    <extension
+          point="org.neontoolkit.gui.entityProperties">
+       <entityPropertyContributor
+             activatorClass="org.neontoolkit.gui.navigator.project.ProjectTreeElement"
+             class="org.neontoolkit.gui.properties.project.ProjectPropertyPage"
+             id="org.neontoolkit.gui.properties.project.propertyContributorProject"
+             name="%projectSettings">
+       </entityPropertyContributor>
+    </extension>
+
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++   ACTIONS   +++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+   <extension
+        point="org.eclipse.ui.popupMenus">
+      <viewerContribution
+            targetID="org.neontoolkit.gui.views.navigator"
+            id="org.neontoolkit.gui.navigator.navigatorActions">
+         <action
+               class="org.neontoolkit.gui.internal.navigator.action.NewProjectAction"
+               icon="icons/onto/ontoprj_obj.gif"
+               id="org.neontoolkit.gui.navigator.NewProjectAction"
+               label="%newProjectLabel"
+               menubarPath="navigator.new_global"/>
+
+      </viewerContribution>
+   </extension>
+<!--    <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:file?after=New">
+         <command
+               commandId="org.neontoolkit.gui.navigator.ontology.SaveAllOntologyAction"
+               label="Save All 1"
+               style="push"
+               tooltip="Save All 2">
+         </command>
+      </menuContribution>
+   </extension>
+   -->
+   <extension point="org.eclipse.ui.editorActions"> 
+	   <editorContribution 
+	      id="org.eclipse.ui.articles.action.contribution.editor2" 
+	   targetID="org.eclipse.ui.DefaultTextEditor">
+	      <action
+	         id="org.neontoolkit.gui.navigator.ontology.SaveOntology" 
+	         label="Editor Action 1" 
+	         tooltip="Tooltip for Editor Action 1"
+	      menubarPath="file/save.ext"
+	         class="org.neontoolkit.gui.navigator.ontology.SaveOntologyAction"> 
+	      </action>
+	   </editorContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.neontoolkit.gui.views.navigator?after=navigator.ccp">
+         <command
+               commandId="org.neontoolkit.gui.navigator.deleteCommand"
+               icon="icons/common/remove.gif"
+               label="Delete"
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:org.neontoolkit.gui.views.navigator?after=navigator.refactor">
+         <command
+               commandId="org.neontoolkit.gui.navigator.renameCommand"
+               label="Rename..."
+               style="push">
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:org.neontoolkit.gui.views.navigator?after=navigator.refresh">
+         <command
+               commandId="org.neontoolkit.gui.navigator.refreshCommand"
+               label="%refresh"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+
+<!-- Toolbar Actions -->
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            label="%neonToolkitToolbarActions"
+            visible="false"
+            id="org.neontoolkit.gui.toolbaractions">
+         <action
+               class="org.neontoolkit.gui.action.ShowNamespaceAction"
+               icon="icons/namespace.gif"
+               id="org.neontoolkit.gui.toolbar.nsAction"
+               label="%showHideNS"
+               style="pulldown"
+               toolbarPath="Normal/additions"
+               tooltip="%showHideNS">
+         </action>
+      </actionSet>
+   </extension>
+<!-- End of Toolbar Actions -->
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++++ NAVIGATOR EXTENSIONS+++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+   
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            description="Save All 3"
+            id="org.neontoolkit.gui.navigator.ontology.SaveAllOntologyAction"
+            name="Save All 4">
+      </command>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="org.neontoolkit.gui.navigatorCategory"
+            name="Navigator Category">
+      </category>
+      <command
+            categoryId="org.neontoolkit.gui.navigatorCategory"
+            description="Creates new elements in the OntologyNavigator"
+            id="org.neontoolkit.gui.navigator.newCommand"
+            name="Create entity">
+      </command>
+      <command
+            categoryId="org.neontoolkit.gui.navigatorCategory"
+            description="Creates new second level elements in the OntologyNavigator"
+            id="org.neontoolkit.gui.navigator.newCommand2"
+            name="Create entity">
+      </command>
+      <command
+            categoryId="org.neontoolkit.gui.navigatorCategory"
+            description="Creates new third level elements in the OntologyNavigator"
+            id="org.neontoolkit.gui.navigator.newCommand3"
+            name="Create entity">
+      </command>
+      <command
+            categoryId="org.neontoolkit.gui.navigatorCategory"
+            defaultHandler="org.neontoolkit.gui.internal.navigator.action.RefreshHandler"
+            description="Refreshes the subtree starting from the selected element in the OntologyNavigator"
+            id="org.neontoolkit.gui.navigator.refreshCommand"
+            name="Refresh">
+      </command>
+      <command
+            categoryId="org.neontoolkit.gui.navigatorCategory"
+            description="Moves an element in the OntologyNavigator"
+            id="org.neontoolkit.gui.navigator.moveCommand"
+            name="Move Entity">
+      </command>
+      <command
+            categoryId="org.neontoolkit.gui.navigatorCategory"
+            description="Rename an element in the OntologyNavigator"
+            id="org.neontoolkit.gui.navigator.renameCommand"
+            name="Rename element">
+      </command>
+      <command
+            categoryId="org.neontoolkit.gui.navigatorCategory"
+            description="Delete an element in the OntologyNavigator"
+            id="org.neontoolkit.gui.navigator.deleteCommand"
+            name="Delete element">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="org.neontoolkit.gui.navigator.newCommand"
+            contextId="org.neontoolkit.gui.views.navigatorContext"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+N">
+      </key>
+      <key
+            commandId="org.neontoolkit.gui.navigator.newCommand2"
+            contextId="org.neontoolkit.gui.views.navigatorContext"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+N">
+      </key>
+      <key
+            commandId="org.neontoolkit.gui.navigator.newCommand3"
+            contextId="org.neontoolkit.gui.views.navigatorContext"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M3+N">
+      </key>
+      <key
+            commandId="org.neontoolkit.gui.navigator.refreshCommand"
+            contextId="org.neontoolkit.gui.views.navigatorContext"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="F5">
+      </key>
+      <key
+            commandId="org.neontoolkit.gui.navigator.moveCommand"
+            contextId="org.neontoolkit.gui.views.navigatorContext"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M2+M3+V">
+      </key>
+      <key
+            commandId="org.neontoolkit.gui.navigator.renameCommand"
+            contextId="org.neontoolkit.gui.views.navigatorContext"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="F2">
+      </key>
+      <key
+            commandId="org.neontoolkit.gui.navigator.deleteCommand"
+            contextId="org.neontoolkit.gui.views.navigatorContext"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="DEL">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            description="Context definition for the OntologyNavigator"
+            id="org.neontoolkit.gui.views.navigatorContext"
+            name="OntologyNavigator context"
+            parentId="org.eclipse.ui.contexts.window">
+      </context>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.neontoolkit.gui.navigator.project.RenameProjectHandler"
+            commandId="org.neontoolkit.gui.navigator.renameCommand">
+         <activeWhen>
+            <and>
+               <count
+                     value="1">
+               </count>
+               <iterate>
+                  <instanceof
+                        value="org.neontoolkit.gui.navigator.project.ProjectTreeElement">
+                  </instanceof>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.neontoolkit.gui.navigator.project.DeleteProjectHandler"
+            commandId="org.neontoolkit.gui.navigator.deleteCommand">
+         <activeWhen>
+            <and>
+               <iterate
+                     ifEmpty="false"
+                     operator="and">
+                  <instanceof
+                        value="org.neontoolkit.gui.navigator.project.ProjectTreeElement">
+                  </instanceof>
+               </iterate>
+            </and>
+         </activeWhen>
+      </handler>
+<!--
+      <handler
+            class="org.neontoolkit.gui.navigator.ontology.SaveAllOntologyAction"
+            commandId="org.neontoolkit.gui.navigator.ontology.SaveAllOntologyAction">
+      </handler>
+-->
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="org.neontoolkit.gui.internal.ClassNamePropertyTester"
+            id="org.neontoolkit.gui.tester.ClassNameTester"
+            namespace="org.neontoolkit.gui"
+            properties="getClassName,booleanMethod,method"
+            type="java.lang.Object">
+      </propertyTester>
+   </extension>
+   
+   <extension
+          point="org.eclipse.core.expressions.definitions">
+       <definition
+             id="org.neontoolkit.gui.projectIsConnected">
+          <and>
+             <iterate
+                   ifEmpty="false">
+                <and>
+                   <instanceof
+                         value="org.neontoolkit.gui.navigator.project.ProjectTreeElement">
+                   </instanceof>
+                   <test
+                         args="isConnected"
+                         property="org.neontoolkit.gui.booleanMethod"
+                         value="true">
+                   </test>
+                </and>
+             </iterate>
+          </and>
+       </definition>
+    </extension>
+
+	<extension
+         point="org.eclipse.ui.actionSets">
+         <actionSet
+            label="%CHEAT_SHEETS"
+            visible="true"
+            id="org.eclipse.ui.cheatsheets.actionSet">
+         <action
+				label="%CHEAT_SHEETS_MENU"
+				class="org.eclipse.ui.cheatsheets.CheatSheetExtensionFactory:helpMenuAction"
+				menubarPath="help/group.tutorials"
+				id="org.eclipse.ui.cheatsheets.actions.CheatSheetHelpMenuAction">
+         </action>
+      </actionSet>
+   </extension>
+    
+</plugin>

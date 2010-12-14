@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.5"?>
+<target name="neon">
+	<locations>
+		<!-- path to unzipped NeOnToolkit-x.y.z-BXX-ontobroker.zip -->
+		<location path="${workspace_loc}/ontobroker" type="Directory"/>
+		<!-- path to eclipse home -->
+		<location path="${eclipse_home}" type="Profile"/>
+	</locations>
+</target>
