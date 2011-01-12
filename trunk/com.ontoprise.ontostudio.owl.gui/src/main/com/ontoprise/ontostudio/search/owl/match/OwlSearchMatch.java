@@ -111,7 +111,7 @@ public abstract class OwlSearchMatch extends NavigatorSearchMatch implements ITr
     
     @Override
     public int getOccurenceCount() {
-        return 1;
+        return 1;//NICO always 1???
     }
     
     @Override

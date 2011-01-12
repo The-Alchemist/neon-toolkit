@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -23,6 +24,7 @@ import org.semanticweb.owlapi.io.OWLOntologyDocumentSource;
 import org.semanticweb.owlapi.io.OWLOntologyDocumentTarget;
 import org.semanticweb.owlapi.model.AddAxiom;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.ImpendingOWLOntologyChangeListener;
 import org.semanticweb.owlapi.model.MissingImportListener;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
@@ -33,6 +35,7 @@ import org.semanticweb.owlapi.model.OWLOntologyChangeBroadcastStrategy;
 import org.semanticweb.owlapi.model.OWLOntologyChangeException;
 import org.semanticweb.owlapi.model.OWLOntologyChangeListener;
 import org.semanticweb.owlapi.model.OWLOntologyChangeProgressListener;
+import org.semanticweb.owlapi.model.OWLOntologyChangesVetoedListener;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyFactory;
 import org.semanticweb.owlapi.model.OWLOntologyFormat;
@@ -47,6 +50,7 @@ import org.semanticweb.owlapi.model.UnknownOWLOntologyException;
 
 /**
  * @author krekeler
+ * @author Nico Stieler
  *
  */
 public final class OntologyInfoOntologyManager implements OWLOntologyManager {
@@ -371,5 +375,26 @@ public final class OntologyInfoOntologyManager implements OWLOntologyManager {
     @Override
     public void setSilentMissingImportsHandling(boolean b) {
         throw new UnsupportedOperationException();
+    }
+    @Override
+    public void addImpendingOntologyChangeListener(ImpendingOWLOntologyChangeListener arg0) {
+        // TODO OWL API 3.1.0
+    }
+    @Override
+    public void addOntologyChangesVetoedListener(OWLOntologyChangesVetoedListener arg0) {
+        // TODO OWL API 3.1.0
+    }
+    @Override
+    public Collection<OWLOntologyFactory> getOntologyFactories() {
+        // TODO OWL API 3.1.0
+        return null;
+    }
+    @Override
+    public void removeImpendingOntologyChangeListener(ImpendingOWLOntologyChangeListener arg0) {
+        // TODO OWL API 3.1.0
+    }
+    @Override
+    public void removeOntologyChangesVetoedListener(OWLOntologyChangesVetoedListener arg0) {
+        // TODO OWL API 3.1.0
     }
 }

@@ -20,7 +20,6 @@ import org.semanticweb.owlapi.model.OWLLiteral;
 
 import com.ontoprise.ontostudio.owl.model.OWLConstants;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
-import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.ApplyChanges;
 import com.ontoprise.ontostudio.owl.model.commands.OWLCommandUtils;
@@ -28,6 +27,7 @@ import com.ontoprise.ontostudio.owl.model.commands.OWLModuleChangeCommand;
 
 /**
  * @author werner
+ * @author Nico Stieler
  * 
  */
 public class CreateDataPropertyMember extends OWLModuleChangeCommand {
@@ -54,14 +54,14 @@ public class CreateDataPropertyMember extends OWLModuleChangeCommand {
             OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(getProjectName());
             OWLIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.toIRI(individualUri));
             OWLLiteral c;
-            if (type.equals(OWLConstants.RDFS_LITERAL)) { //$NON-NLS-1$
+            if (type.equals(OWLConstants.RDF_PLAIN_LITERAL)) {
                 if (!language.equals(OWLCommandUtils.EMPTY_LANGUAGE) && !language.equals("")) { //$NON-NLS-1$
-                    c = factory.getOWLStringLiteral(value, language);
+                    c = factory.getOWLLiteral(value, language);
                 } else {
-                    c = factory.getOWLTypedLiteral(value, factory.getOWLDatatype(OWLUtilities.toIRI(OWLNamespaces.XSD_NS+"string")));
+                    c = factory.getOWLLiteral(value, factory.getOWLDatatype(OWLUtilities.toIRI(OWLConstants.XSD_STRING)));
                 }
             } else {
-                c = factory.getOWLTypedLiteral(value, factory.getOWLDatatype(OWLUtilities.toIRI(type)));
+                c = factory.getOWLLiteral(value, factory.getOWLDatatype(OWLUtilities.toIRI(type)));
             }
 
             OWLDataPropertyExpression prop = OWLModelFactory.getOWLDataFactory(getProjectName()).getOWLDataProperty(OWLUtilities.toIRI(propertyUri));

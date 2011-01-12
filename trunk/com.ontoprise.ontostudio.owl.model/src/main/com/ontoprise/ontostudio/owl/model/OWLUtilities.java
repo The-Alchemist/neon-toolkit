@@ -57,13 +57,17 @@ import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLRuntimeException;
-import org.semanticweb.owlapi.model.OWLStringLiteral;
 import org.semanticweb.owlapi.model.SWRLRule;
 
 import com.ontoprise.ontostudio.owl.model.util.Cast;
 import com.ontoprise.ontostudio.owl.model.util.InternalParser;
 import com.ontoprise.ontostudio.owl.model.util.InternalParserException;
 import com.ontoprise.ontostudio.owl.model.util.OWLFormattingVisitor;
+
+/**
+ * 
+ * @author Nico Stieler
+ */
 
 public class OWLUtilities {
     private static final IRI SWRL_RULE_IRI_IRI = IRI.create("http://www.semanticweb.org/owlapi#iri"); //$NON-NLS-1$
@@ -430,10 +434,13 @@ public class OWLUtilities {
     public static IRI getIRI(SWRLRule rule) {
         for (OWLAnnotation a: rule.getAnnotations()) {
             if (SWRL_RULE_IRI_IRI.equals(a.getProperty().getIRI())) {
-                if (a.getValue() instanceof OWLStringLiteral) {
-                    String literal = ((OWLStringLiteral)a.getValue()).getLiteral();
-                    if (literal != null && literal.startsWith("<") && literal.endsWith(">")) { //$NON-NLS-1$ //$NON-NLS-2$
-                        return IRI.create(literal.substring(1, literal.length() - 2));
+                if (a.getValue() instanceof OWLLiteral){
+                    OWLLiteral owlLiteral = (OWLLiteral)a.getValue();
+                    if(owlLiteral.isRDFPlainLiteral()) { 
+                        String literal = owlLiteral.getLiteral();
+                        if (literal != null && literal.startsWith("<") && literal.endsWith(">")) { //$NON-NLS-1$ //$NON-NLS-2$
+                            return IRI.create(literal.substring(1, literal.length() - 2));
+                        }
                     }
                 }
                 return null;

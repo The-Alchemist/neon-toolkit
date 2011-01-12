@@ -53,8 +53,6 @@ import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
-import org.semanticweb.owlapi.model.OWLStringLiteral;
-import org.semanticweb.owlapi.model.OWLTypedLiteral;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
@@ -71,7 +69,6 @@ import com.ontoprise.ontostudio.owl.gui.util.textfields.AxiomText;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.DatatypeAndIndividualText;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.PropertyText;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.StringText;
-import com.ontoprise.ontostudio.owl.model.OWLConstants;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLModelPlugin;
@@ -289,26 +286,19 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
           createAnnotationsRow(annotation, contents, imported, sourceOnto);
 
         } else if (o instanceof OWLLiteral) {
-            if (!((OWLLiteral)o).isOWLTypedLiteral()) {
-                OWLStringLiteral untypedConstant = (OWLStringLiteral)o;
-                String literal = untypedConstant.getLiteral();
-                String language = untypedConstant.getLang();
-                String dataType = OWLConstants.RDFS_LITERAL;
-                contents.add(propArray);
-                contents.add(new String[] {literal});
-                contents.add((String[]) OWLModelFactory.getOWLDataFactory(_project).getOWLDatatype(OWLUtilities.toIRI(dataType)).accept(visitor));
+            OWLLiteral constant = (OWLLiteral)o;
+            OWLDatatype dataType = constant.getDatatype();
+            contents.add(propArray);
+            contents.add(new String[] {constant.getLiteral()});
+            contents.add((String[]) dataType.accept(visitor));
+            if(constant.isRDFPlainLiteral()) {
+                String language = constant.getLang();
                 contents.add(new String[] {language});
-                createAnnotationsRow(annotation, contents, imported, sourceOnto);
-
-            } else {
-                OWLTypedLiteral typedConstant = (OWLTypedLiteral)o;
-                OWLDatatype dataType = typedConstant.getDatatype();
-                contents.add(propArray);
-                contents.add(new String[] {typedConstant.getLiteral()});
-                contents.add((String[]) dataType.accept(visitor));
+            }else{
                 contents.add(new String[] {null});
-                createAnnotationsRow(annotation, contents, imported, sourceOnto);
             }
+            createAnnotationsRow(annotation, contents, imported, sourceOnto);
+
         } else {
             // TODO proper error handling
             System.err.print(Messages.AnnotationsPropertyPage2_0 + o);

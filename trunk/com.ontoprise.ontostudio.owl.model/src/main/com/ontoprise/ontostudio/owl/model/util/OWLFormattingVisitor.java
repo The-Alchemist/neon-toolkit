@@ -16,15 +16,17 @@ import java.util.Set;
 
 import org.semanticweb.owlapi.model.*;
 
+import com.ontoprise.ontostudio.owl.model.OWLConstants;
 import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
-    private static final IRI OWL_THING_IRI;
-    static {
-        OWL_THING_IRI = IRI.create(OWLNamespaces.OWL_NS + "Thing");
-    }
+    private static final IRI OWL_THING_IRI = IRI.create(OWLConstants.OWL_THING_URI);
+    
     private Appendable m_target;
     private OWLNamespaces m_namespaces;
     private static String escapeString(String string) {
@@ -32,9 +34,9 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
         for (int i=0;i<string.length();i++) {
             char c=string.charAt(i);
             if (c=='"')
-                buffer.append("\\\"");
+                buffer.append("\\\""); //$NON-NLS-1$
             else if (c=='\\')
-                buffer.append("\\\\");
+                buffer.append("\\\\"); //$NON-NLS-1$
             else
                 buffer.append(c);
         }
@@ -99,30 +101,43 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     }
 
     public Object visit(OWLObjectInverseOf object) {
-        append("[inv ");
+        append("[inv "); //$NON-NLS-1$
         object.getInverse().accept(this);
         append(']');
         return null;
     }
 
     public Object visit(OWLLiteral object) {
-        if (object instanceof OWLTypedLiteral) {
-            visit((OWLTypedLiteral)object);
-        } else {
-            visit((OWLStringLiteral)object);
+        String literal = escapeString(object.getLiteral());
+        OWLDatatype datatype = object.getDatatype();
+        if(object.isRDFPlainLiteral()) {
+            String lang = object.getLang();
+            append('"');
+            append(literal);
+            append('"');
+            if(!lang.isEmpty()){
+                append('@');
+                append(lang);
+            }
+        }else{
+            append('"');
+            append(literal);
+            append("\"^^<"); //$NON-NLS-1$
+            append(datatype.getIRI().toString());
+            append('>');
         }
         return null;
     }
 
     public Object visit(OWLDataComplementOf object) {
-        append("[not ");
+        append("[not "); //$NON-NLS-1$
         object.getDataRange().accept(this);
         append(']');
         return null;
     }
 
     public Object visit(OWLDataOneOf object) {
-        append("[oneOf");
+        append("[oneOf"); //$NON-NLS-1$
         for (OWLLiteral literalValue : object.getValues()) {
             append(' ');
             literalValue.accept(this);
@@ -132,7 +147,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     }
 
     public Object visit(OWLDatatypeRestriction object) {
-        append("[datatypeRestriction ");
+        append("[datatypeRestriction "); //$NON-NLS-1$
         object.getDatatype().accept(this);
         for (OWLFacetRestriction facetRestriction: object.getFacetRestrictions()) {
             append(' ');
@@ -143,7 +158,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     }
     
     public Object visit(OWLFacetRestriction object) {
-        append("[facetRestriction ");
+        append("[facetRestriction "); //$NON-NLS-1$
         append(object.getFacet().toString());
         append(' ');
         StringBuffer buffer=new StringBuffer();
@@ -154,7 +169,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     }
 
     public Object visit(OWLDataAllValuesFrom object) {
-        append("[dataAll");
+        append("[dataAll"); //$NON-NLS-1$
         append(' ');
         object.getProperty().accept(this);
         append(' ');
@@ -164,7 +179,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     }
 
     public Object visit(OWLDataSomeValuesFrom object) {
-        append("[dataSome");
+        append("[dataSome"); //$NON-NLS-1$
         append(' ');
         object.getProperty().accept(this);
         append(' ');
@@ -175,13 +190,13 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
 
     public Object visit(OWLDataCardinalityRestriction object) {
         if (object instanceof OWLDataMinCardinality) {
-            append("[dataAtLeast ");
+            append("[dataAtLeast "); //$NON-NLS-1$
         } else if (object instanceof OWLDataMaxCardinality) {
-            append("[dataAtMost ");
+            append("[dataAtMost "); //$NON-NLS-1$
         } else if (object instanceof OWLDataExactCardinality) {
-            append("[dataExactly ");
+            append("[dataExactly "); //$NON-NLS-1$
         } else {
-            throw new IllegalStateException("Invalid cardinality type.");
+            throw new IllegalStateException("Invalid cardinality type."); //$NON-NLS-1$
         }
         append(Integer.toString(object.getCardinality()));
         append(' ');
@@ -193,7 +208,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     }
 
     public Object visit(OWLDataHasValue object) {
-        append("[dataHasValue ");
+        append("[dataHasValue "); //$NON-NLS-1$
         object.getProperty().accept(this);
         append(' ');
         object.getValue().accept(this);
@@ -202,7 +217,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     }
 
     public Object visit(OWLObjectAllValuesFrom object) {
-        append("[all ");
+        append("[all "); //$NON-NLS-1$
         object.getProperty().accept(this);
         append(' ');
         object.getFiller().accept(this);
@@ -211,7 +226,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     }
 
     public Object visit(OWLObjectSomeValuesFrom object) {
-        append("[some ");
+        append("[some "); //$NON-NLS-1$
         object.getProperty().accept(this);
         append(' ');
         object.getFiller().accept(this);
@@ -220,7 +235,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     }
 
     public Object visit(OWLObjectHasSelf object) {
-        append("[self ");
+        append("[self "); //$NON-NLS-1$
         object.getProperty().accept(this);
         append(']');
         return null;
@@ -229,13 +244,13 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     public Object visit(OWLObjectCardinalityRestriction object) {
         OWLClassExpression m_description=object.getFiller();
         if (object instanceof OWLObjectMinCardinality) {
-            append("[atLeast ");
+            append("[atLeast "); //$NON-NLS-1$
         } else if (object instanceof OWLObjectMaxCardinality) {
-            append("[atMost ");
+            append("[atMost "); //$NON-NLS-1$
         } else if (object instanceof OWLObjectExactCardinality) {
-            append("[exactly ");
+            append("[exactly "); //$NON-NLS-1$
         } else {
-            throw new IllegalStateException("Invalid cardinality type.");
+            throw new IllegalStateException("Invalid cardinality type."); //$NON-NLS-1$
         }
         append(Integer.toString(object.getCardinality()));
         append(' ');
@@ -253,7 +268,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     }
 
     public Object visit(OWLObjectOneOf object) {
-        append("[oneOf");
+        append("[oneOf"); //$NON-NLS-1$
         for (OWLIndividual individual : object.getIndividuals()) {
             append(' ');
             individual.accept(this);
@@ -263,7 +278,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     }
 
     public Object visit(OWLObjectHasValue object) {
-        append("[hasValue ");
+        append("[hasValue "); //$NON-NLS-1$
         object.getProperty().accept(this);
         append(' ');
         object.getValue().accept(this);
@@ -272,16 +287,16 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     }
 
     public Object visit(OWLObjectComplementOf object) {
-        append("[not ");
+        append("[not "); //$NON-NLS-1$
         object.getOperand().accept(this);
         append(']');
         return null;
     }
 
     public Object visit(OWLObjectUnionOf object) {
-        append("[or");
+        append("[or"); //$NON-NLS-1$
         for (OWLClassExpression description : object.getOperands()) {
-            append(' ');
+            append(' '); 
             description.accept(this);
         }
         append(']');
@@ -289,7 +304,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     }
 
     public Object visit(OWLObjectIntersectionOf object) {
-        append("[and");
+        append("[and"); //$NON-NLS-1$
         for (OWLClassExpression description : object.getOperands()) {
             append(' ');
             description.accept(this);
@@ -299,8 +314,8 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     }
 
     public Object visit(OWLSubClassOfAxiom object) {
-        append("[");
-        appendAnnotations("subClassOf", object);
+        append("["); //$NON-NLS-1$
+        appendAnnotations("subClassOf", object); //$NON-NLS-1$
         append(' ');
         object.getSubClass().accept(this);
         append(' ');
@@ -310,8 +325,8 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     }
 
     public Object visit(OWLEquivalentClassesAxiom object) {
-        append("[");
-        appendAnnotations("equivalent", object);
+        append("["); //$NON-NLS-1$
+        appendAnnotations("equivalent", object); //$NON-NLS-1$
         for (OWLClassExpression description : object.getClassExpressions()) {
             append(' ');
             description.accept(this);
@@ -322,7 +337,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
 
     public Object visit(OWLDisjointClassesAxiom object) {
         append('[');
-        appendAnnotations("disjoint", object);
+        appendAnnotations("disjoint", object); //$NON-NLS-1$
         for (OWLClassExpression description : object.getClassExpressions()) {
             append(' ');
             description.accept(this);
@@ -332,8 +347,8 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     }
 
     public Object visit(OWLDisjointUnionAxiom object) {
-        append("[");
-        appendAnnotations("disjointUnion", object);
+        append("["); //$NON-NLS-1$
+        appendAnnotations("disjointUnion", object); //$NON-NLS-1$
         append(' ');
         object.getOWLClass().accept(this);
         for (OWLClassExpression description : object.getClassExpressions()) {
@@ -360,10 +375,10 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     public Object visit(OWLDataPropertyCharacteristicAxiom object) {
         if (object instanceof OWLFunctionalDataPropertyAxiom){
             append('[');
-            appendAnnotations("dataFunctional", object);
+            appendAnnotations("dataFunctional", object); //$NON-NLS-1$
             append(' ');
         }else
-            append("[invalid attribute type!");
+            append("[invalid attribute type!"); //$NON-NLS-1$
         object.getProperty().accept(this);
         append(']');
         return null;
@@ -371,7 +386,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
 
     public Object visit(OWLDataPropertyDomainAxiom object) {
         append('[');
-        appendAnnotations("dataDomain", object);
+        appendAnnotations("dataDomain", object); //$NON-NLS-1$
         append(' ');
         object.getProperty().accept(this);
         append(' ');
@@ -382,7 +397,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
 
     public Object visit(OWLDataPropertyRangeAxiom object) {
         append('[');
-        appendAnnotations("dataRange", object);
+        appendAnnotations("dataRange", object); //$NON-NLS-1$
         append(' ');
         object.getProperty().accept(this);
         append(' ');
@@ -393,7 +408,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
 
     public Object visit(OWLSubDataPropertyOfAxiom object) {
         append('[');
-        appendAnnotations("subDataPropertyOf", object);
+        appendAnnotations("subDataPropertyOf", object); //$NON-NLS-1$
         append(' ');
         object.getSubProperty().accept(this);
         append(' ');
@@ -404,7 +419,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
 
     public Object visit(OWLEquivalentDataPropertiesAxiom object) {
         append('[');
-        appendAnnotations("dataEquivalent", object);
+        appendAnnotations("dataEquivalent", object); //$NON-NLS-1$
         for (OWLDataPropertyExpression dataProperty : object.getProperties()) {
             append(' ');
             dataProperty.accept(this);
@@ -415,7 +430,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
 
     public Object visit(OWLDisjointDataPropertiesAxiom object) {
         append('[');
-        appendAnnotations("dataDisjoint", object);
+        appendAnnotations("dataDisjoint", object); //$NON-NLS-1$
         for (OWLDataPropertyExpression dataProperty : object.getProperties()) {
             append(' ');
             dataProperty.accept(this);
@@ -428,21 +443,21 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
         append('[');
         String head = null;
         if (object instanceof OWLFunctionalObjectPropertyAxiom)
-            head = "objectFunctional";
+            head = "objectFunctional"; //$NON-NLS-1$
         else if (object instanceof OWLInverseFunctionalObjectPropertyAxiom)
-            head = "objectInverseFunctional";
+            head = "objectInverseFunctional"; //$NON-NLS-1$
         else if (object instanceof OWLSymmetricObjectPropertyAxiom)
-            head = "objectSymmetric";
+            head = "objectSymmetric"; //$NON-NLS-1$
         else if (object instanceof OWLTransitiveObjectPropertyAxiom)
-            head = "objectTransitive";
+            head = "objectTransitive"; //$NON-NLS-1$
         else if (object instanceof OWLReflexiveObjectPropertyAxiom)
-            head = "objectReflexive";
+            head = "objectReflexive"; //$NON-NLS-1$
         else if (object instanceof OWLIrreflexiveObjectPropertyAxiom)
-            head = "objectIrreflexive";
+            head = "objectIrreflexive"; //$NON-NLS-1$
         else if (object instanceof OWLAsymmetricObjectPropertyAxiom)
-            head = "objectAsymmetric";
+            head = "objectAsymmetric"; //$NON-NLS-1$
         else
-            append("invalid attribute type!");
+            append("invalid attribute type!"); //$NON-NLS-1$
         
         appendAnnotations(head, object);
         append(' ');
@@ -453,7 +468,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
 
     public Object visit(OWLObjectPropertyDomainAxiom object) {
         append('[');
-        appendAnnotations("objectDomain", object);
+        appendAnnotations("objectDomain", object); //$NON-NLS-1$
         append(' ');
         object.getProperty().accept(this);
         append(' ');
@@ -464,7 +479,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
 
     public Object visit(OWLObjectPropertyRangeAxiom object) {
         append('[');
-        appendAnnotations("objectRange", object);
+        appendAnnotations("objectRange", object); //$NON-NLS-1$
         append(' ');
         object.getProperty().accept(this);
         append(' ');
@@ -475,7 +490,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
 
     public Object visit(OWLSubObjectPropertyOfAxiom object) {
         append('[');
-        appendAnnotations("subObjectPropertyOf", object);
+        appendAnnotations("subObjectPropertyOf", object); //$NON-NLS-1$
         append(' ');
         object.getSubProperty().accept(this);
         append(' ');
@@ -486,7 +501,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
 
     public Object visit(OWLEquivalentObjectPropertiesAxiom object) {
         append('[');
-        appendAnnotations("objectEquivalent", object);
+        appendAnnotations("objectEquivalent", object); //$NON-NLS-1$
         for (OWLObjectPropertyExpression objectProperty : object.getProperties()) {
             append(' ');
             objectProperty.accept(this);
@@ -497,7 +512,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
 
     public Object visit(OWLDisjointObjectPropertiesAxiom object) {
         append('[');
-        appendAnnotations("objectDisjoint", object);
+        appendAnnotations("objectDisjoint", object); //$NON-NLS-1$
         for (OWLObjectPropertyExpression objectProperty : object.getProperties()) {
             append(' ');
             objectProperty.accept(this);
@@ -508,7 +523,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
 
     public Object visit(OWLInverseObjectPropertiesAxiom object) {
         append('[');
-        appendAnnotations("objectInverse", object);
+        appendAnnotations("objectInverse", object); //$NON-NLS-1$
         append(' ');
         object.getFirstProperty().accept(this);
         append(' ');
@@ -519,7 +534,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
 
     public Object visit(OWLSameIndividualAxiom object) {
         append('[');
-        appendAnnotations("same", object);
+        appendAnnotations("same", object); //$NON-NLS-1$
         for (OWLIndividual individual : object.getIndividuals()) {
             append(' ');
             individual.accept(this);
@@ -530,7 +545,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
 
     public Object visit(OWLDifferentIndividualsAxiom object) {
         append('[');
-        appendAnnotations("different", object);
+        appendAnnotations("different", object); //$NON-NLS-1$
         for (OWLIndividual individual : object.getIndividuals()) {
             append(' ');
             individual.accept(this);
@@ -541,7 +556,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
 
     public Object visit(OWLDataPropertyAssertionAxiom object) {
         append('[');
-        appendAnnotations("dataMember", object);
+        appendAnnotations("dataMember", object); //$NON-NLS-1$
         append(' ');
         object.getProperty().accept(this);
         append(' ');
@@ -554,7 +569,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
 
     public Object visit(OWLNegativeDataPropertyAssertionAxiom object) {
         append('[');
-        appendAnnotations("negativeDataMember", object);
+        appendAnnotations("negativeDataMember", object); //$NON-NLS-1$
         append(' ');
         object.getProperty().accept(this);
         append(' ');
@@ -567,7 +582,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
 
     public Object visit(OWLObjectPropertyAssertionAxiom object) {
         append('[');
-        appendAnnotations("objectMember", object);
+        appendAnnotations("objectMember", object); //$NON-NLS-1$
         append(' ');
         object.getProperty().accept(this);
         append(' ');
@@ -580,7 +595,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
 
     public Object visit(OWLNegativeObjectPropertyAssertionAxiom object) {
         append('[');
-        appendAnnotations("negativeObjectMember", object);
+        appendAnnotations("negativeObjectMember", object); //$NON-NLS-1$
         append(' ');
         object.getProperty().accept(this);
         append(' ');
@@ -593,7 +608,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
 
     public Object visit(OWLClassAssertionAxiom object) {
         append('[');
-        appendAnnotations("classMember", object);
+        appendAnnotations("classMember", object); //$NON-NLS-1$
         append(' ');
         object.getClassExpression().accept(this);
         append(' ');
@@ -623,25 +638,25 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
         String head = null;
         OWLAnnotationSubject subject=object.getSubject();
         if (subject instanceof OWLDataProperty)
-            head = "dataAnnotation";
+            head = "dataAnnotation"; //$NON-NLS-1$
         else if (subject instanceof OWLObjectProperty)
-            head = "objectAnnotation";
+            head = "objectAnnotation"; //$NON-NLS-1$
         else if (subject instanceof OWLNamedIndividual)
-            head = "namedIndividualAnnotation";
+            head = "namedIndividualAnnotation"; //$NON-NLS-1$
         else if (subject instanceof OWLClass)
-            head = "classAnnotation";
+            head = "classAnnotation"; //$NON-NLS-1$
         else if (subject instanceof OWLDatatype)
-            head = "datatypeAnnotation";
+            head = "datatypeAnnotation"; //$NON-NLS-1$
         else if (subject instanceof OWLAnnotationProperty)
-            head = "annotationAnnotationProperty";
+            head = "annotationAnnotationProperty"; //$NON-NLS-1$
         else if (subject instanceof OWLAnonymousIndividual)
-            head = "annotationAnonymousIndividual";
+            head = "annotationAnonymousIndividual"; //$NON-NLS-1$
         else if (subject instanceof IRI)
-            head = "annotationIRI";
+            head = "annotationIRI"; //$NON-NLS-1$
         else if (subject instanceof OWLAnnotation)
-            head = "annotationAnnotation";
+            head = "annotationAnnotation"; //$NON-NLS-1$
         else
-            throw new IllegalStateException("Unknown entity type. "+subject.getClass().getName());
+            throw new IllegalStateException("Unknown entity type. "+subject.getClass().getName()); //$NON-NLS-1$
         
         append('[');
         appendAnnotations(head, object);
@@ -667,19 +682,19 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
         String head = null;
         OWLEntity m_entity=object.getEntity();
         if (m_entity instanceof OWLDataProperty)
-            head = "dataDeclaration";
+            head = "dataDeclaration"; //$NON-NLS-1$
         else if (m_entity instanceof OWLObjectProperty)
-            head = "objectDeclaration";
+            head = "objectDeclaration"; //$NON-NLS-1$
         else if (m_entity instanceof OWLIndividual)
-            head = "individualDeclaration";
+            head = "individualDeclaration"; //$NON-NLS-1$
         else if (m_entity instanceof OWLClassExpression)
-            head = "classDeclaration";
+            head = "classDeclaration"; //$NON-NLS-1$
         else if (m_entity instanceof OWLDatatype)
-            head = "datatypeDeclaration";
+            head = "datatypeDeclaration"; //$NON-NLS-1$
         else if (m_entity instanceof OWLAnnotationProperty)
-            head = "annotationDeclaration";
+            head = "annotationDeclaration"; //$NON-NLS-1$
         else
-            throw new IllegalStateException("Unknown entity type.");
+            throw new IllegalStateException("Unknown entity type."); //$NON-NLS-1$
         
         append('[');
         appendAnnotations(head, object);
@@ -732,9 +747,9 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     @Override
     public Object visit(OWLSubPropertyChainOfAxiom axiom) {
         append('[');
-        appendAnnotations("subPropertyChainOf", axiom);
+        appendAnnotations("subPropertyChainOf", axiom); //$NON-NLS-1$
         append(' ');
-        append("[objectPropertyChain");
+        append("[objectPropertyChain"); //$NON-NLS-1$
         for(OWLObjectPropertyExpression objectProperty : axiom.getPropertyChain()){
             append(' ');
             objectProperty.accept(this);
@@ -748,7 +763,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     @Override
     public Object visit(SWRLRule rule) {
         append('[');
-        appendAnnotations("rule", rule);
+        appendAnnotations("rule", rule); //$NON-NLS-1$
         append(' ');
         if(OWLUtilities.getIRI(rule) != null){
             visit(OWLUtilities.getIRI(rule));
@@ -762,12 +777,12 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
             atom.accept(this);
             append(' ');
         }
-        append("] [");
+        append("] ["); //$NON-NLS-1$
         for (SWRLAtom atom : consequent) {
             atom.accept(this);
             append(' ');
         }
-        append("]]");
+        append("]]"); //$NON-NLS-1$
         return null;
     }
     @Override
@@ -801,54 +816,29 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
         return null;
     }
     @Override
-    public Object visit(OWLTypedLiteral node) {
-        String literal = escapeString(node.getLiteral());
-        OWLTypedLiteral typedConstant = node;
-        OWLDatatype datatype = typedConstant.getDatatype();
-        append('"');
-        append(literal);
-        append("\"^^<");
-        append(datatype.getIRI().toString());
-        append('>');
-        return null;
-    }
-    @Override
-    public Object visit(OWLStringLiteral node) {
-        String literal = escapeString(node.getLiteral());
-        OWLStringLiteral untypedConstant = node;
-        String lang = untypedConstant.getLang();
-        append('"');
-        append(literal);
-        append('"');
-        append('@');
-        append(lang);
-        return null;
-    }
-    
-    @Override
     public Object visit(SWRLClassAtom node) {
-        appendSWRLArguments("swrlClass",  node.getPredicate(), node.getAllArguments());
+        appendSWRLArguments("swrlClass",  node.getPredicate(), node.getAllArguments()); //$NON-NLS-1$
         return null;
     }
     @Override
     public Object visit(SWRLDataRangeAtom node) {
-        appendSWRLArguments("swrlDataRange",  node.getPredicate(), node.getAllArguments());
+        appendSWRLArguments("swrlDataRange",  node.getPredicate(), node.getAllArguments()); //$NON-NLS-1$
         return null;
     }
     @Override
     public Object visit(SWRLObjectPropertyAtom node) {
-        appendSWRLArguments("swrlObjectProperty",  node.getPredicate(), node.getAllArguments());
+        appendSWRLArguments("swrlObjectProperty",  node.getPredicate(), node.getAllArguments()); //$NON-NLS-1$
         return null;
     }
     @Override
     public Object visit(SWRLDataPropertyAtom node) {
-        appendSWRLArguments("swrlDataValuedProperty",  node.getPredicate(), node.getAllArguments());
+        appendSWRLArguments("swrlDataValuedProperty",  node.getPredicate(), node.getAllArguments()); //$NON-NLS-1$
         return null;
     }
    
     @Override
     public Object visit(SWRLBuiltInAtom node) {
-        append("[swrlBuiltIn");
+        append("[swrlBuiltIn"); //$NON-NLS-1$
         append(' ');
         visit(node.getPredicate());
         append(' ');
@@ -862,7 +852,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     }
     @Override
     public Object visit(SWRLVariable node) {
-        append("[swrlVariable");
+        append("[swrlVariable"); //$NON-NLS-1$
         append(' ');
         visit(node.getIRI());
         append(']');
@@ -880,17 +870,17 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     }
     @Override
     public Object visit(SWRLSameIndividualAtom node) {
-        appendSWRLArguments("swrlSameAs", null, node.getAllArguments());
+        appendSWRLArguments("swrlSameAs", null, node.getAllArguments()); //$NON-NLS-1$
         return null;
     }
     @Override
     public Object visit(SWRLDifferentIndividualsAtom node) {
-        appendSWRLArguments("swrlDifferentFrom", null, node.getAllArguments());
+        appendSWRLArguments("swrlDifferentFrom", null, node.getAllArguments()); //$NON-NLS-1$
         return null;
     }
     
     private void appendSWRLArguments(String head, OWLObject predicate, Collection<? extends SWRLArgument> arguments){
-        append("["+head);
+        append("["+head); //$NON-NLS-1$
         append(' ');
         if(predicate != null){
             predicate.accept(this);
@@ -912,7 +902,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     @Override
     public Object visit(OWLHasKeyAxiom axiom) {
         append('[');
-        appendAnnotations("hasKey", axiom);
+        appendAnnotations("hasKey", axiom); //$NON-NLS-1$
         append(' ');
         axiom.getClassExpression().accept(this);
         append(' ');
@@ -921,18 +911,18 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
             propertyExpression.accept(this);
             append(' ');
         }
-        append("][");
+        append("]["); //$NON-NLS-1$
         for(OWLDataPropertyExpression propertyExpression : axiom.getDataPropertyExpressions()){
             propertyExpression.accept(this);
             append(' ');
         }
-        append("]]");
+        append("]]"); //$NON-NLS-1$
         return null;
     }
     @Override
     public Object visit(OWLDatatypeDefinitionAxiom axiom) {
         append('[');
-        appendAnnotations("datatypeDefinition", axiom);
+        appendAnnotations("datatypeDefinition", axiom); //$NON-NLS-1$
         append(' ');
         axiom.getDatatype().accept(this);
         append(' ');
@@ -943,7 +933,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     @Override
     public Object visit(OWLSubAnnotationPropertyOfAxiom axiom) {
         append('[');
-        appendAnnotations("subAnnotationPropertyOf", axiom);
+        appendAnnotations("subAnnotationPropertyOf", axiom); //$NON-NLS-1$
         append(' ');
         axiom.getSubProperty().accept(this);
         append(' ');
@@ -954,7 +944,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     @Override
     public Object visit(OWLAnnotationPropertyDomainAxiom axiom) {
         append('[');
-        appendAnnotations("annotationPropertyDomain", axiom);
+        appendAnnotations("annotationPropertyDomain", axiom); //$NON-NLS-1$
         append(' ');
         axiom.getProperty().accept(this);
         append(' ');
@@ -965,7 +955,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     @Override
     public Object visit(OWLAnnotationPropertyRangeAxiom axiom) {
         append('[');
-        appendAnnotations("annotationPropertyRange", axiom);
+        appendAnnotations("annotationPropertyRange", axiom); //$NON-NLS-1$
         append(' ');
         axiom.getProperty().accept(this);
         append(' ');
@@ -975,7 +965,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     }
     @Override
     public Object visit(OWLDataIntersectionOf node) {
-        append("[dataIntersectionOf ");
+        append("[dataIntersectionOf "); //$NON-NLS-1$
         
         for(OWLDataRange dataRange : node.getOperands()){
             append(' ');
@@ -986,7 +976,7 @@ public class OWLFormattingVisitor implements OWLObjectVisitorEx<Object> {
     }
     @Override
     public Object visit(OWLDataUnionOf node) {
-        append("[dataUnionOf ");
+        append("[dataUnionOf "); //$NON-NLS-1$
         
         for(OWLDataRange dataRange : node.getOperands()){
             append(' ');

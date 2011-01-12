@@ -11,6 +11,7 @@
 package org.neontoolkit.search.ui;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Control;
 
 /* 
  * Created on: 23.03.2006
@@ -24,7 +25,7 @@ import org.eclipse.swt.graphics.Image;
  * @author Dirk Wenke
  */
 
-public abstract class SearchMatch {
+public abstract class SearchMatch{
 	private Object _match;
 
 	public SearchMatch(Object match) {

@@ -21,6 +21,8 @@ import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 /**
  * This is the registry of all datatypes. Applications with custom datatypes should register
  * appropriate datatype handlers with this class.
+ *
+ * @author Nico Stieler
  */
 public class BuiltInDatatypes {
     
@@ -33,6 +35,7 @@ public class BuiltInDatatypes {
         DatatypeManager.INSTANCE.registerDatatypeHandler(new StringHandler(OWLConstants.XSD_STRING));
         DatatypeManager.INSTANCE.registerDatatypeHandler(new StringHandler(OWLConstants.XSD_NORMALIZED_STRING)); 
         DatatypeManager.INSTANCE.registerDatatypeHandler(new StringHandler(OWLConstants.RDFS_LITERAL)); 
+        DatatypeManager.INSTANCE.registerDatatypeHandler(new StringHandler(OWLConstants.RDF_PLAIN_LITERAL)); 
         DatatypeManager.INSTANCE.registerDatatypeHandler(new StringHandler(OWLConstants.RDF_XML_LITERAL));
         DatatypeManager.INSTANCE.registerDatatypeHandler(new StringHandler(OWLConstants.RDF_TEXT)); 
         DatatypeManager.INSTANCE.registerDatatypeHandler(new UnsignedByteHandler());
