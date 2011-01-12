@@ -71,6 +71,7 @@ import org.semanticweb.owlapi.model.OWLHasKeyAxiom;
 import org.semanticweb.owlapi.model.OWLInverseFunctionalObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLInverseObjectPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLIrreflexiveObjectPropertyAxiom;
+import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLNegativeDataPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLNegativeObjectPropertyAssertionAxiom;
@@ -93,7 +94,6 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.OWLReflexiveObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
-import org.semanticweb.owlapi.model.OWLStringLiteral;
 import org.semanticweb.owlapi.model.OWLSubAnnotationPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubDataPropertyOfAxiom;
@@ -101,7 +101,6 @@ import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubPropertyChainOfAxiom;
 import org.semanticweb.owlapi.model.OWLSymmetricObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLTransitiveObjectPropertyAxiom;
-import org.semanticweb.owlapi.model.OWLTypedLiteral;
 import org.semanticweb.owlapi.model.SWRLBuiltInAtom;
 import org.semanticweb.owlapi.model.SWRLClassAtom;
 import org.semanticweb.owlapi.model.SWRLDArgument;
@@ -123,6 +122,7 @@ import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 
 /**
  * @author krekeler
+ * @author Nico Stieler
  *
  */
 @SuppressWarnings("nls")
@@ -200,26 +200,26 @@ public class InternalParserTest {
     
    
     // OWLConstants
-    @DataPoint public static final OWLStringLiteral untypedConstant0 = _f.getOWLStringLiteral("lexical value", "en");
-    @DataPoint public static final OWLStringLiteral untypedConstant1 = _f.getOWLStringLiteral("emtpy language", "");
-    @DataPoint public static final OWLStringLiteral untypedConstant2 = _f.getOWLStringLiteral("null language", null);
-    @DataPoint public static final OWLTypedLiteral typedConstant0 = _f.getOWLTypedLiteral("lexical value");
-    @DataPoint public static final OWLTypedLiteral typedConstant1 = _f.getOWLTypedLiteral(true);
-    @DataPoint public static final OWLTypedLiteral typedConstant2 = _f.getOWLTypedLiteral(false);
-    @DataPoint public static final OWLTypedLiteral typedConstant3 = _f.getOWLTypedLiteral(0d);
-    @DataPoint public static final OWLTypedLiteral typedConstant4 = _f.getOWLTypedLiteral(0f);
-    @DataPoint public static final OWLTypedLiteral typedConstant5 = _f.getOWLTypedLiteral("" + Integer.MIN_VALUE, xsdInt);
-    @DataPoint public static final OWLTypedLiteral typedConstant6 = _f.getOWLTypedLiteral("" + (Short.MIN_VALUE - 1), xsdInt);
-    @DataPoint public static final OWLTypedLiteral typedConstant7 = _f.getOWLTypedLiteral("" + Short.MIN_VALUE, xsdShort);
-    @DataPoint public static final OWLTypedLiteral typedConstant8 = _f.getOWLTypedLiteral("" + (Byte.MIN_VALUE - 1), xsdShort);
-    @DataPoint public static final OWLTypedLiteral typedConstant9 = _f.getOWLTypedLiteral("" + Byte.MIN_VALUE, xsdByte);
-    @DataPoint public static final OWLTypedLiteral typedConstant10 = _f.getOWLTypedLiteral("" + -1, xsdByte);
-    @DataPoint public static final OWLTypedLiteral typedConstant11 = _f.getOWLTypedLiteral("" + 0, xsdUnsignedByte);
-    @DataPoint public static final OWLTypedLiteral typedConstant12 = _f.getOWLTypedLiteral("" + Byte.MAX_VALUE, xsdUnsignedByte);
-    @DataPoint public static final OWLTypedLiteral typedConstant13 = _f.getOWLTypedLiteral("" + (Byte.MAX_VALUE + 1), xsdUnsignedShort);
-    @DataPoint public static final OWLTypedLiteral typedConstant14 = _f.getOWLTypedLiteral("" + Short.MAX_VALUE, xsdUnsignedShort);
-    @DataPoint public static final OWLTypedLiteral typedConstant15 = _f.getOWLTypedLiteral("" + (Short.MAX_VALUE + 1), xsdUnsignedInt);
-    @DataPoint public static final OWLTypedLiteral typedConstant16 = _f.getOWLTypedLiteral("" + Integer.MAX_VALUE, xsdUnsignedInt);
+    @DataPoint public static final OWLLiteral untypedConstant0 = _f.getOWLLiteral("lexical value", "en");
+    @DataPoint public static final OWLLiteral untypedConstant1 = _f.getOWLLiteral("emtpy language", "");
+    @DataPoint public static final OWLLiteral untypedConstant2 = _f.getOWLLiteral("null language");//removed second parameter (null)
+    @DataPoint public static final OWLLiteral typedConstant0 = _f.getOWLLiteral("lexical value");
+    @DataPoint public static final OWLLiteral typedConstant1 = _f.getOWLLiteral(true);
+    @DataPoint public static final OWLLiteral typedConstant2 = _f.getOWLLiteral(false);
+    @DataPoint public static final OWLLiteral typedConstant3 = _f.getOWLLiteral(0d);
+    @DataPoint public static final OWLLiteral typedConstant4 = _f.getOWLLiteral(0f);
+    @DataPoint public static final OWLLiteral typedConstant5 = _f.getOWLLiteral("" + Integer.MIN_VALUE, xsdInt);
+    @DataPoint public static final OWLLiteral typedConstant6 = _f.getOWLLiteral("" + (Short.MIN_VALUE - 1), xsdInt);
+    @DataPoint public static final OWLLiteral typedConstant7 = _f.getOWLLiteral("" + Short.MIN_VALUE, xsdShort);
+    @DataPoint public static final OWLLiteral typedConstant8 = _f.getOWLLiteral("" + (Byte.MIN_VALUE - 1), xsdShort);
+    @DataPoint public static final OWLLiteral typedConstant9 = _f.getOWLLiteral("" + Byte.MIN_VALUE, xsdByte);
+    @DataPoint public static final OWLLiteral typedConstant10 = _f.getOWLLiteral("" + -1, xsdByte);
+    @DataPoint public static final OWLLiteral typedConstant11 = _f.getOWLLiteral("" + 0, xsdUnsignedByte);
+    @DataPoint public static final OWLLiteral typedConstant12 = _f.getOWLLiteral("" + Byte.MAX_VALUE, xsdUnsignedByte);
+    @DataPoint public static final OWLLiteral typedConstant13 = _f.getOWLLiteral("" + (Byte.MAX_VALUE + 1), xsdUnsignedShort);
+    @DataPoint public static final OWLLiteral typedConstant14 = _f.getOWLLiteral("" + Short.MAX_VALUE, xsdUnsignedShort);
+    @DataPoint public static final OWLLiteral typedConstant15 = _f.getOWLLiteral("" + (Short.MAX_VALUE + 1), xsdUnsignedInt);
+    @DataPoint public static final OWLLiteral typedConstant16 = _f.getOWLLiteral("" + Integer.MAX_VALUE, xsdUnsignedInt);
     
     
     @DataPoint public static final OWLAnnotation constantAnnotation0 = _f.getOWLAnnotation(_f.getOWLAnnotationProperty(iri("constantAnnotation")), untypedConstant0);

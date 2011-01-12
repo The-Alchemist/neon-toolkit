@@ -90,7 +90,6 @@ import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubDataPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
-import org.semanticweb.owlapi.model.OWLTypedLiteral;
 import org.semanticweb.owlapi.model.SWRLAtom;
 import org.semanticweb.owlapi.model.SWRLBuiltInAtom;
 import org.semanticweb.owlapi.model.SWRLClassAtom;
@@ -110,6 +109,7 @@ import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 
 /**
  * @author krekeler
+ * @author Nico Stieler
  *
  */
 public class InternalParser {
@@ -211,7 +211,7 @@ public class InternalParser {
         nextToken();
         OWLFacet facet = OWLFacet.getFacetByShortName(_tokenizer.sval);
         nextToken();
-        OWLTypedLiteral value = (OWLTypedLiteral)parseConstant();
+        OWLLiteral value = parseConstant();
         checkTokenType(_tokenizer, ']');
         nextToken();
         return _f.getOWLFacetRestriction(facet, value);

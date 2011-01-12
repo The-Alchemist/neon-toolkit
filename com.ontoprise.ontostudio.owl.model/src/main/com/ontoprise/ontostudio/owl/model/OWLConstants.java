@@ -51,6 +51,7 @@ public interface OWLConstants {
     public static final String XSD_INTEGER = OWLNamespaces.XSD_NS + "integer";
     public static final String XSD_DECIMAL = OWLNamespaces.XSD_NS + "decimal";
     public static final String RDF_TEXT = OWLNamespaces.RDF_NS + "text";
+    public static final String RDF_PLAIN_LITERAL = OWLNamespaces.RDF_NS + "PlainLiteral";
     public static final String RDFS_LITERAL = OWLNamespaces.RDFS_NS + "Literal";
     public static final String RDF_XML_LITERAL = OWLNamespaces.RDFS_NS + "XMLLiteral";
     public static final String OWL_RATIONAL = OWLNamespaces.OWL_NS + "rational";

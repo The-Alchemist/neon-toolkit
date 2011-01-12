@@ -81,7 +81,6 @@ import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLReflexiveObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
-import org.semanticweb.owlapi.model.OWLStringLiteral;
 import org.semanticweb.owlapi.model.OWLSubAnnotationPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubDataPropertyOfAxiom;
@@ -89,7 +88,6 @@ import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubPropertyChainOfAxiom;
 import org.semanticweb.owlapi.model.OWLSymmetricObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLTransitiveObjectPropertyAxiom;
-import org.semanticweb.owlapi.model.OWLTypedLiteral;
 import org.semanticweb.owlapi.model.SWRLBuiltInAtom;
 import org.semanticweb.owlapi.model.SWRLClassAtom;
 import org.semanticweb.owlapi.model.SWRLDataPropertyAtom;
@@ -104,6 +102,8 @@ import org.semanticweb.owlapi.model.SWRLVariable;
 
 /**
  * Default implementation of the visitor containing an empty method for each object.
+ * 
+ * @author Nico Stieler
  */
 public class OWLKAON2VisitorAdapter implements OWLObjectVisitorEx<Object> {
     public Object visit(OWLAnnotationProperty object) {
@@ -315,14 +315,6 @@ public class OWLKAON2VisitorAdapter implements OWLObjectVisitorEx<Object> {
     }
     @Override
     public Object visit(OWLDataMaxCardinality desc) {
-        return null;
-    }
-    @Override
-    public Object visit(OWLTypedLiteral node) {
-        return null;
-    }
-    @Override
-    public Object visit(OWLStringLiteral node) {
         return null;
     }
     @Override

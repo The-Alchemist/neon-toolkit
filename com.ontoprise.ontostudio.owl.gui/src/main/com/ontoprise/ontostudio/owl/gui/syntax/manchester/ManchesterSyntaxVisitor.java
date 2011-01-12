@@ -93,7 +93,6 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLPropertyRange;
 import org.semanticweb.owlapi.model.OWLReflexiveObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
-import org.semanticweb.owlapi.model.OWLStringLiteral;
 import org.semanticweb.owlapi.model.OWLSubAnnotationPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubDataPropertyOfAxiom;
@@ -101,7 +100,6 @@ import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubPropertyChainOfAxiom;
 import org.semanticweb.owlapi.model.OWLSymmetricObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLTransitiveObjectPropertyAxiom;
-import org.semanticweb.owlapi.model.OWLTypedLiteral;
 
 import com.ontoprise.ontostudio.owl.model.OWLConstants;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
@@ -119,6 +117,7 @@ import com.ontoprise.ontostudio.owl.model.visitors.OWLKAON2VisitorAdapter;
  * cf. http://www.w3.org/TR/owl2-manchester-syntax/ for a complete description of the syntax.
  * 
  * @author Michael
+ * @author Nico Stieler
  */
 public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
 
@@ -201,8 +200,8 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
     private String getLocalizedLiteral(Set<OWLAnnotationValue> annotations){
         String result = null;
         for (OWLAnnotationValue value: annotations) {
-            if (value instanceof OWLStringLiteral) {
-                OWLStringLiteral untypedConstant = (OWLStringLiteral)value;
+            if (value instanceof OWLLiteral) {
+                OWLLiteral untypedConstant = (OWLLiteral)value;
                 String lang = untypedConstant.getLang();
                 if (_language.equals(lang)) {
                     result = untypedConstant.getLiteral();
@@ -383,15 +382,31 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
     }
 
     @Override
-    public String[] visit(OWLLiteral object) {
+    public String[] visit(OWLLiteral typedConstant) {
         
-        if (object.isOWLTypedLiteral()) {
-            OWLTypedLiteral typedConstant = (OWLTypedLiteral)object;
-            return (String[])visit(typedConstant);
-        } else {
-            OWLStringLiteral untypedConstant = (OWLStringLiteral)object;
-            return (String[])visit(untypedConstant);
+
+        OWLDatatype datatype = typedConstant.getDatatype();
+        if ((OWLConstants.XSD_INTEGER).equals(datatype.getIRI().toString())) {//NICO OWL API 3.1.0 insert new datatypes
+            return createSingle(typedConstant.getLiteral());
+        } else if ((OWLConstants.XSD_DOUBLE).equals(datatype.getIRI().toString())) {
+            String literal = typedConstant.getLiteral();
+            if (!literal.contains(".") && !literal.contains("E") && !literal.contains("e")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                literal = literal + ".0"; //$NON-NLS-1$
+            }
+            return createSingle(literal);
+        }else if(typedConstant.isRDFPlainLiteral()){
+            String value = quoteLiteral(typedConstant.getLiteral());
+            String language = typedConstant.getLang();
+            if(language != null && language.length() > 0) {
+                return createSingle(new StringBuilder(value).append("@").append(language).toString()); //$NON-NLS-1$
+            } else {
+                return createSingle(value);
+            }
         }
+
+        String literal = typedConstant.getLiteral();
+        String xsdTypeURI = datatype.getIRI().toString();
+        return addPrefixToArrayNoSpace(new StringBuilder(quoteLiteral(literal)).append("^^").toString(), createStandardArray(xsdTypeURI)); //$NON-NLS-1$
     }
 
     @Override
@@ -916,16 +931,6 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
         return array;
     }
 
-    @Override
-    public Object visit(OWLStringLiteral node) {
-        String value = quoteLiteral(node.getLiteral());
-        String language = node.getLang();
-        if(language != null && language.length() > 0) {
-            return createSingle(new StringBuilder(value).append("@").append(language).toString()); //$NON-NLS-1$
-        } else {
-            return createSingle(value);
-        }
-    }
     
     @Override
     public Object visit(OWLDifferentIndividualsAxiom object) {
@@ -1008,25 +1013,6 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
 
         return appendArrays(entityType, subject, createSingle(ManchesterSyntaxConstants.ANNOTATIONS), (String[]) object.getAnnotation().getProperty().accept(this), (String[]) object.getAnnotation().getValue().accept(this));
     }
-    
-    @Override
-    public Object visit(OWLTypedLiteral typedConstant) {
-        OWLDatatype datatype = typedConstant.getDatatype();
-        if ((OWLConstants.XSD_INTEGER).equals(datatype.getIRI().toString())) {
-            return createSingle(typedConstant.getLiteral());
-        } else if ((OWLConstants.XSD_DOUBLE).equals(datatype.getIRI().toString())) {
-            String literal = typedConstant.getLiteral();
-            if (!literal.contains(".") && !literal.contains("E") && !literal.contains("e")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                literal = literal + ".0"; //$NON-NLS-1$
-            }
-            return createSingle(literal);
-        }
-
-        String literal = typedConstant.getLiteral();
-        String xsdTypeURI = datatype.getIRI().toString();
-        return addPrefixToArrayNoSpace(new StringBuilder(quoteLiteral(literal)).append("^^").toString(), createStandardArray(xsdTypeURI)); //$NON-NLS-1$
-    }
-
     @Override
     public Object visit(OWLDeclarationAxiom object) {
         String entityType = ManchesterSyntaxConstants.getEntityTypeString(object.getEntity());
@@ -1037,63 +1023,54 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
 
         return appendArrays(createSingle(entityType), (String[]) object.getEntity().accept(this));
     }
-    
     @Override
     public Object visit(OWLFunctionalObjectPropertyAxiom axiom) {
         String[] functional = createSingle(ManchesterSyntaxConstants.FUNCTIONAL);
         String[] propertyUri = (String[]) axiom.getProperty().accept(this);
         return appendArrays(functional, propertyUri);
     }
-    
     @Override
     public Object visit(OWLFunctionalDataPropertyAxiom axiom) {
         String[] functional = createSingle(ManchesterSyntaxConstants.FUNCTIONAL);
         String[] propertyUri = (String[]) axiom.getProperty().accept(this);
         return appendArrays(functional, propertyUri);
     }
-    
     @Override
     public Object visit(OWLTransitiveObjectPropertyAxiom axiom) {
         String[] functional = createSingle(ManchesterSyntaxConstants.TRANSITIVE);
         String[] propertyUri = (String[]) axiom.getProperty().accept(this);
         return appendArrays(functional, propertyUri);
     }
-    
     @Override
     public Object visit(OWLSymmetricObjectPropertyAxiom axiom) {
         String[] functional = createSingle(ManchesterSyntaxConstants.SYMMETRIC);
         String[] propertyUri = (String[]) axiom.getProperty().accept(this);
         return appendArrays(functional, propertyUri);
     }
-    
     @Override
     public Object visit(OWLAsymmetricObjectPropertyAxiom axiom) {
         String[] functional = createSingle(ManchesterSyntaxConstants.ASYMMETRIC);
         String[] propertyUri = (String[]) axiom.getProperty().accept(this);
         return appendArrays(functional, propertyUri);
     }
-    
     @Override
     public Object visit(OWLInverseFunctionalObjectPropertyAxiom axiom) {
         String[] functional = createSingle(ManchesterSyntaxConstants.INVERSEFUNCTIONAL);
         String[] propertyUri = (String[]) axiom.getProperty().accept(this);
         return appendArrays(functional, propertyUri);
     }
-    
     @Override
     public Object visit(OWLIrreflexiveObjectPropertyAxiom axiom) {
         String[] functional = createSingle(ManchesterSyntaxConstants.IRREFLEXIVE);
         String[] propertyUri = (String[]) axiom.getProperty().accept(this);
         return appendArrays(functional, propertyUri);
     }
-    
     @Override
     public Object visit(OWLReflexiveObjectPropertyAxiom axiom) {
         String[] functional = createSingle(ManchesterSyntaxConstants.REFLEXIVE);
         String[] propertyUri = (String[]) axiom.getProperty().accept(this);
         return appendArrays(functional, propertyUri);
     }
-    
     @Override
     public String[] visit(OWLSubPropertyChainOfAxiom axiom) {
         String[] superPropertyUri = (String[] ) axiom.getSuperProperty().accept(this);
@@ -1109,7 +1086,6 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
                 createSingle(ManchesterSyntaxConstants.SUBPROPERTYCHAIN),
                 chainStrings);
     }
-
     @Override
     public Object visit(OWLSubAnnotationPropertyOfAxiom axiom) {
         String[] property = (String[]) axiom.getSubProperty().accept(this);
@@ -1117,7 +1093,6 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
 
         return appendArrays(createSingle(ManchesterSyntaxConstants.ANNOTATIONPROPERTY), property, createSingle(ManchesterSyntaxConstants.SUBPROPERTTYOF), superProp);
     }
-    
     @Override
     public Object visit(OWLDataIntersectionOf node) {
         Set<OWLDataRange> descs = node.getOperands();
@@ -1137,12 +1112,10 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
         }
         return result;    
     }
-    
     @Override
     public Object visit(IRI iri) {
         return createStandardArray(iri.toString());
     }
-    
     @Override
     public String[] visit(OWLDatatypeDefinitionAxiom axiom) {
         String[] datatype = (String[]) axiom.getDatatype().accept(this);

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %plugin.name
 Bundle-SymbolicName: com.ontoprise.ontostudio.owl.gui.ontologyimportsgraph;singleton:=true
-Bundle-Version: 2.4
+Bundle-Version: 2.5
 Bundle-Localization: plugin
 Bundle-Activator: com.ontoprise.ontostudio.owl.gui.ontologyimportsgraph.Activator
 Bundle-Vendor: %neonFoundation

@@ -3,7 +3,7 @@ Eclipse-RegisterBuddy: dependencies
 Bundle-ManifestVersion: 2
 Bundle-Name: %searchFunctionalities
 Bundle-SymbolicName: org.neontoolkit.search;singleton:=true
-Bundle-Version: 2.4
+Bundle-Version: 2.5
 Bundle-ClassPath: neontoolkit-search.jar
 Bundle-Activator: org.neontoolkit.search.SearchPlugin
 Bundle-Vendor: NeOn Technologies Foundation Ltd
