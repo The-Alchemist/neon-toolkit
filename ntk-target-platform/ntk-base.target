@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.6"?>
+<?pde version="3.5"?>
 
 <target name="ntk-base-target-platform">
 <locations>
-<location path="${project_loc}/eclipse-platform-3.5.2" type="Directory"/>
-<location path="${project_loc}/delta-packs" type="Directory"/>
+<location path="${project_loc}/delta-packs-3.6.1" type="Directory"/>
+<location path="${project_loc}/eclipse-platform-3.6.1" type="Directory"/>
 </locations>
 </target>
