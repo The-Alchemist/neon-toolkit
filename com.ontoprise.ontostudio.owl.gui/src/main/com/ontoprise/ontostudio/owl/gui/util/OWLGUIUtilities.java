@@ -640,12 +640,15 @@ public class OWLGUIUtilities {
      * @param owlModel
      * @return
      */
-    private static String[] getRdfsLiteral(OWLModel owlModel) {
+    private static String[] getRdfPlainLiteral(OWLModel owlModel) {
         try {
-            String[] idArray = OWLGUIUtilities.getIdArray((OWLDatatype) owlModel.getOWLDataFactory().getOWLDatatype(OWLUtilities.toIRI(OWLConstants.RDFS_LITERAL)), owlModel.getOntologyURI(), owlModel.getProjectId());
+            String[] idArray = OWLGUIUtilities.getIdArray(
+                    (OWLDatatype) owlModel.getOWLDataFactory().getOWLDatatype(OWLUtilities.toIRI(OWLConstants.RDF_PLAIN_LITERAL)), 
+                    owlModel.getOntologyURI(), 
+                    owlModel.getProjectId());
             return idArray;
         } catch (NeOnCoreException e) {
-            return new String[]{"Literal", OWLConstants.RDFS_LITERAL}; //$NON-NLS-1$
+            return new String[]{"PlainLiteral", OWLConstants.RDF_PLAIN_LITERAL}; //$NON-NLS-1$
         }
     }
 
@@ -656,7 +659,7 @@ public class OWLGUIUtilities {
             public void modifyText(ModifyEvent e) {
                 if (e.widget instanceof StyledText) {
                     String text = ((StyledText) e.widget).getText();
-                    String[] literalText = getRdfsLiteral(owlModel);
+                    String[] literalText = getRdfPlainLiteral(owlModel);
                     if (!text.equals(literalText[0]) && !text.equals(literalText[1])) {
                         languageCombo.select(languageCombo.indexOf(OWLCommandUtils.EMPTY_LANGUAGE));
                     }
@@ -670,7 +673,7 @@ public class OWLGUIUtilities {
             public void widgetSelected(SelectionEvent e) {
                 String selectedText = ((CCombo) e.widget).getText();
                 if (!selectedText.equals(OWLCommandUtils.EMPTY_LANGUAGE)) {
-                    typeText.setText(getRdfsLiteral(owlModel)[1]);
+                    typeText.setText(getRdfPlainLiteral(owlModel)[1]);
                 }
             }
 
