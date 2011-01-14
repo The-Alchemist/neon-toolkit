@@ -78,7 +78,7 @@ public abstract class AbstractOwlEntityTreeElement extends AbstractOntologyEntit
             int nbDInstances = OWLGUIUtilities.getNumberOfDirectInstances(_entity, getOntologyUri(), getProjectName());
             int nbIInstances = OWLGUIUtilities.getNumberOfInDirectInstances(_entity, getOntologyUri(), getProjectName());
             if (nbIInstances != 0)
-                result+=" "+nbDInstances+"|"+nbIInstances;
+                result+=" "+nbDInstances+"|"+nbIInstances; //$NON-NLS-1$ //$NON-NLS-2$
         }
         return result;
     }
@@ -117,6 +117,7 @@ public abstract class AbstractOwlEntityTreeElement extends AbstractOntologyEntit
     /* (non-Javadoc) NOTE: not needed for OWL
      * @see org.neontoolkit.gui.navigator.elements.IEntityElement#getLocalName()
      */
+    @Override
     public String getLocalName() {
         return _uri;
     }
@@ -124,6 +125,7 @@ public abstract class AbstractOwlEntityTreeElement extends AbstractOntologyEntit
     /* (non-Javadoc) NOTE: not needed for OWL
      * @see org.neontoolkit.gui.navigator.elements.IEntityElement#getNamespace()
      */
+    @Override
     public String getNamespace() {
         return _uri;
     }
