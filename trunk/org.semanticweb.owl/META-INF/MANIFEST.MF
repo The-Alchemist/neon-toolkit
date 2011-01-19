@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: OWLAPI lib Plug-in
 Bundle-SymbolicName: org.semanticweb.owl
-Bundle-Version: 3.1.0
+Bundle-Version: 3.2.0
 Bundle-Vendor: NeOn Technologies Foundation Ltd.
-Bundle-ClassPath: lib/org.semanticweb.owlapi_3.1.0.v20100820.jar
+Bundle-ClassPath: lib/org.semanticweb.owlapi_3.2.0.v20110114.jar
 Export-Package: 
  com.clarkparsia.owlapi.explanation,
  com.clarkparsia.owlapi.explanation.io,
