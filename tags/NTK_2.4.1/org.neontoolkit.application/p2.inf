@@ -1,3 +1,0 @@
-instructions.configure=\
-addRepository(name:NeOn Toolkit Update Site v2.4,type:0,location:http${#58}//neon-toolkit.org/plugins/2.4);\
-addRepository(name:NeOn Toolkit Update Site v2.4,type:1,location:http${#58}//neon-toolkit.org/plugins/2.4);
