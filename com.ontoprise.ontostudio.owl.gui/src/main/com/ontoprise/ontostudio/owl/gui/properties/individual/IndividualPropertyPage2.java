@@ -56,6 +56,8 @@ import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLStringLiteral;
+import org.semanticweb.owlapi.model.OWLTypedLiteral;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
@@ -581,7 +583,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
      *         qname,.
      */
     private ArrayList<String[]> handleDataPropertyMemberAxiom(OWLDataPropertyAssertionAxiom axiom) {
-        OWLLiteral typedConstant = axiom.getObject();
+        OWLLiteral target = axiom.getObject();
 
         int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
         OWLObjectVisitorEx<?> visitor = _manager.getVisitor(_owlModel, idDisplayStyle);
@@ -589,17 +591,30 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         String[] propArray = (String[]) axiom.getProperty().accept(visitor);
         ArrayList<String[]> contents = new ArrayList<String[]>();
 
-        OWLDatatype datatype = typedConstant.getDatatype();
-        contents.add(propArray);
-        contents.add(new String[] {typedConstant.getLiteral()});
-        contents.add((String[]) datatype.accept(visitor));
-        if(typedConstant.isRDFPlainLiteral()) {
-            String language = typedConstant.getLang();
+        if (!target.isOWLTypedLiteral()) {
+            OWLStringLiteral untypedConstant = (OWLStringLiteral)target;
+            String literal = untypedConstant.getLiteral();
+            String language = untypedConstant.getLang();
+            String dataType = OWLConstants.RDFS_LITERAL;
+            contents.add(propArray);
+            contents.add(new String[] {literal});
+            try {
+                contents.add((String[]) OWLModelFactory.getOWLDataFactory(_project).getOWLDatatype(OWLUtilities.toIRI(dataType)).accept(visitor));
+            } catch (NeOnCoreException e) {
+                throw new RuntimeException(e);
+            }
             contents.add(new String[] {language});
-        }else{
+            return contents;
+
+        } else {
+            OWLTypedLiteral typedConstant = (OWLTypedLiteral)target;
+            OWLDatatype dataType = typedConstant.getDatatype();
+            contents.add(propArray);
+            contents.add(new String[] {typedConstant.getLiteral()});
+            contents.add((String[]) dataType.accept(visitor));
             contents.add(new String[] {null});
+            return contents;
         }
-        return contents;
     }
 
     /**
@@ -698,7 +713,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 
                     OWLDatatype type;
                     if (typeText.getText().equals("")) { //$NON-NLS-1$
-                        type = OWLModelFactory.getOWLDataFactory(_project).getOWLDatatype(OWLUtilities.toIRI(OWLConstants.RDF_PLAIN_LITERAL));
+                        type = OWLModelFactory.getOWLDataFactory(_project).getOWLDatatype(OWLUtilities.toIRI(OWLConstants.RDFS_LITERAL));
                     } else {
                         type = (OWLDatatype) _manager.parseDataRange(typeText.getText(), _localOwlModel);
                     }
@@ -860,21 +875,21 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 
                     OWLDatatype type;
                     if (typeText.getText().equals("")) { //$NON-NLS-1$
-                        type = OWLModelFactory.getOWLDataFactory(_project).getOWLDatatype(OWLUtilities.toIRI(OWLConstants.RDF_PLAIN_LITERAL));
+                        type = OWLModelFactory.getOWLDataFactory(_project).getOWLDatatype(OWLUtilities.toIRI(OWLConstants.RDFS_LITERAL));
                     } else {
                         type = (OWLDatatype) _manager.parseDataRange(typeText.getText(), _localOwlModel);
                     }
 
                     OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(_project);
                     OWLLiteral c;
-                    if (type.getIRI().toString().equals(OWLConstants.RDF_PLAIN_LITERAL)) {
+                    if (type.getIRI().toString().equals(OWLConstants.RDFS_LITERAL)) {
                         if (!languageCombo.getText().equals(OWLCommandUtils.EMPTY_LANGUAGE) && !languageCombo.getText().equals("")) { //$NON-NLS-1$
-                            c = factory.getOWLLiteral(valueText.getText(), languageCombo.getText());
+                            c = factory.getOWLStringLiteral(valueText.getText(), languageCombo.getText());
                         } else {
-                            c = factory.getOWLLiteral(valueText.getText(), factory.getOWLDatatype(OWLUtilities.toIRI(OWLConstants.XSD_STRING)));
+                            c = factory.getOWLTypedLiteral(valueText.getText(), factory.getOWLDatatype(OWLUtilities.toIRI(OWLConstants.XSD_STRING)));
                         }
                     } else {
-                        c = factory.getOWLLiteral(valueText.getText(), type);
+                        c = factory.getOWLTypedLiteral(valueText.getText(), type);
                     }
 
                     OWLAxiom newAxiom = factory.getOWLDataPropertyAssertionAxiom(prop, (OWLIndividual)getOWLObject(), c);

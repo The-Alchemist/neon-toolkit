@@ -34,6 +34,7 @@ import org.eclipse.ui.forms.widgets.ColumnLayoutData;
 import org.eclipse.ui.forms.widgets.Section;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.core.util.IRIUtils;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.semanticweb.owlapi.model.IRI;
@@ -45,6 +46,8 @@ import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
+import org.semanticweb.owlapi.model.OWLStringLiteral;
+import org.semanticweb.owlapi.model.OWLTypedLiteral;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
@@ -60,7 +63,9 @@ import com.ontoprise.ontostudio.owl.gui.util.forms.OntologyAnnotationRowHandler;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.DatatypeText;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.PropertyText;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.StringText;
+import com.ontoprise.ontostudio.owl.model.OWLConstants;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
+import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.OWLCommandUtils;
 import com.ontoprise.ontostudio.owl.model.commands.annotationproperties.GetAnnotationPropertyRanges;
@@ -380,21 +385,30 @@ public class OntologyAnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage 
             createAnnotationsRow(prop, OWLGUIUtilities.getEntityLabel(indivArray), null, OWLGUIUtilities.getEntityLabel(typeArray), contents);
 
         } else if (o instanceof OWLLiteral) {
-            OWLLiteral typedConstant = (OWLLiteral)o;
-            OWLDatatype datatype = typedConstant.getDatatype();
+            OWLLiteral constant = (OWLLiteral)o;
+            if (!constant.isOWLTypedLiteral()) {
+                OWLStringLiteral untypedConstant = (OWLStringLiteral)o;
+                String literal = untypedConstant.getLiteral();
+                language = untypedConstant.getLang();
+                String dataType = OWLConstants.RDFS_LITERAL;
 
-            String literal = typedConstant.getLiteral();
-
-            contents.add(propArray);
-            contents.add(new String[] {literal});
-            contents.add((String[]) datatype.accept(visitor));
-            if(typedConstant.isRDFPlainLiteral()) {
-                language = typedConstant.getLang();
+                contents.add(propArray);
+                contents.add(new String[] {literal});
+                contents.add((String[]) OWLModelFactory.getOWLDataFactory(_project).getOWLDatatype(OWLUtilities.toIRI(dataType)).accept(visitor));
                 contents.add(new String[] {language});
-            }else{
+                createAnnotationsRow(prop, literal, language, dataType, contents);
+
+            } else {
+                OWLTypedLiteral typedConstant = (OWLTypedLiteral)o;
+                OWLDatatype datatype = typedConstant.getDatatype();
+                String literal = typedConstant.getLiteral();
+
+                contents.add(propArray);
+                contents.add(new String[] {literal});
+                contents.add((String[]) datatype.accept(visitor));
                 contents.add(new String[] {null});
+                createAnnotationsRow(prop, literal, language, datatype.getIRI().toString(), contents);
             }
-            createAnnotationsRow(prop, literal, language, datatype.getIRI().toString(), contents);
         } else {
             throw new IllegalArgumentException(Messages.OntologyAnnotationsPropertyPage2_1 + o);
         }

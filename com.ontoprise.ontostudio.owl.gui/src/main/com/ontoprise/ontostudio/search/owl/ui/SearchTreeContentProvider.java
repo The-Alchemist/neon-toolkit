@@ -3,6 +3,7 @@
  */
 package com.ontoprise.ontostudio.search.owl.ui;
 
+import java.lang.management.ThreadMXBean;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
@@ -14,6 +15,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.neontoolkit.gui.navigator.ITreeDataProvider;
 import org.neontoolkit.gui.navigator.elements.AbstractOntologyTreeElement;
 import org.neontoolkit.gui.navigator.elements.TreeElement;
+
+import sun.management.ManagementFactory;
 
 import com.ontoprise.ontostudio.search.owl.match.ITreeObject;
 import com.ontoprise.ontostudio.search.owl.match.ITreeParent;
@@ -60,18 +63,56 @@ public class SearchTreeContentProvider implements ITreeContentProvider,IStructur
         }
         return null;
     }
-    
+
+    private ThreadGroup getRootThreadGroup( ) {
+        ThreadGroup tg = Thread.currentThread( ).getThreadGroup( );
+        ThreadGroup ptg;
+        while ( (ptg = tg.getParent( )) != null )
+            tg = ptg;
+        return tg;
+    }
+    private Thread[] getAllThreads( ) {
+        final ThreadGroup root = getRootThreadGroup( );
+        final ThreadMXBean thbean = ManagementFactory.getThreadMXBean( );
+        int nAlloc = thbean.getThreadCount( );
+        int n = 0;
+        Thread[] threads;
+        do {
+            nAlloc *= 2;
+            threads = new Thread[ nAlloc ];
+            n = root.enumerate( threads, true );
+        } while ( n == nAlloc );
+        return java.util.Arrays.copyOf( threads, n );
+    }
     @SuppressWarnings("null")
     @Override
     public Object[] getChildren(Object parent) {
 
         if (parent.equals(this.result) && parent instanceof SearchResult) {
-            try {   
-                Thread.sleep(500);//NICO   
+            
+            System.out.println("getChildren: before " + ((SearchResult)parent).getElements().length);
+            try {   //NICO 
+                System.out.println("================" + getAllThreads().length + "=====================");
+                for(Thread t : getAllThreads()){
+                    System.out.println(t.getName());
+                }
+                System.out.println("================" + getAllThreads().length + "=====================");
+                if(((SearchResult) parent).getElements().length == 0){
+                    System.out.println("sleep");
+                    Thread.sleep(500);  
+                    System.out.println("slept");
+                    System.out.println("================" + getAllThreads().length + "=====================");
+                    for(Thread t : getAllThreads()){
+                        System.out.println(t.getName());
+                    }
+                    System.out.println("================" + getAllThreads().length + "=====================");
+                }
             } catch (InterruptedException e) {   
                 e.printStackTrace();   
             } 
-            this.invisibleRoot = new RootTreeObject();
+            System.out.println("getChildren: " + ((SearchResult)parent).getElements().length);
+            if(this.invisibleRoot == null)
+                this.invisibleRoot = new RootTreeObject();
             LinkedList<ProjectTreeObject> projectArray = new LinkedList<ProjectTreeObject>();
             LinkedList<LinkedList<OntologyTreeObject>> projectOntologyArray = new LinkedList<LinkedList<OntologyTreeObject>>();
             for (Object match: ((SearchResult) parent).getElements()) {
@@ -167,6 +208,73 @@ public class SearchTreeContentProvider implements ITreeContentProvider,IStructur
                 removeCount++;
             }
         }   
+//        outer:
+        System.out.println("elementsChanged: " + added.size());
+//        LinkedList<ProjectTreeObject> projectArray = null;
+//        LinkedList<LinkedList<OntologyTreeObject>> projectOntologyArray = null;
+//        if(added.size() > 0){
+//            if(this.invisibleRoot == null)
+//                this.invisibleRoot = new RootTreeObject();
+//            projectArray = new LinkedList<ProjectTreeObject>();
+//            projectOntologyArray = new LinkedList<LinkedList<OntologyTreeObject>>();
+//
+//            for(Object match : added){
+//                System.out.println(match);
+//                if(match instanceof OwlSearchMatch){
+//                    AbstractOntologyTreeElement element = (AbstractOntologyTreeElement) ((OwlSearchMatch) match).getMatch();
+//                        if (match instanceof TreeElement) {
+//                            TreeElement te = ((TreeElement) match);
+//                            ITreeDataProvider p = te.getProvider();
+//                            p.getClass();
+//                        }
+//                        ProjectTreeObject actualProject = null;
+//                        OntologyTreeObject actualOntology = null;
+//                        boolean newproject = false;
+//                        int i = 0;
+//            
+//                        project: {
+//                            for (; i < projectArray.size(); i++) {
+//                                if (projectArray.get(i).getName().equals(element.getProjectName())) {
+//                                    actualProject = projectArray.get(i);
+//                                    break project;
+//                                }
+//                            }
+//                            i = projectArray.size();
+//                            newproject = true;
+//                            actualProject = new ProjectTreeObject(element.getProjectName());
+//                            projectArray.add(actualProject);
+//                            invisibleRoot.addChild(actualProject);
+//                        }
+//            
+//                        ontology: {
+//                            if(actualProject != null){
+//                                LinkedList<OntologyTreeObject> ontologyArray;
+//                                if (!newproject) {
+//                                    ontologyArray = projectOntologyArray.get(i);
+//                                   for (int j = 0; j < ontologyArray.size(); j++) {
+//                                        if (ontologyArray.get(j).getName().equals(element.getOntologyUri())) {
+//                                            actualOntology = ontologyArray.get(j);
+//                                            break ontology;
+//                                        }
+//                                    }
+//                                } else {
+//                                    ontologyArray = new LinkedList<OntologyTreeObject>();
+//                                    projectOntologyArray.add(ontologyArray);
+//                                }
+//                                actualOntology = new OntologyTreeObject(element.getOntologyUri());
+//                                ontologyArray.add(actualOntology);
+//                                actualProject.addChild(actualOntology);
+//                            }
+//                        }
+//                        if(actualOntology != null)
+//                            actualOntology.addChild((OwlSearchMatch) match);
+//                }else{
+//                    System.out.println("\tout: " + match); //$NON-NLS-1$
+//                }
+//                System.out.println(match);
+//        }
+//     }
+
         outer:
         for(Object match : removed){
             for(ITreeObject project : invisibleRoot.getChildren()){
@@ -192,7 +300,6 @@ public class SearchTreeContentProvider implements ITreeContentProvider,IStructur
                     }
             }
         }
-        
         
         
 //        System.out.println("------------------elementsChanged-------------------");

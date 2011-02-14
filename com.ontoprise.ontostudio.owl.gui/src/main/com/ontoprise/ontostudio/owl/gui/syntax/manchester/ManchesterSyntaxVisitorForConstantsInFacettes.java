@@ -12,6 +12,8 @@ package com.ontoprise.ontostudio.owl.gui.syntax.manchester;
 
 import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.OWLStringLiteral;
+import org.semanticweb.owlapi.model.OWLTypedLiteral;
 
 import com.ontoprise.ontostudio.owl.model.visitors.OWLKAON2VisitorAdapter;
 
@@ -20,7 +22,6 @@ import com.ontoprise.ontostudio.owl.model.visitors.OWLKAON2VisitorAdapter;
  * abbreviated without the namespace.
  *      
  * @author Michael
- * @author Nico Stieler
  */
 public class ManchesterSyntaxVisitorForConstantsInFacettes extends OWLKAON2VisitorAdapter {
 
@@ -29,7 +30,7 @@ public class ManchesterSyntaxVisitorForConstantsInFacettes extends OWLKAON2Visit
     }
     
     @Override
-    public String visit(OWLLiteral typedConstant) {
+    public String visit(OWLLiteral object) {
         // TODO: migration, skipped special handling for numbers
 //        if (value instanceof Long) {
 //            return value.toString();
@@ -37,26 +38,30 @@ public class ManchesterSyntaxVisitorForConstantsInFacettes extends OWLKAON2Visit
 //        } else if (value instanceof Double) {
 //            return value.toString();
 
-
-        OWLDatatype datatype = typedConstant.getDatatype();//TODO OWL API 3.1.0 : there are more datatypes now
-        String xsdTypeURI = datatype.getIRI().toString();
-        if(xsdTypeURI.equals("http://www.w3.org/2001/XMLSchema#unsignedInt")) { //$NON-NLS-1$
-            xsdTypeURI="integer"; //$NON-NLS-1$
-        } else if(typedConstant.isInteger()) {
-            xsdTypeURI="integer"; //$NON-NLS-1$
-        } else if(typedConstant.isFloat()) {
-            xsdTypeURI="float"; //$NON-NLS-1$
-        } else if(xsdTypeURI.equals("http://www.w3.org/2001/XMLSchema#string")) { //$NON-NLS-1$
-            xsdTypeURI="string"; //$NON-NLS-1$
-        } else if(typedConstant.isRDFPlainLiteral()) {
-            String string = typedConstant.getLiteral();
-            String language = typedConstant.getLang();
+        if (!object.isOWLTypedLiteral()) {
+            OWLStringLiteral untypedConstant = (OWLStringLiteral)object;
+            String string = untypedConstant.getLiteral();
+            String language = untypedConstant.getLang();
             if (language != null) {
                 return ManchesterSyntaxVisitor.quoteLiteral(string).concat("@").concat(language).toString(); //$NON-NLS-1$
             } else {
                 return ManchesterSyntaxVisitor.quoteLiteral(string);
             }
+
+        } else {
+            OWLTypedLiteral typedConstant = (OWLTypedLiteral)object;
+            OWLDatatype datatype = typedConstant.getDatatype();
+            String xsdTypeURI = datatype.getIRI().toString();
+            if(xsdTypeURI.equals("http://www.w3.org/2001/XMLSchema#unsignedInt")) { //$NON-NLS-1$
+                xsdTypeURI="integer"; //$NON-NLS-1$
+            } else if(xsdTypeURI.equals("http://www.w3.org/2001/XMLSchema#integer")) { //$NON-NLS-1$
+                xsdTypeURI="integer"; //$NON-NLS-1$
+            } else if(xsdTypeURI.equals("http://www.w3.org/2001/XMLSchema#float")) { //$NON-NLS-1$
+                xsdTypeURI="float"; //$NON-NLS-1$
+            } else if(xsdTypeURI.equals("http://www.w3.org/2001/XMLSchema#string")) { //$NON-NLS-1$
+                xsdTypeURI="string"; //$NON-NLS-1$
+            }
+            return new StringBuilder(ManchesterSyntaxVisitor.quoteLiteral(typedConstant.getLiteral())).append("^^").append(xsdTypeURI).toString(); //$NON-NLS-1$
         }
-        return new StringBuilder(ManchesterSyntaxVisitor.quoteLiteral(typedConstant.getLiteral())).append("^^").append(xsdTypeURI).toString(); //$NON-NLS-1$
     }
 }

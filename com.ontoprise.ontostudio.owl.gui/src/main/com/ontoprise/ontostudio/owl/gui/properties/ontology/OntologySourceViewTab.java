@@ -282,7 +282,7 @@ public class OntologySourceViewTab extends AbstractOWLIdPropertyPage implements 
                 break;
             } case OWLXML: {
                 OWLXMLWriter xmlWriter = new OWLXMLWriter(writer, ontology);
-                OWLXMLObjectRenderer renderer = new OWLXMLObjectRenderer(xmlWriter);//NICO changed for OWL API 3.2; before: new OWLXMLObjectRenderer(ontology, xmlWriter);
+                OWLXMLObjectRenderer renderer = new OWLXMLObjectRenderer(ontology, xmlWriter);
                 renderer.visit(ontology);
             } case OWLRDF: {
                 RDFXMLRenderer renderer = new RDFXMLRenderer(ontology.getOWLOntologyManager(), ontology, writer);

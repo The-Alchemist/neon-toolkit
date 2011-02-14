@@ -194,8 +194,8 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
 
             dataTypeNameMap = new HashMap<String,OWLDatatype>();
             for (XSDVocabulary v: XSDVocabulary.values()) {
-                dataTypeNameMap.put(v.getIRI().toURI().getFragment(), dataFactory.getOWLDatatype(v.getIRI())); //NICO OWL API 3.1.0 URI --> IRI: maybe its possible to remove the toURI()
-                dataTypeNameMap.put("xsd:" + v.getIRI().toURI().getFragment(), dataFactory.getOWLDatatype(v.getIRI())); //$NON-NLS-1$ //NICO OWL API 3.1.0 URI --> IRI: maybe its possible to remove the toURI()
+                dataTypeNameMap.put(v.getURI().getFragment(), dataFactory.getOWLDatatype(v.getIRI()));
+                dataTypeNameMap.put("xsd:" + v.getURI().getFragment(), dataFactory.getOWLDatatype(v.getIRI())); //$NON-NLS-1$
             }
         }
 
