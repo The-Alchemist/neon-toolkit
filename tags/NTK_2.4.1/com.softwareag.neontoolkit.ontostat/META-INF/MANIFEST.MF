@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: OWL Ontology Statistics
+Bundle-SymbolicName: com.softwareag.neontoolkit.ontostat;singleton:=true
+Bundle-Version: 1.2.0
+Bundle-Activator: com.softwareag.neontoolkit.ontostat.StatsPlugin
+Bundle-Vendor: Software AG
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.eclipse.ui.forms,
+ org.semanticweb.owl,
+ org.neontoolkit.core,
+ org.neontoolkit.gui,
+ com.ontoprise.ontostudio.owl.gui,
+ com.ontoprise.ontostudio.owl.model
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: softwareag-neontoolkit-ontostat.jar

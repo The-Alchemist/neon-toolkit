@@ -1,0 +1,133 @@
+body {
+    color: #000000;
+    margin:0px;
+    font-family: Verdana;
+    font-size: 10pt;
+    text-align: justify;
+}
+.bodynormal {
+    color: #000000;
+    margin:0px;
+    padding: 10px;
+    padding-right: 10px;
+    font-family: Verdana;
+    font-size: 10pt;
+    text-align: justify;
+}
+
+a {
+    text-decoration: underline;
+    color: #000000;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #003399;
+}
+
+h3 {
+    text-align: justify;
+    padding-left: 10px ;
+    line-height:40px;
+    background-image:url(../images/topgrad_unten.png); 
+    background-repeat:repeat-x
+}
+
+h4 {
+    text-align: justify;
+    padding-left: 10px ;
+    line-height:40px;
+    background-image:url(../images/topgrad_oben.png); 
+    background-repeat:repeat-x
+}
+
+h5 {
+    text-align: justify;
+    padding-left: 10px ;
+    line-height:30px;
+    background-image:url(../images/topgrad_oben.png); 
+    background-repeat:repeat-x
+}
+
+ol{
+    list-style-position: outside;
+}
+
+ul{
+    list-style-type: square;
+
+}
+
+.code {
+    color: #0000FF;
+    margin: 30;
+    padding: 4;
+    font-family: Courier;
+    font-size: 12pt;
+    text-align: justify
+}
+
+.notes{
+    border-width:1px;
+    border-style:solid;
+    border-color:black;
+    padding:10px;
+    text-align:justify;
+
+}
+
+img{
+    border-bottom-style: solid;
+    border-right-style: solid;
+    border-bottom-width: medium;
+    border-right-width: medium;
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-color: #999999;
+    border-top-style: solid;
+    border-top-width: 1px;
+    
+    
+
+}
+
+img.ohne{
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+	
+}
+
+
+table {
+    border-collapse: collapse;
+    border: 0px none;
+    margin: 0em;
+    clear: both;
+    font-size: 10pt;
+}
+
+table.main td {
+    padding: 0em;
+    text-align: justify
+}
+
+table.main td.grey {
+    background: #F3F3F3;
+}
+
+table.main td.blue {
+    background: #003399;
+}
+
+table.main span.title {
+    font-size: 10pt;
+    font-weight: bold
+}
+
+table.main span.head {
+    font-size: 10pt;
+    font-weight: bold;
+    color: white
+}

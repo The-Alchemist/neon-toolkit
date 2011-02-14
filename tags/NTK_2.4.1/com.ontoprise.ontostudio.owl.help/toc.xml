@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc href="html/owl_editor.html" label="The OWL Perspective" topic="html/owl_editor.html">
+		<topic label="The OWL Language" href="html/owl.html"></topic>
+		<topic label="OWL 2 Language Features" href="html/owl2-features.html"></topic>
+		<topic href="html/user_interface_overview.html" label="User Interface Overview">
+			<topic href="html/ontology_navigator.html" label="Ontology Navigator"></topic>
+			<topic href="html/individuals_view.html" label="Individuals Panel"></topic>
+			<topic href="html/entity_properties.html" label="Entity Properties Panel">
+				<topic href="html/owl_ontology.html" label="Ontology"></topic>
+				<topic href="html/owl_classes.html" label="Classes"></topic>
+				<topic href="html/owl_object_properties.html" label="Object Properties"></topic>
+				<topic href="html/owl_data_properties.html" label="Datatype Properties"></topic>
+				<topic href="html/owl_annotation_properties.html" label="Annotation Properties"></topic>
+				<topic href="html/owl_datatypes.html" label="Datatypes"></topic>
+				<topic href="html/owl_individuals.html" label="Individuals"></topic>
+    <topic href="html/imported_ontologies_information.html" label="Functionality for imported ontologies">
+    </topic>
+			</topic>
+			<topic href="html/manchester_syntax.html" label="Manchester Syntax"></topic>
+			<topic href="html/search.html" label="Search"></topic>
+			<topic href="html/ontology_visualizer.html" label="Ontology Visualizer"></topic>
+			<topic href="html/preferences.html" label="Preferences"></topic>
+   <topic href="html/domain_view.html" label="Domain View">
+   </topic>
+   <topic href="html/range_view.html" label="Range View">
+   </topic>
+   <topic href="html/property_members_view.html" label="Property Members View">
+   </topic>
+		</topic>
+		
+		<topic href="html/using_owl_editor.html" label="How to use the OWL Perspective?">
+			<topic href="html/create_owl_project.html" label="How to create an Ontology Project?"></topic>
+			<topic href="html/create_ontology.html" label="How to create an Ontology?"></topic>
+			<topic href="html/create_class.html" label="How to create a Class?"></topic>
+			<topic href="html/create_object_property.html" label="How to create an Object Property?"></topic>
+			<topic href="html/create_datatype_property.html" label="How to create a Datatype Property?"></topic>
+			<topic href="html/create_annotation_property.html" label="How to create an Annotation Property?"></topic>
+			<topic href="html/create_annotation.html" label="How to create an Annotation?"></topic>
+			<topic href="html/import_ontology.html" label="How to load an Ontology?"></topic>
+			<topic href="html/export_ontology.html" label="How to save an Ontology?"></topic>
+			<topic href="html/delete_resource.html" label="How to delete an Entity?"></topic>
+		</topic>
+		<topic href="html/online_references.html" label="Online References"></topic>
+</toc>

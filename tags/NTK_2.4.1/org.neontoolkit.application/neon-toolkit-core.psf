@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<psf version="2.0">
+<provider id="org.tigris.subversion.subclipse.core.svnnature">
+<project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/branches/NTK_2.4/com.ontoprise.dependencies,com.ontoprise.dependencies"/>
+<project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/branches/NTK_2.4/com.ontoprise.ontostudio.owl.gui,com.ontoprise.ontostudio.owl.gui"/>
+<project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/branches/NTK_2.4/com.ontoprise.ontostudio.owl.gui.ontologyimportsgraph,com.ontoprise.ontostudio.owl.gui.ontologyimportsgraph"/>
+<project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/branches/NTK_2.4/com.ontoprise.ontostudio.owl.help,com.ontoprise.ontostudio.owl.help"/>
+<project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/branches/NTK_2.4/com.ontoprise.ontostudio.owl.model,com.ontoprise.ontostudio.owl.model"/>
+<project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/branches/NTK_2.4/com.ontoprise.ontostudio.owl.visualize,com.ontoprise.ontostudio.owl.visualize"/>
+<project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/branches/NTK_2.4/com.softwareag.neontoolkit.ontostat,com.softwareag.neontoolkit.ontostat"/>
+<project reference="0.9.3,https://neon-plugins.googlecode.com/svn/branches/NTK_2.4/it.essepuntato.semanticweb.neontoolkit.kcevisualizer,it.essepuntato.semanticweb.neontoolkit.kcevisualizer"/>
+<project reference="0.9.3,https://neon-plugins.googlecode.com/svn/branches/NTK_2.4/org.neontoolkit.kcevisualizer.feature,org.neontoolkit.kcevisualizer.feature"/>
+<project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/branches/NTK_2.4/ntk-target-platform,ntk-target-platform"/>
+<project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/branches/NTK_2.4/org.neontoolkit.application,org.neontoolkit.application"/>
+<project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/branches/NTK_2.4/org.neontoolkit.core,org.neontoolkit.core"/>
+<project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/branches/NTK_2.4/org.neontoolkit.core-feature,org.neontoolkit.core-feature"/>
+<project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/branches/NTK_2.4/org.neontoolkit.gui,org.neontoolkit.gui"/>
+<project reference="0.9.3,https://neon-plugins.googlecode.com/svn/branches/NTK_2.4/org.neontoolkit.gui.individual.formtemplate,org.neontoolkit.gui.individual.formtemplate"/>
+<project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/branches/NTK_2.4/org.neontoolkit.io,org.neontoolkit.io"/>
+<project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/branches/NTK_2.4/org.neontoolkit.jpowergraph,org.neontoolkit.jpowergraph"/>
+<project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/branches/NTK_2.4/org.neontoolkit.ontovisualize,org.neontoolkit.ontovisualize"/>
+<project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/branches/NTK_2.4/org.neontoolkit.plugin,org.neontoolkit.plugin"/>
+<project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/branches/NTK_2.4/org.neontoolkit.refactor,org.neontoolkit.refactor"/>
+<project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/branches/NTK_2.4/org.neontoolkit.search,org.neontoolkit.search"/>
+<project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/branches/NTK_2.4/org.neontoolkit.swt,org.neontoolkit.swt"/>
+<project reference="0.9.3,https://neon-toolkit.svn.sourceforge.net/svnroot/neon-toolkit/branches/NTK_2.4/org.semanticweb.owl,org.semanticweb.owl"/>
+</provider>
+<workingSets editPageId="org.eclipse.jdt.ui.JavaWorkingSetPage" id="1260173876500_1" label="NTK-core" name="NTK-core">
+<item elementID="=com.ontoprise.ontostudio.owl.model" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=com.ontoprise.ontostudio.owl.gui.ontologyimportsgraph" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.neontoolkit.core" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.neontoolkit.gui.individual.formtemplate" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/org.neontoolkit.core-feature" type="4"/>
+<item elementID="=org.neontoolkit.swt" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=com.ontoprise.ontostudio.owl.help" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=com.ontoprise.dependencies" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=com.ontoprise.ontostudio.owl.visualize" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=com.softwareag.neontoolkit.ontostat" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.neontoolkit.gui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.neontoolkit.jpowergraph" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.neontoolkit.io" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=it.essepuntato.semanticweb.neontoolkit.kcevisualizer" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item factoryID="=org.neontoolkit.kcevisualizer.feature" type="4"/>
+<item elementID="=com.ontoprise.ontostudio.owl.gui" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/ntk-target-platform" type="4"/>
+<item elementID="=org.neontoolkit.search" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.neontoolkit.ontovisualize" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.neontoolkit.refactor" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.neontoolkit.application" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.semanticweb.owl" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+<item elementID="=org.neontoolkit.plugin" factoryID="org.eclipse.jdt.ui.PersistableJavaElementFactory"/>
+</workingSets>
+</psf>

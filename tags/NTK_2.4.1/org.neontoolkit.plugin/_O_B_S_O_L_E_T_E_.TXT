@@ -1,0 +1,9 @@
+This plugin project is obsolete as of 31.10.10 (on HEAD on the way to NTK 2.3.3).
+Do not use it anymore and do not define dependencies to it anymore. The plug-in is only
+delivered in 2.3.3 to not break working plug-ins that define dependencies to it. 
+
+This plug-in was replaced by the NeOn Toolkit application project
+	org.neontoolkit.application
+Please use the PSF in this project to find all other required plugins and the target platform. 
+
+   --- Michael
