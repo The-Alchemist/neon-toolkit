@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.w3.org/TR/2003/PR-owl-guide-20031209/wine#"
+     xml:base="http://ontologyWithNonExistingImport#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:food="http://www.w3.org/TR/2003/PR-owl-guide-20031209/food#"
+     xmlns:vin="http://www.w3.org/TR/2003/PR-owl-guide-20031209/wine#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about="">
+        <owl:imports rdf:resource="http://this_onto_does_not_exist.org/food"/>
+    </owl:Ontology>
+    
+    <owl:ObjectProperty rdf:about="http://www.w3.org/TR/2003/PR-owl-guide-20031209/food#madeFromFruit"/>
+</rdf:RDF>

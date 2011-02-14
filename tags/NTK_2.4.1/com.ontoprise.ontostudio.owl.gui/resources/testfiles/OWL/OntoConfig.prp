@@ -1,0 +1,3 @@
+dir.conf=resources/testfiles/OWL/conf
+
+OntologyLanguage=OWL
