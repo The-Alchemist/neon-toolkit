@@ -41,12 +41,14 @@ import org.semanticweb.owlapi.model.OWLOntologyFactory;
 import org.semanticweb.owlapi.model.OWLOntologyFormat;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLOntologyIRIMapper;
+import org.semanticweb.owlapi.model.OWLOntologyLoaderConfiguration;
 import org.semanticweb.owlapi.model.OWLOntologyLoaderListener;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 import org.semanticweb.owlapi.model.OWLOntologyStorer;
 import org.semanticweb.owlapi.model.SetOntologyID;
 import org.semanticweb.owlapi.model.UnknownOWLOntologyException;
+import org.semanticweb.owlapi.model.UnloadableImportException;
 
 /**
  * @author krekeler
@@ -396,5 +398,14 @@ public final class OntologyInfoOntologyManager implements OWLOntologyManager {
     @Override
     public void removeOntologyChangesVetoedListener(OWLOntologyChangesVetoedListener arg0) {
         // TODO OWL API 3.1.0
+    }
+    @Override
+    public OWLOntology loadOntologyFromOntologyDocument(OWLOntologyDocumentSource arg0, OWLOntologyLoaderConfiguration arg1) throws OWLOntologyCreationException {
+        // TODO OWL API 3.2.0
+        return null;
+    }
+    @Override
+    public void makeLoadImportRequest(OWLImportsDeclaration arg0, OWLOntologyLoaderConfiguration arg1) throws UnloadableImportException {
+     // TODO OWL API 3.2.0
     }
 }
