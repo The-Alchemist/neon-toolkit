@@ -3,7 +3,7 @@ Eclipse-RegisterBuddy: dependencies
 Bundle-ManifestVersion: 2
 Bundle-Name: %plugin.name
 Bundle-SymbolicName: com.ontoprise.ontostudio.owl.gui; singleton:=true
-Bundle-Version: 2.4
+Bundle-Version: 2.4.1
 Bundle-ClassPath: ontostudio-owleditor-gui.jar
 Bundle-Vendor: %neonFoundation
 Bundle-Localization: plugin

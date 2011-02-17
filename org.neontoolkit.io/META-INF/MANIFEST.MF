@@ -3,7 +3,7 @@ Eclipse-RegisterBuddy: dependencies
 Bundle-ManifestVersion: 2
 Bundle-Name: %imporExportPluginContainer
 Bundle-SymbolicName: org.neontoolkit.io;singleton:=true
-Bundle-Version: 2.3.2
+Bundle-Version: 2.4.1
 Bundle-ClassPath: neontoolkit-io.jar
 Bundle-Vendor: %ontoprise
 Bundle-Localization: plugin
