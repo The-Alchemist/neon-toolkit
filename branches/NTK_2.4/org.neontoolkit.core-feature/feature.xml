@@ -2,7 +2,7 @@
 <feature
       id="org.neontoolkit.core.feature"
       label="NeOn Toolkit Core"
-      version="2.4"
+      version="2.4.1"
       provider-name="NeOn Technologies Foundation Ltd."
       plugin="org.neontoolkit.application"
       image="neon_120.jpg">

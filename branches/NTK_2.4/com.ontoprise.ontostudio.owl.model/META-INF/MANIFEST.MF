@@ -3,7 +3,7 @@ Eclipse-RegisterBuddy: dependencies
 Bundle-ManifestVersion: 2
 Bundle-Name: %plugin.name
 Bundle-SymbolicName: com.ontoprise.ontostudio.owl.model;singleton:=true
-Bundle-Version: 2.4
+Bundle-Version: 2.4.1
 Bundle-ClassPath: ontostudio-owleditor-model.jar
 Bundle-Activator: com.ontoprise.ontostudio.owl.model.OWLModelPlugin
 Bundle-Vendor: %neonFoundation
