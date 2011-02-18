@@ -589,25 +589,40 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
                     String  decisionID = OWLModelPlugin.INSERT_EXPLICIT_CLASS_ASSERTION_AXIOM_TO_OWLTHING_YES_OR_NO;
                     String  dialogTitle = Messages.RemoveLastClassAssertionAxiom_Title;
                     String  dialogText = Messages.RemoveLastClassAssertionAxiom_Text;
-                    if(new GetDescriptionHits(_project, _ontologyUri, _id).getResults().length == 1){
+                    String[][] hits = new GetDescriptionHits(_project, _ontologyUri, _id).getResults();
+                    if(hits.length == 1){
                         boolean decision = false;
-                        if(!OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(checkboxID)){ 
-                            switch(new CheckboxDesicionDialog(null,dialogTitle, dialogText, checkboxID, decisionID).open()){
-                                case CheckboxDesicionDialog.YES:
-                                    decision = true;
-                                    break;
+                        OWLClassAssertionAxiom axiom = OWLUtilities.axiom(hits[0][0], _namespaces, factory);
+                        if(axiom.getClassExpression().equals(OWLUtilities.description(OWLConstants.OWL_THING_URI, _namespaces, factory))){
+                            dialogText = Messages.RemoveLastClassAssertionAxiom_Text_OWLTHING;
+                            switch(new CheckboxDesicionDialog(null,dialogTitle, dialogText, checkboxID, decisionID, true).open()){
                                 case CheckboxDesicionDialog.NO:
                                     decision = false;
                                     break;
+                                case CheckboxDesicionDialog.YES:
                                 case CheckboxDesicionDialog.CANCEL:
                                 default:
                                     return;
                             }
-                            
+                        }else{
+                            if(!OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(checkboxID)){ 
+                                switch(new CheckboxDesicionDialog(null,dialogTitle, dialogText, checkboxID, decisionID,false).open()){
+                                    case CheckboxDesicionDialog.NO:
+                                        decision = false;
+                                        break;
+                                    case CheckboxDesicionDialog.YES:
+                                        decision = true;
+                                        break;
+                                    case CheckboxDesicionDialog.CANCEL:
+                                    default:
+                                        return;
+                                }
+                            }else{
+                                decision = OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(checkboxID) && 
+                                        OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(decisionID);
+                            }
                         }
-                        if(decision || (
-                                OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(checkboxID) && 
-                                OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(decisionID))){ 
+                        if(decision){ 
                             OWLAxiom newAxiom = factory.getOWLClassAssertionAxiom(
                                     OWLUtilities.description(OWLConstants.OWL_THING_URI, _namespaces, factory), 
                                     individual);

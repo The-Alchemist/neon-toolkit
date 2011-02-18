@@ -19,6 +19,7 @@ public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "com.ontoprise.ontostudio.owl.gui.messages";//$NON-NLS-1$
 	public static String RemoveLastClassAssertionAxiom_Title;
     public static String RemoveLastClassAssertionAxiom_Text;
+    public static String RemoveLastClassAssertionAxiom_Text_OWLTHING;
     public static String EditImportedTitle;
     public static String EditImportedText_0;
     public static String EditImportedText_1;
