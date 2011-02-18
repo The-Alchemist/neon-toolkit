@@ -25,23 +25,26 @@ public class CheckboxDesicionDialog extends Dialog {
     private String _preferencesRemember;
     private String _preferencesDecision;
     private boolean _check;
+    private boolean _lockCheckbox;
     
     public static final int YES = 5;
     public static final int NO = 6;
     
 
     /**
+     * @param lockCheckbox 
      * @param parentShell
      * @throws CheckPreferencesFirstException 
      */
-    public CheckboxDesicionDialog(Shell parent, String titleText, String messageText, String preferencesRemember, String preferencesDecision){
+    public CheckboxDesicionDialog(Shell parent, String titleText, String messageText, String preferencesRemember, String preferencesDecision, boolean lockCheckbox){
         super(parent);
         _messageText = messageText;
         _titleText = titleText;
         _preferencesRemember = preferencesRemember;
         _preferencesDecision = preferencesDecision;
         
-        _check = getPreferencesRemember();
+        _check = !lockCheckbox && getPreferencesRemember();
+        _lockCheckbox = lockCheckbox;
     }
     @Override
     protected Control createDialogArea(Composite parent) {
@@ -63,6 +66,7 @@ public class CheckboxDesicionDialog extends Dialog {
         infoLabel.setLayoutData(data);
 
         final Button checkbox = new Button(comp, SWT.CHECK);
+        checkbox.setEnabled(!_lockCheckbox);
         checkbox.setText("remember my decision"); //$NON-NLS-1$
         checkbox.setSelection(_check);
         SelectionListener listener = new SelectionListener() {
@@ -137,7 +141,7 @@ public class CheckboxDesicionDialog extends Dialog {
     }
     @Override
     public boolean close() {
-        if(_preferencesRemember != null && _preferencesDecision != null && _check){
+        if(_preferencesRemember != null && _preferencesDecision != null && _check && !_lockCheckbox){
             switch (getReturnCode()) {
                 case YES:  
                     setPreferencesDecision(true);
