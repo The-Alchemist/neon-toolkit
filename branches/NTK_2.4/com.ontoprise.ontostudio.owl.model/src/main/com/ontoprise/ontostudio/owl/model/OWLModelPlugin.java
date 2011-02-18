@@ -45,6 +45,8 @@ public class OWLModelPlugin extends AbstractUIPlugin {
     public static final String SHOW_ACTUAL_ONTOLOGY = OWLModelPlugin.class.getName() + ".owlShowActualOntologyInIdentifier"; //$NON-NLS-1$ 
     public static final String EDIT_IMPORTED_AXIOMS_WITHOUT_ASKING = OWLModelPlugin.class.getName() + ".owlEditImportedWithoutAsking"; //$NON-NLS-1$
     public static final String REMOVE_IMPORTED_AXIOMS_WITHOUT_ASKING = OWLModelPlugin.class.getName() + ".owlRemoveImportedWithoutAsking"; //$NON-NLS-1$ 
+    public static final String INSERT_EXPLICIT_CLASS_ASSERTION_AXIOM_TO_OWLTHING_OPEN_DIALOG = OWLModelPlugin.class.getName() + ".owlInsertExplicitClassAssertionAxiomToOwlthingOpenDialog"; //$NON-NLS-1$
+    public static final String INSERT_EXPLICIT_CLASS_ASSERTION_AXIOM_TO_OWLTHING_YES_OR_NO = OWLModelPlugin.class.getName() + ".owlInsertExplicitClassAssertionAxiomToOwlthingYesOrNo"; //$NON-NLS-1$ 
     public static final String SHOW_RESTRICTION_IN_CLASS_TAXONOMY_TAB = OWLModelPlugin.class.getName() + ".owlShowRestrictionsInClassTaxonomyTab"; //$NON-NLS-1$ 
     
     public static final String LANGUAGE_PREFERENCE = OWLModelPlugin.class.getName() + ".language"; //$NON-NLS-1$

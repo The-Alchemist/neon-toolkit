@@ -51,9 +51,11 @@ import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
 import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
 
+
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.properties.AbstractOWLIdPropertyPage;
 import com.ontoprise.ontostudio.owl.gui.properties.LocatedAxiom;
+import com.ontoprise.ontostudio.owl.gui.util.CheckboxDesicionDialog;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.gui.util.forms.AxiomRowHandler;
 import com.ontoprise.ontostudio.owl.gui.util.forms.EmptyFormRow;
@@ -61,6 +63,7 @@ import com.ontoprise.ontostudio.owl.gui.util.forms.EntityRowHandler;
 import com.ontoprise.ontostudio.owl.gui.util.forms.FormRow;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.DescriptionText;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.IndividualText;
+import com.ontoprise.ontostudio.owl.model.OWLConstants;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLModelPlugin;
@@ -572,6 +575,54 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
                 } else {
                     text.setText(array[0]);
                 }
+            }
+            
+            @Override
+            public void removePressed() throws NeOnCoreException {
+                try {
+                    OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(_project);
+                    OWLIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.toIRI(_id));
+                    OWLAxiom oldAxiom = factory.getOWLClassAssertionAxiom(((OWLClassAssertionAxiom) axiom.getAxiom()).getClassExpression(), individual);
+                    String[] newAxioms = new String[0];
+
+                    String  checkboxID = OWLModelPlugin.INSERT_EXPLICIT_CLASS_ASSERTION_AXIOM_TO_OWLTHING_OPEN_DIALOG;
+                    String  decisionID = OWLModelPlugin.INSERT_EXPLICIT_CLASS_ASSERTION_AXIOM_TO_OWLTHING_YES_OR_NO;
+                    String  dialogTitle = Messages.RemoveLastClassAssertionAxiom_Title;
+                    String  dialogText = Messages.RemoveLastClassAssertionAxiom_Text;
+                    if(new GetDescriptionHits(_project, _ontologyUri, _id).getResults().length == 1){
+                        boolean decision = false;
+                        if(!OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(checkboxID)){ 
+                            switch(new CheckboxDesicionDialog(null,dialogTitle, dialogText, checkboxID, decisionID).open()){
+                                case CheckboxDesicionDialog.YES:
+                                    decision = true;
+                                    break;
+                                case CheckboxDesicionDialog.NO:
+                                    decision = false;
+                                    break;
+                                case CheckboxDesicionDialog.CANCEL:
+                                default:
+                                    return;
+                            }
+                            
+                        }
+                        if(decision || (
+                                OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(checkboxID) && 
+                                OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(decisionID))){ 
+                            OWLAxiom newAxiom = factory.getOWLClassAssertionAxiom(
+                                    OWLUtilities.description(OWLConstants.OWL_THING_URI, _namespaces, factory), 
+                                    individual);
+                            newAxioms = new String[] {OWLUtilities.toString(newAxiom)};
+                        }
+                    }
+                    new ApplyChanges(_project, _sourceOwlModel.getOntologyURI(), 
+                            newAxioms, 
+                            new String[] {OWLUtilities.toString(oldAxiom)}).run();
+
+                        
+                } catch (CommandException e) {
+                    e.printStackTrace();
+                }
+                _propertyPage.refresh();
             }
 
         };
