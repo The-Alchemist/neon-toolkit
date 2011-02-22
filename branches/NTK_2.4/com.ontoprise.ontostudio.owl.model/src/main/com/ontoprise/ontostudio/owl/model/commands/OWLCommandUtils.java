@@ -30,6 +30,7 @@ import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 
 /**
  * @author werner
+ * @author Nico Stieler
  * 
  */
 public class OWLCommandUtils {
