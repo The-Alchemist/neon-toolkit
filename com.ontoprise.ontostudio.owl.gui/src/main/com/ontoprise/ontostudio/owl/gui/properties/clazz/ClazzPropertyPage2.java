@@ -527,12 +527,16 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         final StyledText rangeTextWidget = getRangeText(description, row.getParent(), imported, rangeArray[1]);
         OWLGUIUtilities.enable(rangeTextWidget, false);
 
-        if (rangeArray != null) {
+        if (rangeArray != null) {// thats a strange hack
             // ignore OWL:Thing
             if (!rangeArray[0].equals(OWLConstants.OWL_THING_URI)) {
                 String id = OWLGUIUtilities.getEntityLabel(rangeArray);
                 rangeTextWidget.setText(id);
             }
+        }
+        if(restrictions.get(0)[0].equals(OWLCommandUtils.HAS_SELF)){
+            rangeTextWidget.setText(new String());
+            rangeTextWidget.setVisible(false);
         }
         row.addWidget(rangeTextWidget);
         row.setRangeText(rangeTextWidget);
@@ -591,7 +595,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 @Override
                 public void savePressed() {
                     try {
-                        String[] values = getNewValues(quantifierCombo, propertyTextWidget, rangeTextWidget, cardinalityText);
+                        String[] values = getNewValues(quantifierCombo, propertyTextWidget, row.getRangeText(), cardinalityText);
                         new EditRestriction(_project, _ontologyUri, clazzType, _id, values, OWLUtilities.toString(description)).run();
 
                     } catch (NeOnCoreException k2e) {
@@ -662,7 +666,10 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             }
         }
 
-        if ((restriction instanceof OWLObjectSomeValuesFrom) || (restriction instanceof OWLObjectAllValuesFrom) || (restriction instanceof OWLObjectCardinalityRestriction) || (restriction instanceof OWLObjectHasSelf)) {
+        if ((restriction instanceof OWLObjectSomeValuesFrom) || 
+                (restriction instanceof OWLObjectAllValuesFrom) || 
+                (restriction instanceof OWLObjectCardinalityRestriction) || 
+                (restriction instanceof OWLObjectHasSelf)) {
             DescriptionText descriptionText = new DescriptionText(rowComp, _owlModel, sourceOwlModel, imported, _toolkit);
             addComplexText(descriptionText, true);
             StyledText text = descriptionText.getStyledText();
@@ -673,8 +680,9 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             StyledText textWidget = text.getStyledText();
             textWidget.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, text);
             return textWidget;
-        } else if ((restriction instanceof OWLDataSomeValuesFrom) || (restriction instanceof OWLDataAllValuesFrom) || (restriction instanceof OWLDataCardinalityRestriction)) {
-            
+        } else if ((restriction instanceof OWLDataSomeValuesFrom) || 
+                (restriction instanceof OWLDataAllValuesFrom) || 
+                (restriction instanceof OWLDataCardinalityRestriction)) {
             DatatypeText text = new DatatypeText(rowComp, _owlModel, sourceOwlModel);
             StyledText textWidget = text.getStyledText();
             textWidget.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, text);
@@ -707,7 +715,9 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 // modify text widgets according to user selection
                 String text = quantifierCombo.getText();
                 OWLGUIUtilities.enable(cardinalityText, true);
-                if (text.equals(OWLCommandUtils.AT_LEAST_MIN) || text.equals(OWLCommandUtils.AT_MOST_MAX) || text.equals(OWLCommandUtils.EXACTLY_CARDINALITY)) {
+                if (text.equals(OWLCommandUtils.AT_LEAST_MIN) || 
+                        text.equals(OWLCommandUtils.AT_MOST_MAX) || 
+                        text.equals(OWLCommandUtils.EXACTLY_CARDINALITY)) {
                     cardinalityText.setVisible(true);
                     OWLGUIUtilities.enable(cardinalityText, true);
                     if (cardinalityText.getText().trim().length() == 0 || cardinalityText.getText().equals(Messages.ClazzPropertyPage2_15)) {
@@ -716,10 +726,16 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 } else {
                     cardinalityText.setVisible(false);
                 }
+                StyledText rangeText = ((AbstractRestrictionRow) formRow).getRangeText();
+                if (text.equals(OWLCommandUtils.HAS_SELF)) {
+                    rangeText.setVisible(false);
+                }else{
+                    rangeText.setVisible(true);
+                    OWLGUIUtilities.enable(rangeText, true);
+                }
                 _form.layout(true);
-                // initWarnings(formRow, quantifierCombo, cardinalityText, propertyText);
-                // enableButtons(quantifierCombo, cardinalityText, propertyText, formRow.getRangeText(), formRow.getSubmitButton());
-
+                 initWarnings(formRow, quantifierCombo, cardinalityText, propertyText);
+                 enableButtons(quantifierCombo, cardinalityText, propertyText, formRow.getRangeText(), formRow.getSubmitButton());
                 updateRangeText(formRow, rowHandler, quantifierCombo, cardinalityText, propertyText, emptyRow, "", imported, sourceOntology); //$NON-NLS-1$
             }
         });
@@ -730,6 +746,9 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 String quantifier = quantifierCombo.getText();
                 if (quantifier.equals(OWLCommandUtils.EXACTLY_CARDINALITY) || quantifier.equals(OWLCommandUtils.AT_LEAST_MIN) || quantifier.equals(OWLCommandUtils.AT_MOST_MAX)) {
                     cardinalityText.setVisible(true);
+                }
+                if (quantifier.equals(OWLCommandUtils.HAS_SELF)) {
+                    ((AbstractRestrictionRow) formRow).getRangeText().setVisible(false);
                 }
                 initWarnings(formRow, quantifierCombo, cardinalityText, propertyText);
                 enableButtons(quantifierCombo, cardinalityText, propertyText, formRow.getRangeText(), formRow.getSubmitButton());
@@ -756,121 +775,120 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
      * @param imported 
      */
     private void updateRangeText(final AbstractRestrictionRow formRow, final AbstractRowHandler rowHandler, final CCombo quantifierCombo, final StyledText cardinalityText, final StyledText propertyText, boolean emptyRow, String name, boolean imported, String sourceOntology) {
-        try {
-            OWLModel sourceOwlModel =_owlModel;
-            if(imported){
-                sourceOwlModel = OWLModelFactory.getOWLModel(sourceOntology, _project);
-            }
-
-            String oldValue = ((AbstractRestrictionRow) formRow).getRangeText().getText();
-
-            boolean hasValue = false;
-            if (OWLCommandUtils.HAS_VALUE.equals(quantifierCombo.getText())) {
-                hasValue = true;
-            }
-
-            StyledText finalRangeText = null;
-            ISyntaxManager manager = OWLPlugin.getDefault().getSyntaxManager();
-            String input = propertyText.getText();
-            if (input.trim().equals("")) { //$NON-NLS-1$
-                return;
-            }
-            OWLDataProperty prop = manager.parseDataProperty(input, sourceOwlModel);
-            boolean isDataProperty = new IsDataProperty(_project, _ontologyUri, prop.getIRI().toString()).isDataProperty();
-            if (isDataProperty) {
-                if (hasValue) {
-                    finalRangeText = new LiteralText(formRow.getParent(), _owlModel, sourceOwlModel).getStyledText();
-                } else {
-                    finalRangeText = new DatatypeText(formRow.getParent(), _owlModel, sourceOwlModel).getStyledText();
+        if(!OWLCommandUtils.HAS_SELF.equals(quantifierCombo.getText())){
+            try {
+                OWLModel sourceOwlModel =_owlModel;
+                if(imported){
+                    sourceOwlModel = OWLModelFactory.getOWLModel(sourceOntology, _project);
                 }
-            } else {
-                OWLObjectPropertyExpression objProp = manager.parseObjectProperty(input, sourceOwlModel);
-                boolean isObjectProperty = new IsObjectProperty(_project, _ontologyUri, OWLUtilities.toString(objProp)).isObjectProperty();
-                if (isObjectProperty) {
+    
+                String oldValue = ((AbstractRestrictionRow) formRow).getRangeText().getText();
+    
+                boolean hasValue = false;
+                if (OWLCommandUtils.HAS_VALUE.equals(quantifierCombo.getText())) {
+                    hasValue = true;
+                }
+    
+                StyledText finalRangeText = null;
+                ISyntaxManager manager = OWLPlugin.getDefault().getSyntaxManager();
+                String input = propertyText.getText();
+                if (input.trim().equals("")) { //$NON-NLS-1$
+                    return;
+                }
+                OWLDataProperty prop = manager.parseDataProperty(input, sourceOwlModel);
+                boolean isDataProperty = new IsDataProperty(_project, _ontologyUri, prop.getIRI().toString()).isDataProperty();
+                if (isDataProperty) {
                     if (hasValue) {
-                        finalRangeText = new IndividualText(formRow.getParent(), _owlModel, sourceOwlModel).getStyledText();
+                        finalRangeText = new LiteralText(formRow.getParent(), _owlModel, sourceOwlModel).getStyledText();
                     } else {
-                        finalRangeText = new DescriptionText(formRow.getParent(), _owlModel, sourceOwlModel, false, _toolkit).getStyledText();
+                        finalRangeText = new DatatypeText(formRow.getParent(), _owlModel, sourceOwlModel).getStyledText();
                     }
-                }  
-            } 
-
-            if (finalRangeText != null) {
-                // have to replace range field for data properties
-                formRow.getRangeText().dispose();
-                formRow.removeWidget(((AbstractRestrictionRow) formRow).getRangeText());
-                
-                if (OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(OWLModelPlugin.SHOW_AXIOMS)) {
-                    if (formRow instanceof RestrictionRow) {
-                        String axiom = ((RestrictionRow)formRow).getAxiomText().getText();
-                        ((RestrictionRow)formRow).getAxiomText().dispose();
-                        formRow.removeWidget(((RestrictionRow) formRow).getAxiomText());
-                        StyledText newAxiomText = new AxiomText(formRow.getParent(), _owlModel, sourceOwlModel, 4).getStyledText();
-                        newAxiomText.setEditable(false);
-                        newAxiomText.setText(axiom);
-                        ((RestrictionRow) formRow).setAxiomText(newAxiomText);
-                        formRow.addWidget(newAxiomText);
-                    }
-                }
-                
-                formRow.disposeButton(formRow.getCancelButton());
-                formRow.disposeButton(formRow.getSubmitButton());
-                finalRangeText.setText(oldValue);
-                formRow.setRangeText(finalRangeText);
-                formRow.addWidget(finalRangeText);
-                setListenerForRangeText(formRow, quantifierCombo, cardinalityText, propertyText, finalRangeText);
-
-                final Button addButton = emptyRow ? createAddButton(formRow.getParent(), true) : createSaveButton(formRow.getParent(), true);
-                addButton.addSelectionListener(new SelectionAdapter() {
-
-                    @Override
-                    public void widgetSelected(SelectionEvent e) {
-                        if (addButton.getText().equals(OWLGUIUtilities.BUTTON_LABEL_SAVE)) {
-                            rowHandler.savePressed();
+                } else {
+                    OWLObjectPropertyExpression objProp = manager.parseObjectProperty(input, sourceOwlModel);
+                    boolean isObjectProperty = new IsObjectProperty(_project, _ontologyUri, OWLUtilities.toString(objProp)).isObjectProperty();
+                    if (isObjectProperty) {
+                        if (hasValue) {
+                            finalRangeText = new IndividualText(formRow.getParent(), _owlModel, sourceOwlModel).getStyledText();
                         } else {
-                            rowHandler.addPressed();
+                            finalRangeText = new DescriptionText(formRow.getParent(), _owlModel, sourceOwlModel, false, _toolkit).getStyledText();
+                        }
+                    }  
+                } 
+    
+                if (finalRangeText != null) {
+                    // have to replace range field for data properties
+                    formRow.getRangeText().dispose();
+                    formRow.removeWidget(((AbstractRestrictionRow) formRow).getRangeText());
+                    
+                    if (OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(OWLModelPlugin.SHOW_AXIOMS)) {
+                        if (formRow instanceof RestrictionRow) {
+                            String axiom = ((RestrictionRow)formRow).getAxiomText().getText();
+                            ((RestrictionRow)formRow).getAxiomText().dispose();
+                            formRow.removeWidget(((RestrictionRow) formRow).getAxiomText());
+                            StyledText newAxiomText = new AxiomText(formRow.getParent(), _owlModel, sourceOwlModel, 4).getStyledText();
+                            newAxiomText.setEditable(false);
+                            newAxiomText.setText(axiom);
+                            ((RestrictionRow) formRow).setAxiomText(newAxiomText);
+                            formRow.addWidget(newAxiomText);
                         }
                     }
-
-                });
-
-                final Button cancelButton = createCancelButton(formRow.getParent(), true);
-                cancelButton.addSelectionListener(new SelectionAdapter() {
-
-                    @Override
-                    public void widgetSelected(SelectionEvent e) {
-                        if (cancelButton.getText().equals(OWLGUIUtilities.BUTTON_LABEL_CANCEL)) {
-                            rowHandler.cancelPressed();
-                        } else {
-                            try {
-                                rowHandler.removePressed();
-                            } catch (NeOnCoreException k2e) {
-                                handleException(k2e, Messages.ObjectPropertyPropertyPage2_45, cancelButton.getShell());
-                                return;
-                            } catch (CommandException k2e) {
-                                handleException(k2e, Messages.ObjectPropertyPropertyPage2_45, cancelButton.getShell());
-                                return;
+                    
+                    formRow.disposeButton(formRow.getCancelButton());
+                    formRow.disposeButton(formRow.getSubmitButton());
+                    finalRangeText.setText(oldValue);
+                    formRow.setRangeText(finalRangeText);
+                    formRow.addWidget(finalRangeText);
+                    setListenerForRangeText(formRow, quantifierCombo, cardinalityText, propertyText, finalRangeText);
+    
+                    final Button addButton = emptyRow ? createAddButton(formRow.getParent(), true) : createSaveButton(formRow.getParent(), true);
+                    addButton.addSelectionListener(new SelectionAdapter() {
+    
+                        @Override
+                        public void widgetSelected(SelectionEvent e) {
+                            if (addButton.getText().equals(OWLGUIUtilities.BUTTON_LABEL_SAVE)) {
+                                rowHandler.savePressed();
+                            } else {
+                                rowHandler.addPressed();
                             }
                         }
-                    }
-
-                });
-
-                formRow.setSubmitButton(addButton);
-                formRow.setCancelButton(cancelButton);
-
+    
+                    });
+    
+                    final Button cancelButton = createCancelButton(formRow.getParent(), true);
+                    cancelButton.addSelectionListener(new SelectionAdapter() {
+    
+                        @Override
+                        public void widgetSelected(SelectionEvent e) {
+                            if (cancelButton.getText().equals(OWLGUIUtilities.BUTTON_LABEL_CANCEL)) {
+                                rowHandler.cancelPressed();
+                            } else {
+                                try {
+                                    rowHandler.removePressed();
+                                } catch (NeOnCoreException k2e) {
+                                    handleException(k2e, Messages.ObjectPropertyPropertyPage2_45, cancelButton.getShell());
+                                    return;
+                                } catch (CommandException k2e) {
+                                    handleException(k2e, Messages.ObjectPropertyPropertyPage2_45, cancelButton.getShell());
+                                    return;
+                                }
+                            }
+                        }
+                    });
+    
+                    formRow.setSubmitButton(addButton);
+                    formRow.setCancelButton(cancelButton);
+                }
+            } catch (CommandException e) {
+                // nothing to do
+            } catch (NeOnCoreException e) {
+                // TODO: migration
+                // do nothing
             }
-
-            initWarnings(formRow, quantifierCombo, cardinalityText, propertyText);
-            enableButtons(quantifierCombo, cardinalityText, propertyText, formRow.getRangeText(), formRow.getSubmitButton());
-            formRow.getParent().layout(true);
-            _form.reflow(true);
-        } catch (CommandException e) {
-            // nothing to do
-        } catch (NeOnCoreException e) {
-            // TODO: migration
-            // do nothing
         }
+        initWarnings(formRow, quantifierCombo, cardinalityText, propertyText);
+        enableButtons(quantifierCombo, cardinalityText, propertyText, formRow.getRangeText(), formRow.getSubmitButton());
+        formRow.getParent().layout(true);
+        _form.reflow(true);
     }
 
     private void initWarnings(AbstractFormRow formRow, CCombo quantifierCombo, StyledText cardinalityText, StyledText propertyText) {
@@ -896,7 +914,10 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             }
             if (formRow instanceof AbstractRestrictionRow) {
                 AbstractRestrictionRow row = (AbstractRestrictionRow) formRow;
-                if (row.getRangeText().getText().trim().length() == 0 && (quantifier.equals(OWLCommandUtils.SOME) || quantifier.equals(OWLCommandUtils.HAS_VALUE) || quantifier.equals(OWLCommandUtils.ONLY) || quantifier.equals(OWLCommandUtils.HAS_SELF))) {
+                if (row.getRangeText().getText().trim().length() == 0 && 
+                        (quantifier.equals(OWLCommandUtils.SOME) || 
+                                quantifier.equals(OWLCommandUtils.HAS_VALUE) || 
+                                quantifier.equals(OWLCommandUtils.ONLY))) {
                     if (row.getRangeText().getText().trim().length() == 0) {
                         message = Messages.ClazzPropertyPage2_11;
                         type = IMessageProvider.WARNING;
@@ -908,7 +929,9 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             }
 
             String card = cardinalityText.getText();
-            if (card.length() > 0 && (quantifier.equals(OWLCommandUtils.AT_LEAST_MIN) || quantifier.equals(OWLCommandUtils.AT_MOST_MAX) || quantifier.equals(OWLCommandUtils.EXACTLY_CARDINALITY))) {
+            if (card.length() > 0 && (quantifier.equals(OWLCommandUtils.AT_LEAST_MIN) || 
+                    quantifier.equals(OWLCommandUtils.AT_MOST_MAX) || 
+                    quantifier.equals(OWLCommandUtils.EXACTLY_CARDINALITY))) {
                 try {
                     new Integer(card);
                     if (card.startsWith("-")) { //$NON-NLS-1$
@@ -939,7 +962,16 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     type = IMessageProvider.WARNING;
                 }
             }
-
+            if(quantifier.equals(OWLCommandUtils.HAS_SELF)){
+                try {
+                    if(! new IsObjectProperty(this._project, this._ontologyUri, propertyText.getText().trim()).isObjectProperty()){
+                        message = Messages.ClazzPropertyPage2_41;
+                        type = IMessageProvider.WARNING;
+                    }
+                } catch (CommandException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         _form.setMessage(message, type);
     }
@@ -963,11 +995,17 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             String propertyString = propertyText.getText().trim();
             String cardinalityString = cardinalityText.getText().trim();
             String rangeString = rangeText.getText().trim();
-            if (quantifierString.equals(Messages.ClazzPropertyPage2_5) || propertyString.equals(Messages.ClazzPropertyPage2_7) || propertyString.equals("") //$NON-NLS-1$
+            if (quantifierString.equals(Messages.ClazzPropertyPage2_5) || 
+                    propertyString.equals(Messages.ClazzPropertyPage2_7) || 
+                    propertyString.equals("") //$NON-NLS-1$
                     || cardinalityString.equals("") && //$NON-NLS-1$
-                    (quantifierString.equals(OWLCommandUtils.AT_LEAST_MIN) || quantifierString.equals(OWLCommandUtils.AT_MOST_MAX) || quantifierString.equals(OWLCommandUtils.EXACTLY_CARDINALITY))
+                    (quantifierString.equals(OWLCommandUtils.AT_LEAST_MIN) || 
+                            quantifierString.equals(OWLCommandUtils.AT_MOST_MAX) || 
+                            quantifierString.equals(OWLCommandUtils.EXACTLY_CARDINALITY))
                     || rangeString.equals("") && //$NON-NLS-1$
-                    (quantifierString.equals(OWLCommandUtils.SOME) || quantifierString.equals(OWLCommandUtils.HAS_VALUE) || quantifierString.equals(OWLCommandUtils.ONLY) || quantifierString.equals(OWLCommandUtils.HAS_SELF))) {
+                    (quantifierString.equals(OWLCommandUtils.SOME) || 
+                            quantifierString.equals(OWLCommandUtils.HAS_VALUE) || 
+                            quantifierString.equals(OWLCommandUtils.ONLY))) {
                 button.setEnabled(false);
             } else {
                 button.setEnabled(true);

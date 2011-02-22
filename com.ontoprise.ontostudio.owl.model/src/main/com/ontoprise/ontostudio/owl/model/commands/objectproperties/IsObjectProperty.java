@@ -47,6 +47,12 @@ public class IsObjectProperty extends OWLOntologyRequestCommand {
             OWLObjectProperty prop = OWLModelFactory.getOWLDataFactory(getProjectName()).getOWLObjectProperty(OWLUtilities.toIRI(expandedURI));
             Set<OWLObjectProperty> properties = getOwlModel().getAllObjectProperties(true);
             _isObjectProperty = new Boolean(properties.contains(prop));
+            if(!_isObjectProperty){
+                if(prop.equals(getOwlModel().getOWLDataFactory().getOWLTopObjectProperty()) ||
+                        prop.equals(getOwlModel().getOWLDataFactory().getOWLBottomObjectProperty())){
+                    _isObjectProperty = new Boolean(true);
+                }
+            }
         } catch (NeOnCoreException e) {
             _isObjectProperty = new Boolean(false);
             throw new CommandException(e);

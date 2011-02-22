@@ -181,6 +181,7 @@ public class Messages extends NLS {
 	public static String ClazzPropertyPage2_30;
 	public static String ClazzPropertyPage2_4;
     public static String ClazzPropertyPage2_40;
+    public static String ClazzPropertyPage2_41;
 	public static String ClazzPropertyPage2_45;
 	public static String ClazzPropertyPage2_52;
 	public static String ClazzPropertyPage2_56;

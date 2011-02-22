@@ -90,7 +90,7 @@ public class RestrictionOnPropertyWriter {
             OWLObjectHasSelf newDesc = (OWLObjectHasSelf) description;
             resultArray.add(new String[] {OWLCommandUtils.HAS_SELF});
             resultArray.add((String[]) newDesc.getProperty().accept(visitor));
-            resultArray.add((String[]) currentClass.accept(visitor));
+            resultArray.add(new String[]{"", ""});// (String[]) currentClass.accept(visitor));
             resultArray.add(null);
 
         } else if (description instanceof OWLObjectCardinalityRestriction) {
