@@ -16,11 +16,11 @@ import java.util.Set;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 
-
-
 /**
  * This is the registry of all datatypes. Applications with custom datatypes should register
  * appropriate datatype handlers with this class.
+ * 
+ * @author Nico Stieler
  */
 
 public class DatatypeManager {
@@ -40,7 +40,17 @@ public class DatatypeManager {
 
     }
     public synchronized void registerDatatypeHandler(DatatypeHandler datatypeHandler) {
-        m_handlersByDatatypeURI.put(datatypeHandler.getDatatypeURI(),datatypeHandler);
+        registerDatatypeHandler(datatypeHandler.getDatatypeURI(),datatypeHandler);
+    }
+
+    public synchronized void registerDatatypeHandler(String datatypeUri, DatatypeHandler datatypeHandler) {
+        m_handlersByDatatypeURI.put(datatypeUri,datatypeHandler);
+    }
+    public synchronized void unregisterDatatypeHandler(String datatypeUri) {
+        m_handlersByDatatypeURI.remove(datatypeUri);
+    }
+    public synchronized DatatypeHandler getRegisteredDatatypeHandler(String datatypeUri) {//NICO synchronized??
+        return m_handlersByDatatypeURI.get(datatypeUri);
     }
     
     public synchronized Set<String>getSupportedDatatypeURIs() {
@@ -50,8 +60,7 @@ public class DatatypeManager {
     public synchronized Object parseObject(String objectValue,String datatypeURI) throws IllegalArgumentException, UnknownDatatypeException {
         DatatypeHandler handler=m_handlersByDatatypeURI.get(datatypeURI);
         if (handler==null)
-            throw new UnknownDatatypeException(Messages.InputVerifier_0+" "+datatypeURI);
+            throw new UnknownDatatypeException(Messages.InputVerifier_0+" "+datatypeURI); //$NON-NLS-1$
         return handler.parseObject(objectValue);
     }
-
  }
