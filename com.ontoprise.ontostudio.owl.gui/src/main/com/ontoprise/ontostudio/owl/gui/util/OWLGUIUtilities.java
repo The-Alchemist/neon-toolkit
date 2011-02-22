@@ -39,6 +39,7 @@ import org.neontoolkit.core.NeOnCorePlugin;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.core.project.IOntologyProject;
+import org.neontoolkit.core.util.IRIUtils;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.navigator.ITreeDataProvider;
 import org.neontoolkit.gui.navigator.ITreeElement;
@@ -847,15 +848,11 @@ public class OWLGUIUtilities {
         return message;
     }
     
-    private static DatatypeVerifier _datatypeVerifier = new DatatypeVerifier();
-    private static ValueInputVerifier _valueInputVerifier = new ValueInputVerifier();
     
-    public static String verifyUserInput(String valueInput, String datatype) {
+    public static String verifyUserInput(String valueInput, String datatype, OWLModel owlModel) {
         
         if (!(datatype.equals("") || datatype.equals("<" + OWLAxiomUtils.OWL_INDIVIDUAL + ">")))  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-        
-            return _valueInputVerifier.verify(valueInput, _datatypeVerifier.verify(datatype));
-            
+            return new ValueInputVerifier().verify(valueInput, new DatatypeVerifier(owlModel).verify(IRIUtils.ensureValidIdentifierSyntax(datatype)));
         else
             return valueInput;
     }

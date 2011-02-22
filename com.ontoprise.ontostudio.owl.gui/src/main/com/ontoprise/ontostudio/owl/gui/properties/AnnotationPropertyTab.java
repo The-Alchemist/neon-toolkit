@@ -496,7 +496,7 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
                         if(!(ranges == null || ranges.isEmpty())){
                             for(IRI range : ranges){
                                 systemChanged[0] = true;
-                                typeTextWidget.setText(IRIUtils.ensureValidIRISyntax(range.toString()));
+                                typeTextWidget.setText(IRIUtils.ensureValidIRISyntax(_owlModel.getNamespaces().expandString(range.toString())));
                                 break;
                             }
                         }else{
@@ -637,7 +637,7 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
                         if(!(ranges == null || ranges.isEmpty())){
                             for(IRI range : ranges){
                                 systemChanged[0] = true;
-                                typeText.setText(IRIUtils.ensureValidIRISyntax(range.toString()));
+                                typeText.setText(IRIUtils.ensureValidIRISyntax(_owlModel.getNamespaces().expandString(range.toString())));
                                 break;
                             }
                         }else{
@@ -704,7 +704,7 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
             String expandedRange = _namespaces.expandString(datatype);
             String value = valueText.getText();
             try {
-                OWLGUIUtilities.verifyUserInput(value, expandedRange);
+                OWLGUIUtilities.verifyUserInput(value, expandedRange, _owlModel);
             } catch (UnknownDatatypeException e) {
                 message = e.getMessage();
                 type = IMessageProvider.WARNING;

@@ -500,7 +500,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         String expandedRange = _namespaces.expandString(datatype);
         String value = valueText.getText();
         try{
-            OWLGUIUtilities.verifyUserInput(value, expandedRange);
+            OWLGUIUtilities.verifyUserInput(value, expandedRange,_owlModel);
         }catch (UnknownDatatypeException e){
             message = e.getMessage();
             type = IMessageProvider.WARNING;
