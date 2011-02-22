@@ -54,7 +54,7 @@ public class OWLCommandUtils {
     public static final String ASYMMETRIC = "asymmetric"; //$NON-NLS-1$
     public static final String TRANSITIVE = "transitive"; //$NON-NLS-1$
 
-    public static final String HAS_SELF = "HAS_SELF"; //$NON-NLS-1$
+    public static final String HAS_SELF = "has self"; //$NON-NLS-1$
 
     public static OWLAxiom createAxiom(String clazzId, String clazzType, String quantor, String propertyId, String range, String quantity, String ontologyId, String project) throws NeOnCoreException {
         OWLModel owlModel = OWLModelFactory.getOWLModel(ontologyId, project);
@@ -67,7 +67,7 @@ public class OWLCommandUtils {
         OWLNamespaces ns = owlModel.getNamespaces();
         String expandedURI = ns.expandString(propertyId);
 
-        if ((range == null) || range.equals("")) { //$NON-NLS-1$
+        if (((range == null) || range.equals("")) && !quantor.equals(HAS_SELF)) { //$NON-NLS-1$
             range = OWLConstants.OWL_THING_URI;
         }
 
@@ -102,14 +102,14 @@ public class OWLCommandUtils {
                 OWLObjectPropertyExpression property = factory.getOWLObjectProperty(OWLUtilities.toIRI(expandedURI));
                 if (quantor.equals(HAS_VALUE)) {
                     desc = factory.getOWLObjectHasValue(property, OWLUtilities.individual(range, ns, factory));
+                } else if (quantor.equals(HAS_SELF)){
+                    desc = factory.getOWLObjectHasSelf((OWLObjectPropertyExpression)property);
                 } else {
                     OWLClassExpression propertyRange = OWLUtilities.description(range, ns, factory);
                     if (quantor.equals(ONLY)) {
                         desc = factory.getOWLObjectAllValuesFrom((OWLObjectPropertyExpression)property, (OWLClassExpression)propertyRange);
                     } else if (quantor.equals(SOME)) {
                         desc = factory.getOWLObjectSomeValuesFrom((OWLObjectPropertyExpression)property, (OWLClassExpression)propertyRange);
-                    } else if (quantor.equals(HAS_SELF)){
-                        desc = factory.getOWLObjectHasSelf((OWLObjectPropertyExpression)property);
                     } else if (quantity == null || quantity.equals("")) { //$NON-NLS-1$
                         // user has to enter min cardinality first
                         return null;
