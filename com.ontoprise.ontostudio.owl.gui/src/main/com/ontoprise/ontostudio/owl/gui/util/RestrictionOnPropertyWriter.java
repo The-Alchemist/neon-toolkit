@@ -34,7 +34,10 @@ import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
 
 import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.commands.OWLCommandUtils;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class RestrictionOnPropertyWriter {
 
     /**
