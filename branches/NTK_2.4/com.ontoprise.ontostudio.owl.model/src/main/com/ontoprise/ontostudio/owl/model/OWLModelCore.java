@@ -1907,6 +1907,7 @@ public class OWLModelCore implements OWLModel {
         return getRootProperties(OWLAnnotationProperty.class, OWLAnnotationProperty.class);
     }
 
+    @Override
     public Set<List<OWLObjectProperty>> getSubPropertyChains(String propertyId) throws NeOnCoreException {
         return Cast.cast(OWLSubPropertyChainOfAxiom_subObjectProperties_Collector.getItems(OWLSubPropertyChainOfAxiom_superDescription_Request, autoBox(objectProperty(propertyId))));
     }
@@ -1923,11 +1924,13 @@ public class OWLModelCore implements OWLModel {
 
     @Override
     public Set<ItemHits<OWLObjectProperty,OWLSubObjectPropertyOfAxiom>> getSubObjectPropertyHits(String propertyId) throws NeOnCoreException {
+        EntityHierarchyUpdater<?> updater = _hierarchyUpdaters.get(OWLObjectPropertyExpression.class);
+        if(updater != null)
+            updater.refresh();
         Set<LocatedItem<OWLSubObjectPropertyOfAxiom>> locatedAxioms = getLocatedChildEdgeAxioms(OWLObjectPropertyExpression.class, OWLSubObjectPropertyOfAxiom.class, OWLModelFactory.getOWLDataFactory(getProjectId()).getOWLObjectProperty(OWLUtilities.toIRI(propertyId)));
         return Cast.cast(SubObjectPropertyOf_subObjectProperties_NamedObjectPropertiesOnly_Collector.getItemHits(getGroupBy(), locatedAxioms));
     }
     
-
     @Override
     public Set<OWLDataProperty> getSubDataProperties(String propertyId) throws NeOnCoreException {
         return getItemsFromItemHits(getSubDataPropertyHits(propertyId));
@@ -1935,6 +1938,9 @@ public class OWLModelCore implements OWLModel {
 
     @Override
     public Set<ItemHits<OWLDataProperty,OWLSubDataPropertyOfAxiom>> getSubDataPropertyHits(String propertyId) throws NeOnCoreException {
+        EntityHierarchyUpdater<?> updater = _hierarchyUpdaters.get(OWLDataPropertyExpression.class);
+        if(updater != null)
+            updater.refresh();
         Set<LocatedItem<OWLSubDataPropertyOfAxiom>> locatedAxioms = getLocatedChildEdgeAxioms(OWLDataPropertyExpression.class, OWLSubDataPropertyOfAxiom.class, OWLModelFactory.getOWLDataFactory(getProjectId()).getOWLDataProperty(OWLUtilities.toIRI(propertyId)));
         return Cast.cast(SubDataPropertyOf_subDataProperty_NamedDataPropertiesOnly_Collector.getItemHits(getGroupBy(), locatedAxioms));
     }
@@ -1946,7 +1952,8 @@ public class OWLModelCore implements OWLModel {
 
     @Override
     public Set<ItemHits<OWLObjectPropertyExpression,OWLSubObjectPropertyOfAxiom>> getSuperObjectPropertyHits(String propertyId) throws NeOnCoreException {
-        return Cast.cast(SubObjectPropertyOf_superObjectProperty_NamedObjectPropertiesOnly_Collector.getItemHits(OWLObjectSubPropertyAxiom_subProperty_Request, autoBox(objectProperty(propertyId))));
+        return Cast.cast(SubObjectPropertyOf_superObjectProperty_NamedObjectPropertiesOnly_Collector.getItemHits(
+                OWLObjectSubPropertyAxiom_subProperty_Request, autoBox(objectProperty(propertyId))));
     }
 
     @Override
@@ -2171,6 +2178,7 @@ public class OWLModelCore implements OWLModel {
         return OWLInverseFunctionalObjectPropertyAxiom_property_Request.getAxioms(objectProperty(propertyId)).size() > 0;
     }
 
+    @Override
     public boolean isInverseFunctional(String propertyId, boolean includeImported) throws NeOnCoreException {
         return OWLInverseFunctionalObjectPropertyAxiom_property_Request.getAxioms(includeImported, objectProperty(propertyId)).size() > 0;
     }
