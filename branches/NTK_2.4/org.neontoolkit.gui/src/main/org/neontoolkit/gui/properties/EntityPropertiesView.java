@@ -15,8 +15,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.jface.viewers.TreePath;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.action.IAction;
@@ -26,6 +24,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -51,8 +50,10 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.neontoolkit.gui.Messages;
 import org.neontoolkit.gui.NeOnUIPlugin;
+import org.neontoolkit.gui.SharedImages;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.neontoolkit.gui.internal.properties.PropertyPageInfo;
+import org.neontoolkit.gui.navigator.elements.IFolderElement;
 import org.neontoolkit.gui.navigator.elements.IOntologyElement;
 import org.neontoolkit.gui.navigator.elements.IProjectElement;
 
@@ -254,6 +255,11 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
 				}
 				if(sel.isEmpty())
 				    showEmptyPage();
+                if (sel instanceof TreeSelection) {
+                    TreeSelection treeSelection = (TreeSelection) sel;
+                    if(treeSelection.getFirstElement() instanceof IFolderElement)
+                        showEmptyPage();
+                }
 			}
 		};
 	}
@@ -289,8 +295,6 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
                     }
                 }
             }
-            //NICO if _selection is deleted, you can select the one of its parents: super entity, ontology, project
-            showEmptyPage();
         }
 	    if (_activePart == null) {
 	        _activePart = getSite().getPage().getActivePart();
@@ -340,15 +344,14 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
 	}
 	
 	private void showEmptyPage() {//NICO Has to be redone: Bug 19(WORD)
-//	    System.out.println("showEmptyPage"); //$NON-NLS-1$
-//		if (!_noSelectionPage.getControl().isDisposed()) {
-//            if (_oldMainPage != null && !_oldMainPage.isDisposed()) {
-//                _oldMainPage.resetSelection();
-//                _oldMainPage = null;
-//            }
-//            setTitleImage(NeOnUIPlugin.getDefault().getImageRegistry().get(SharedImages.ONTOLOGY));
-//			_container.setSelection(_noSelectionPage);
-//		}
+		if (!_noSelectionPage.getControl().isDisposed()) {
+            if (_oldMainPage != null && !_oldMainPage.isDisposed()) {
+                _oldMainPage.resetSelection();
+                _oldMainPage = null;
+            }
+            setTitleImage(NeOnUIPlugin.getDefault().getImageRegistry().get(SharedImages.ONTOLOGY));
+			_container.setSelection(_noSelectionPage);
+		}
 
 	}
 
