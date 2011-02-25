@@ -15,17 +15,19 @@ import java.util.LinkedHashSet;
 
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.core.util.IRIUtils;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
+import org.semanticweb.owlapi.model.OWLOntology;
 
-import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.ApplyChanges;
 import com.ontoprise.ontostudio.owl.model.commands.OWLModuleChangeCommand;
 
 /**
  * @author werner
+ * @author Nico Stieler
  * 
  */
 public class CreateEquivalentObjectProperty extends OWLModuleChangeCommand {
@@ -43,13 +45,18 @@ public class CreateEquivalentObjectProperty extends OWLModuleChangeCommand {
     @Override
     protected void doPerform() throws CommandException {
         try {
-            OWLNamespaces ns = getOwlModel().getNamespaces();
+            OWLOntology ontology = getOwlModel().getOntology();
             OWLDataFactory factory = getOwlModel().getOWLDataFactory();
             
-            OWLObjectPropertyExpression propertyUri = OWLUtilities.objectProperty((String) getArgument(2), ns, factory);
-            OWLObjectPropertyExpression equivalentPropertyUri = OWLUtilities.objectProperty((String) getArgument(3), ns, factory);
+            OWLObjectPropertyExpression propertyUri = 
+                OWLUtilities.objectProperty(IRIUtils.ensureValidIRISyntax((String) getArgument(2)), ontology);
+            OWLObjectPropertyExpression equivalentPropertyUri = 
+                OWLUtilities.objectProperty(IRIUtils.ensureValidIRISyntax((String) getArgument(3)), ontology);
 
-            new ApplyChanges(getProjectName(), getOntology(), new OWLAxiom[] {factory.getOWLEquivalentObjectPropertiesAxiom(new LinkedHashSet<OWLObjectPropertyExpression>(Arrays.asList(propertyUri, equivalentPropertyUri)))}, new OWLAxiom[0]).perform();
+            new ApplyChanges(getProjectName(), getOntology(), 
+                    new OWLAxiom[] {factory.getOWLEquivalentObjectPropertiesAxiom(new LinkedHashSet<OWLObjectPropertyExpression>(
+                            Arrays.asList(propertyUri, equivalentPropertyUri)))}, 
+                    new OWLAxiom[0]).perform();
         } catch (NeOnCoreException e) {
             throw new CommandException(e);
         }

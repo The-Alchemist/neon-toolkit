@@ -29,6 +29,7 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 import com.ontoprise.ontostudio.owl.model.LocatedItem;
@@ -43,6 +44,7 @@ import com.ontoprise.ontostudio.owl.visualize.nodes.ClazzNode;
 
 /**
  * @author werner
+ * @author Nico Stieler
  * 
  */
 public class IndividualObjectPropertyNodeContentProvider extends AbstractNodeContentProvider {
@@ -92,6 +94,7 @@ public class IndividualObjectPropertyNodeContentProvider extends AbstractNodeCon
     private void addInstancePropertyValues(String projectId, String ontologyUri, List<LabelImageNode> nodes, List<OntoStudioDefaultEdge> edges, OWLEntity clazz, int hierarchyLevel) throws NeOnCoreException,NeOnCoreException {
         try {
             OWLModel owlModel = OWLModelFactory.getOWLModel(ontologyUri, projectId);
+            OWLOntology ontology = owlModel.getOntology();
             String[] individualUris = new GetIndividuals(projectId, ontologyUri, clazz.getIRI().toString()).getResults();
             if (individualUris.length > 100) {
                 return;
@@ -104,8 +107,8 @@ public class IndividualObjectPropertyNodeContentProvider extends AbstractNodeCon
                     OWLIndividual targetIndividual = member.getObject();
     
                     LabelImageNode sourceInstanceNode = getNode(individualUri, ontologyUri, projectId, VisualizerConfiguration.INDIVIDUAL_TYPE, _ontologyLanguage);
-                    LabelImageNode targetInstanceNode = getNode(OWLUtilities.toString(targetIndividual), OWLUtilities.toString(objectProperty), ontologyUri, projectId, VisualizerConfiguration.INDIVIDUAL_TYPE, _ontologyLanguage);
-                    LabelImageNode objectPropertyNode = getNode(OWLUtilities.toString(objectProperty), ontologyUri, projectId, VisualizerConfiguration.OBJECT_PROPERTY_TYPE, _ontologyLanguage);
+                    LabelImageNode targetInstanceNode = getNode(OWLUtilities.toString(targetIndividual, ontology), OWLUtilities.toString(objectProperty, ontology), ontologyUri, projectId, VisualizerConfiguration.INDIVIDUAL_TYPE, _ontologyLanguage);
+                    LabelImageNode objectPropertyNode = getNode(OWLUtilities.toString(objectProperty, ontology), ontologyUri, projectId, VisualizerConfiguration.OBJECT_PROPERTY_TYPE, _ontologyLanguage);
                     addNode(targetInstanceNode, nodes);
                     addNode(objectPropertyNode, nodes);
                     addEdge(new DashedEdge(targetInstanceNode, objectPropertyNode), edges);
@@ -144,6 +147,7 @@ public class IndividualObjectPropertyNodeContentProvider extends AbstractNodeCon
      * 
      * @see org.eclipse.core.runtime.IExecutableExtensionFactory#create()
      */
+    @Override
     public Object create() throws CoreException {
         return new IndividualObjectPropertyNodeContentProvider();
     }

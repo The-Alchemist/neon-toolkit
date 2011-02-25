@@ -18,6 +18,7 @@ import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLObjectPropertyDomainAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.ItemHits;
 import com.ontoprise.ontostudio.owl.model.LocatedItem;
@@ -26,6 +27,7 @@ import com.ontoprise.ontostudio.owl.model.commands.OWLOntologyRequestCommand;
 
 /**
  * @author werner
+ * @author Nico Stieler
  *
  */
 public class GetObjectPropertyDomains extends OWLOntologyRequestCommand {
@@ -47,11 +49,12 @@ public class GetObjectPropertyDomains extends OWLOntologyRequestCommand {
         String propertyUri = (String) getArgument(2);
 
         try {
+            OWLOntology ontology = getOwlModel().getOntology();
             Set<ItemHits<OWLClassExpression,OWLObjectPropertyDomainAxiom>> clazzDescriptions = getOwlModel().getObjectPropertyDomainHits(propertyUri);
             for (ItemHits<OWLClassExpression,OWLObjectPropertyDomainAxiom> hit: clazzDescriptions) {
                 Set<LocatedItem<OWLObjectPropertyDomainAxiom>> axioms = hit.getAxioms();
                 for (LocatedItem<OWLObjectPropertyDomainAxiom> item: axioms) {
-                    _results.add(new String[]{OWLUtilities.toString(item.getItem()), item.getOntologyURI()});
+                    _results.add(new String[]{OWLUtilities.toString(item.getItem(), ontology), item.getOntologyURI()});
                 }
             }
             

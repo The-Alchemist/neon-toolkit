@@ -38,7 +38,6 @@ import org.neontoolkit.search.ui.OpenSearchPreferencesAction;
 import org.neontoolkit.search.ui.SearchMatch;
 
 import com.ontoprise.ontostudio.search.owl.match.ITreeObject;
-import com.ontoprise.ontostudio.search.owl.match.OwlSearchMatch;
 
 /**
  * @author Nico Stieler
@@ -54,6 +53,7 @@ public class OWLSearchResultPage extends AbstractTextSearchViewPage implements I
 
         // Listens to the events that change the namespace and display
         // language settings
+        @Override
         public void propertyChange(PropertyChangeEvent event) {
             if (event.getProperty().equals(NeOnUIPlugin.ID_DISPLAY_PREFERENCE)) {
                 getViewer().update(_contentProvider.getElements(getViewer().getInput()), null);
@@ -103,12 +103,10 @@ public class OWLSearchResultPage extends AbstractTextSearchViewPage implements I
     @Override
     protected void configureTreeViewer(TreeViewer viewer) {
         viewer.setUseHashlookup(true);
-//      viewer.setLabelProvider(new ColorDecoratingLabelProvider(new SortingLabelProvider(this), PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
         _contentProvider = new SearchTreeContentProvider(this);
         _labelProvider = new SearchTableLabelProvider();
         viewer.setContentProvider(_contentProvider);
         viewer.setLabelProvider(_labelProvider);
-//      setSortOrder(fCurrentSortOrder);
         IPreferenceStore store = NeOnUIPlugin.getDefault().getPreferenceStore();
         store.addPropertyChangeListener(_propertyChangeListener);
     }
@@ -117,17 +115,7 @@ public class OWLSearchResultPage extends AbstractTextSearchViewPage implements I
      * @see org.eclipse.search.ui.text.AbstractTextSearchViewPage#configureTableViewer(org.eclipse.jface.viewers.TableViewer)
      */
     @Override
-    protected void configureTableViewer(TableViewer viewer) {
-//        viewer.setUseHashlookup(true);
-////      viewer.setLabelProvider(new ColorDecoratingLabelProvider(new SortingLabelProvider(this), PlatformUI.getWorkbench().getDecoratorManager().getLabelDecorator()));
-//        _contentProvider = new SearchTreeContentProvider(this);
-//        _labelProvider = new SearchTableLabelProvider();
-//        viewer.setContentProvider(_contentProvider);
-//        viewer.setLabelProvider(_labelProvider);
-////      setSortOrder(fCurrentSortOrder);
-//        IPreferenceStore store = NeOnUIPlugin.getDefault().getPreferenceStore();
-//        store.addPropertyChangeListener(_propertyChangeListener);
-        
+    protected void configureTableViewer(TableViewer viewer) {      
     }
     
     /* (non-Javadoc)
@@ -238,6 +226,7 @@ public class OWLSearchResultPage extends AbstractTextSearchViewPage implements I
     
     private void showMatch(final SearchMatch match) {
         ISafeRunnable runnable = new ISafeRunnable() {
+            @Override
             public void handleException(Throwable exception) {
                 if (exception instanceof PartInitException) {
                     PartInitException pie = (PartInitException) exception;
@@ -245,6 +234,7 @@ public class OWLSearchResultPage extends AbstractTextSearchViewPage implements I
                 }
             }
 
+            @Override
             public void run() throws Exception {
                 match.show(_currentPathIndex);
             }
@@ -254,37 +244,30 @@ public class OWLSearchResultPage extends AbstractTextSearchViewPage implements I
 
     @Override
     public void internalRemoveSelected() {
-        // TODO Auto-generated method stub
         super.internalRemoveSelected();
     }
     @Override
     public void restoreState(IMemento memento) {
-        // TODO Auto-generated method stub
         super.restoreState(memento);
     }
     @Override
     public void setActionBars(IActionBars actionBars) {
-        // TODO Auto-generated method stub
         super.setActionBars(actionBars);
     }
     @Override
     protected void fillContextMenu(IMenuManager mgr) {
-        // TODO Auto-generated method stub
         super.fillContextMenu(mgr);
     }
     @Override
     protected void fillToolbar(IToolBarManager tbm) {
-        // TODO Auto-generated method stub
         super.fillToolbar(tbm);
     }
     @Override
     public Match[] getDisplayedMatches(Object element) {
-        // TODO Auto-generated method stub
         return super.getDisplayedMatches(element);
     }
     @Override
     protected IDialogSettings getSettings() {
-        // TODO Auto-generated method stub
         return super.getSettings();
     }
 }

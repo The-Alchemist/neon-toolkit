@@ -88,7 +88,7 @@ public class DescriptionText extends AbstractOwlTextField {
      * 
      */
     public DescriptionText(Composite parent, OWLModel owlModel, boolean imported, FormToolkit toolkit) {
-        this(parent,owlModel,owlModel, imported, toolkit);
+        this(parent, owlModel, owlModel, imported, toolkit);
     }
     /**
      * 

@@ -74,10 +74,11 @@ public class WebImportOntologyWizardPage extends FileSystemImportSelectionPage {
         _projectsCombo = new Combo(container, SWT.BORDER | SWT.READ_ONLY);
         _projectsCombo.setLayoutData(gd2);
         _projectsCombo.addSelectionListener(new SelectionListener() {
+            @Override
             public void widgetSelected(SelectionEvent e) {
             	checkStatus();
             }
-
+            @Override
             public void widgetDefaultSelected(SelectionEvent e) {
             }
         });
@@ -90,6 +91,7 @@ public class WebImportOntologyWizardPage extends FileSystemImportSelectionPage {
         _uri = new Text(container, SWT.BORDER | SWT.SINGLE);
         _uri.setLayoutData(gd1);
         _uri.addModifyListener(new ModifyListener() {
+            @Override
             public void modifyText(ModifyEvent e) {
             	checkStatus();
             }

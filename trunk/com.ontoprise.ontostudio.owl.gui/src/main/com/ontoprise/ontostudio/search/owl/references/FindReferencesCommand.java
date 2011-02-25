@@ -45,6 +45,7 @@ import com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataProp
 import com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyHierarchyProvider;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement;
+import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.search.owl.match.AxiomSearchMatch;
@@ -132,7 +133,8 @@ public class FindReferencesCommand extends AbstractSearchCommand{
                     OWLIndividual indi = factory.getOWLNamedIndividual(entityUri);
                     Set<OWLClass> classes;
                     try {
-                        classes = OWLModelFactory.getOWLModel(ontology, project).getClasses(OWLUtilities.toString(indi));
+                        OWLModel model = OWLModelFactory.getOWLModel(ontology, project);
+                        classes = model.getClasses(OWLUtilities.toString(indi, model.getOntology()));
                         for (OWLClass c: classes) {
                             elem = IndividualItem.createNewInstance(indi, c.getIRI().toString(), ontology, project);
                             break; // only add the match once

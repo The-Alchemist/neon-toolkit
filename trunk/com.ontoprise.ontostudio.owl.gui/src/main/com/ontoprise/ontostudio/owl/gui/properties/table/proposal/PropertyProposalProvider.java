@@ -48,6 +48,7 @@ public class PropertyProposalProvider extends AbstractOwlProposalProvider {
         super(localOwlModel, sourceOwlModel);
         _style = style;
     }
+    @Override
     public IContentProposal[] getProposals(String contents, int position) {
         List<IContentProposal> proposals = new ArrayList<IContentProposal>();
         try {

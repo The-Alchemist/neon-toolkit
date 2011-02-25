@@ -22,6 +22,7 @@ import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.gui.commands.AbstractOWLPluginTest;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
@@ -79,11 +80,12 @@ public class RenameAnnotationPropertyTest extends AbstractOWLPluginTest {
 
     private Set<OWLAnnotationAssertionAxiom> getAnnotationAssertions(String projectId, String ontologyURI, String entityURI) throws NeOnCoreException, CommandException {
         OWLModel model = OWLModelFactory.getOWLModel(ontologyURI, projectId);
+        OWLOntology ontology = model.getOntology();
         GetEntityAnnotationHits getEntityAnnotationHitsNew = new GetEntityAnnotationHits(projectId, ontologyURI, entityURI);
         getEntityAnnotationHitsNew.run();
         Set<OWLAnnotationAssertionAxiom> result = new LinkedHashSet<OWLAnnotationAssertionAxiom>();
         for (String[] item: getEntityAnnotationHitsNew.getResults()) {
-            result.add((OWLAnnotationAssertionAxiom)OWLUtilities.axiom(item[0], model.getNamespaces(), model.getOWLDataFactory()));
+            result.add((OWLAnnotationAssertionAxiom)OWLUtilities.axiom(item[0], ontology));
         }
         return result;
     }

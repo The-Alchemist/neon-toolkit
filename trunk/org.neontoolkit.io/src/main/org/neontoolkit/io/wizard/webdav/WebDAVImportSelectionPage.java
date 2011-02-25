@@ -111,6 +111,7 @@ public class WebDAVImportSelectionPage extends AbstractImportSelectionPage imple
             this._webDAVConn = conn;
         }
 
+        @Override
         public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
             try {
                 monitor.beginTask(Messages.getString("WebDAVImportSelectionPage.28") + _webDAVConn.getServerURL().toExternalForm(), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
@@ -123,7 +124,7 @@ public class WebDAVImportSelectionPage extends AbstractImportSelectionPage imple
     }
 
     class EventHandler implements SelectionListener, ModifyListener {
-
+        @Override
         public void widgetSelected(SelectionEvent se) {
 //            if (se.getSource() == _createButton) {
 //                createNewProject();
@@ -137,11 +138,11 @@ public class WebDAVImportSelectionPage extends AbstractImportSelectionPage imple
 //            }
             checkStatus();
         }
-
+        @Override
         public void widgetDefaultSelected(SelectionEvent se) {
             widgetSelected(se);
         }
-
+        @Override
         public void modifyText(ModifyEvent me) {
             checkStatus();
         }
@@ -219,11 +220,11 @@ public class WebDAVImportSelectionPage extends AbstractImportSelectionPage imple
         gridData.horizontalSpan = 5;
         _webDAVSiteCombo.setLayoutData(gridData);
         _webDAVSiteCombo.addSelectionListener(new SelectionListener() {
-
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 siteComboChanged(_webDAVSiteCombo.getText());
             }
-
+            @Override
             public void widgetDefaultSelected(SelectionEvent e) {
             }
         });
@@ -234,7 +235,7 @@ public class WebDAVImportSelectionPage extends AbstractImportSelectionPage imple
         gridData.horizontalSpan = 1;
         siteSettingsButton.setLayoutData(gridData);
         siteSettingsButton.addSelectionListener(new SelectionListener() {
-
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 _webDAVSiteSettingsAction.run();
                 if (_webDAVSiteSettingsAction.getStatus() == Window.OK) {
@@ -242,7 +243,7 @@ public class WebDAVImportSelectionPage extends AbstractImportSelectionPage imple
                     setPreselectedFileInput();
                 }
             }
-
+            @Override
             public void widgetDefaultSelected(SelectionEvent e) {
             }
         });
@@ -273,6 +274,7 @@ public class WebDAVImportSelectionPage extends AbstractImportSelectionPage imple
              * 
              * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
              */
+            @Override
             public void selectionChanged(SelectionChangedEvent event) {
                 if (!event.getSelection().isEmpty()) {
                     _webDAVFolderSelection = ((IStructuredSelection) event.getSelection()).getFirstElement();
@@ -315,6 +317,7 @@ public class WebDAVImportSelectionPage extends AbstractImportSelectionPage imple
              * 
              * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
              */
+            @Override
             public void selectionChanged(SelectionChangedEvent event) {
                 String file = ""; //$NON-NLS-1$
                 if (!event.getSelection().isEmpty()) {
@@ -594,6 +597,7 @@ public class WebDAVImportSelectionPage extends AbstractImportSelectionPage imple
      * 
      * @see com.ontoprise.ontostudio.io.webdav.IWebDAVSelectionPage#addSite(com.ontoprise.ontostudio.io.webdav.WebDAVConnection)
      */
+    @Override
     public void addSite(WebDAVConnection site) {
         this._webDAVSiteManager.addSite(site);
         _webDAVFolderTreeViewer.setInput(_webDAVSiteManager);
@@ -606,6 +610,7 @@ public class WebDAVImportSelectionPage extends AbstractImportSelectionPage imple
      * 
      * @see com.ontoprise.ontostudio.io.webdav.IWebDAVSelectionPage#deleteSite(com.ontoprise.ontostudio.io.webdav.WebDAVConnection)
      */
+    @Override
     public void deleteSite(WebDAVConnection site) {
         this._webDAVSiteManager.removeSite(site.getServerURL());
         _webDAVFolderTreeViewer.setInput(_webDAVSiteManager);
@@ -618,6 +623,7 @@ public class WebDAVImportSelectionPage extends AbstractImportSelectionPage imple
      * 
      * @see com.ontoprise.ontostudio.io.webdav.IWebDAVSelectionPage#refresh()
      */
+    @Override
     public void refresh() {
         this._webDAVFolderTreeViewer.refresh();
         this._webDAVFileTreeViewer.refresh();
@@ -636,7 +642,7 @@ public class WebDAVImportSelectionPage extends AbstractImportSelectionPage imple
     
     @Override
     public String[] getFiles() {
-//        version url zurückgeben!!
+//        version url zurï¿½ckgeben!!
         String file = _fileInput.getText();
         if(file.equals("")) { //$NON-NLS-1$
             return new String[0];

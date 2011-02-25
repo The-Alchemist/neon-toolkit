@@ -466,6 +466,7 @@ public class NamespacesArea extends AbstractOWLIdPropertyPage {
 
     private void initVerifyListeners(final Button defaultNsButton, final StyledText prefixText, final StyledText namespaceText, final Button addButton) {
         namespaceText.addModifyListener(new ModifyListener() {
+            @Override
             public void modifyText(ModifyEvent e) {
                 verifyEntries(defaultNsButton, prefixText, namespaceText, addButton);
             }
@@ -479,6 +480,7 @@ public class NamespacesArea extends AbstractOWLIdPropertyPage {
         });
 
         prefixText.addModifyListener(new ModifyListener() {
+            @Override
             public void modifyText(ModifyEvent e) {
                 verifyEntries(defaultNsButton, prefixText, namespaceText, addButton);
             }
@@ -497,17 +499,33 @@ public class NamespacesArea extends AbstractOWLIdPropertyPage {
                 verifyUri(namespaceText, addButton);
             }
         } else {
-            if (prefixText.getText().trim().length() == 0 && namespaceText.getText().trim().length() != 0) {
-                _form.setMessage(Messages.NamespacesArea_16, IMessageProvider.WARNING);
-                addButton.setEnabled(false);
-            } else {
-                if (namespaceText.getText().trim().length() == 0) {
+            if(prefixText.getText().trim().length() == 0){
+                if(namespaceText.getText().trim().length() == 0){
+                    _form.setMessage(null, IMessageProvider.NONE);//pn
+                    addButton.setEnabled(false);
+                }else{
+                    _form.setMessage(Messages.NamespacesArea_16, IMessageProvider.WARNING);//p-n
+                    addButton.setEnabled(false);
+                }
+            }else{
+                if(namespaceText.getText().trim().length() == 0){
                     _form.setMessage(Messages.NamespacesArea_22, IMessageProvider.WARNING);
                     addButton.setEnabled(false);
-                } else {
-                    verifyUri(namespaceText, addButton);
+                }else{
+                    verifyUri(namespaceText, addButton);//-n-p
                 }
             }
+//            if (prefixText.getText().trim().length() == 0 && namespaceText.getText().trim().length() != 0) {
+//                _form.setMessage(Messages.NamespacesArea_16, IMessageProvider.WARNING);
+//                addButton.setEnabled(false);
+//            } else {
+//                if (namespaceText.getText().trim().length() == 0) {
+//                    _form.setMessage(Messages.NamespacesArea_22, IMessageProvider.WARNING);
+//                    addButton.setEnabled(false);
+//                } else {
+//                    verifyUri(namespaceText, addButton);
+//                }
+//            }
         }
     }
 

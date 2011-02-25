@@ -15,14 +15,13 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataPropertyDomainAxiom;
 import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.gui.commands.AbstractOWLPluginTest;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
-import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.ApplyChanges;
 import com.ontoprise.ontostudio.owl.model.commands.clazz.CreateRootClazz;
@@ -34,6 +33,7 @@ import com.ontoprise.ontostudio.owl.model.commands.dataproperties.GetDataPropert
 
 /**
  * @author werner
+ * @author Nico Stieler
  *
  */
 public class DataPropertyDomainAndRangeTest extends AbstractOWLPluginTest {
@@ -64,13 +64,12 @@ public class DataPropertyDomainAndRangeTest extends AbstractOWLPluginTest {
         Assert.assertEquals(1, ranges.length);
         
         OWLModel model = OWLModelFactory.getOWLModel(ONTOLOGY_URI, PROJECT_ID);
-        OWLNamespaces namespaces = model.getNamespaces();
-        OWLDataFactory factory = model.getOWLDataFactory();
-        OWLDataPropertyDomainAxiom domain = (OWLDataPropertyDomainAxiom) OWLUtilities.axiom(domains[0][0], namespaces, factory);
-        Assert.assertEquals(c1, OWLUtilities.toString(domain.getDomain()));
+        OWLOntology ontology = model.getOntology();
+        OWLDataPropertyDomainAxiom domain = (OWLDataPropertyDomainAxiom) OWLUtilities.axiom(domains[0][0], ontology);
+        Assert.assertEquals(c1, OWLUtilities.toString(domain.getDomain(), model.getOntology()));
         
-        OWLDataPropertyRangeAxiom range = (OWLDataPropertyRangeAxiom) OWLUtilities.axiom(ranges[0][0], namespaces, factory);
-        Assert.assertEquals(c2, OWLUtilities.toString(range.getRange()));
+        OWLDataPropertyRangeAxiom range = (OWLDataPropertyRangeAxiom) OWLUtilities.axiom(ranges[0][0], ontology);
+        Assert.assertEquals(c2, OWLUtilities.toString(range.getRange(), model.getOntology()));
         
         String domainAxiom = new StringBuilder("[dataDomain ").append(dp1).append(" ").append(c1).append("]").toString(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         String rangeAxiom = new StringBuilder("[dataRange ").append(dp1).append(" ").append(c2).append("]").toString(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

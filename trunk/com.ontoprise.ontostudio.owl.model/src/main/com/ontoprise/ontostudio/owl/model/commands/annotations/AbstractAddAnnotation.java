@@ -15,12 +15,14 @@ import java.util.List;
 
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.core.util.IRIUtils;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAnnotationSubject;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
@@ -32,6 +34,7 @@ import com.ontoprise.ontostudio.owl.model.util.OWLAxiomUtils;
 
 /**
  * @author werner
+ * @author Nico Stieler
  * 
  */
 public abstract class AbstractAddAnnotation extends OWLModuleChangeCommand {
@@ -59,11 +62,13 @@ public abstract class AbstractAddAnnotation extends OWLModuleChangeCommand {
         try {
             OWLNamespaces namespaces = getOwlModel().getNamespaces();
             OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(getProjectName());
+            OWLOntology ontology = getOwlModel().getOntology();
 
             
-            String expandedRange = namespaces.expandString(range);
+            String expandedRange = null;
             String expandedProperty = namespaces.expandString(property);
-            OWLAnnotationProperty annotProp = factory.getOWLAnnotationProperty(OWLUtilities.toIRI(expandedProperty));
+            OWLAnnotationProperty annotProp = OWLUtilities.annotationProperty(IRIUtils.ensureValidIRISyntax(expandedProperty), ontology);
+//            factory.getOWLAnnotationProperty(OWLUtilities.toIRI(expandedProperty));
             OWLAnnotationValue c = null;
             if (language.equals(OWLCommandUtils.EMPTY_LANGUAGE) || language.equals("")) { //$NON-NLS-1$
                 // bugfix of bug 9674 - we get an exception if no type AND no language is selected,
@@ -75,10 +80,10 @@ public abstract class AbstractAddAnnotation extends OWLModuleChangeCommand {
                 if (expandedRange.equals(OWLAxiomUtils.OWL_INDIVIDUAL)) {
                     c = OWLUtilities.toIRI(namespaces.expandString(value));
                 } else {
-                    c = factory.getOWLTypedLiteral(value, factory.getOWLDatatype(OWLUtilities.toIRI(expandedRange)));
+                    c = factory.getOWLLiteral(value, factory.getOWLDatatype(OWLUtilities.toIRI(expandedRange)));
                 }
             } else {
-                c = factory.getOWLStringLiteral(value, language);
+                c = factory.getOWLLiteral(value, language);
             }
             OWLAnnotation annot = factory.getOWLAnnotation(annotProp, c);
 

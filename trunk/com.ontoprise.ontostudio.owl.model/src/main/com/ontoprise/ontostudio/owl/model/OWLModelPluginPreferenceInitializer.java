@@ -32,6 +32,8 @@ public class OWLModelPluginPreferenceInitializer extends AbstractPreferenceIniti
         store.setDefault(OWLModelPlugin.SHOW_ACTUAL_ONTOLOGY, false); 
         store.setDefault(OWLModelPlugin.EDIT_IMPORTED_AXIOMS_WITHOUT_ASKING, false); 
         store.setDefault(OWLModelPlugin.REMOVE_IMPORTED_AXIOMS_WITHOUT_ASKING, false); 
+        store.setDefault(OWLModelPlugin.INSERT_EXPLICIT_CLASS_ASSERTION_AXIOM_TO_OWLTHING_OPEN_DIALOG, false); 
+        store.setDefault(OWLModelPlugin.INSERT_EXPLICIT_CLASS_ASSERTION_AXIOM_TO_OWLTHING_YES_OR_NO, true); 
         store.setDefault(OWLModelPlugin.SHOW_RESTRICTION_IN_CLASS_TAXONOMY_TAB, false); 
     }
 

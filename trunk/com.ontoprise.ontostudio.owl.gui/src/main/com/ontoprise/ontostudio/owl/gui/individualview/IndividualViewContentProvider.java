@@ -24,32 +24,37 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.neontoolkit.core.NeOnCorePlugin;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.neontoolkit.gui.navigator.elements.IOntologyElement;
 import org.neontoolkit.gui.navigator.elements.IProjectElement;
+import org.neontoolkit.gui.properties.EntityPropertiesView;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzFolderTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 import com.ontoprise.ontostudio.owl.model.OWLConstants;
+import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
-import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.individual.CreateIndividual;
 import com.ontoprise.ontostudio.owl.model.commands.individual.GetIndividuals;
 import com.ontoprise.ontostudio.owl.model.event.OWLAxiomListener;
 import com.ontoprise.ontostudio.owl.model.event.OWLChangeEvent;
-import com.ontoprise.ontostudio.owl.model.util.InternalParser;
-import com.ontoprise.ontostudio.owl.model.util.InternalParserException;
 
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class IndividualViewContentProvider implements IStructuredContentProvider,ITreeContentProvider {
 
     public static final int INDENT = 5;
@@ -85,6 +90,7 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
         if (_axiomListener == null) {
             _axiomListener = new OWLAxiomListener() {
 
+                @Override
                 public void modelChanged(OWLChangeEvent event) {
 
                     _individualTree.getTree().getDisplay().syncExec(new Runnable() {
@@ -108,10 +114,12 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
         _guiListener = new IPropertyChangeListener() {
 
             // Listenes to the events that change the namespace and update instance properties
+            @Override
             public void propertyChange(PropertyChangeEvent event) {
                 if (event.getProperty().equals(NeOnUIPlugin.ID_DISPLAY_PREFERENCE)) {
                     _individualTree.getTree().getDisplay().syncExec(new Runnable() {
 
+                        @Override
                         public void run() {
                             // refreshElements();
                             // setDirty();
@@ -124,10 +132,12 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
 
         _owlListener = new IPropertyChangeListener() {
             // Listenes to the events that change the namespace and update instance properties
+            @Override
             public void propertyChange(PropertyChangeEvent event) {
                 if (event.getProperty().equals(NeOnUIPlugin.ID_DISPLAY_PREFERENCE)) {
                     _individualTree.getTree().getDisplay().syncExec(new Runnable() {
 
+                        @Override
                         public void run() {
                             _individualTree.refresh();
                         }
@@ -146,6 +156,7 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
      * 
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      */
+    @Override
     public Object[] getElements(Object parent) {
         // String projectId = ((IProjectElement)parent).getProjectName();
         // String ontologyId = ((IModuleElement)parent).getOntologyUri();
@@ -157,6 +168,7 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
         return _items;
     }
 
+    @Override
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
         if (newInput instanceof Object[]) {
             Object[] array = (Object[]) newInput;
@@ -194,16 +206,33 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
 
         try {
             String[] individualUris = new GetIndividuals(_projectId, _ontologyUri, _selectedClazz).getResults();
+            IIndividualTreeElement[] oldItems = (IIndividualTreeElement[]) getElements(null);
             _items = new IIndividualTreeElement[individualUris.length];
 
             int i = 0;
             for (String individualUri: individualUris) {
-                
-                InternalParser parser = new InternalParser(individualUri, OWLNamespaces.EMPTY_INSTANCE, OWLModelFactory.getOWLDataFactory(_projectId));
-                OWLIndividual individual = parser.parseOWLIndividual();
+                OWLOntology ontology = OWLModelFactory.getOWLModel(_ontologyUri, _projectId).getOntology();
 //                if(individualUri.startsWith("_:"))individualUri = individualUri.substring(2); //$NON-NLS-1$
 //                OWLIndividual individual = OWLModelFactory.getOWLDataFactory(_projectId).getOWLNamedIndividual(OWLUtilities.toIRI(individualUri));
-                _items[i++] = IndividualItem.createNewInstance(individual, _selectedClazz, _ontologyUri, _projectId);
+                boolean newIndividuum = true;
+                int oldPos = 0;
+                for(oldPos = 0 ; oldPos < oldItems.length ; oldPos++){
+                    if(oldItems[oldPos] != null && OWLUtilities.toString(oldItems[oldPos].getIndividual(), ontology).equals(i)){
+                        newIndividuum = false;
+                        break;
+                    }
+                }
+                if(newIndividuum){
+                    OWLIndividual individual = OWLUtilities.individual(individualUri, ontology);
+                    _items[i++] = IndividualItem.createNewInstance(individual, _selectedClazz, _ontologyUri, _projectId);
+                }else{
+                    _items[i++] = oldItems[oldPos];
+                    oldItems[oldPos] = null;
+                }
+            }
+            
+            if(oldItems != null && oldItems.length > 0 && oldItems[0] != null && _items[0] != null){
+                System.err.println("select " + _items[0] + " or its class " + _items[0].getClazz());
             }
             Arrays.sort(_items, new Comparator<IIndividualTreeElement>() {
                 @Override
@@ -216,9 +245,7 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
             new NeonToolkitExceptionHandler().handleException(e);
         } catch (NeOnCoreException e) {
             new NeonToolkitExceptionHandler().handleException(e);
-        } catch (InternalParserException e) {
-            new NeonToolkitExceptionHandler().handleException(e);
-        } 
+        }
     }
     
 
@@ -229,10 +256,12 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
         updateItems();
     }
 
+    @Override
     public Object getParent(Object child) {
         return null;
     }
 
+    @Override
     public Object[] getChildren(Object parent) {
         String projectId = ((IProjectElement) parent).getProjectName();
         String ontologyId = ((IOntologyElement) parent).getOntologyUri();
@@ -241,6 +270,7 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
         return new Object[0];
     }
 
+    @Override
     public boolean hasChildren(Object parent) {
         String projectId = ((IProjectElement) parent).getProjectName();
         String ontologyId = ((IOntologyElement) parent).getOntologyUri();
@@ -296,6 +326,7 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
      * 
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      */
+    @Override
     public void dispose() {
         _guiStore.removePropertyChangeListener(_guiListener);
         _owlStore.removePropertyChangeListener(_owlListener);
@@ -326,8 +357,10 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
         String localName = Messages.IndividualViewContentProvider_0 + System.currentTimeMillis(); 
         String uri = localName;
         String newUri = ""; //$NON-NLS-1$
+        OWLModel owlModel = null;
         try {
-            newUri = OWLPlugin.getDefault().getSyntaxManager().parseUri(uri, OWLModelFactory.getOWLModel(_ontologyUri, _projectId));
+            owlModel = OWLModelFactory.getOWLModel(_ontologyUri, _projectId);
+            newUri = OWLPlugin.getDefault().getSyntaxManager().parseUri(uri, owlModel);
         } catch (NeOnCoreException e) {
             newUri = uri;
         }
@@ -372,27 +405,21 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
             List<IIndividualTreeElement> directInstances = null;
             directInstances = new ArrayList<IIndividualTreeElement>();
             String[] individualUris = new GetIndividuals(_projectId, _ontologyUri, _selectedClazz).getResults();
-            for (String uri: individualUris) {
-                
-                OWLIndividual i = new InternalParser(uri, OWLNamespaces.EMPTY_INSTANCE, OWLModelFactory.getOWLDataFactory(_projectId)).parseOWLIndividual();
-                directInstances.add(IndividualItem.createNewInstance(i, _selectedClazz, _ontologyUri, _projectId));
+            for (String individualUri: individualUris) {
+                OWLIndividual individual = OWLUtilities.individual(individualUri, OWLModelFactory.getOWLModel(_ontologyUri, _projectId).getOntology());
+                directInstances.add(IndividualItem.createNewInstance(individual, _selectedClazz, _ontologyUri, _projectId));
             }
-
             _items = new IIndividualTreeElement[directInstances.size()];
             int i = 0;
             for (IIndividualTreeElement ind: directInstances) {
                 _items[i] = ind;
                 i++;
             }
-
         } catch (CommandException e) {
             new NeonToolkitExceptionHandler().handleException(e);
         } catch (NeOnCoreException e) {
             new NeonToolkitExceptionHandler().handleException(e);
-        } catch (InternalParserException e) {
-            new NeonToolkitExceptionHandler().handleException(e);
         }
-
     }
 
     public void setStyle(int style) {

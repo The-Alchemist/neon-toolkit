@@ -16,6 +16,7 @@ import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyRangeAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.ItemHits;
 import com.ontoprise.ontostudio.owl.model.LocatedItem;
@@ -45,11 +46,12 @@ public class GetPropertiesForRangeHits extends OWLOntologyRequestCommand {
         _results = new ArrayList<String[]>();
         String classUri = (String) getArgument(2);
         try {
+            OWLOntology ontology = getOwlModel().getOntology();
             Set<ItemHits<OWLDataProperty,OWLDataPropertyRangeAxiom>> dataPropertyHits = getOwlModel().getDataPropertiesForRangeHits(classUri);
             for (ItemHits<OWLDataProperty,OWLDataPropertyRangeAxiom> hit: dataPropertyHits) {
                 Set<LocatedItem<OWLDataPropertyRangeAxiom>> axioms = hit.getAxioms();
                 for (LocatedItem<OWLDataPropertyRangeAxiom> axiom: axioms) {
-                    String[] result = new String[]{OWLUtilities.toString(axiom.getItem()), axiom.getOntologyURI()};
+                    String[] result = new String[]{OWLUtilities.toString(axiom.getItem(), ontology), axiom.getOntologyURI()};
                     _results.add(result);
                 }
             }
@@ -58,7 +60,7 @@ public class GetPropertiesForRangeHits extends OWLOntologyRequestCommand {
             for (ItemHits<OWLObjectProperty,OWLObjectPropertyRangeAxiom> hit: objectPropertyHits) {
                 Set<LocatedItem<OWLObjectPropertyRangeAxiom>> axioms = hit.getAxioms();
                 for (LocatedItem<OWLObjectPropertyRangeAxiom> axiom: axioms) {
-                    String[] result = new String[]{OWLUtilities.toString(axiom.getItem()), axiom.getOntologyURI()};
+                    String[] result = new String[]{OWLUtilities.toString(axiom.getItem(), ontology), axiom.getOntologyURI()};
                     _results.add(result);
                 }
             }
@@ -67,7 +69,7 @@ public class GetPropertiesForRangeHits extends OWLOntologyRequestCommand {
             for (ItemHits<OWLAnnotationProperty,OWLAnnotationPropertyRangeAxiom> hit: annotationPropertyHits) {
                 Set<LocatedItem<OWLAnnotationPropertyRangeAxiom>> axioms = hit.getAxioms();
                 for (LocatedItem<OWLAnnotationPropertyRangeAxiom> axiom: axioms) {
-                    String[] result = new String[]{OWLUtilities.toString(axiom.getItem()), axiom.getOntologyURI()};
+                    String[] result = new String[]{OWLUtilities.toString(axiom.getItem(), ontology), axiom.getOntologyURI()};
                     _results.add(result);
                 }
             }

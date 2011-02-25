@@ -25,6 +25,8 @@ import org.semanticweb.owlapi.model.OWLDatatype;
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
+import com.ontoprise.ontostudio.owl.gui.util.DatatypeHandler;
+import com.ontoprise.ontostudio.owl.gui.util.DatatypeManager;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
@@ -36,6 +38,8 @@ import com.ontoprise.ontostudio.owl.perspectives.OWLPerspective;
 
 /**
  * Action to create new datatype in the tree.
+ * 
+ * @author Nico Stieler
  */
 
 public class NewDatatypeHandler extends AbstractNewHandler {
@@ -52,24 +56,23 @@ public class NewDatatypeHandler extends AbstractNewHandler {
     public Object createNewItem(Object parent) {
         try {
             OWLModel owlModel;
+            DatatypeHandler datatypeHandler = null;
             ITreeDataProvider provider;
+            String newUri = ""; //$NON-NLS-1$
             if (parent instanceof DatatypeTreeElement) {
                 _parentDatatype = (DatatypeTreeElement) parent;
                 owlModel = OWLModelFactory.getOWLModel(_parentDatatype.getOntologyUri(), _parentDatatype.getProjectName());
                 provider = _parentDatatype.getProvider();
-    
+                datatypeHandler = DatatypeManager.INSTANCE.getRegisteredDatatypeHandler(_parentDatatype.getId());
             } else if (parent instanceof DatatypeFolderTreeElement) {
                 _parentDatatype = null;
                 DatatypeFolderTreeElement folder = (DatatypeFolderTreeElement) parent;
                 owlModel = OWLModelFactory.getOWLModel(folder.getOntologyUri(), folder.getProjectName());
                 provider = _view.getExtensionHandler().getProvider("com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeProvider"); //$NON-NLS-1$
-                
             } else {
                 _parentDatatype = null;
                 return null;
             }
-    
-            String newUri = ""; //$NON-NLS-1$
             long timeStamp = System.currentTimeMillis() % 1000;
             String newId = Messages.NewDatatypeAction_0 + "datatype" + timeStamp; //$NON-NLS-1$
             try {
@@ -80,7 +83,8 @@ public class NewDatatypeHandler extends AbstractNewHandler {
             } catch (NeOnCoreException e) {
                 newUri = newId;
             }
-
+            if(datatypeHandler != null)
+                DatatypeManager.INSTANCE.registerDatatypeHandler(newUri, datatypeHandler);
             OWLDatatype datatype = OWLModelFactory.getOWLDataFactory(owlModel.getProjectId()).getOWLDatatype(OWLUtilities.toIRI(newUri));
             DatatypeTreeElement newElement = new DatatypeTreeElement(
                     datatype, owlModel.getOntologyURI(), owlModel.getProjectId(), provider);

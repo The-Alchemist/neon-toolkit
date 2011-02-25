@@ -14,16 +14,20 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.core.util.IRIUtils;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataProperty;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
-import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.ApplyChanges;
 import com.ontoprise.ontostudio.owl.model.commands.OWLModuleChangeCommand;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class RemoveDataProperty extends OWLModuleChangeCommand {
 
     public RemoveDataProperty(String project, String ontologyId, String propertyId, String superPropertyId, boolean deleteSubProperties) throws NeOnCoreException {
@@ -38,7 +42,7 @@ public class RemoveDataProperty extends OWLModuleChangeCommand {
         String superPropertyId = getArgument(3) != null ? getArgument(3).toString() : null;
 
         try {
-            OWLNamespaces ns = getOwlModel().getNamespaces();
+            OWLOntology ontology = getOwlModel().getOntology();
             OWLDataFactory factory = getOwlModel().getOWLDataFactory();
 
             // delete subproperties, or shift them one level higher
@@ -55,10 +59,14 @@ public class RemoveDataProperty extends OWLModuleChangeCommand {
             }
 
             if (superPropertyId == null) {
-                OWLDataProperty dataProperty = OWLModelFactory.getOWLDataFactory(getProjectName()).getOWLDataProperty(OWLUtilities.toIRI(subPropertyId));
+                OWLDataProperty dataProperty = OWLModelFactory.getOWLDataFactory(getProjectName()).getOWLDataProperty(
+                        OWLUtilities.toIRI(subPropertyId));
                 getOwlModel().delEntity(dataProperty, null);
             } else {
-                new ApplyChanges(getProjectName(), getOntology(), new OWLAxiom[0], new OWLAxiom[]{factory.getOWLSubDataPropertyOfAxiom(OWLUtilities.dataProperty(subPropertyId, ns, factory), OWLUtilities.dataProperty(superPropertyId, ns, factory))}).perform();
+                new ApplyChanges(getProjectName(), getOntology(), new OWLAxiom[0], 
+                        new OWLAxiom[]{factory.getOWLSubDataPropertyOfAxiom(
+                                OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(subPropertyId), ontology), 
+                                OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(superPropertyId), ontology))}).perform();
             }
 
         } catch (NeOnCoreException e) {

@@ -17,6 +17,9 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "com.ontoprise.ontostudio.owl.gui.messages";//$NON-NLS-1$
+    public static String RemoveLastClassAssertionAxiom_Title;
+    public static String RemoveLastClassAssertionAxiom_Text;
+    public static String RemoveLastClassAssertionAxiom_Text_OWLTHING;
     public static String EditImportedTitle;
     public static String EditImportedText_0;
     public static String EditImportedText_1;
@@ -178,6 +181,7 @@ public class Messages extends NLS {
 	public static String ClazzPropertyPage2_30;
 	public static String ClazzPropertyPage2_4;
     public static String ClazzPropertyPage2_40;
+    public static String ClazzPropertyPage2_41;
 	public static String ClazzPropertyPage2_45;
 	public static String ClazzPropertyPage2_52;
 	public static String ClazzPropertyPage2_56;
@@ -440,6 +444,10 @@ public class Messages extends NLS {
     public static String OWLPreferencePage_0_4;
     public static String OWLPreferencePage_1_0;
     public static String OWLPreferencePage_1_1;
+    public static String OWLPreferencePage_Title_3;
+    public static String OWLPreferencePage_3_0;
+    public static String OWLPreferencePage_3_1;
+    public static String OWLPreferencePage_3_2;
 	public static String DeleteIndividualProcessor_4;
     public static String NewOntologyProjectWizard_1;
     public static String NewOntologyProjectWizard_2;

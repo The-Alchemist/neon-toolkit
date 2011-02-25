@@ -12,17 +12,19 @@ package com.ontoprise.ontostudio.owl.model.commands.dataproperties;
 
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.core.util.IRIUtils;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.OWLModel;
-import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.ApplyChanges;
 import com.ontoprise.ontostudio.owl.model.commands.OWLModuleChangeCommand;
 
 /**
  * @author werner
+ * @author Nico Stieler
  *
  */
 public class CreateDataPropertyRange extends OWLModuleChangeCommand {
@@ -43,9 +45,13 @@ public class CreateDataPropertyRange extends OWLModuleChangeCommand {
         String range = (String) getArgument(3);
         try {
             OWLModel model = getOwlModel();
-            OWLNamespaces ns = model.getNamespaces();
+            OWLOntology ontology = model.getOntology();
             OWLDataFactory factory = model.getOWLDataFactory();
-            new ApplyChanges(getProjectName(), getOntology(), new OWLAxiom[]{factory.getOWLDataPropertyRangeAxiom(OWLUtilities.dataProperty(propertyUri, ns, factory), OWLUtilities.dataRange(range, ns, factory))}, new OWLAxiom[0]).perform();
+            new ApplyChanges(getProjectName(), getOntology(), 
+                    new OWLAxiom[]{factory.getOWLDataPropertyRangeAxiom(
+                            OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(propertyUri), ontology), 
+                            OWLUtilities.dataRange(range, ontology))}, 
+                    new OWLAxiom[0]).perform();
         } catch (NeOnCoreException e) {
             throw new CommandException(e);
         }

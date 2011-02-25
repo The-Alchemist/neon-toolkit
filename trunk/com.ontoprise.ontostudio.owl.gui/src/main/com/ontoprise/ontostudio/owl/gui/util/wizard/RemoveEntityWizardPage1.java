@@ -42,9 +42,13 @@ import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
+import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class RemoveEntityWizardPage1 extends RemoveAxiomWizardPage1 {
 
     protected CheckboxTreeViewer _treeViewer;
@@ -114,7 +118,10 @@ public class RemoveEntityWizardPage1 extends RemoveAxiomWizardPage1 {
                     
                     for (OWLEntity entity: _entities) {
                         //if (OWLUtilities.toString(superDesc).contains(entity.getURI().toString()) || OWLUtilities.toString(subDesc).contains(entity.getURI().toString())) {
-                            if (!OWLUtilities.toString(superDesc).contains(entity.getIRI().toString()) && !OWLUtilities.toString(subDesc).contains(entity.getIRI().toString()) && tryRecursive) {
+                        OWLModel model = OWLModelFactory.getOWLModel(_ontologyUri, _projectId);
+                            if (tryRecursive 
+                                    && !OWLUtilities.toString(superDesc, model.getOntology()).contains(entity.getIRI().toString()) 
+                                    && !OWLUtilities.toString(subDesc, model.getOntology()).contains(entity.getIRI().toString()) ) {
                                 recursiveFetchChildren(child, rootAxiom);
                             }
                         //}
@@ -176,6 +183,7 @@ public class RemoveEntityWizardPage1 extends RemoveAxiomWizardPage1 {
         }
         int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
         OWLObjectVisitorEx visitor = OWLPlugin.getDefault().getSyntaxManager().getVisitor(owlModel, idDisplayStyle);
+        
         String[] result = (String[]) axiom.accept(visitor);
         text.setText(OWLGUIUtilities.getEntityLabel(result));
     }

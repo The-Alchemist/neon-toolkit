@@ -34,7 +34,6 @@ import com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.An
 import com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
-import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.clazz.GetPropertiesForRangeHits;
 import com.ontoprise.ontostudio.owl.model.event.OWLAxiomListener;
@@ -74,9 +73,10 @@ public class RangeViewContentProvider implements IStructuredContentProvider, ITr
     protected OWLAxiomListener getAxiomListener() {
         if (_axiomListener == null) {
             _axiomListener = new OWLAxiomListener() {
-
+                @Override
                 public void modelChanged(OWLChangeEvent event) {
                     _propertyTree.getTree().getDisplay().syncExec(new Runnable() {
+                        @Override
                         public void run() {
                             forceUpdate();
                             _propertyTree.refresh();
@@ -96,9 +96,11 @@ public class RangeViewContentProvider implements IStructuredContentProvider, ITr
         _guiListener = new IPropertyChangeListener() {
 
             // Listens to the events that change the namespace and update instance properties
+            @Override
             public void propertyChange(PropertyChangeEvent event) {
                 if (event.getProperty().equals(NeOnUIPlugin.ID_DISPLAY_PREFERENCE)) {
                     _propertyTree.getTree().getDisplay().syncExec(new Runnable() {
+                        @Override
                         public void run() {
                             _propertyTree.refresh();
                         }
@@ -111,9 +113,11 @@ public class RangeViewContentProvider implements IStructuredContentProvider, ITr
         _owlListener = new IPropertyChangeListener() {
 
             // Listens to the events that change the namespace and update instance properties
+            @Override
             public void propertyChange(PropertyChangeEvent event) {
                 if (event.getProperty().equals(NeOnUIPlugin.ID_DISPLAY_PREFERENCE)) {
                     _propertyTree.getTree().getDisplay().syncExec(new Runnable() {
+                        @Override
                         public void run() {
                             _propertyTree.refresh();
                         }
@@ -132,6 +136,7 @@ public class RangeViewContentProvider implements IStructuredContentProvider, ITr
      * 
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      */
+    @Override
     public Object[] getElements(Object parent) {
         if (_items == null) {
             return new PropertyTreeElement[0];
@@ -139,6 +144,7 @@ public class RangeViewContentProvider implements IStructuredContentProvider, ITr
         return _items;
     }
 
+    @Override
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
         if (newInput instanceof Object[]) {
             Object[] array = (Object[]) newInput;
@@ -180,7 +186,7 @@ public class RangeViewContentProvider implements IStructuredContentProvider, ITr
                 String ontologyUri = hit[1];
 
                 boolean isImported = !ontologyUri.equals(_ontologyUri);
-                OWLAxiom axiom = (OWLAxiom) OWLUtilities.axiom(axiomText, OWLNamespaces.EMPTY_INSTANCE, OWLModelFactory.getOWLDataFactory(_projectId));
+                OWLAxiom axiom = (OWLAxiom) OWLUtilities.axiom(axiomText, OWLModelFactory.getOWLModel(_ontologyUri, _projectId).getOntology());
                 
                 OWLEntity property;
                 if(axiom instanceof OWLAnnotationPropertyRangeAxiom) {
@@ -230,10 +236,12 @@ public class RangeViewContentProvider implements IStructuredContentProvider, ITr
         updateItems();
     }
 
+    @Override
     public Object getParent(Object child) {
         return null;
     }
 
+    @Override
     public Object[] getChildren(Object parent) {
         String projectId = ((IProjectElement) parent).getProjectName();
         String ontologyId = ((IOntologyElement) parent).getOntologyUri();
@@ -242,6 +250,7 @@ public class RangeViewContentProvider implements IStructuredContentProvider, ITr
         return new Object[0];
     }
 
+    @Override
     public boolean hasChildren(Object parent) {
         String projectId = ((IProjectElement) parent).getProjectName();
         String ontologyId = ((IOntologyElement) parent).getOntologyUri();
@@ -255,6 +264,7 @@ public class RangeViewContentProvider implements IStructuredContentProvider, ITr
      * 
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      */
+    @Override
     public void dispose() {
         _guiStore.removePropertyChangeListener(_guiListener);
         _owlStore.removePropertyChangeListener(_owlListener);

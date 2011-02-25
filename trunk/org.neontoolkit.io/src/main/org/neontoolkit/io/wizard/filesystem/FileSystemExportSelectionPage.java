@@ -51,7 +51,7 @@ public class FileSystemExportSelectionPage extends AbstractExportSelectionPage {
     protected Composite _composite;
 
     public class EventHandler implements SelectionListener, ModifyListener {
-
+        @Override
         public void widgetSelected(SelectionEvent se) {
             if (se.getSource().equals(_browseButton)) {
                 // check whether extension is specified
@@ -148,11 +148,11 @@ public class FileSystemExportSelectionPage extends AbstractExportSelectionPage {
             }
             checkStatus();
         }
-
+        @Override
         public void widgetDefaultSelected(SelectionEvent se) {
             widgetSelected(se);
         }
-
+        @Override
         public void modifyText(ModifyEvent me) {
             checkStatus();
         }

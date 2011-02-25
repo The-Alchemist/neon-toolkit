@@ -11,6 +11,7 @@ import java.util.Set;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 
 import com.ontoprise.ontostudio.owl.model.ItemHits;
@@ -40,11 +41,12 @@ public class GetSuperDescriptionHitsWithoutRestrictionHits extends OWLOntologyRe
         _results = new ArrayList<String[]>();
         String subClazzUri = (String) getArgument(2);
         try {
+            OWLOntology ontology = getOwlModel().getOntology();
             Set<ItemHits<OWLClassExpression,OWLSubClassOfAxiom>> superDescriptionHitsWithoutRestrictionHits = getOwlModel().getSuperDescriptionHitsWithoutRestrictionHits(subClazzUri);
             for (ItemHits<OWLClassExpression,OWLSubClassOfAxiom> hit: superDescriptionHitsWithoutRestrictionHits) {
                 Set<LocatedItem<OWLSubClassOfAxiom>> axioms = hit.getAxioms();
                 for (LocatedItem<OWLSubClassOfAxiom> axiom: axioms) {
-                    String[] result = new String[] {OWLUtilities.toString(axiom.getItem()), axiom.getOntologyURI()};
+                    String[] result = new String[] {OWLUtilities.toString(axiom.getItem(), ontology), axiom.getOntologyURI()};
                     _results.add(result);
                 }
             }

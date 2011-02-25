@@ -26,6 +26,7 @@ import org.neontoolkit.gui.util.PerspectiveChangeHandler;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
@@ -132,6 +133,7 @@ public class NewObjectPropertyHandler extends AbstractNewHandler {
         ObjectPropertyTreeElement data = new ObjectPropertyTreeElement(prop, ontologyId, projectId, element.getProvider());
         item.setData(data);
         item.setText(element.getProvider().getText(data));
+//        OWLOntology ontology = OWLModelFactory.getOWLModel(ontologyId, projectId).getOntology();
 
         if (item.getParentItem().getData() instanceof ObjectPropertyFolderTreeElement) {
             // root property

@@ -51,6 +51,7 @@ import com.ontoprise.ontostudio.owl.model.event.OWLChangeEvent;
 
 /**
  * @author Michael Erdmann
+ * @author Nico Stieler
  */
 public class PropertyMemberViewContentProvider implements IStructuredContentProvider {
 
@@ -190,7 +191,7 @@ public class PropertyMemberViewContentProvider implements IStructuredContentProv
                 String axiomText = hit[0];
                 String ontologyUri = hit[1];
 
-                OWLAxiom axiom = OWLUtilities.axiom(axiomText, OWLNamespaces.EMPTY_INSTANCE, OWLModelFactory.getOWLDataFactory(_projectId));
+                OWLAxiom axiom = OWLUtilities.axiom(axiomText, OWLModelFactory.getOWLModel(_ontologyUri, _projectId).getOntology());
                 
                 OWLObject subject = null;
                 OWLObject value = null;

@@ -68,13 +68,16 @@ import org.semanticweb.owlapi.model.OWLEquivalentObjectPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLInverseObjectPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.model.OWLNaryBooleanClassExpression;
 import org.semanticweb.owlapi.model.OWLObject;
+import org.semanticweb.owlapi.model.OWLObjectIntersectionOf;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLObjectPropertyCharacteristicAxiom;
 import org.semanticweb.owlapi.model.OWLObjectPropertyDomainAxiom;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLObjectPropertyRangeAxiom;
+import org.semanticweb.owlapi.model.OWLObjectUnionOf;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyChange;
@@ -102,8 +105,6 @@ import com.ontoprise.ontostudio.owl.model.hierarchy.OWLClassHandler;
 import com.ontoprise.ontostudio.owl.model.hierarchy.ObjectPropertyHandler;
 import com.ontoprise.ontostudio.owl.model.util.Cast;
 import com.ontoprise.ontostudio.owl.model.util.Filter;
-import com.ontoprise.ontostudio.owl.model.util.InternalParser;
-import com.ontoprise.ontostudio.owl.model.util.InternalParserException;
 import com.ontoprise.ontostudio.owl.model.visitors.GetInterfaceTypeVisitor;
 import com.ontoprise.ontostudio.owl.model.visitors.GetMemberVisitor;
 
@@ -145,8 +146,20 @@ public class OWLModelCore implements OWLModel {
         return ontology.getOntologyID().getOntologyIRI().toURI().toString();
     }
     
+    @Override
     public void cleanCaches() {
         cleanCaches(false);
+    }
+
+    public static boolean containsInConjunctionOrDisjunction(OWLClass clazz, OWLClassExpression domain) {
+        if(domain instanceof OWLClass){
+            return clazz.equals(domain); 
+        }else if(domain instanceof OWLObjectIntersectionOf || domain instanceof OWLObjectUnionOf){
+            for(OWLClassExpression operand : ((OWLNaryBooleanClassExpression)domain).getOperands())
+                if(containsInConjunctionOrDisjunction(clazz,operand))
+                    return true;                
+        }
+        return false;
     }
     
     private void cleanCaches(boolean changesAffectImportedOntologiesOnly) {
@@ -263,6 +276,7 @@ public class OWLModelCore implements OWLModel {
 
     /** A filter returning true iff a given <code>ObjectPropertyExpression</code> is of type <code>ObjectProperty</code>. */
     private static final Filter<OWLObjectPropertyExpression> OBJECT_PROPERTY_FILTER = new Filter<OWLObjectPropertyExpression>() {
+        @Override
         public boolean matches(OWLObjectPropertyExpression item) {
             return item instanceof OWLObjectProperty;
         }
@@ -270,6 +284,7 @@ public class OWLModelCore implements OWLModel {
 
     /** A filter returning true iff a given <code>DataPropertyExpression</code> is of type <code>DataProperty</code>. */
     private static final Filter<OWLDataPropertyExpression> DATA_PROPERTY_FILTER = new Filter<OWLDataPropertyExpression>() {
+        @Override
         public boolean matches(OWLDataPropertyExpression item) {
             return item instanceof OWLDataProperty;
         }
@@ -277,6 +292,7 @@ public class OWLModelCore implements OWLModel {
 
     /** A filter returning true iff a given <code>Description</code> is a restriction on a property. */
     private static final Filter<OWLClassExpression> RESTRICTION_FILTER = new Filter<OWLClassExpression>() {
+        @Override
         public boolean matches(OWLClassExpression item) {
             return OWLUtilities.isRestriction(item);
         }
@@ -284,12 +300,14 @@ public class OWLModelCore implements OWLModel {
 
     /** A filter returning true iff a given <code>Description</code> is a restriction on a property. */
     private static final Filter<OWLClassExpression> NO_RESTRICTION_FILTER = new Filter<OWLClassExpression>() {
+        @Override
         public boolean matches(OWLClassExpression item) {
             return !OWLUtilities.isRestriction(item);
         }
     };
     /** A filter returning true iff a given <code>Description</code> is a restriction on a property. */
     private static final Filter<OWLClassExpression> COMPLEX_DESCRIPTION_AND_NO_RESTRICTION_FILTER = new Filter<OWLClassExpression>() {
+        @Override
         public boolean matches(OWLClassExpression item) {
             return (!OWLUtilities.isRestriction(item) && !(item instanceof OWLClass));
         }
@@ -297,6 +315,7 @@ public class OWLModelCore implements OWLModel {
 
     /** A filter returning true iff a given <code>Description</code> is nor an <code>OWLClass</code> neither a restriction on a property. */
     private static final Filter<OWLClassExpression> UNNAMED_NON_RESTRICTION_FILTER = new Filter<OWLClassExpression>() {
+        @Override
         public boolean matches(OWLClassExpression item) {
             return !(item instanceof OWLClass) && !OWLUtilities.isRestriction(item);
         }
@@ -304,6 +323,7 @@ public class OWLModelCore implements OWLModel {
 
     /** A filter returning true iff a given <code>Description</code> is an <code>OWLClass</code>. */
     private static final Filter<OWLClassExpression> NAMED_DESCRIPTION_FILTER = new Filter<OWLClassExpression>() {
+        @Override
         public boolean matches(OWLClassExpression item) {
             return item instanceof OWLClass;
         }
@@ -311,6 +331,7 @@ public class OWLModelCore implements OWLModel {
 
     /** A filter returning true iff a given <code>Description</code> is not an <code>OWLClass</code>, i.e. a complex class description. */
     private final static Filter<OWLClassExpression> COMPLEX_DESCRIPTION_FILTER = new Filter<OWLClassExpression>() {
+        @Override
         public boolean matches(OWLClassExpression item) {
             return !(item instanceof OWLClass);
         }
@@ -486,15 +507,20 @@ public class OWLModelCore implements OWLModel {
     private final AxiomRequest<OWLDataPropertyDomainAxiom> DataPropertyDomain_domain_Request = new AxiomRequestCore<OWLDataPropertyDomainAxiom>(AxiomType.DATA_PROPERTY_DOMAIN, "domain") {
         @Override
         protected Iterable<OWLDataPropertyDomainAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
-            OWLClassExpression clazz = (OWLClassExpression)parameters[0];
+            OWLClass clazz = (OWLClass)parameters[0];
+//            OWLClassExpression clazz = (OWLClassExpression)parameters[0];
             Set<OWLDataPropertyDomainAxiom> result = new LinkedHashSet<OWLDataPropertyDomainAxiom>();
             for (OWLDataPropertyDomainAxiom axiom: ontology.getAxioms(AxiomType.DATA_PROPERTY_DOMAIN)) {
-                if (clazz.equals(axiom.getDomain())) {
+                if (containsInConjunctionOrDisjunction(clazz,axiom.getDomain())) {
                     result.add(axiom);
                 }
+//                if (clazz.equals(axiom.getDomain())) {
+//                    result.add(axiom);
+//                }
             }
             return result;
         }
+
     }; 
     private final AxiomRequest<OWLDataPropertyRangeAxiom> DataPropertyRange_range_Request = new AxiomRequestCore<OWLDataPropertyRangeAxiom>(AxiomType.DATA_PROPERTY_RANGE, "range") {
         @Override
@@ -727,12 +753,15 @@ public class OWLModelCore implements OWLModel {
     private final AxiomRequest<OWLObjectPropertyDomainAxiom> ObjectPropertyDomain_domain_Request = new AxiomRequestCore<OWLObjectPropertyDomainAxiom>(AxiomType.OBJECT_PROPERTY_DOMAIN, "domain") {
         @Override
         protected Iterable<OWLObjectPropertyDomainAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
-            OWLClassExpression clazz = (OWLClassExpression)parameters[0];
+            OWLClass clazz = (OWLClass)parameters[0];
             Set<OWLObjectPropertyDomainAxiom> result = new LinkedHashSet<OWLObjectPropertyDomainAxiom>();
             for (OWLObjectPropertyDomainAxiom axiom: ontology.getAxioms(AxiomType.OBJECT_PROPERTY_DOMAIN)) {
-                if (clazz.equals(axiom.getDomain())) {
+                if (containsInConjunctionOrDisjunction(clazz, axiom.getDomain())) {
                     result.add(axiom);
                 }
+//                if (clazz.equals(axiom.getDomain())) {
+//                    result.add(axiom);
+//                }
             }
             return result;
         }
@@ -740,15 +769,19 @@ public class OWLModelCore implements OWLModel {
     private final AxiomRequest<OWLObjectPropertyRangeAxiom> ObjectPropertyRange_range_Request = new AxiomRequestCore<OWLObjectPropertyRangeAxiom>(AxiomType.OBJECT_PROPERTY_RANGE, "range") {
         @Override
         protected Iterable<OWLObjectPropertyRangeAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
-            OWLClassExpression clazz = (OWLClassExpression)parameters[0];
+            OWLClass clazz = (OWLClass)parameters[0];
             Set<OWLObjectPropertyRangeAxiom> result = new LinkedHashSet<OWLObjectPropertyRangeAxiom>();
             for (OWLObjectPropertyRangeAxiom axiom: ontology.getAxioms(AxiomType.OBJECT_PROPERTY_RANGE)) {
-                if (clazz.equals(axiom.getRange())) {
+                if (containsInConjunctionOrDisjunction(clazz, axiom.getRange())) {
                     result.add(axiom);
-                }
+                    }
+//                if (clazz.equals(axiom.getRange())) {
+//                    result.add(axiom);
+//                }
             }
             return result;
         }
+
     }; 
     private final AxiomRequest<OWLObjectPropertyAssertionAxiom> ObjectPropertyMember_objectProperty_sourceIndividual_Request = new AxiomRequestCore<OWLObjectPropertyAssertionAxiom>(AxiomType.OBJECT_PROPERTY_ASSERTION, "objectProperty", "sourceIndividual") {
         @Override
@@ -916,6 +949,7 @@ public class OWLModelCore implements OWLModel {
                 _item = item;
             }
 
+            @Override
             public boolean matches(E item) {
                 return !_item.equals(item);
             }
@@ -1220,11 +1254,11 @@ public class OWLModelCore implements OWLModel {
                     OWLSubClassOfAxiom axiom = (OWLSubClassOfAxiom)event.getAxiom();
                     if (event instanceof AddAxiom) {
                         if (!_subClassOfAxioms.add(axiom)) {
-                            _log.error("Adding sub class relation already contained in the cache, ignoring: " + OWLUtilities.toString(axiom, _namespaces));
+                            _log.error("Adding sub class relation already contained in the cache, ignoring: " + OWLUtilities.toString(axiom, getOntology()));
                         }
                     } else {
                         if (!_subClassOfAxioms.remove(axiom)) {
-                            _log.error("Removing sub class relation not contained in the cache, ignoring: " + OWLUtilities.toString(axiom, _namespaces));
+                            _log.error("Removing sub class relation not contained in the cache, ignoring: " + OWLUtilities.toString(axiom, getOntology()));
                         }
                     }
                 }
@@ -1246,7 +1280,7 @@ public class OWLModelCore implements OWLModel {
                 Class<? extends OWLObject> type = Cast.cast(entity.accept(visitor));
                 if (_entities.containsKey(type)) {
                     if (!_entities.get(type).remove(entity)) {
-                        _log.error("Removing entity not contained in the cache, ignoring: " + OWLUtilities.toString(entity, _namespaces));
+                        _log.error("Removing entity not contained in the cache, ignoring: " + OWLUtilities.toString(entity, getOntology()));
                     }
                 }
             }
@@ -1375,6 +1409,7 @@ public class OWLModelCore implements OWLModel {
         return EntityAnnotation_entity_Request.getAxioms(OWLUtilities.toIRI(expandedURI));
     }
 
+    @Override
     public Set<LocatedItem<OWLAnnotationAssertionAxiom>> getAnnotationHits(String owlEntityId) throws NeOnCoreException {
         
         String expandedURI = getNamespaces().expandString(owlEntityId);
@@ -1907,6 +1942,7 @@ public class OWLModelCore implements OWLModel {
         return getRootProperties(OWLAnnotationProperty.class, OWLAnnotationProperty.class);
     }
 
+    @Override
     public Set<List<OWLObjectProperty>> getSubPropertyChains(String propertyId) throws NeOnCoreException {
         return Cast.cast(OWLSubPropertyChainOfAxiom_subObjectProperties_Collector.getItems(OWLSubPropertyChainOfAxiom_superDescription_Request, autoBox(objectProperty(propertyId))));
     }
@@ -1923,11 +1959,13 @@ public class OWLModelCore implements OWLModel {
 
     @Override
     public Set<ItemHits<OWLObjectProperty,OWLSubObjectPropertyOfAxiom>> getSubObjectPropertyHits(String propertyId) throws NeOnCoreException {
+        EntityHierarchyUpdater<?> updater = _hierarchyUpdaters.get(OWLObjectPropertyExpression.class);
+        if(updater != null)
+            updater.refresh();
         Set<LocatedItem<OWLSubObjectPropertyOfAxiom>> locatedAxioms = getLocatedChildEdgeAxioms(OWLObjectPropertyExpression.class, OWLSubObjectPropertyOfAxiom.class, OWLModelFactory.getOWLDataFactory(getProjectId()).getOWLObjectProperty(OWLUtilities.toIRI(propertyId)));
         return Cast.cast(SubObjectPropertyOf_subObjectProperties_NamedObjectPropertiesOnly_Collector.getItemHits(getGroupBy(), locatedAxioms));
     }
     
-
     @Override
     public Set<OWLDataProperty> getSubDataProperties(String propertyId) throws NeOnCoreException {
         return getItemsFromItemHits(getSubDataPropertyHits(propertyId));
@@ -1935,6 +1973,9 @@ public class OWLModelCore implements OWLModel {
 
     @Override
     public Set<ItemHits<OWLDataProperty,OWLSubDataPropertyOfAxiom>> getSubDataPropertyHits(String propertyId) throws NeOnCoreException {
+        EntityHierarchyUpdater<?> updater = _hierarchyUpdaters.get(OWLDataPropertyExpression.class);
+        if(updater != null)
+            updater.refresh();
         Set<LocatedItem<OWLSubDataPropertyOfAxiom>> locatedAxioms = getLocatedChildEdgeAxioms(OWLDataPropertyExpression.class, OWLSubDataPropertyOfAxiom.class, OWLModelFactory.getOWLDataFactory(getProjectId()).getOWLDataProperty(OWLUtilities.toIRI(propertyId)));
         return Cast.cast(SubDataPropertyOf_subDataProperty_NamedDataPropertiesOnly_Collector.getItemHits(getGroupBy(), locatedAxioms));
     }
@@ -2171,6 +2212,7 @@ public class OWLModelCore implements OWLModel {
         return OWLInverseFunctionalObjectPropertyAxiom_property_Request.getAxioms(objectProperty(propertyId)).size() > 0;
     }
 
+    @Override
     public boolean isInverseFunctional(String propertyId, boolean includeImported) throws NeOnCoreException {
         return OWLInverseFunctionalObjectPropertyAxiom_property_Request.getAxioms(includeImported, objectProperty(propertyId)).size() > 0;
     }
@@ -2506,12 +2548,7 @@ public class OWLModelCore implements OWLModel {
     }
 
     private OWLIndividual individual(String uri) throws NeOnCoreException {
-        try {
-            return new InternalParser(uri, OWLNamespaces.EMPTY_INSTANCE, getOWLDataFactory()).parseOWLIndividual();
-        } catch (InternalParserException e) {
-            throw new InternalNeOnException(e.getMessage(), e.getCause());
-            
-        }//.getOWLNamedIndividual(OWLUtilities.toIRI(uri));
+        return OWLUtilities.individual(uri, _ontology);
     }
 
     private OWLClass owlClass(String uri) throws NeOnCoreException {
@@ -2697,6 +2734,7 @@ public class OWLModelCore implements OWLModel {
         return new RemoveAxiom(_ontology, axiom);
     }
     
+    @Override
     public IOntologyProject getOntologyProject() throws NeOnCoreException {
         return _ontologyProject;
     }

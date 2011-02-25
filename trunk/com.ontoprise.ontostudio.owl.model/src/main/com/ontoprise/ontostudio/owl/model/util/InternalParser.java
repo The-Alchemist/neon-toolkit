@@ -431,7 +431,7 @@ public class InternalParser {
             if (isNumberToken()) {
                 double result=getNumber();
                 nextToken();
-                return _f.getOWLTypedLiteral(result);
+                return _f.getOWLLiteral(result);
             }
             else if (_tokenizer.ttype==StreamTokenizer.TT_WORD) {
                 if ("<null>".equalsIgnoreCase(_tokenizer.sval)) {
@@ -508,15 +508,15 @@ public class InternalParser {
                     }
                     nextToken();
                     datatypeURI=_namespaces.expandString(datatypeURI);
-                    return _f.getOWLTypedLiteral(stringValue, _f.getOWLDatatype(OWLUtilities.toIRI(datatypeURI)));
+                    return _f.getOWLLiteral(stringValue, _f.getOWLDatatype(OWLUtilities.toIRI(datatypeURI)));
                 }
                 else if (_tokenizer.ttype==StreamTokenizer.TT_WORD && _tokenizer.sval.startsWith("@")) {
                     String language=_tokenizer.sval.substring(1);
                     nextToken();
-                    return _f.getOWLStringLiteral((stringValue.equals("null"))?null:stringValue, (language.equals("null"))?null:language);
+                    return _f.getOWLLiteral((stringValue.equals("null"))?null:stringValue, (language.equals("null"))?null:language);
                 }
                 else
-                    return _f.getOWLStringLiteral((stringValue.equals("null"))?null:stringValue, null);
+                    return _f.getOWLLiteral((stringValue.equals("null"))?null:stringValue, (String) null);
             }
             else
                 throw createException("Invalid token '"+Character.valueOf((char)_tokenizer.ttype)+"'.");

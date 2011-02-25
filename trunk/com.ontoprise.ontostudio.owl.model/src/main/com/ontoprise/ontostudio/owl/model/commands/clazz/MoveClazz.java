@@ -14,6 +14,7 @@ import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDeclarationAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 
 import com.ontoprise.ontostudio.owl.model.Messages;
@@ -21,7 +22,10 @@ import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.ApplyChanges;
 import com.ontoprise.ontostudio.owl.model.commands.OWLModuleChangeCommand;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class MoveClazz extends OWLModuleChangeCommand {
 
 	public MoveClazz(String project, String ontologyId, String clazzId, String oldParentId, String newParentId, boolean cleanIndividualProperties) throws NeOnCoreException {
@@ -35,6 +39,7 @@ public class MoveClazz extends OWLModuleChangeCommand {
 		String newSuperClazzId = getArgument(4) != null ? getArgument(4).toString() : null;
 
         try {
+            OWLOntology ontology = getOwlModel().getOntology();
 	        if (newSuperClazzId != null) {
 	            //add a subclass
 	        	if (clazzId.equals(newSuperClazzId)) {
@@ -51,7 +56,7 @@ public class MoveClazz extends OWLModuleChangeCommand {
 	                // tkr: remove the old SubClassOf axiom only, do not remove clazzId itself
 	                OWLSubClassOfAxiom axiom = factory.getOWLSubClassOfAxiom(factory.getOWLClass(OWLUtilities.toIRI(clazzId)), factory.getOWLClass(OWLUtilities.toIRI(oldSuperClazzId)));
 	                if (getOwlModel().containsAxiom(axiom, false)) {
-	                    new ApplyChanges(getProjectName(), getOntology(), new String[0], new String[]{OWLUtilities.toString(axiom)}).perform();
+	                    new ApplyChanges(getProjectName(), getOntology(), new String[0], new String[]{OWLUtilities.toString(axiom, ontology)}).perform();
 	                }
 	                
 	            } else {
@@ -59,7 +64,7 @@ public class MoveClazz extends OWLModuleChangeCommand {
 	            	// declaration so that the respective event removes the tree item. 
 	    			try {
 	    				OWLDeclarationAxiom decl = factory.getOWLDeclarationAxiom(factory.getOWLClass(OWLUtilities.toIRI(clazzId)));
-                        new ApplyChanges(getProjectName(), getOntology(), new String[0], new String[]{OWLUtilities.toString(decl)}).perform();
+                        new ApplyChanges(getProjectName(), getOntology(), new String[0], new String[]{OWLUtilities.toString(decl, ontology)}).perform();
 					} catch (NeOnCoreException e) {
 	                    // nothing to do, no explicit information seems to exist
 			        }

@@ -14,6 +14,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -24,6 +25,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.Section;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.properties.IImagePropertyPage;
+import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -39,6 +41,8 @@ import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
 import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.AxiomText;
+import com.ontoprise.ontostudio.owl.model.OWLUtilities;
+import com.ontoprise.ontostudio.owl.model.util.OWLFunctionalSyntaxVisitor;
 
 /**
  * This class shows the source text of an entity, i.e. a frame-like representation of it in Manchester Syntax.
@@ -212,7 +216,7 @@ public class SourceViewTab extends AbstractOWLIdPropertyPage implements IImagePr
         
         ManchesterOWLSyntaxFrameRenderer r = new ManchesterOWLSyntaxFrameRenderer(owlOntologyManager, ontology, writer, entityShortFormProvider);
         r.writeFrame(owlEntity);
-
+        
         return writer.toString();
     }
         

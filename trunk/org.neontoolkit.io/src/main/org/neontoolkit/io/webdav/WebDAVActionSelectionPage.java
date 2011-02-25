@@ -63,7 +63,7 @@ public class WebDAVActionSelectionPage extends WizardPage {
     protected WebDAVSiteManager _webDAVSiteManager = WebDAVSiteManager.getManager();
 
     class EventHandler implements SelectionListener, ModifyListener {
-
+        @Override
         public void widgetSelected(SelectionEvent se) {
             if (se.getSource().equals(_createNewSiteOption)) {
                 ((NewWebDAVConnectionWizard) getWizard()).setWebDAVConnection(null);
@@ -77,11 +77,11 @@ public class WebDAVActionSelectionPage extends WizardPage {
             }
             checkStatus();
         }
-
+        @Override
         public void widgetDefaultSelected(SelectionEvent se) {
             widgetSelected(se);
         }
-
+        @Override
         public void modifyText(ModifyEvent me) {
             checkStatus();
         }
@@ -96,6 +96,7 @@ public class WebDAVActionSelectionPage extends WizardPage {
     /**
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(Composite)
      */
+    @Override
     public void createControl(Composite parent) {
         _composite = new Composite(parent, SWT.NONE);
 
@@ -144,6 +145,7 @@ public class WebDAVActionSelectionPage extends WizardPage {
              * 
              * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
              */
+            @Override
             public void selectionChanged(SelectionChangedEvent event) {
                 if (!event.getSelection().isEmpty()) {
                     _folderSelection = ((IStructuredSelection) event.getSelection()).getFirstElement();

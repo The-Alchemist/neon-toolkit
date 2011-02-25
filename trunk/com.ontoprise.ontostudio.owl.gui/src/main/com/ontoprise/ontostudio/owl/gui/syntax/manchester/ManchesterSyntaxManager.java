@@ -126,12 +126,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
             if (error != null) {
                 expandedValue = RESERVED_NAMESPACE + expandedValue;
             }
-            if (!expandedValue.startsWith(IRIUtils.TURTLE_IRI_OPEN)) {
-                expandedValue = IRIUtils.TURTLE_IRI_OPEN + expandedValue; 
-            }
-            if (!expandedValue.endsWith(IRIUtils.TURTLE_IRI_CLOSE)) {
-                expandedValue += IRIUtils.TURTLE_IRI_CLOSE;
-            }
+            expandedValue = IRIUtils.ensureValidIRISyntax(expandedValue);
             return new ManchesterOWLSyntaxEditorParser(owlModel.getOWLDataFactory(), expandedValue).parseIRI().toString();//NICO problem is maybe here??
 
         } catch (ParserException e) {
@@ -354,7 +349,7 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
     @Override
     public OWLLiteral parseConstant(String value, OWLModel owlModel) throws NeOnCoreException {
         try {
-            return getManchesterOWLSyntaxEditorParser(owlModel, value).parseConstant();
+            return getManchesterOWLSyntaxEditorParser(owlModel, value).parseLiteral();//parseConstant() does not exist anymore
         } catch (ParserException e) {
             throw new InternalNeOnException(e);
         } catch (IllegalArgumentException e) {

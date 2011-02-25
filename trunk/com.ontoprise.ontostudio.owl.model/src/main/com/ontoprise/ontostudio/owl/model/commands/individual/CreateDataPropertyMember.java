@@ -12,11 +12,13 @@ package com.ontoprise.ontostudio.owl.model.commands.individual;
 
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.core.util.IRIUtils;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.OWLConstants;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
@@ -51,8 +53,9 @@ public class CreateDataPropertyMember extends OWLModuleChangeCommand {
         String language = ((String[]) getArgument(5))[1];
 
         try {
+            OWLOntology ontology = getOwlModel().getOntology();
             OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(getProjectName());
-            OWLIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.toIRI(individualUri));
+            OWLIndividual individual = OWLUtilities.individual(IRIUtils.ensureValidIRISyntax(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(individualUri, ontology).toString()), ontology);
             OWLLiteral c;
             if (type.equals(OWLConstants.RDF_PLAIN_LITERAL)) {
                 if (!language.equals(OWLCommandUtils.EMPTY_LANGUAGE) && !language.equals("")) { //$NON-NLS-1$
@@ -61,13 +64,12 @@ public class CreateDataPropertyMember extends OWLModuleChangeCommand {
                     c = factory.getOWLLiteral(value, factory.getOWLDatatype(OWLUtilities.toIRI(OWLConstants.XSD_STRING)));
                 }
             } else {
-                c = factory.getOWLLiteral(value, factory.getOWLDatatype(OWLUtilities.toIRI(type)));
+                c = factory.getOWLLiteral(value, factory.getOWLDatatype(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(type, ontology)));
             }
-
-            OWLDataPropertyExpression prop = OWLModelFactory.getOWLDataFactory(getProjectName()).getOWLDataProperty(OWLUtilities.toIRI(propertyUri));
+            OWLDataPropertyExpression prop = OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(propertyUri, ontology).toString()), ontology);
             OWLAxiom newAxiom = factory.getOWLDataPropertyAssertionAxiom(prop, individual, c);
 
-            new ApplyChanges(getProjectName(), getOntology(), new String[] {OWLUtilities.toString(newAxiom)}, new String[0]).perform();
+            new ApplyChanges(getProjectName(), getOntology(), new String[] {OWLUtilities.toString(newAxiom, ontology)}, new String[0]).perform();
         } catch (NeOnCoreException e) {
             throw new CommandException(e);
         }

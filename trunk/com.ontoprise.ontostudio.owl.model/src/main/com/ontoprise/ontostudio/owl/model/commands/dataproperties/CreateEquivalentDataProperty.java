@@ -10,23 +10,20 @@
 
 package com.ontoprise.ontostudio.owl.model.commands.dataproperties;
 
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
-import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
+import org.semanticweb.owlapi.model.OWLDataProperty;
+import org.semanticweb.owlapi.model.OWLEquivalentDataPropertiesAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
 
-import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.ApplyChanges;
 import com.ontoprise.ontostudio.owl.model.commands.OWLModuleChangeCommand;
-import com.ontoprise.ontostudio.owl.model.util.Cast;
 
 /**
  * @author werner
+ * @author Nico Stieler
  * 
  */
 public class CreateEquivalentDataProperty extends OWLModuleChangeCommand {
@@ -45,11 +42,14 @@ public class CreateEquivalentDataProperty extends OWLModuleChangeCommand {
     protected void doPerform() throws CommandException {
         String propertyUri1 = (String) getArgument(2);
         String propertyUri2 = (String) getArgument(3);
-
         try {
-            OWLNamespaces ns = getOwlModel().getNamespaces();
             OWLDataFactory factory = getOwlModel().getOWLDataFactory();
-            new ApplyChanges(getProjectName(), getOntology(), new OWLAxiom[] {Cast.cast(factory.getOWLEquivalentDataPropertiesAxiom(new LinkedHashSet<OWLDataPropertyExpression>(Arrays.asList(OWLUtilities.dataProperty(propertyUri1, ns, factory), OWLUtilities.dataProperty(propertyUri2, ns, factory)))))}, new OWLAxiom[0]).perform();
+            OWLOntology ontology = getOwlModel().getOntology();
+            
+            OWLDataProperty dataproperty1 = OWLUtilities.dataProperty(propertyUri1, ontology);
+            OWLDataProperty dataproperty2 = OWLUtilities.dataProperty(propertyUri2, ontology);
+            OWLEquivalentDataPropertiesAxiom axiom = factory.getOWLEquivalentDataPropertiesAxiom(dataproperty1, dataproperty2);
+            new ApplyChanges(getProjectName(), getOntology(), new String[] {OWLUtilities.toString(axiom, ontology)}, new String[0]).perform();
         } catch (NeOnCoreException e) {
             throw new CommandException(e);
         }

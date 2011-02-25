@@ -22,7 +22,7 @@ import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 
 /**
  * @author mer
- * 
+ * @author Nico Stieler
  */
 public abstract class AbstractOwlEntityTreeElement extends AbstractOntologyEntity {
 
@@ -30,7 +30,7 @@ public abstract class AbstractOwlEntityTreeElement extends AbstractOntologyEntit
     private OWLEntity _entity;
 
     public AbstractOwlEntityTreeElement(OWLEntity entity, String ontologyURI, String projectName, ITreeDataProvider provider) {
-        super(projectName, ontologyURI, entity.getIRI().toString(), provider);
+        super(projectName, ontologyURI, entity.toStringID(), provider);
         _entity = entity;
     }
 

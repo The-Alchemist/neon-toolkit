@@ -14,16 +14,22 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.core.util.IRIUtils;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.ApplyChanges;
 import com.ontoprise.ontostudio.owl.model.commands.OWLModuleChangeCommand;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class RemoveIndividual extends OWLModuleChangeCommand {
 
     public RemoveIndividual(String project, String ontologyId, String clazzId, String[] individualIds) throws NeOnCoreException {
@@ -42,14 +48,19 @@ public class RemoveIndividual extends OWLModuleChangeCommand {
         for (int i = 0; i < individuals.length; i++) {
             try {
                 OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(getProjectName());
-                OWLNamedIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.toIRI(individuals[i]));
-                if (removeReferringAxioms) {
-                    getOwlModel().delEntity(individual, null);
-                } else {
-                    // called from MoveIndividual, so don' t remove all referring axioms
-                    OWLClassExpression clazzDescription = OWLUtilities.description(clazzUri, getOwlModel().getNamespaces(), getOwlModel().getOWLDataFactory());
-                    OWLClassAssertionAxiom clazzMember = factory.getOWLClassAssertionAxiom(clazzDescription, individual);
-                    new ApplyChanges(getProjectName(), getOntology(), new String[0], new String[] {OWLUtilities.toString(clazzMember)}).perform();
+                OWLOntology ontology = OWLModelFactory.getOWLModel(getOntology(), getProjectName()).getOntology();
+
+                OWLIndividual individual = OWLUtilities.individual(individuals[i], ontology);
+                if(individual instanceof OWLNamedIndividual){
+                    OWLNamedIndividual namedIndividual = (OWLNamedIndividual) individual;
+                    if (removeReferringAxioms) {
+                        getOwlModel().delEntity(namedIndividual, null);
+                    } else {
+                        // called from MoveIndividual, so don' t remove all referring axioms
+                        OWLClassExpression clazzDescription = OWLUtilities.description(IRIUtils.ensureValidIRISyntax(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(clazzUri, ontology).toString()), ontology);
+                        OWLClassAssertionAxiom clazzMember = factory.getOWLClassAssertionAxiom(clazzDescription, namedIndividual);
+                        new ApplyChanges(getProjectName(), getOntology(), new String[0], new String[] {OWLUtilities.toString(clazzMember, ontology)}).perform();
+                    }
                 }
             } catch (NeOnCoreException e) {
                 throw new CommandException(e);

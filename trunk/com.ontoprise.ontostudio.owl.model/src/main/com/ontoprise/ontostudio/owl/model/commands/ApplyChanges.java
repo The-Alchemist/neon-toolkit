@@ -17,17 +17,18 @@ import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLAxiomChange;
-import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLOntology;
 
-import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
+import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 
 /**
  * @author werner
+ * @author Nico Stieler
  *
  */
 public class ApplyChanges extends OWLModuleChangeCommand {
-    private static String[] toString(OWLAxiom[] axioms) {
+    private static String[] toString(OWLAxiom[] axioms, OWLOntology ontology) {
         if (axioms == null) {
             return null;
         }
@@ -36,13 +37,15 @@ public class ApplyChanges extends OWLModuleChangeCommand {
         }
         String[] strings = new String[axioms.length];
         for (int i = 0; i < axioms.length; i++) {
-            strings[i] = OWLUtilities.toString(axioms[i]);
+            strings[i] = OWLUtilities.toString(axioms[i], ontology);
         }
         return strings;
     }
 
     public ApplyChanges(String project, String ontology, OWLAxiom[] addChanges, OWLAxiom[] removeChanges) throws NeOnCoreException {
-        this (project, ontology, toString(addChanges), toString(removeChanges));
+        this (project, ontology, 
+                toString(addChanges, OWLModelFactory.getOWLModel(ontology, project).getOntology()), 
+                toString(removeChanges, OWLModelFactory.getOWLModel(ontology, project).getOntology()));
     }
     /**
      * @param project
@@ -59,20 +62,17 @@ public class ApplyChanges extends OWLModuleChangeCommand {
         String[] addChanges = (String[]) getArgument(2);
         String[] removeChanges = (String[]) getArgument(3);
         List<OWLAxiomChange> changes = new ArrayList<OWLAxiomChange>();
-        
-        
         try {
-            OWLNamespaces namespaces = getOwlModel().getNamespaces();
-            OWLDataFactory factory = getOwlModel().getOWLDataFactory();
+            OWLOntology ontology = getOwlModel().getOntology();
             for (String removeChange: removeChanges) {
-                OWLAxiom axiom = OWLUtilities.axiom(removeChange, namespaces, factory);
+                OWLAxiom axiom = OWLUtilities.axiom(removeChange, ontology);
                 OWLAxiomChange changeEvent = getOwlModel().getRemoveAxiom(axiom);
                 if (!changes.contains(changeEvent)) {
                     changes.add(changeEvent);
                 }
             }
             for (String addChange: addChanges) {
-                OWLAxiom axiom = OWLUtilities.axiom(addChange, namespaces, factory);
+                OWLAxiom axiom = OWLUtilities.axiom(addChange, ontology);
                 OWLAxiomChange changeEvent = getOwlModel().getAddAxiom(axiom);
                 if (!changes.contains(changeEvent)) {
                     changes.add(changeEvent);

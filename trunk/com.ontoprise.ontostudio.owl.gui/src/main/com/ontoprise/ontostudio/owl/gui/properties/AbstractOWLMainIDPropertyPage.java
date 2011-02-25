@@ -77,6 +77,7 @@ import com.ontoprise.ontostudio.owl.perspectives.OWLPerspective;
  * @author Werner Hihn
  * @author Michael Erdmann 
  * @author Nico Stieler
+ * 
  * The Class BasicOWLEntityPropertyPage.
  */
 public abstract class AbstractOWLMainIDPropertyPage extends AbstractMainIDPropertyPage implements IOWLPropertyPage {

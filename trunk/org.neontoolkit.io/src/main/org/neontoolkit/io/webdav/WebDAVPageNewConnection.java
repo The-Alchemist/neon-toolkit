@@ -59,15 +59,15 @@ public class WebDAVPageNewConnection extends WizardPage {
     protected Composite _composite;
 
     class EventHandler implements SelectionListener, ModifyListener {
-
+        @Override
         public void widgetSelected(SelectionEvent se) {
             checkStatus();
         }
-
+        @Override
         public void widgetDefaultSelected(SelectionEvent se) {
             widgetSelected(se);
         }
-
+        @Override
         public void modifyText(ModifyEvent me) {
             checkStatus();
         }
@@ -82,6 +82,7 @@ public class WebDAVPageNewConnection extends WizardPage {
     /**
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(Composite)
      */
+    @Override
     public void createControl(Composite parent) {
         _composite = new Composite(parent, SWT.NONE);
 
@@ -150,11 +151,13 @@ public class WebDAVPageNewConnection extends WizardPage {
             new SelectionListener() {/* (non-Javadoc)
 	         * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
 	         */
+                @Override
 	        public void widgetDefaultSelected(SelectionEvent e) {
 	        }
 	        /* (non-Javadoc)
              * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
+                @Override
             public void widgetSelected(SelectionEvent e) {
                 WebDAVAdvancedDialog ad = 
                     new WebDAVAdvancedDialog(

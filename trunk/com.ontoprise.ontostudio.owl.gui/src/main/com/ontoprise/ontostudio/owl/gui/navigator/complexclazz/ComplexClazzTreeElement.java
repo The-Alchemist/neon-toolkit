@@ -72,7 +72,10 @@ public class ComplexClazzTreeElement extends AbstractOwlEntityTreeElement {
         try {
             return OWLGUIUtilities.getEntityLabel(_description, getOntologyUri(), getProjectName());
         } catch (NeOnCoreException e) {
-            return OWLUtilities.toString(_description);
+//            return OWLUtilities.toString(_description);
+            //NICO OWLFunctionalSyntax needs OWLOntology, 
+            //     but this could not be generated in the try block
+            return null;
         }
     }
 }

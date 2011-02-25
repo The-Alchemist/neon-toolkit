@@ -18,6 +18,7 @@ import java.util.Set;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLSubAnnotationPropertyOfAxiom;
 
 import com.ontoprise.ontostudio.owl.model.ItemHits;
@@ -27,6 +28,7 @@ import com.ontoprise.ontostudio.owl.model.commands.OWLOntologyRequestCommand;
 
 /**
  * @author werner
+ * @author Nico Stieler
  * 
  */
 public class GetSuperAnnotationPropertyHits extends OWLOntologyRequestCommand {
@@ -49,11 +51,12 @@ public class GetSuperAnnotationPropertyHits extends OWLOntologyRequestCommand {
 
         Set<ItemHits<OWLAnnotationProperty,OWLSubAnnotationPropertyOfAxiom>> results = new HashSet<ItemHits<OWLAnnotationProperty,OWLSubAnnotationPropertyOfAxiom>>();
         try {
+            OWLOntology ontology = getOwlModel().getOntology();
             results = getOwlModel().getSuperAnnotationPropertyHits(propertyUri);
             for (ItemHits<OWLAnnotationProperty,OWLSubAnnotationPropertyOfAxiom> hit: results) {
                 Set<LocatedItem<OWLSubAnnotationPropertyOfAxiom>> axioms = hit.getAxioms();
                 for (LocatedItem<OWLSubAnnotationPropertyOfAxiom> axiom: axioms) {
-                    _results.add(new String[] {OWLUtilities.toString(axiom.getItem()), axiom.getOntologyURI()});
+                    _results.add(new String[] {OWLUtilities.toString(axiom.getItem(), ontology), axiom.getOntologyURI()});
                 }
             }
         } catch (NeOnCoreException e1) {

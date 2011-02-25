@@ -138,12 +138,12 @@
          point="org.eclipse.ui.menus">
       <menuContribution
             locationURI="menu:file?after=New">
-         <command
-               commandId="org.neontoolkit.gui.navigator.ontology.SaveAllOntologyAction"
-               label="Save All 1"
+         <action
+               class="org.neontoolkit.gui.navigator.ontology.SaveAllOntologiesAction"
+               label="Save All"
                style="push"
-               tooltip="Save All 2">
-         </command>
+               tooltip="Save All">
+         </action>
       </menuContribution>
    </extension>
    -->

@@ -41,7 +41,11 @@ public class ComplexClazzPropertyPage2 extends ClazzPropertyPage2 {
         if (_description == null) {
             return new String[0][0]; // in case of complex classes
         }
-        return new GetSuperRestrictionHits(_project, _ontologyUri, OWLUtilities.toString(_description)).getResults();
+        try {
+            return new GetSuperRestrictionHits(_project, _ontologyUri, OWLUtilities.toString(_description, _owlModel.getOntology())).getResults();
+        } catch (NeOnCoreException e) {
+            return new String[0][0]; // NICO how to handle this?
+        }
     }
     
     @Override
@@ -49,7 +53,11 @@ public class ComplexClazzPropertyPage2 extends ClazzPropertyPage2 {
         if (_description == null) {
             return new String[0][0]; // in case of complex classes
         }
-        return new GetEquivalentRestrictionHits(_project, _ontologyUri, OWLUtilities.toString(_description)).getResults();
+        try {
+            return new GetEquivalentRestrictionHits(_project, _ontologyUri, OWLUtilities.toString(_description, _owlModel.getOntology())).getResults();
+        } catch (NeOnCoreException e) {
+            return new String[0][0]; // NICO how to handle this?
+        }
     }
     
     @Override

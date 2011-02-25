@@ -25,6 +25,7 @@ import com.ontoprise.ontostudio.owl.model.commands.OWLModuleChangeCommand;
 
 /**
  * @author werner
+ * @author Nico Stieler
  * 
  */
 public class RemoveOntologyAnnotation extends OWLModuleChangeCommand {
@@ -55,9 +56,9 @@ public class RemoveOntologyAnnotation extends OWLModuleChangeCommand {
             OWLLiteral c = null;
             if (language.equals(OWLCommandUtils.EMPTY_LANGUAGE)) {
                 expandedRange = namespaces.expandString(datatype);
-                c = factory.getOWLTypedLiteral(annotationValueText, factory.getOWLDatatype(OWLUtilities.toIRI(expandedRange)));
+                c = factory.getOWLLiteral(annotationValueText, factory.getOWLDatatype(OWLUtilities.toIRI(expandedRange)));
             } else {
-                c = factory.getOWLStringLiteral(annotationValueText, language);
+                c = factory.getOWLLiteral(annotationValueText, language);
             }
             OWLAnnotation annot = factory.getOWLAnnotation(annotProp, c);
             getOwlModel().removeAnnotation(annot);
