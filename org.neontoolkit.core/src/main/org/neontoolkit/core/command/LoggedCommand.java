@@ -81,7 +81,9 @@ public abstract class LoggedCommand implements ICommand {
 	 * (non-Javadoc)
 	 * @see org.neontoolkit.datamodel.command.ICommand#getArgument(int)
 	 */
-	public Object getArgument(int i) {
+	
+	@Override
+    public Object getArgument(int i) {
 		return _arguments[i];
 	}
 
@@ -90,7 +92,8 @@ public abstract class LoggedCommand implements ICommand {
 	 * calling the perform method afterwards.
 	 * @see org.neontoolkit.core.command.ICommand#run()
 	 */
-	public void run() throws CommandException {
+	@Override
+    public void run() throws CommandException {
 		writeToLog();
 		perform();
 	}

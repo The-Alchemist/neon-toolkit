@@ -55,15 +55,15 @@ public abstract class AbstractImportSelectionPage extends ImportWizardPage {
     protected Button _importAsRDFButton;
 
     class EventHandler implements SelectionListener, ModifyListener {
-
+        @Override
         public void widgetSelected(SelectionEvent se) {
             checkStatus();
         }
-
+        @Override
         public void widgetDefaultSelected(SelectionEvent se) {
             widgetSelected(se);
         }
-
+        @Override
         public void modifyText(ModifyEvent me) {
             checkStatus();
         }

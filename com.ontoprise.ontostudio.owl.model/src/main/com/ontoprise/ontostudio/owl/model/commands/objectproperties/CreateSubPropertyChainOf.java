@@ -17,11 +17,14 @@ import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLOntology;
 
-import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.OWLModuleChangeCommand;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class CreateSubPropertyChainOf extends OWLModuleChangeCommand {
 
     public CreateSubPropertyChainOf(String project, String ontologyId, List<String> subPropertyChain, String superPropertyId) throws NeOnCoreException {
@@ -35,14 +38,15 @@ public class CreateSubPropertyChainOf extends OWLModuleChangeCommand {
         String superPropertyId = (String)getArgument(3);
 
         try {
-            OWLNamespaces ns = getOwlModel().getNamespaces();
+            OWLOntology ontology = getOwlModel().getOntology();
             OWLDataFactory factory = getOwlModel().getOWLDataFactory();
             List<OWLObjectProperty> chain = new ArrayList<OWLObjectProperty>();
             for (String p: subPropertyChain) {
-                chain.add(OWLUtilities.objectProperty(p, ns, factory));
+                chain.add(OWLUtilities.objectProperty(p, ontology));
             }
             
-            OWLObjectProperty superObjectProperty = OWLUtilities.objectProperty(superPropertyId, ns, factory);
+            OWLObjectProperty superObjectProperty = 
+                OWLUtilities.objectProperty(superPropertyId, ontology);
             getOwlModel().addAxiom(factory.getOWLSubPropertyChainOfAxiom(chain, superObjectProperty));
         } catch (NeOnCoreException e) {
             throw new CommandException(e);

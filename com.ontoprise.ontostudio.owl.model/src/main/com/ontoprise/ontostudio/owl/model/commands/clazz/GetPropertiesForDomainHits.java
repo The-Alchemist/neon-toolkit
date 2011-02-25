@@ -22,6 +22,7 @@ import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyDomainAxiom;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyDomainAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.ItemHits;
 import com.ontoprise.ontostudio.owl.model.LocatedItem;
@@ -30,6 +31,7 @@ import com.ontoprise.ontostudio.owl.model.commands.OWLOntologyRequestCommand;
 
 /**
  * @author Michael
+ * @author Nico Stieler
  * 
  * Returns the properties that have a given class as their domain.
  */
@@ -51,11 +53,12 @@ public class GetPropertiesForDomainHits extends OWLOntologyRequestCommand {
         _results = new ArrayList<String[]>();
         String classUri = (String) getArgument(2);
         try {
+            OWLOntology ontology = getOwlModel().getOntology();
             Set<ItemHits<OWLDataProperty,OWLDataPropertyDomainAxiom>> dataPropertyHits = getOwlModel().getDataPropertiesForDomainHits(classUri);
             for (ItemHits<OWLDataProperty,OWLDataPropertyDomainAxiom> hit: dataPropertyHits) {
                 Set<LocatedItem<OWLDataPropertyDomainAxiom>> axioms = hit.getAxioms();
                 for (LocatedItem<OWLDataPropertyDomainAxiom> axiom: axioms) {
-                    String[] result = new String[]{OWLUtilities.toString(axiom.getItem()), axiom.getOntologyURI()};
+                    String[] result = new String[]{OWLUtilities.toString(axiom.getItem(), ontology), axiom.getOntologyURI()};
                     _results.add(result);
                 }
             }
@@ -64,7 +67,7 @@ public class GetPropertiesForDomainHits extends OWLOntologyRequestCommand {
             for (ItemHits<OWLObjectProperty,OWLObjectPropertyDomainAxiom> hit: objectPropertyHits) {
                 Set<LocatedItem<OWLObjectPropertyDomainAxiom>> axioms = hit.getAxioms();
                 for (LocatedItem<OWLObjectPropertyDomainAxiom> axiom: axioms) {
-                    String[] result = new String[]{OWLUtilities.toString(axiom.getItem()), axiom.getOntologyURI()};
+                    String[] result = new String[]{OWLUtilities.toString(axiom.getItem(), ontology), axiom.getOntologyURI()};
                     _results.add(result);
                 }
             }
@@ -73,7 +76,7 @@ public class GetPropertiesForDomainHits extends OWLOntologyRequestCommand {
             for (ItemHits<OWLAnnotationProperty,OWLAnnotationPropertyDomainAxiom> hit: annotationPropertyHits) {
                 Set<LocatedItem<OWLAnnotationPropertyDomainAxiom>> axioms = hit.getAxioms();
                 for (LocatedItem<OWLAnnotationPropertyDomainAxiom> axiom: axioms) {
-                    String[] result = new String[]{OWLUtilities.toString(axiom.getItem()), axiom.getOntologyURI()};
+                    String[] result = new String[]{OWLUtilities.toString(axiom.getItem(), ontology), axiom.getOntologyURI()};
                     _results.add(result);
                 }
             }

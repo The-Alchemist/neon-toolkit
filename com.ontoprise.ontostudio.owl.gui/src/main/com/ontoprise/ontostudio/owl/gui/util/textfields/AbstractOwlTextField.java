@@ -40,6 +40,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.neontoolkit.core.exception.InternalNeOnException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
@@ -241,25 +242,18 @@ public abstract class AbstractOwlTextField {
                         if( NeOnUIPlugin.getDefault().getIdDisplayStyle() == NeOnUIPlugin.DISPLAY_LOCAL){
                             Object data = _styledText.getData();
                             if(data instanceof OWLNamedObject) {
-                                selectedText = ((OWLNamedObject) data).getIRI().toString();
+                                selectedText = ((OWLNamedObject) data).getIRI().toString();//NICO has to be replaced with OWLUtilities.toString(data, ontology);
                         
                             } else if(data instanceof String[]){
                                 selectedText = ((String[])data)[1];
 
                             } else {
-                                selectedText = manager.parseUri(selectedText, _localOwlModel);
+                                selectedText = manager.parseUri(selectedText, _localOwlModel);//NICO not the internal language
                                 
                                 if(_localOwlModel.getEntity(selectedText).isEmpty()) {
                                     if(MessageDialog.openQuestion(null, "Change of display style is necessary", "Change of display style is necessary\nDo you want to change the display style to QName?")){
                                         NeOnUIPlugin.getDefault().getPreferenceStore().setValue(NeOnUIPlugin.ID_DISPLAY_PREFERENCE,NeOnUIPlugin.DISPLAY_QNAME);
-                                        System.out.println(NeOnUIPlugin.getDefault().getIdDisplayStyle());
-                                        throw new NeOnCoreException(selectedText) {
-                                            private static final long serialVersionUID = 1L;
-                                            @Override
-                                            public String getErrorCode() {
-                                                return null;
-                                            }
-                                        };
+                                        throw new InternalNeOnException(selectedText);//NICO exception???
                                     } else {
                                         return;
                                     }

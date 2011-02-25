@@ -27,6 +27,7 @@ import com.ontoprise.ontostudio.owl.model.commands.OWLOntologyRequestCommand;
 
 /**
  * @author werner
+ * @author Nico Stieler
  * 
  */
 public class GetOntologyAnnotations extends OWLOntologyRequestCommand {
@@ -54,7 +55,7 @@ public class GetOntologyAnnotations extends OWLOntologyRequestCommand {
             for (OWLAnnotation annotation: annots) {
                 OWLAnnotationAssertionAxiom ontologyAnnotation = factory.getOWLAnnotationAssertionAxiom(annotation.getProperty(), IRI.create(DUMMY_ONTOLOGY_URI), annotation.getValue());
                 
-                String axiom = OWLUtilities.toString(ontologyAnnotation);
+                String axiom = OWLUtilities.toString(ontologyAnnotation, getOwlModel().getOntology());
                 _results.add(axiom);
             }
         } catch (NeOnCoreException e) {

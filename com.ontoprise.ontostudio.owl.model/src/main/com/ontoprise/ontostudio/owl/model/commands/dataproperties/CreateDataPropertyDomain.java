@@ -12,17 +12,19 @@ package com.ontoprise.ontostudio.owl.model.commands.dataproperties;
 
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.core.util.IRIUtils;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLOntology;
 
-import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.ApplyChanges;
 import com.ontoprise.ontostudio.owl.model.commands.OWLModuleChangeCommand;
 
 /**
  * @author werner
+ * @author Nico Stieler
  *
  */
 public class CreateDataPropertyDomain extends OWLModuleChangeCommand {
@@ -42,10 +44,14 @@ public class CreateDataPropertyDomain extends OWLModuleChangeCommand {
         String propertyUri = (String) getArgument(2);
         String domain = (String) getArgument(3);
         try {
-            OWLNamespaces ns = getOwlModel().getNamespaces();
+            OWLOntology ontology = getOwlModel().getOntology();
             OWLDataFactory factory = getOwlModel().getOWLDataFactory();
-            OWLClassExpression desc = OWLUtilities.description(domain, ns, factory);
-            new ApplyChanges(getProjectName(), getOntology(), new OWLAxiom[]{factory.getOWLDataPropertyDomainAxiom(OWLUtilities.dataProperty(propertyUri, ns, factory), desc)}, new OWLAxiom[0]).perform();
+            OWLClassExpression desc = OWLUtilities.description(domain, ontology);
+            new ApplyChanges(getProjectName(), getOntology(), 
+                    new OWLAxiom[]{factory.getOWLDataPropertyDomainAxiom(
+                            OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(propertyUri), ontology), 
+                            desc)}, 
+                    new OWLAxiom[0]).perform();
         } catch (NeOnCoreException e) {
             throw new CommandException(e);
         }

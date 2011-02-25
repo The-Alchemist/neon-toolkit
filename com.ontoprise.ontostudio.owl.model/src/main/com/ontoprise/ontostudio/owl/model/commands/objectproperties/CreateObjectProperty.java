@@ -15,10 +15,12 @@ import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
-import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.OWLModuleChangeCommand;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class CreateObjectProperty extends OWLModuleChangeCommand {
 
     public CreateObjectProperty(String project, String ontologyId, String propertyId, String superPropertyId) throws NeOnCoreException {
@@ -29,14 +31,15 @@ public class CreateObjectProperty extends OWLModuleChangeCommand {
     public void doPerform() throws CommandException {
         String propertyId = getArgument(2).toString();
         String superPropertyId = (String) (getArgument(3) == null ? null : getArgument(3));
-
         try {
-            OWLNamespaces ns = getOwlModel().getNamespaces();
+//            OWLOntology ontology = getOwlModel().getOntology();
             OWLDataFactory factory = getOwlModel().getOWLDataFactory();
-            OWLObjectProperty objectProperty = OWLUtilities.objectProperty(propertyId, ns, factory);
+            OWLObjectProperty objectProperty = factory.getOWLObjectProperty(OWLUtilities.toIRI(propertyId));
+//            OWLObjectProperty objectProperty = OWLUtilities.objectProperty(propertyId, ontology);
             
             if (superPropertyId != null) { 
-                OWLObjectProperty superObjectProperty = OWLUtilities.objectProperty(superPropertyId, ns, factory);
+                OWLObjectProperty superObjectProperty = factory.getOWLObjectProperty(OWLUtilities.toIRI(superPropertyId));
+//                OWLObjectProperty superObjectProperty = OWLUtilities.objectProperty(superPropertyId, ontology);
                 getOwlModel().addAxiom(factory.getOWLSubObjectPropertyOfAxiom(objectProperty, superObjectProperty));
             } else {
                 getOwlModel().addEntity(objectProperty);

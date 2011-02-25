@@ -49,6 +49,7 @@ public class OWLPreferencePage extends PreferencePage implements IWorkbenchPrefe
 
     private IPreferenceStore _prefs;
     private RadioButtonComposite _syntaxChooser;
+    private RadioButtonComposite _insertExplicitClassAssertionAxiomToOwlThingYesOrNo;
 
     private Button _importedCheckbox;
     private Button _showAxiomsCheckbox;
@@ -56,6 +57,7 @@ public class OWLPreferencePage extends PreferencePage implements IWorkbenchPrefe
     private Button _showActualOntology; 
     private Button _editImportedAxiomsWithoutAsking; 
     private Button _removeImportedAxiomsWithoutAsking; 
+    private Button _insertExplicitClassAssertionAxiomToOwlThingOpenDialog; 
     private Button _showRestrictionsInClassTaxonomyTab; 
 
     /*
@@ -120,11 +122,31 @@ public class OWLPreferencePage extends PreferencePage implements IWorkbenchPrefe
         _editImportedAxiomsWithoutAsking.setText(Messages.OWLPreferencePage_1_0); 
         enabled = _prefs.getBoolean(OWLModelPlugin.EDIT_IMPORTED_AXIOMS_WITHOUT_ASKING);
         _editImportedAxiomsWithoutAsking.setSelection(enabled);
-        
+
         _removeImportedAxiomsWithoutAsking = new Button(groupDialog, SWT.CHECK);
         _removeImportedAxiomsWithoutAsking.setText(Messages.OWLPreferencePage_1_1); 
         enabled = _prefs.getBoolean(OWLModelPlugin.REMOVE_IMPORTED_AXIOMS_WITHOUT_ASKING);
         _removeImportedAxiomsWithoutAsking.setSelection(enabled);
+
+        Group groupDialogInner = new Group(parent, SWT.NONE);
+        groupDialogInner.setText(Messages.OWLPreferencePage_Title_3); 
+        gData = new GridData();
+        gData.horizontalAlignment = GridData.FILL;
+        gData.grabExcessHorizontalSpace = true;
+        groupDialogInner.setLayoutData(gData);
+        fillLayout = new FillLayout(SWT.VERTICAL);
+        fillLayout.marginWidth = 10;
+        fillLayout.marginHeight = 5;
+        groupDialogInner.setLayout(fillLayout);
+        
+        _insertExplicitClassAssertionAxiomToOwlThingOpenDialog = new Button(groupDialogInner, SWT.CHECK);
+        _insertExplicitClassAssertionAxiomToOwlThingOpenDialog.setText(Messages.OWLPreferencePage_3_0); 
+        enabled = _prefs.getBoolean(OWLModelPlugin.INSERT_EXPLICIT_CLASS_ASSERTION_AXIOM_TO_OWLTHING_OPEN_DIALOG);
+        _insertExplicitClassAssertionAxiomToOwlThingOpenDialog.setSelection(enabled);
+
+        _insertExplicitClassAssertionAxiomToOwlThingYesOrNo = new RadioButtonComposite(groupDialogInner, SWT.HORIZONTAL, new String[]{Messages.OWLPreferencePage_3_1, Messages.OWLPreferencePage_3_2});
+        enabled = _prefs.getBoolean(OWLModelPlugin.INSERT_EXPLICIT_CLASS_ASSERTION_AXIOM_TO_OWLTHING_YES_OR_NO);
+        _insertExplicitClassAssertionAxiomToOwlThingYesOrNo.setSelection(enabled ? Messages.OWLPreferencePage_3_1 : Messages.OWLPreferencePage_3_2);
         
         Set<ISyntaxManager> syntaxManagers = OWLPlugin.getDefault().getRegisteredSyntaxManagers();
         String[] managers = new String[syntaxManagers.size()];
@@ -162,6 +184,7 @@ public class OWLPreferencePage extends PreferencePage implements IWorkbenchPrefe
      * 
      * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
      */
+    @Override
     public void init(IWorkbench workbench) {
         _prefs = OWLModelPlugin.getDefault().getPreferenceStore();
     }
@@ -175,6 +198,7 @@ public class OWLPreferencePage extends PreferencePage implements IWorkbenchPrefe
     public boolean performOk() {
         BusyIndicator.showWhile(_displayToolbar.getDisplay(), new Runnable() {
         
+            @Override
             public void run() {
                 _prefs.setValue(OWLModelPlugin.SHOW_IMPORTED, getShowImported());
                 String syntax = _syntaxChooser.getSelection();
@@ -186,6 +210,8 @@ public class OWLPreferencePage extends PreferencePage implements IWorkbenchPrefe
                 _prefs.setValue(OWLModelPlugin.SHOW_ACTUAL_ONTOLOGY, getShowActualOntology());
                 _prefs.setValue(OWLModelPlugin.EDIT_IMPORTED_AXIOMS_WITHOUT_ASKING, getEditImportedAxiomsWithoutAsking());
                 _prefs.setValue(OWLModelPlugin.REMOVE_IMPORTED_AXIOMS_WITHOUT_ASKING, getRemoveImportedAxiomsWithoutAsking());
+                _prefs.setValue(OWLModelPlugin.INSERT_EXPLICIT_CLASS_ASSERTION_AXIOM_TO_OWLTHING_OPEN_DIALOG, getInsertExplicitClassAssertionAxiomToOwlThingOpenDialog());
+                _prefs.setValue(OWLModelPlugin.INSERT_EXPLICIT_CLASS_ASSERTION_AXIOM_TO_OWLTHING_YES_OR_NO, getInsertExplicitClassAssertionAxiomToOwlThingYesOrNo());
                 _prefs.setValue(OWLModelPlugin.SHOW_RESTRICTION_IN_CLASS_TAXONOMY_TAB, getShowRestrictionsInClassTaxonomyTab());
             }
 
@@ -201,6 +227,12 @@ public class OWLPreferencePage extends PreferencePage implements IWorkbenchPrefe
     }
     private boolean getRemoveImportedAxiomsWithoutAsking() {
         return _removeImportedAxiomsWithoutAsking.getSelection();
+    }
+    private boolean getInsertExplicitClassAssertionAxiomToOwlThingOpenDialog() {
+        return _insertExplicitClassAssertionAxiomToOwlThingOpenDialog.getSelection();
+    }
+    private boolean getInsertExplicitClassAssertionAxiomToOwlThingYesOrNo() {
+        return _insertExplicitClassAssertionAxiomToOwlThingYesOrNo.getSelection().equals(Messages.OWLPreferencePage_3_1);
     }
     private boolean getShowRestrictionsInClassTaxonomyTab() {
         return _showRestrictionsInClassTaxonomyTab.getSelection();
@@ -230,6 +262,8 @@ public class OWLPreferencePage extends PreferencePage implements IWorkbenchPrefe
         _prefs.setValue(OWLModelPlugin.SHOW_ACTUAL_ONTOLOGY, false);
         _prefs.setValue(OWLModelPlugin.EDIT_IMPORTED_AXIOMS_WITHOUT_ASKING, false);
         _prefs.setValue(OWLModelPlugin.REMOVE_IMPORTED_AXIOMS_WITHOUT_ASKING, false);
+        _prefs.setValue(OWLModelPlugin.INSERT_EXPLICIT_CLASS_ASSERTION_AXIOM_TO_OWLTHING_OPEN_DIALOG, false);
+        _prefs.setValue(OWLModelPlugin.INSERT_EXPLICIT_CLASS_ASSERTION_AXIOM_TO_OWLTHING_YES_OR_NO, true);
         _prefs.setValue(OWLModelPlugin.SHOW_RESTRICTION_IN_CLASS_TAXONOMY_TAB, false);
 
         _importedCheckbox.setSelection(false);
@@ -238,6 +272,8 @@ public class OWLPreferencePage extends PreferencePage implements IWorkbenchPrefe
         _showActualOntology.setSelection(false);
         _editImportedAxiomsWithoutAsking.setSelection(false);
         _removeImportedAxiomsWithoutAsking.setSelection(false);
+        _insertExplicitClassAssertionAxiomToOwlThingOpenDialog.setSelection(false);
+        _insertExplicitClassAssertionAxiomToOwlThingYesOrNo.setSelection(Messages.OWLPreferencePage_3_1);
         _showRestrictionsInClassTaxonomyTab.setSelection(false);
         _syntaxChooser.setSelection(OWLPlugin.DEFAULT_SYNTAX);
     }

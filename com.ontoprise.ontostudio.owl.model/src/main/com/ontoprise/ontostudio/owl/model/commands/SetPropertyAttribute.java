@@ -12,18 +12,20 @@ package com.ontoprise.ontostudio.owl.model.commands;
 
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.core.util.IRIUtils;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.Messages;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
-import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 
 /**
  * @author werner
+ * @author Nico Stieler
  * 
  */
 public class SetPropertyAttribute extends OWLModuleChangeCommand {
@@ -50,17 +52,17 @@ public class SetPropertyAttribute extends OWLModuleChangeCommand {
 
         try {
             OWLModel owlModel = OWLModelFactory.getOWLModel(getOntology(), getProjectName());
-            OWLNamespaces ns = owlModel.getNamespaces();
+            OWLOntology ontology = owlModel.getOntology();
             OWLDataFactory factory = owlModel.getOWLDataFactory();
             OWLAxiom axiom = null;
             if (propertyType.equals(OWLCommandUtils.DATA_PROP)) {
                 if (attributeMode.equals(OWLCommandUtils.FUNCTIONAL)) {
-                    axiom = factory.getOWLFunctionalDataPropertyAxiom(OWLUtilities.dataProperty(propertyUri, ns, factory));
+                    axiom = factory.getOWLFunctionalDataPropertyAxiom(OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(propertyUri), ontology));
                 } else {
                     throw new IllegalArgumentException(Messages.getString("SetPropertyAttribute.0") + attributeMode); //$NON-NLS-1$
                 }
             } else {
-                OWLObjectPropertyExpression objectProperty = OWLUtilities.objectProperty(propertyUri, ns, factory);
+                OWLObjectPropertyExpression objectProperty = OWLUtilities.objectProperty(IRIUtils.ensureValidIRISyntax(propertyUri), ontology);
                 if (attributeMode.equals(OWLCommandUtils.FUNCTIONAL)) {
                     axiom = factory.getOWLFunctionalObjectPropertyAxiom(objectProperty);
                 } else if (attributeMode.equals(OWLCommandUtils.INVERSE_FUNCTIONAL)) {

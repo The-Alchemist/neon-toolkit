@@ -12,18 +12,19 @@ package com.ontoprise.ontostudio.owl.model.commands.annotationproperties;
 
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.core.util.IRIUtils;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLOntology;
 
-import com.ontoprise.ontostudio.owl.model.OWLModel;
-import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.ApplyChanges;
 import com.ontoprise.ontostudio.owl.model.commands.OWLModuleChangeCommand;
 
 /**
  * @author Michael
+ * @author Nico Stieler
  *
  */
 public class CreateAnnotationPropertyRange extends OWLModuleChangeCommand {
@@ -43,11 +44,14 @@ public class CreateAnnotationPropertyRange extends OWLModuleChangeCommand {
         String propertyUri = (String) getArgument(2);
         String range = (String) getArgument(3);
         try {
-            OWLModel model = getOwlModel();
-            OWLNamespaces ns = model.getNamespaces();
-            OWLDataFactory factory = model.getOWLDataFactory();
+            OWLOntology ontology = getOwlModel().getOntology();
+            OWLDataFactory factory = getOwlModel().getOWLDataFactory();
             IRI iri = OWLUtilities.toIRI(range);
-            new ApplyChanges(getProjectName(), getOntology(), new OWLAxiom[]{factory.getOWLAnnotationPropertyRangeAxiom(OWLUtilities.annotationProperty(propertyUri, ns, factory),iri)}, new OWLAxiom[0]).perform();
+            new ApplyChanges(getProjectName(), getOntology(), new 
+                    OWLAxiom[]{factory.getOWLAnnotationPropertyRangeAxiom(
+                            OWLUtilities.annotationProperty(IRIUtils.ensureValidIRISyntax(propertyUri), ontology),
+                            iri)}, 
+                    new OWLAxiom[0]).perform();
         } catch (NeOnCoreException e) {
             throw new CommandException(e);
         }

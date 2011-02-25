@@ -28,6 +28,7 @@ import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 import com.ontoprise.ontostudio.owl.model.LocatedItem;
@@ -42,6 +43,7 @@ import com.ontoprise.ontostudio.owl.visualize.nodes.ClazzNode;
 
 /**
  * @author werner
+ * @author Nico Stieler
  * 
  */
 public class IndividualDataPropertyNodeContentProvider extends AbstractNodeContentProvider {
@@ -91,6 +93,7 @@ public class IndividualDataPropertyNodeContentProvider extends AbstractNodeConte
     private void addInstancePropertyValues(String projectId, String ontologyUri, List<LabelImageNode> nodes, List<OntoStudioDefaultEdge> edges, OWLEntity clazz, int hierarchyLevel) throws NeOnCoreException, NeOnCoreException {
         try {
             OWLModel owlModel = OWLModelFactory.getOWLModel(ontologyUri, projectId);
+            OWLOntology ontology = owlModel.getOntology();
             String[] individualUris = new GetIndividuals(projectId, ontologyUri, clazz.getIRI().toString()).getResults();
             if (individualUris.length > 100) {
                 return;
@@ -104,8 +107,8 @@ public class IndividualDataPropertyNodeContentProvider extends AbstractNodeConte
                     OWLLiteral targetValue = member.getObject();
     
                     LabelImageNode sourceInstanceNode = getNode(individual.getIRI().toString(), ontologyUri, projectId, VisualizerConfiguration.INDIVIDUAL_TYPE, _ontologyLanguage);
-                    LabelImageNode targetValueNode = getNode(OWLUtilities.toString(targetValue), ontologyUri, projectId, VisualizerConfiguration.DATA_TYPE, _ontologyLanguage);
-                    LabelImageNode dataPropertyNode = getNode(OWLUtilities.toString(dataProperty), ontologyUri, projectId, VisualizerConfiguration.DATA_PROPERTY_TYPE, _ontologyLanguage);
+                    LabelImageNode targetValueNode = getNode(OWLUtilities.toString(targetValue, ontology), ontologyUri, projectId, VisualizerConfiguration.DATA_TYPE, _ontologyLanguage);
+                    LabelImageNode dataPropertyNode = getNode(OWLUtilities.toString(dataProperty, ontology), ontologyUri, projectId, VisualizerConfiguration.DATA_PROPERTY_TYPE, _ontologyLanguage);
                     addNode(targetValueNode, nodes);
                     addNode(dataPropertyNode, nodes);
                     addEdge(new IndividualEdge(targetValueNode, dataPropertyNode), edges);
@@ -144,6 +147,7 @@ public class IndividualDataPropertyNodeContentProvider extends AbstractNodeConte
      * 
      * @see org.eclipse.core.runtime.IExecutableExtensionFactory#create()
      */
+    @Override
     public Object create() throws CoreException {
         return new IndividualDataPropertyNodeContentProvider();
     }

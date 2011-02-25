@@ -47,7 +47,6 @@ import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataPropertyDomainAxiom;
 import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLDataRange;
-import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLObject;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
@@ -199,8 +198,8 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 String axiomText = domain[0];
                 String ontologyUri = domain[1];
                 boolean isLocal = ontologyUri.equals(_ontologyUri);
-                OWLDataPropertyDomainAxiom dataPropertyDomain = (OWLDataPropertyDomainAxiom) OWLUtilities.axiom(axiomText, _namespaces, _factory);
-
+                OWLDataPropertyDomainAxiom dataPropertyDomain = 
+                    (OWLDataPropertyDomainAxiom) OWLUtilities.axiom(axiomText, _owlModel.getOntology());
                 createRow(new LocatedAxiom(dataPropertyDomain, isLocal), ontologyUri, false, DOMAIN);
             }
         } catch (NeOnCoreException e1) {
@@ -252,8 +251,8 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 String axiomText = domain[0];
                 String ontologyUri = domain[1];
                 boolean isLocal = ontologyUri.equals(_ontologyUri);
-                OWLDataPropertyRangeAxiom dataPropertyRange = (OWLDataPropertyRangeAxiom) OWLUtilities.axiom(axiomText, _namespaces, _factory);
-
+                OWLDataPropertyRangeAxiom dataPropertyRange = 
+                    (OWLDataPropertyRangeAxiom) OWLUtilities.axiom(axiomText, _owlModel.getOntology());
                 createRow(new LocatedAxiom(dataPropertyRange, isLocal), ontologyUri, true, RANGE);
             }
         } catch (NeOnCoreException e) {
@@ -367,12 +366,6 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             text.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, descriptionText);
             addComplexText(descriptionText);
         } else {
-            String name = null;
-            if(locatedAxiom != null && locatedAxiom.getAxiom() != null){
-                for(OWLEntity e : locatedAxiom.getAxiom().getDatatypesInSignature()){
-                    name = e.toString();
-                }
-            }
             DatatypeText datatypeText = new DatatypeText(row.getParent(), _owlModel, sourceOwlModel);
             text = datatypeText.getStyledText();
             text.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, datatypeText);
@@ -394,11 +387,11 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     remove();
                    
                     if (mode == DOMAIN) {
-                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDescription(input, _localOwlModel));
-                        new CreateDataPropertyDomain(_project, _sourceOwlModel.getOntologyURI(), _id, value).run();
+                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDescription(input, _localOwlModel), _localOwlModel.getOntology());
+                        new CreateDataPropertyDomain(_project, _sourceOwlModel.getOntologyURI(), _id, value).run(); 
                         initDomainSection(false);
                     } else {
-                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDataRange(input, _localOwlModel));
+                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDataRange(input, _localOwlModel), _localOwlModel.getOntology());
                         new CreateDataPropertyRange(_project, _sourceOwlModel.getOntologyURI(), _id, value).run();
                         initRangeSection(false);
                     }
@@ -472,10 +465,10 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 try {
                    
                     if (mode == DOMAIN) {
-                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDescription(input, _localOwlModel));
+                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDescription(input, _localOwlModel),_localOwlModel.getOntology());
                         new CreateDataPropertyDomain(_project, _sourceOwlModel.getOntologyURI(), _id, value).run();
                     } else {
-                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDataRange(input, _localOwlModel));
+                        String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDataRange(input, _localOwlModel), _localOwlModel.getOntology());
                         new CreateDataPropertyRange(_project, _sourceOwlModel.getOntologyURI(), _id, value).run();
                     }
                 } catch (NeOnCoreException ce) {
@@ -507,6 +500,7 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         row.init(rowHandler);
 
         text.addModifyListener(new ModifyListener() {
+            @Override
             public void modifyText(ModifyEvent e) {
                 if (text.getText().trim().length() == 0) {
                     row.getAddButton().setEnabled(false);
@@ -528,7 +522,7 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 try {
                     String ontologyUri1 = o1[1];
                     String ontologyUri2 = o2[1];
-                    OWLAxiom axiom1 = (OWLAxiom) OWLUtilities.axiom(o1[0], _namespaces, _factory);
+                    OWLAxiom axiom1 = (OWLAxiom) OWLUtilities.axiom(o1[0], _owlModel.getOntology());
                     String uri1 = "";  //$NON-NLS-1$
                     String uri2 = "";  //$NON-NLS-1$
                     if (axiom1 instanceof OWLDataPropertyDomainAxiom) {
@@ -536,7 +530,7 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                         OWLClassExpression desc1 = domain.getDomain();
                         uri1 = OWLGUIUtilities.getUriForSorting(desc1, _owlModel);
 
-                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0], _namespaces, _factory);
+                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0], _owlModel.getOntology());
                         if (axiom2 instanceof OWLDataPropertyDomainAxiom) {
                             OWLDataPropertyDomainAxiom domain2 = (OWLDataPropertyDomainAxiom) axiom2;
                             OWLClassExpression desc2 = domain2.getDomain();
@@ -547,7 +541,7 @@ public class DataPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                         OWLDataRange dr = range.getRange();
                         uri1 = OWLGUIUtilities.getEntityLabel(dr, ontologyUri1, _project);
 
-                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0], _namespaces, _factory);
+                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0], _owlModel.getOntology());
                         if (axiom2 instanceof OWLDataPropertyRangeAxiom) {
                             OWLDataPropertyRangeAxiom range2 = (OWLDataPropertyRangeAxiom) axiom2;
                             OWLDataRange dr2 = range2.getRange();

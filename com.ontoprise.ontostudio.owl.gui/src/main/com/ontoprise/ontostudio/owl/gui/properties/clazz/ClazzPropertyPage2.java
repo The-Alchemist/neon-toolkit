@@ -41,6 +41,7 @@ import org.eclipse.ui.forms.widgets.ColumnLayoutData;
 import org.eclipse.ui.forms.widgets.Section;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.core.util.IRIUtils;
 import org.neontoolkit.gui.IHelpContextIds;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
@@ -50,6 +51,7 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataAllValuesFrom;
 import org.semanticweb.owlapi.model.OWLDataCardinalityRestriction;
+import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataHasValue;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataSomeValuesFrom;
@@ -63,6 +65,7 @@ import org.semanticweb.owlapi.model.OWLObjectHasValue;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
@@ -178,7 +181,8 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 String ontologyUri = hit[1];
 
                 boolean imported = !ontologyUri.equals(_ontologyUri);
-                OWLEquivalentClassesAxiom axiom = (OWLEquivalentClassesAxiom) OWLUtilities.axiom(axiomText, _namespaces, _factory);
+                OWLEquivalentClassesAxiom axiom = 
+                    (OWLEquivalentClassesAxiom) OWLUtilities.axiom(axiomText, _owlModel.getOntology());
                 List<LocatedAxiom> axiomList = new ArrayList<LocatedAxiom>();
                 axiomList.add(new LocatedAxiom(axiom, !imported));
                 Set<OWLClassExpression> descriptions = axiom.getClassExpressions();
@@ -214,7 +218,8 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 try {
                     String ontologyUri1 = o1[1];
                     String ontologyUri2 = o2[1];
-                    OWLAxiom axiom1 = (OWLAxiom) OWLUtilities.axiom(o1[0], _namespaces, _factory);
+                    OWLOntology ontology = _owlModel.getOntology();
+                    OWLAxiom axiom1 = (OWLAxiom) OWLUtilities.axiom(o1[0], ontology);
                     String propertyUri1 = ""; //$NON-NLS-1$
                     String propertyUri2 = ""; //$NON-NLS-1$
                     if (axiom1 instanceof OWLEquivalentClassesAxiom) {
@@ -227,7 +232,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                             }
                         }
                         
-                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0], _namespaces, _factory);
+                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0], ontology);
                         if (axiom2 instanceof OWLEquivalentClassesAxiom) {
                             clazzes = (OWLEquivalentClassesAxiom) axiom2;
                             descriptions = clazzes.getClassExpressions();
@@ -243,7 +248,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                         OWLClassExpression desc1 = ((OWLSubClassOfAxiom)axiom1).getSuperClass();
                         propertyUri1 = OWLGUIUtilities.getUriForSorting(desc1, _owlModel);
 
-                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0], _namespaces, _factory);
+                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0], ontology);
                         OWLClassExpression desc2 = ((OWLSubClassOfAxiom)axiom2).getSuperClass();
                         propertyUri2 = OWLGUIUtilities.getUriForSorting(desc2, _owlModel);
                     }
@@ -330,7 +335,8 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 String ontologyUri = hit[1];
 
                 boolean imported = !ontologyUri.equals(_ontologyUri);
-                OWLSubClassOfAxiom axiom = (OWLSubClassOfAxiom) OWLUtilities.axiom(axiomText, _namespaces, _factory);
+                OWLSubClassOfAxiom axiom = 
+                    (OWLSubClassOfAxiom) OWLUtilities.axiom(axiomText, _owlModel.getOntology());
                 List<LocatedAxiom> axiomList = new ArrayList<LocatedAxiom>();
                 axiomList.add(new LocatedAxiom(axiom, !imported));
                 OWLClassExpression desc = axiom.getSuperClass();
@@ -413,7 +419,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         String[] quantifiers = QUANTOR_TYPES;
 
         // property
-        final StyledText propertyText = new PropertyText(formRow.getParent(), _owlModel, _owlModel, PropertyText.DATA_PROPERTY | PropertyText.OBJECT_PROPERTY).getStyledText();
+        final StyledText propertyText = new PropertyText(formRow.getParent(), _owlModel, PropertyText.DATA_PROPERTY | PropertyText.OBJECT_PROPERTY).getStyledText();
         addSimpleWidget(propertyText);
         formRow.addWidget(propertyText);
 
@@ -426,19 +432,19 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         formRow.addWidget(quantifierCombo);
 
         // cardinality
-        final StyledText cardinalityText = new NumberText(formRow.getParent(), _owlModel, _owlModel).getStyledText();
+        final StyledText cardinalityText = new NumberText(formRow.getParent(), _owlModel).getStyledText();
         addSimpleWidget(cardinalityText);
         cardinalityText.setVisible(false);
         formRow.addWidget(cardinalityText);
 
         // range
-        DescriptionText descriptionText = new DescriptionText(formRow.getParent(), _owlModel, _owlModel, false, _toolkit);
+        DescriptionText descriptionText = new DescriptionText(formRow.getParent(), _owlModel, false, _toolkit);
         final StyledText rangeText = descriptionText.getStyledText();
         formRow.addWidget(rangeText);
         formRow.setRangeText(rangeText);
         addComplexText(descriptionText, true);
 
-        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, _owlModel, null) {
+        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, null) {
 
             @Override
             public void savePressed() {
@@ -450,7 +456,9 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 // add new entry
                 try {
                     String[] newValues = getNewValues(quantifierCombo, propertyText, formRow.getRangeText(), cardinalityText);
-                    new AddRestriction(_project, _sourceOwlModel.getOntologyURI(), _id, newValues, clazzType).run();
+                    OWLOntology ontology = _localOwlModel.getOntology();
+                    String thisClass = OWLUtilities.toString(OWLUtilities.description(IRIUtils.ensureValidIRISyntax(_id), ontology), ontology);
+                    new AddRestriction(_project, _sourceOwlModel.getOntologyURI(), thisClass, newValues, clazzType).run();
 
                     OWLGUIUtilities.enable(quantifierCombo, false);
                     if (clazzType.equals(OWLCommandUtils.EQUIV)) {
@@ -480,7 +488,6 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         return quantifierCombo;
     }
 
-    @SuppressWarnings("unchecked")
     private void createRow(Composite parent, final OWLClassExpression description, List<LocatedAxiom> axioms, boolean imported, String[] sourceOntos, final String clazzType) throws NeOnCoreException {
         OWLModel sourceOwlModel=_owlModel;
         if(imported){
@@ -527,12 +534,16 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         final StyledText rangeTextWidget = getRangeText(description, row.getParent(), imported, rangeArray[1]);
         OWLGUIUtilities.enable(rangeTextWidget, false);
 
-        if (rangeArray != null) {
+        if (rangeArray != null) {//NICO thats a strange hack
             // ignore OWL:Thing
             if (!rangeArray[0].equals(OWLConstants.OWL_THING_URI)) {
                 String id = OWLGUIUtilities.getEntityLabel(rangeArray);
                 rangeTextWidget.setText(id);
             }
+        }
+        if(restrictions.get(0)[0].equals(OWLCommandUtils.HAS_SELF)){
+            rangeTextWidget.setText(new String());
+            rangeTextWidget.setVisible(false);
         }
         row.addWidget(rangeTextWidget);
         row.setRangeText(rangeTextWidget);
@@ -548,7 +559,9 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     // save modified entries
                     try {
                         String[] values = getNewValues(quantifierCombo, propertyTextWidget, row.getRangeText(), cardinalityText);
-                        new EditRestriction(_project, _sourceOwlModel.getOntologyURI(), clazzType, _id, values, OWLUtilities.toString(description)).run();
+                        OWLOntology ontology = _localOwlModel.getOntology();
+                        String thisClass = OWLUtilities.toString(OWLUtilities.description(IRIUtils.ensureValidIRISyntax(_id), ontology), ontology);
+                        new EditRestriction(_project, _sourceOwlModel.getOntologyURI(), clazzType, thisClass, values, OWLUtilities.toString(description, ontology)).run();
                     } catch (NeOnCoreException k2e) {
                         handleException(k2e, Messages.ClazzPropertyPage2_30, _equivRestrictionsComp.getShell());
                         rangeTextWidget.setFocus();
@@ -585,15 +598,17 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             };
 
         } else {
-            final String[] descriptionArray = getArrayFromDescription(description);
+            final String[] descriptionArrayOLD = getArrayFromDescription(description);//NICO maybe this can be used again, but with a new content
+            final String[] descriptionArray = new String[]{OWLUtilities.toString(description, _owlModel.getOntology())};
             rowHandler = new DescriptionRowHandler(this, _owlModel, sourceOwlModel, descriptionArray, axioms) {
 
                 @Override
                 public void savePressed() {
                     try {
-                        String[] values = getNewValues(quantifierCombo, propertyTextWidget, rangeTextWidget, cardinalityText);
-                        new EditRestriction(_project, _ontologyUri, clazzType, _id, values, OWLUtilities.toString(description)).run();
-
+                        String[] values = getNewValues(quantifierCombo, propertyTextWidget, row.getRangeText(), cardinalityText);
+                        OWLOntology ontology = _localOwlModel.getOntology();
+                        String thisClass = OWLUtilities.toString(OWLUtilities.description(IRIUtils.ensureValidIRISyntax(_id), ontology), ontology);
+                        new EditRestriction(_project, _ontologyUri, clazzType, thisClass, values, OWLUtilities.toString(description, ontology)).run();
                     } catch (NeOnCoreException k2e) {
                         handleException(k2e, Messages.ClazzPropertyPage2_30, _equivRestrictionsComp.getShell());
                         rangeTextWidget.setFocus();
@@ -616,7 +631,9 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                         }
                     }
                     try {
-                        OWLAxiomUtils.triggerRemovePressed(owlAxioms, OWLGUIUtilities.getEntityLabel(getDescriptionArray()), _namespaces, _id, _sourceOwlModel);
+                        OWLOntology ontology = _localOwlModel.getOntology();
+                        String thisClass = OWLUtilities.toString(OWLUtilities.description(IRIUtils.ensureValidIRISyntax(_id), ontology), ontology);
+                        OWLAxiomUtils.triggerRemovePressed(owlAxioms, OWLGUIUtilities.getEntityLabel(getDescriptionArray()), _namespaces, thisClass, _sourceOwlModel);
                     } catch (NeOnCoreException e) {
                         throw new RuntimeException(e);
                     }
@@ -662,7 +679,10 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             }
         }
 
-        if ((restriction instanceof OWLObjectSomeValuesFrom) || (restriction instanceof OWLObjectAllValuesFrom) || (restriction instanceof OWLObjectCardinalityRestriction) || (restriction instanceof OWLObjectHasSelf)) {
+        if ((restriction instanceof OWLObjectSomeValuesFrom) || 
+                (restriction instanceof OWLObjectAllValuesFrom) || 
+                (restriction instanceof OWLObjectCardinalityRestriction) || 
+                (restriction instanceof OWLObjectHasSelf)) {
             DescriptionText descriptionText = new DescriptionText(rowComp, _owlModel, sourceOwlModel, imported, _toolkit);
             addComplexText(descriptionText, true);
             StyledText text = descriptionText.getStyledText();
@@ -673,8 +693,9 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             StyledText textWidget = text.getStyledText();
             textWidget.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, text);
             return textWidget;
-        } else if ((restriction instanceof OWLDataSomeValuesFrom) || (restriction instanceof OWLDataAllValuesFrom) || (restriction instanceof OWLDataCardinalityRestriction)) {
-            
+        } else if ((restriction instanceof OWLDataSomeValuesFrom) || 
+                (restriction instanceof OWLDataAllValuesFrom) || 
+                (restriction instanceof OWLDataCardinalityRestriction)) {
             DatatypeText text = new DatatypeText(rowComp, _owlModel, sourceOwlModel);
             StyledText textWidget = text.getStyledText();
             textWidget.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, text);
@@ -707,7 +728,9 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 // modify text widgets according to user selection
                 String text = quantifierCombo.getText();
                 OWLGUIUtilities.enable(cardinalityText, true);
-                if (text.equals(OWLCommandUtils.AT_LEAST_MIN) || text.equals(OWLCommandUtils.AT_MOST_MAX) || text.equals(OWLCommandUtils.EXACTLY_CARDINALITY)) {
+                if (text.equals(OWLCommandUtils.AT_LEAST_MIN) || 
+                        text.equals(OWLCommandUtils.AT_MOST_MAX) || 
+                        text.equals(OWLCommandUtils.EXACTLY_CARDINALITY)) {
                     cardinalityText.setVisible(true);
                     OWLGUIUtilities.enable(cardinalityText, true);
                     if (cardinalityText.getText().trim().length() == 0 || cardinalityText.getText().equals(Messages.ClazzPropertyPage2_15)) {
@@ -716,20 +739,29 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 } else {
                     cardinalityText.setVisible(false);
                 }
+                StyledText rangeText = ((AbstractRestrictionRow) formRow).getRangeText();
+                if (text.equals(OWLCommandUtils.HAS_SELF)) {
+                    rangeText.setVisible(false);
+                }else{
+                    rangeText.setVisible(true);
+                    OWLGUIUtilities.enable(rangeText, true);
+                }
                 _form.layout(true);
-                // initWarnings(formRow, quantifierCombo, cardinalityText, propertyText);
-                // enableButtons(quantifierCombo, cardinalityText, propertyText, formRow.getRangeText(), formRow.getSubmitButton());
-
+                initWarnings(formRow, quantifierCombo, cardinalityText, propertyText);
+                enableButtons(quantifierCombo, cardinalityText, propertyText, formRow.getRangeText(), formRow.getSubmitButton());
                 updateRangeText(formRow, rowHandler, quantifierCombo, cardinalityText, propertyText, emptyRow, "", imported, sourceOntology); //$NON-NLS-1$
             }
         });
 
         cardinalityText.addModifyListener(new ModifyListener() {
-
+            @Override
             public void modifyText(ModifyEvent e) {
                 String quantifier = quantifierCombo.getText();
                 if (quantifier.equals(OWLCommandUtils.EXACTLY_CARDINALITY) || quantifier.equals(OWLCommandUtils.AT_LEAST_MIN) || quantifier.equals(OWLCommandUtils.AT_MOST_MAX)) {
                     cardinalityText.setVisible(true);
+                }
+                if (quantifier.equals(OWLCommandUtils.HAS_SELF)) {
+                    ((AbstractRestrictionRow) formRow).getRangeText().setVisible(false);
                 }
                 initWarnings(formRow, quantifierCombo, cardinalityText, propertyText);
                 enableButtons(quantifierCombo, cardinalityText, propertyText, formRow.getRangeText(), formRow.getSubmitButton());
@@ -739,7 +771,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         setListenerForRangeText(formRow, quantifierCombo, cardinalityText, propertyText, formRow.getRangeText());
 
         propertyText.addModifyListener(new ModifyListener() {
-
+            @Override
             public void modifyText(ModifyEvent e) {
                 updateRangeText(formRow, rowHandler, quantifierCombo, cardinalityText, propertyText, emptyRow,"", imported, sourceOntology); //$NON-NLS-1$
             }
@@ -756,121 +788,119 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
      * @param imported 
      */
     private void updateRangeText(final AbstractRestrictionRow formRow, final AbstractRowHandler rowHandler, final CCombo quantifierCombo, final StyledText cardinalityText, final StyledText propertyText, boolean emptyRow, String name, boolean imported, String sourceOntology) {
-        try {
-            OWLModel sourceOwlModel =_owlModel;
-            if(imported){
-                sourceOwlModel = OWLModelFactory.getOWLModel(sourceOntology, _project);
-            }
-
-            String oldValue = ((AbstractRestrictionRow) formRow).getRangeText().getText();
-
-            boolean hasValue = false;
-            if (OWLCommandUtils.HAS_VALUE.equals(quantifierCombo.getText())) {
-                hasValue = true;
-            }
-
-            StyledText finalRangeText = null;
-            ISyntaxManager manager = OWLPlugin.getDefault().getSyntaxManager();
-            String input = propertyText.getText();
-            if (input.trim().equals("")) { //$NON-NLS-1$
-                return;
-            }
-            OWLDataProperty prop = manager.parseDataProperty(input, sourceOwlModel);
-            boolean isDataProperty = new IsDataProperty(_project, _ontologyUri, prop.getIRI().toString()).isDataProperty();
-            if (isDataProperty) {
-                if (hasValue) {
-                    finalRangeText = new LiteralText(formRow.getParent(), _owlModel, sourceOwlModel).getStyledText();
-                } else {
-                    finalRangeText = new DatatypeText(formRow.getParent(), _owlModel, sourceOwlModel).getStyledText();
+        if(!OWLCommandUtils.HAS_SELF.equals(quantifierCombo.getText())){
+            try {
+                OWLModel sourceOwlModel =_owlModel;
+                if(imported){
+                    sourceOwlModel = OWLModelFactory.getOWLModel(sourceOntology, _project);
                 }
-            } else {
-                OWLObjectPropertyExpression objProp = manager.parseObjectProperty(input, sourceOwlModel);
-                boolean isObjectProperty = new IsObjectProperty(_project, _ontologyUri, OWLUtilities.toString(objProp)).isObjectProperty();
-                if (isObjectProperty) {
+    
+                String oldRangeValue = ((AbstractRestrictionRow) formRow).getRangeText().getText();
+    
+                boolean hasValue = false;
+                if (OWLCommandUtils.HAS_VALUE.equals(quantifierCombo.getText())) {
+                    hasValue = true;
+                }
+    
+                StyledText finalRangeText = null;
+                ISyntaxManager manager = OWLPlugin.getDefault().getSyntaxManager();
+                String input = propertyText.getText();
+                if (input.trim().equals("")) { //$NON-NLS-1$
+                    return;
+                }
+                OWLDataProperty prop = manager.parseDataProperty(input, sourceOwlModel);
+                boolean isDataProperty = new IsDataProperty(_project, _ontologyUri, prop.getIRI().toString()).isDataProperty();
+                if (isDataProperty) {
                     if (hasValue) {
-                        finalRangeText = new IndividualText(formRow.getParent(), _owlModel, sourceOwlModel).getStyledText();
+                        finalRangeText = new LiteralText(formRow.getParent(), _owlModel, sourceOwlModel).getStyledText();
                     } else {
-                        finalRangeText = new DescriptionText(formRow.getParent(), _owlModel, sourceOwlModel, false, _toolkit).getStyledText();
+                        finalRangeText = new DatatypeText(formRow.getParent(), _owlModel, sourceOwlModel).getStyledText();
                     }
-                }  
-            } 
-
-            if (finalRangeText != null) {
-                // have to replace range field for data properties
-                formRow.getRangeText().dispose();
-                formRow.removeWidget(((AbstractRestrictionRow) formRow).getRangeText());
-                
-                if (OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(OWLModelPlugin.SHOW_AXIOMS)) {
-                    if (formRow instanceof RestrictionRow) {
-                        String axiom = ((RestrictionRow)formRow).getAxiomText().getText();
-                        ((RestrictionRow)formRow).getAxiomText().dispose();
-                        formRow.removeWidget(((RestrictionRow) formRow).getAxiomText());
-                        StyledText newAxiomText = new AxiomText(formRow.getParent(), _owlModel, sourceOwlModel, 4).getStyledText();
-                        newAxiomText.setEditable(false);
-                        newAxiomText.setText(axiom);
-                        ((RestrictionRow) formRow).setAxiomText(newAxiomText);
-                        formRow.addWidget(newAxiomText);
-                    }
-                }
-                
-                formRow.disposeButton(formRow.getCancelButton());
-                formRow.disposeButton(formRow.getSubmitButton());
-                finalRangeText.setText(oldValue);
-                formRow.setRangeText(finalRangeText);
-                formRow.addWidget(finalRangeText);
-                setListenerForRangeText(formRow, quantifierCombo, cardinalityText, propertyText, finalRangeText);
-
-                final Button addButton = emptyRow ? createAddButton(formRow.getParent(), true) : createSaveButton(formRow.getParent(), true);
-                addButton.addSelectionListener(new SelectionAdapter() {
-
-                    @Override
-                    public void widgetSelected(SelectionEvent e) {
-                        if (addButton.getText().equals(OWLGUIUtilities.BUTTON_LABEL_SAVE)) {
-                            rowHandler.savePressed();
+                } else {
+                    OWLObjectPropertyExpression objProp = manager.parseObjectProperty(input, sourceOwlModel);
+                    boolean isObjectProperty = new IsObjectProperty(_project, _ontologyUri, OWLUtilities.toString(objProp, _owlModel.getOntology())).isObjectProperty();
+                    if (isObjectProperty) {
+                        if (hasValue) {
+                            finalRangeText = new IndividualText(formRow.getParent(), _owlModel, sourceOwlModel).getStyledText();
                         } else {
-                            rowHandler.addPressed();
+                            finalRangeText = new DescriptionText(formRow.getParent(), _owlModel, sourceOwlModel, false, _toolkit).getStyledText();
                         }
                     }
-
-                });
-
-                final Button cancelButton = createCancelButton(formRow.getParent(), true);
-                cancelButton.addSelectionListener(new SelectionAdapter() {
-
-                    @Override
-                    public void widgetSelected(SelectionEvent e) {
-                        if (cancelButton.getText().equals(OWLGUIUtilities.BUTTON_LABEL_CANCEL)) {
-                            rowHandler.cancelPressed();
-                        } else {
-                            try {
-                                rowHandler.removePressed();
-                            } catch (NeOnCoreException k2e) {
-                                handleException(k2e, Messages.ObjectPropertyPropertyPage2_45, cancelButton.getShell());
-                                return;
-                            } catch (CommandException k2e) {
-                                handleException(k2e, Messages.ObjectPropertyPropertyPage2_45, cancelButton.getShell());
-                                return;
+                }
+                if (finalRangeText != null) {
+                    // have to replace range field for data properties
+                    formRow.getRangeText().dispose();
+                    formRow.removeWidget(((AbstractRestrictionRow) formRow).getRangeText());
+                    
+                    if (OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(OWLModelPlugin.SHOW_AXIOMS)) {
+                        if (formRow instanceof RestrictionRow) {
+                            String axiom = ((RestrictionRow)formRow).getAxiomText().getText();
+                            ((RestrictionRow)formRow).getAxiomText().dispose();
+                            formRow.removeWidget(((RestrictionRow) formRow).getAxiomText());
+                            StyledText newAxiomText = new AxiomText(formRow.getParent(), _owlModel, sourceOwlModel, 4).getStyledText();
+                            newAxiomText.setEditable(false);
+                            newAxiomText.setText(axiom);
+                            ((RestrictionRow) formRow).setAxiomText(newAxiomText);
+                            formRow.addWidget(newAxiomText);
+                        }
+                    }
+                    
+                    formRow.disposeButton(formRow.getCancelButton());
+                    formRow.disposeButton(formRow.getSubmitButton());
+                    finalRangeText.setText(oldRangeValue);
+                    formRow.setRangeText(finalRangeText);
+                    formRow.addWidget(finalRangeText);
+                    setListenerForRangeText(formRow, quantifierCombo, cardinalityText, propertyText, finalRangeText);
+    
+                    final Button addButton = emptyRow ? createAddButton(formRow.getParent(), true) : createSaveButton(formRow.getParent(), true);
+                    addButton.addSelectionListener(new SelectionAdapter() {
+    
+                        @Override
+                        public void widgetSelected(SelectionEvent e) {
+                            if (addButton.getText().equals(OWLGUIUtilities.BUTTON_LABEL_SAVE)) {
+                                rowHandler.savePressed();
+                            } else {
+                                rowHandler.addPressed();
                             }
                         }
-                    }
-
-                });
-
-                formRow.setSubmitButton(addButton);
-                formRow.setCancelButton(cancelButton);
-
+    
+                    });
+    
+                    final Button cancelButton = createCancelButton(formRow.getParent(), true);
+                    cancelButton.addSelectionListener(new SelectionAdapter() {
+    
+                        @Override
+                        public void widgetSelected(SelectionEvent e) {
+                            if (cancelButton.getText().equals(OWLGUIUtilities.BUTTON_LABEL_CANCEL)) {
+                                rowHandler.cancelPressed();
+                            } else {
+                                try {
+                                    rowHandler.removePressed();
+                                } catch (NeOnCoreException k2e) {
+                                    handleException(k2e, Messages.ObjectPropertyPropertyPage2_45, cancelButton.getShell());
+                                    return;
+                                } catch (CommandException k2e) {
+                                    handleException(k2e, Messages.ObjectPropertyPropertyPage2_45, cancelButton.getShell());
+                                    return;
+                                }
+                            }
+                        }
+                    });
+    
+                    formRow.setSubmitButton(addButton);
+                    formRow.setCancelButton(cancelButton);
+                }
+            } catch (CommandException e) {
+                // nothing to do
+            } catch (NeOnCoreException e) {
+                // TODO: migration
+                // do nothing
             }
-
-            initWarnings(formRow, quantifierCombo, cardinalityText, propertyText);
-            enableButtons(quantifierCombo, cardinalityText, propertyText, formRow.getRangeText(), formRow.getSubmitButton());
-            formRow.getParent().layout(true);
-            _form.reflow(true);
-        } catch (CommandException e) {
-            // nothing to do
-        } catch (NeOnCoreException e) {
-            // TODO: migration
-            // do nothing
         }
+        initWarnings(formRow, quantifierCombo, cardinalityText, propertyText);
+        enableButtons(quantifierCombo, cardinalityText, propertyText, formRow.getRangeText(), formRow.getSubmitButton());
+        formRow.getParent().layout(true);
+        _form.reflow(true);
     }
 
     private void initWarnings(AbstractFormRow formRow, CCombo quantifierCombo, StyledText cardinalityText, StyledText propertyText) {
@@ -879,8 +909,13 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 
         String quantifier = quantifierCombo.getText();
         if (propertyText.getText().trim().length() == 0) {
-            message = Messages.ClazzPropertyPage2_4;
-            type = IMessageProvider.WARNING;
+            if (formRow instanceof AbstractRestrictionRow && ((AbstractRestrictionRow) formRow).getRangeText().getText().trim().length() == 0){
+                message = null;
+                type = IMessageProvider.NONE;
+            }else{
+                message = Messages.ClazzPropertyPage2_4;
+                type = IMessageProvider.WARNING;
+            }
         } else {
             if (cardinalityText.getText().trim().length() == 0 || cardinalityText.getText().equals(Messages.ClazzPropertyPage2_15)) {
                 if (quantifier.equals(OWLCommandUtils.AT_LEAST_MIN)) {
@@ -896,7 +931,10 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             }
             if (formRow instanceof AbstractRestrictionRow) {
                 AbstractRestrictionRow row = (AbstractRestrictionRow) formRow;
-                if (row.getRangeText().getText().trim().length() == 0 && (quantifier.equals(OWLCommandUtils.SOME) || quantifier.equals(OWLCommandUtils.HAS_VALUE) || quantifier.equals(OWLCommandUtils.ONLY) || quantifier.equals(OWLCommandUtils.HAS_SELF))) {
+                if (row.getRangeText().getText().trim().length() == 0 && (
+                        quantifier.equals(OWLCommandUtils.SOME) || 
+                        quantifier.equals(OWLCommandUtils.HAS_VALUE) || 
+                        quantifier.equals(OWLCommandUtils.ONLY))) {
                     if (row.getRangeText().getText().trim().length() == 0) {
                         message = Messages.ClazzPropertyPage2_11;
                         type = IMessageProvider.WARNING;
@@ -908,7 +946,10 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             }
 
             String card = cardinalityText.getText();
-            if (card.length() > 0 && (quantifier.equals(OWLCommandUtils.AT_LEAST_MIN) || quantifier.equals(OWLCommandUtils.AT_MOST_MAX) || quantifier.equals(OWLCommandUtils.EXACTLY_CARDINALITY))) {
+            if (card.length() > 0 && (
+                    quantifier.equals(OWLCommandUtils.AT_LEAST_MIN) || 
+                    quantifier.equals(OWLCommandUtils.AT_MOST_MAX) || 
+                    quantifier.equals(OWLCommandUtils.EXACTLY_CARDINALITY))) {
                 try {
                     new Integer(card);
                     if (card.startsWith("-")) { //$NON-NLS-1$
@@ -939,14 +980,23 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     type = IMessageProvider.WARNING;
                 }
             }
-
+            if(quantifier.equals(OWLCommandUtils.HAS_SELF)){
+                try {
+                    if(! new IsObjectProperty(this._project, this._ontologyUri, propertyText.getText().trim()).isObjectProperty()){
+                        message = Messages.ClazzPropertyPage2_41;
+                        type = IMessageProvider.WARNING;
+                    }
+                } catch (CommandException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         _form.setMessage(message, type);
     }
 
     private void setListenerForRangeText(final AbstractFormRow formRow, final CCombo quantifierCombo, final StyledText cardinalityText, final StyledText propertyText, final StyledText rangeText) {
         rangeText.addModifyListener(new ModifyListener() {
-
+            @Override
             public void modifyText(ModifyEvent e) {
                 initWarnings(formRow, quantifierCombo, cardinalityText, propertyText);
                 enableButtons(quantifierCombo, cardinalityText, propertyText, rangeText, formRow.getSubmitButton());
@@ -963,11 +1013,17 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             String propertyString = propertyText.getText().trim();
             String cardinalityString = cardinalityText.getText().trim();
             String rangeString = rangeText.getText().trim();
-            if (quantifierString.equals(Messages.ClazzPropertyPage2_5) || propertyString.equals(Messages.ClazzPropertyPage2_7) || propertyString.equals("") //$NON-NLS-1$
+            if (quantifierString.equals(Messages.ClazzPropertyPage2_5) || 
+                    propertyString.equals(Messages.ClazzPropertyPage2_7) || 
+                    propertyString.equals("") //$NON-NLS-1$
                     || cardinalityString.equals("") && //$NON-NLS-1$
-                    (quantifierString.equals(OWLCommandUtils.AT_LEAST_MIN) || quantifierString.equals(OWLCommandUtils.AT_MOST_MAX) || quantifierString.equals(OWLCommandUtils.EXACTLY_CARDINALITY))
+                    (quantifierString.equals(OWLCommandUtils.AT_LEAST_MIN) || 
+                            quantifierString.equals(OWLCommandUtils.AT_MOST_MAX) || 
+                            quantifierString.equals(OWLCommandUtils.EXACTLY_CARDINALITY))
                     || rangeString.equals("") && //$NON-NLS-1$
-                    (quantifierString.equals(OWLCommandUtils.SOME) || quantifierString.equals(OWLCommandUtils.HAS_VALUE) || quantifierString.equals(OWLCommandUtils.ONLY) || quantifierString.equals(OWLCommandUtils.HAS_SELF))) {
+                    (quantifierString.equals(OWLCommandUtils.SOME) || 
+                            quantifierString.equals(OWLCommandUtils.HAS_VALUE) || 
+                            quantifierString.equals(OWLCommandUtils.ONLY))) {
                 button.setEnabled(false);
             } else {
                 button.setEnabled(true);
@@ -992,38 +1048,51 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 
         String quantifier = quantifierCombo.getText();
         String property = OWLGUIUtilities.getValidURI(propertyText.getText(), _ontologyUri, _project);
+//        rangeText.d
         String range = rangeText.getText();
         String cardinality = cardText.getText();
+        OWLOntology ontology = _owlModel.getOntology();
 
-        ISyntaxManager manager = OWLPlugin.getDefault().getSyntaxManager();
+//        ISyntaxManager manager = OWLPlugin.getDefault().getSyntaxManager();
+        OWLDataFactory factory = _owlModel.getOWLDataFactory();
         // range is optional, so may be empty.
         OWLObject rangeDesc = null;
-        if (range.trim().length() > 0) {
-            if (new IsDataProperty(_project, _ontologyUri, property).isDataProperty()) {
+        OWLObject propertyObject = null;
+        if (new IsDataProperty(_project, _ontologyUri, property).isDataProperty()) {
+            propertyObject = factory.getOWLDataProperty(OWLUtilities.toIRI(_owlModel.getNamespaces().expandString(property)));
+            if (range.trim().length() > 0) {
                 if (quantifier.equals(OWLCommandUtils.HAS_VALUE)) {
                     // peter as value is rejected. should be stored like "peter"^^ xsd:string instead
                     try {
-                        rangeDesc = manager.parseConstant(range, _owlModel);
+                        rangeDesc = OWLUtilities.constant(range, _owlModel);
+    //                        rangeDesc = manager.parseConstant(range, _owlModel);
                     } catch (NeOnCoreException e) {
                         // bugfix for #9898
                         if (e.getCause() instanceof ParserException) {
-                            rangeDesc = manager.parseConstant("\"" + range + "\"", _owlModel);  //$NON-NLS-1$//$NON-NLS-2$
+                            rangeDesc = OWLUtilities.constant("\"" + range + "\"", _owlModel);  //$NON-NLS-1$//$NON-NLS-2$
+    //                            rangeDesc = manager.parseConstant("\"" + range + "\"", _owlModel);  //$NON-NLS-1$//$NON-NLS-2$
                         }
                     }
                 } else {
-                    rangeDesc = manager.parseDataRange(range, _owlModel);
+                    rangeDesc = OWLUtilities.dataRange(IRIUtils.ensureValidIRISyntax(_owlModel.getNamespaces().expandString(range)), ontology);
+    //                    rangeDesc = manager.parseDataRange(range, _owlModel);
                 }
-
-            } else {
+            }
+        } else {
+            propertyObject = factory.getOWLObjectProperty(OWLUtilities.toIRI(_owlModel.getNamespaces().expandString(property)));
+            if (range.trim().length() > 0) {
                 if (quantifier.equals(OWLCommandUtils.HAS_VALUE)) {
-                    rangeDesc = manager.parseIndividual(range, _owlModel);
+                    rangeDesc = OWLUtilities.individual(IRIUtils.ensureValidIRISyntax(_owlModel.getNamespaces().expandString(range)), ontology);
+    //                    rangeDesc = manager.parseIndividual(range, _owlModel);
                 } else {
-                    rangeDesc = manager.parseDescription(range, _owlModel);
+                    rangeDesc = OWLUtilities.description(IRIUtils.ensureValidIRISyntax(_owlModel.getNamespaces().expandString(range)), ontology);
+    //                    rangeDesc = manager.parseDescription(range, _owlModel);
                 }
             }
         }
-        String rangeStr = rangeDesc != null ? OWLUtilities.toString(rangeDesc) : range;
-        String[] newValues = new String[] {quantifier, property, rangeStr, cardinality};
+        String rangeStr = rangeDesc != null ? OWLUtilities.toString(rangeDesc, ontology) : range;
+        String propertyStr = propertyObject != null ? OWLUtilities.toString(propertyObject, ontology) : property;
+        String[] newValues = new String[] {quantifier, propertyStr, rangeStr, cardinality};
         return newValues;
     }
 
@@ -1068,7 +1137,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
     }
 
     protected OWLClassExpression getClazzDescription() throws NeOnCoreException {
-        return OWLUtilities.description(_id, _owlModel.getNamespaces(), _owlModel.getOWLDataFactory());
+        return OWLUtilities.description(IRIUtils.ensureValidIRISyntax(_id), _owlModel.getOntology());
     }
 
     /*

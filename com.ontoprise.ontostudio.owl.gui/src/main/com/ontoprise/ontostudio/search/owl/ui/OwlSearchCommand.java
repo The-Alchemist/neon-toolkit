@@ -59,10 +59,7 @@ import com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.Object
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
-import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
-import com.ontoprise.ontostudio.owl.model.util.InternalParser;
-import com.ontoprise.ontostudio.owl.model.util.InternalParserException;
 import com.ontoprise.ontostudio.search.owl.match.AnnotationPropertySearchMatch;
 import com.ontoprise.ontostudio.search.owl.match.AnnotationValuesSearchMatch;
 import com.ontoprise.ontostudio.search.owl.match.ClassSearchMatch;
@@ -272,10 +269,10 @@ public class OwlSearchCommand extends AbstractSearchCommand {
                     break;
                     
                 case INDIVIDUALS:
-                    OWLIndividual indi = new InternalParser(element.getEntityUri(), OWLNamespaces.EMPTY_INSTANCE, factory).parseOWLIndividual();// factory.getOWLNamedIndividual(OWLUtilities.toIRI(element.getEntityUri()));
+                    OWLIndividual indi = OWLUtilities.individual(element.getEntityUri(), owlModel.getOntology());// factory.getOWLNamedIndividual(OWLUtilities.toIRI(element.getEntityUri()));
                     Set<OWLClass> classes;
                     try {
-                        classes = OWLModelFactory.getOWLModel(ontology, project).getClasses(OWLUtilities.toString(indi));
+                        classes = owlModel.getClasses(OWLUtilities.toString(indi, owlModel.getOntology()));
                         ClassSearchMatch classMatch = null;
                         for (OWLClass c: classes) {
                             classMatch = new ClassSearchMatch(new ClazzTreeElement(c, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class)));
@@ -294,7 +291,7 @@ public class OwlSearchCommand extends AbstractSearchCommand {
                         OWLIndividual subject = axiom.getSubject();
                         OWLDataPropertyExpression prop = axiom.getProperty();
     
-                        classes = OWLModelFactory.getOWLModel(ontology, project).getClasses(OWLUtilities.toString(subject));
+                        classes = OWLModelFactory.getOWLModel(ontology, project).getClasses(OWLUtilities.toString(subject,  owlModel.getOntology()));
                         ClassSearchMatch classMatch = null;
                         for (OWLClass c: classes) {
                             classMatch = new ClassSearchMatch(new ClazzTreeElement(c, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class)));
@@ -352,8 +349,6 @@ public class OwlSearchCommand extends AbstractSearchCommand {
             }
         } catch (NeOnCoreException e1) {
             SearchPlugin.logError(e1.getMessage(), e1);
-        } catch (InternalParserException e) {
-            SearchPlugin.logError(e.getMessage(), e);
         }
     }
 
@@ -384,7 +379,8 @@ public class OwlSearchCommand extends AbstractSearchCommand {
 
             Set<OWLClass> classes;
             try {
-                classes = OWLModelFactory.getOWLModel(ontology, project).getClasses(OWLUtilities.toString(entity));
+                OWLModel owlModel = OWLModelFactory.getOWLModel(ontology, project);
+                classes = owlModel.getClasses(OWLUtilities.toString(entity,  owlModel.getOntology()));
 //                ClassSearchMatch classMatch = null;
                 for (OWLClass c: classes) {
 //                    classMatch = new ClassSearchMatch(new ClazzTreeElement(c, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class)));

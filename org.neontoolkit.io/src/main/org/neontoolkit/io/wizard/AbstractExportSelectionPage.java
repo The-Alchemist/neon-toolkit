@@ -78,7 +78,7 @@ public abstract class AbstractExportSelectionPage extends WizardPage {
     private List<String> _supportedProjectLanguages;    
 
     public class EventHandler implements SelectionListener, ModifyListener {
-
+        @Override
         public void widgetSelected(SelectionEvent se) {
             if (se.getSource().equals(_browseButton)) {
                 // check whether extension is specified
@@ -128,11 +128,11 @@ public abstract class AbstractExportSelectionPage extends WizardPage {
             }
             checkStatus();
         }
-
+        @Override
         public void widgetDefaultSelected(SelectionEvent se) {
             widgetSelected(se);
         }
-
+        @Override
         public void modifyText(ModifyEvent me) {
             checkStatus();
         }
@@ -165,6 +165,7 @@ public abstract class AbstractExportSelectionPage extends WizardPage {
     /**
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(Composite)
      */
+    @Override
     public void createControl(Composite parent) {
         _composite = new Composite(parent, SWT.NONE);
 
@@ -230,7 +231,7 @@ public abstract class AbstractExportSelectionPage extends WizardPage {
             return new URL(url);
         } catch (MalformedURLException e) {
             try {
-                return new File(url).toURL();
+                return new File(url).toURI().toURL();
             } catch (MalformedURLException e1) {
                 IOPlugin.getDefault().logError("", e1); //$NON-NLS-1$
                 return null;

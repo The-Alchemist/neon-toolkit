@@ -14,6 +14,7 @@ import com.ontoprise.ontostudio.owl.gui.Messages;
 
 /**
  * @author janiko
+ * @author Nico Stieler
  *
  */
 public class ValueInputVerifier extends InputVerifier{
@@ -25,7 +26,8 @@ public class ValueInputVerifier extends InputVerifier{
         try{
             return DatatypeManager.INSTANCE.parseObject(input[0], input[1] ).toString();
         }catch (UnknownDatatypeException e){
-            throw e;
+//            throw e;
+            return null;
         }catch (IllegalArgumentException e){
             throw new IllegalArgumentException(Messages.InputVerifier_1 + input[1] + Messages.InputVerifier_2);
         }

@@ -12,15 +12,21 @@ package com.ontoprise.ontostudio.owl.model.commands.individual;
 
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLRuntimeException;
 
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.OWLModuleChangeCommand;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class CreateIndividual extends OWLModuleChangeCommand {
 
     public CreateIndividual(String project, String ontologyId, String clazzId, String individualId) throws NeOnCoreException {
@@ -30,9 +36,21 @@ public class CreateIndividual extends OWLModuleChangeCommand {
     @Override
     public void doPerform() throws CommandException {
         try {
+            OWLOntology ontology = getOwlModel().getOntology();
             OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(getProjectName());
-            OWLClass clazz = factory.getOWLClass(OWLUtilities.toIRI(getArgument(2).toString()));
-            OWLNamedIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.toIRI(getArgument(3).toString()));
+            IRI clazzIRI,individualIRI;
+            try{
+                clazzIRI = OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(getArgument(2).toString(), ontology);
+            }catch(OWLRuntimeException e){
+                clazzIRI = OWLUtilities.toIRI(getArgument(2).toString());
+            }
+            try{
+                individualIRI = OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(getArgument(3).toString(), ontology);   
+            }catch(OWLRuntimeException e){
+                individualIRI = OWLUtilities.toIRI(getArgument(3).toString());
+            }
+            OWLClass clazz = factory.getOWLClass(clazzIRI);
+            OWLNamedIndividual individual = factory.getOWLNamedIndividual(individualIRI);
             OWLClassAssertionAxiom clazzMember = factory.getOWLClassAssertionAxiom(clazz, individual);
 
             getOwlModel().addEntity(individual);

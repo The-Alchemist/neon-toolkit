@@ -12,6 +12,7 @@ package com.ontoprise.ontostudio.owl.gui.util.wizard;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.ltk.ui.refactoring.UserInputWizardPage;
 import org.eclipse.swt.SWT;
@@ -28,6 +29,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLEntity;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
@@ -148,7 +150,8 @@ public class RemoveAxiomWizardPage2 extends UserInputWizardPage {
                 List<String> uriList = new ArrayList<String>();
                 uriList.add(_page1.getTargetUri());
                 uriList.add(_page1.getURI());
-                List<OWLAxiom> newAxioms = OWLGUIUtilities.getDependentAxioms(axiom, list, _page1.getEntities(), uriList, _page1._projectId);
+                Set<OWLEntity> set = axiom.getSignature();
+                List<OWLAxiom> newAxioms = OWLGUIUtilities.getDependentAxioms(axiom, list, _page1.getEntities(), uriList, _page1._ontologyUri, _page1._projectId);
                 if (newAxioms.size() > 0) {
 
                     boolean addRow = false;

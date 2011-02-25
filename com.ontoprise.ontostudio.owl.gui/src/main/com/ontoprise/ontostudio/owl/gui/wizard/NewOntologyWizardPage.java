@@ -76,6 +76,7 @@ public class NewOntologyWizardPage extends WizardPage {
      * 
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
+    @Override
     public void createControl(Composite parent) {
         _container = new Composite(parent, SWT.NULL);
         GridLayout layout = new GridLayout(3, false);
@@ -88,7 +89,7 @@ public class NewOntologyWizardPage extends WizardPage {
         GridData gd = new GridData(GridData.FILL_HORIZONTAL);
         _ontologyText.setLayoutData(gd);
         _ontologyText.addModifyListener(new ModifyListener() {
-
+            @Override
             public void modifyText(ModifyEvent e) {
                 updateStatus();
             }
@@ -107,7 +108,7 @@ public class NewOntologyWizardPage extends WizardPage {
         gd.grabExcessHorizontalSpace = true;
         _namespaceText.setLayoutData(gd);
         _namespaceText.addModifyListener(new ModifyListener() {
-
+            @Override
             public void modifyText(ModifyEvent e) {
                 updateStatus();
             }
@@ -126,11 +127,11 @@ public class NewOntologyWizardPage extends WizardPage {
         gd.grabExcessHorizontalSpace = true;
         _projectCombo.setLayoutData(gd);
         _projectCombo.addSelectionListener(new SelectionListener() {
-
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 updateStatus();
             }
-
+            @Override
             public void widgetDefaultSelected(SelectionEvent e) {
             }
         });
@@ -138,7 +139,7 @@ public class NewOntologyWizardPage extends WizardPage {
         _createButton = new Button(_container, SWT.PUSH);
         _createButton.setText(Messages.NewOntologyWizardPage_11); 
         _createButton.addSelectionListener(new SelectionListener() {
-
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 NewOntologyProjectWizard wizard = new NewOntologyProjectWizard();
                 wizard.init(PlatformUI.getWorkbench(), null);
@@ -149,7 +150,7 @@ public class NewOntologyWizardPage extends WizardPage {
         		dialog.open();
         		initialize();
             }
-
+            @Override
             public void widgetDefaultSelected(SelectionEvent e) {
             }
             

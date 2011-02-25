@@ -39,6 +39,7 @@ import org.neontoolkit.core.NeOnCorePlugin;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.core.project.IOntologyProject;
+import org.neontoolkit.core.util.IRIUtils;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.navigator.ITreeDataProvider;
 import org.neontoolkit.gui.navigator.ITreeElement;
@@ -46,6 +47,7 @@ import org.neontoolkit.gui.navigator.ITreeElementPath;
 import org.neontoolkit.gui.navigator.MTreeView;
 import org.neontoolkit.gui.navigator.TreeProviderManager;
 import org.neontoolkit.gui.util.PerspectiveChangeHandler;
+import org.neontoolkit.gui.util.URIUtils;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -95,11 +97,8 @@ import com.ontoprise.ontostudio.owl.model.OWLConstants;
 import com.ontoprise.ontostudio.owl.model.OWLManchesterProjectFactory;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
-import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.OWLCommandUtils;
-import com.ontoprise.ontostudio.owl.model.util.InternalParser;
-import com.ontoprise.ontostudio.owl.model.util.InternalParserException;
 import com.ontoprise.ontostudio.owl.model.util.OWLAxiomUtils;
 import com.ontoprise.ontostudio.owl.perspectives.OWLPerspective;
 
@@ -575,8 +574,10 @@ public class OWLGUIUtilities {
                             // individuals
                             try {
                                 provider = TreeProviderManager.getDefault().getProvider(MTreeView.ID, IndividualViewContentProvider.class);
-                                Set<OWLClass> clazzes = OWLModelFactory.getOWLModel(ontologyURI, project).getClasses(uri);
-                                OWLIndividual individual = new InternalParser(uri, OWLNamespaces.EMPTY_INSTANCE, factory).parseOWLIndividual();// factory.getOWLNamedIndividual(OWLUtilities.toIRI(uri));
+                                OWLModel model = OWLModelFactory.getOWLModel(ontologyURI, project);
+                                uri = IRIUtils.ensureValidIRISyntax(uri);
+                                Set<OWLClass> clazzes = model.getClasses(uri);
+                                OWLIndividual individual = OWLUtilities.individual(uri, model.getOntology());// factory.getOWLNamedIndividual(OWLUtilities.toIRI(uri));
                                 if (clazzes.size() > 0) {
                                     // FIXME if individual exists for multiple classes, a dialog to select one would be nice
                                     // FIXME also consider individuals of OWL.Thing (displayed if class folder is selected)
@@ -596,11 +597,9 @@ public class OWLGUIUtilities {
                                 }
                             } catch (NeOnCoreException e) {
                                 // nothing to do
+                                e.printStackTrace();
                             } catch (PartInitException e) {
                                 // nothing to do
-                            } catch (InternalParserException e) {
-                                // nothing to do
-                                e.printStackTrace();
                             }
                         }
                     }
@@ -727,17 +726,26 @@ public class OWLGUIUtilities {
         return ((String[]) entity.accept(visitor))[0];
     }
 
-    public static List<OWLAxiom> getDependentAxioms(OWLAxiom oldAxiom, List<OWLAxiom> list, List<OWLEntity> entities, List<String> uris, String projectId) {
+    public static List<OWLAxiom> getDependentAxioms(OWLAxiom oldAxiom, List<OWLAxiom> list, List<OWLEntity> entities, List<String> uris, String ontologyURI, String projectId) {
         if (entities.size() > 0) {
             for (OWLEntity e: entities) {
-                OWLAxiom newAxiom = OWLAxiomUtils.createNewAxiom(oldAxiom, e.getIRI().toString(), projectId);
-                if (newAxiom != null && !newAxiom.equals(oldAxiom)) {
-                    list.add(newAxiom);
+                try {
+                    OWLAxiom newAxiom = 
+                        OWLAxiomUtils.createNewAxiom(
+                                oldAxiom, 
+                                OWLUtilities.toString(e, OWLModelFactory.getOWLModel(ontologyURI, projectId).getOntology()), 
+                                ontologyURI, 
+                                projectId);
+                    if (newAxiom != null && !newAxiom.equals(oldAxiom)) {
+                        list.add(newAxiom);
+                    }
+                } catch (NeOnCoreException e1) {
+                    // nothing to do
                 }
             }
         } else {
             for (String uri: uris) {
-                list.add(OWLAxiomUtils.createNewAxiom(oldAxiom, uri, projectId));
+                list.add(OWLAxiomUtils.createNewAxiom(oldAxiom, uri, ontologyURI, projectId));
             }
         }
         return list;
@@ -759,7 +767,7 @@ public class OWLGUIUtilities {
 		return quantifierCombo;
 	}
 
-    public static String getUriForSorting(OWLClassExpression desc, OWLModel owlModel) {
+    public static String getUriForSorting(OWLClassExpression desc, OWLModel owlModel) throws NeOnCoreException {
         ISyntaxManager manager = OWLPlugin.getDefault().getSyntaxManager();
         int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
         OWLObjectVisitorEx<?> visitor = manager.getVisitor(owlModel, idDisplayStyle);
@@ -772,55 +780,55 @@ public class OWLGUIUtilities {
         } else if (desc instanceof OWLDataAllValuesFrom) {
             OWLDataAllValuesFrom dataAll = (OWLDataAllValuesFrom) desc;
             resultArray = (String[]) dataAll.getProperty().accept(visitor);
-            result = OWLUtilities.toString(dataAll.getProperty());
+            result = OWLUtilities.toString(dataAll.getProperty(), owlModel.getOntology());
         } else if (desc instanceof OWLDataCardinalityRestriction) {
             OWLDataCardinalityRestriction dataCard = (OWLDataCardinalityRestriction)desc;
             resultArray = (String[]) dataCard.getProperty().accept(visitor);
-            result = OWLUtilities.toString(dataCard.getProperty());
+            result = OWLUtilities.toString(dataCard.getProperty(), owlModel.getOntology());
         } else if (desc instanceof OWLDataHasValue) {
             OWLDataHasValue dataHasValue = (OWLDataHasValue) desc;
             resultArray = (String[]) dataHasValue.getProperty().accept(visitor);
-            result = OWLUtilities.toString(dataHasValue.getProperty());
+            result = OWLUtilities.toString(dataHasValue.getProperty(), owlModel.getOntology());
         } else if (desc instanceof OWLDataSomeValuesFrom) {
             OWLDataSomeValuesFrom dataSome = (OWLDataSomeValuesFrom) desc;
             resultArray = (String[]) dataSome.getProperty().accept(visitor);
-            result = OWLUtilities.toString(dataSome.getProperty());
+            result = OWLUtilities.toString(dataSome.getProperty(), owlModel.getOntology());
         } else if (desc instanceof OWLObjectAllValuesFrom) {
             OWLObjectAllValuesFrom objectAll = (OWLObjectAllValuesFrom) desc;
             resultArray = (String[]) objectAll.getProperty().accept(visitor);
-            result = OWLUtilities.toString(objectAll.getProperty());
+            result = OWLUtilities.toString(objectAll.getProperty(), owlModel.getOntology());
         } else if (desc instanceof OWLObjectIntersectionOf) {
             OWLObjectIntersectionOf objectAnd = (OWLObjectIntersectionOf) desc;
 //            resultArray = (String[]) dataHasValue.getDataProperty().accept(visitor);
-            result = OWLUtilities.toString(objectAnd);
+            result = OWLUtilities.toString(objectAnd, owlModel.getOntology());
         } else if (desc instanceof OWLObjectCardinalityRestriction) {
             OWLObjectCardinalityRestriction objectCard = (OWLObjectCardinalityRestriction) desc;
             resultArray = (String[]) objectCard.getProperty().accept(visitor);
-            result = OWLUtilities.toString(objectCard.getProperty());
+            result = OWLUtilities.toString(objectCard.getProperty(), owlModel.getOntology());
         } else if (desc instanceof OWLObjectHasSelf) {
             OWLObjectHasSelf objExistsSelf = (OWLObjectHasSelf) desc;
             resultArray = (String[]) objExistsSelf.getProperty().accept(visitor);
-            result = OWLUtilities.toString(objExistsSelf.getProperty());
+            result = OWLUtilities.toString(objExistsSelf.getProperty(), owlModel.getOntology());
         } else if (desc instanceof OWLObjectHasValue) {
             OWLObjectHasValue objHasValue = (OWLObjectHasValue) desc;
             resultArray = (String[]) objHasValue.getProperty().accept(visitor);
-            result = OWLUtilities.toString(objHasValue.getProperty());
+            result = OWLUtilities.toString(objHasValue.getProperty(), owlModel.getOntology());
         } else if (desc instanceof OWLObjectComplementOf) {
             OWLObjectComplementOf objNot = (OWLObjectComplementOf) desc;
 //            resultArray = (String[]) dataHasValue.getDataProperty().accept(visitor);
-            result = OWLUtilities.toString(objNot);
+            result = OWLUtilities.toString(objNot, owlModel.getOntology());
         } else if (desc instanceof OWLObjectOneOf) {
             OWLObjectOneOf objOneOf = (OWLObjectOneOf) desc;
 //            resultArray = (String[]) dataHasValue.getDataProperty().accept(visitor);
-            result = OWLUtilities.toString(objOneOf);
+            result = OWLUtilities.toString(objOneOf, owlModel.getOntology());
         } else if (desc instanceof OWLObjectUnionOf) {
             OWLObjectUnionOf objOr = (OWLObjectUnionOf) desc;
 //            resultArray = (String[]) dataHasValue.getDataProperty().accept(visitor);
-            result = OWLUtilities.toString(objOr);
+            result = OWLUtilities.toString(objOr, owlModel.getOntology());
         } else if (desc instanceof OWLObjectSomeValuesFrom) {
             OWLObjectSomeValuesFrom objectSome = (OWLObjectSomeValuesFrom) desc;
             resultArray = (String[]) objectSome.getProperty().accept(visitor);
-            result = OWLUtilities.toString(objectSome.getProperty());
+            result = OWLUtilities.toString(objectSome.getProperty(), owlModel.getOntology());
         }
         if (resultArray != null) {
             return getEntityLabel(resultArray);
@@ -850,19 +858,13 @@ public class OWLGUIUtilities {
         return message;
     }
     
-    private static DatatypeVerifier _datatypeVerifier = new DatatypeVerifier();
-    private static ValueInputVerifier _valueInputVerifier = new ValueInputVerifier();
-    
-    public static String verifyUserInput(String valueInput, String datatype) {
+    public static String verifyUserInput(String valueInput, String datatype, OWLModel owlModel) {
         
         if (!(datatype.equals("") || datatype.equals("<" + OWLAxiomUtils.OWL_INDIVIDUAL + ">")))  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-        
-            return _valueInputVerifier.verify(valueInput, _datatypeVerifier.verify(datatype));
-            
+            return new ValueInputVerifier().verify(valueInput, new DatatypeVerifier(owlModel).verify(IRIUtils.ensureValidIdentifierSyntax(datatype)));
         else
             return valueInput;
     }
-
      
     public static boolean isOWLProject(String projectName) throws NeOnCoreException {
         IOntologyProject ontoProject = NeOnCorePlugin.getDefault().getOntologyProject(projectName);

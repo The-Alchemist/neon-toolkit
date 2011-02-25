@@ -61,18 +61,18 @@ public class FileSystemImportSelectionPage extends AbstractImportSelectionPage {
     protected Composite _composite;
 
     class EventHandler implements SelectionListener, ModifyListener {
-
+        @Override
         public void widgetSelected(SelectionEvent se) {
             if (se.getSource().equals(_browseButton)) {
                 browse();
             }
             checkStatus();
         }
-
+        @Override
         public void widgetDefaultSelected(SelectionEvent se) {
             widgetSelected(se);
         }
-
+        @Override
         public void modifyText(ModifyEvent me) {
             checkStatus();
         }

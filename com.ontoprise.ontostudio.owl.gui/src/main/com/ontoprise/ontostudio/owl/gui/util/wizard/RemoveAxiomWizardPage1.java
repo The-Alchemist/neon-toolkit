@@ -31,8 +31,8 @@ import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
@@ -41,7 +41,10 @@ import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class RemoveAxiomWizardPage1 extends UserInputWizardPage {
 
     protected String _sourceEntityUri;
@@ -56,7 +59,6 @@ public class RemoveAxiomWizardPage1 extends UserInputWizardPage {
     protected List<OWLEntity> _entities;
 
     private OWLNamespaces _namespaces;
-    private OWLDataFactory _factory;
 
     protected RemoveAxiomWizardPage1(String pageName, List<OWLAxiom> axioms, OWLNamespaces namespaces, String sourceEntityUri, String targetEntityUri, String deleteMode, List<OWLEntity> entities, String ontologyUri, String projectId) {
         super(pageName);
@@ -68,12 +70,7 @@ public class RemoveAxiomWizardPage1 extends UserInputWizardPage {
         _targetEntityUri = targetEntityUri;
         _entities = entities;
         _namespaces = namespaces;
-        try {
-            _factory = OWLModelFactory.getOWLDataFactory(projectId);
-        } catch (NeOnCoreException e) {
-            throw new RuntimeException(e);
-        }
-
+        
         // initially all axioms are checked
         _axiomsToRemove = axioms;
         _checkboxes = new ArrayList<Button>();
@@ -81,6 +78,7 @@ public class RemoveAxiomWizardPage1 extends UserInputWizardPage {
         _deleteMode = deleteMode;
     }
 
+    @Override
     public void createControl(Composite parent) {
         try {
             _info = getInfoString();
@@ -173,8 +171,9 @@ public class RemoveAxiomWizardPage1 extends UserInputWizardPage {
             }
         } else {
             info.append(Messages.RemoveAxiomWizardPage1_6);
-            OWLClassExpression sourceDesc = OWLUtilities.description(_sourceEntityUri, _namespaces, _factory);
-            OWLClassExpression targetDesc = OWLUtilities.description(_targetEntityUri, _namespaces, _factory);
+            OWLOntology ontology = OWLModelFactory.getOWLModel(_ontologyUri, _projectId).getOntology();
+            OWLClassExpression sourceDesc = OWLUtilities.description(_sourceEntityUri, ontology);
+            OWLClassExpression targetDesc = OWLUtilities.description(_targetEntityUri, ontology);
             String sourceUriToDisplay = OWLGUIUtilities.getEntityLabel(sourceDesc, _ontologyUri, _projectId);
             String targetUriToDisplay = OWLGUIUtilities.getEntityLabel(targetDesc, _ontologyUri, _projectId);
             if (sourceUriToDisplay.length() > 80) {
@@ -231,7 +230,7 @@ public class RemoveAxiomWizardPage1 extends UserInputWizardPage {
                 int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
                 String[] result = (String[]) axiom.accept(OWLPlugin.getDefault().getSyntaxManager().getVisitor(owlModel, idDisplayStyle));
                 StringBuffer buffer = new StringBuffer();
-                OWLUtilities.toString(axiom, buffer, owlModel.getNamespaces());
+                OWLUtilities.toString(axiom, owlModel.getOntology());
                 String id = buffer.toString();
                 if (result != null) {
                     id = OWLGUIUtilities.getEntityLabel(result);

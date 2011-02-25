@@ -81,12 +81,12 @@ public abstract class AbstractSearchPage extends DialogPage implements ISearchPa
 	public AbstractSearchPage(SearchPageOption[] options) {
 		_options = options;
 	}
-	
+    @Override
 	public boolean performAction() {
 		NewSearchUI.runQueryInForeground(null, getSearchQuery());
 		return true;
 	}
-
+    @Override
 	public void setContainer(ISearchPageContainer container) {
 		_container = container;
 	}
@@ -94,7 +94,7 @@ public abstract class AbstractSearchPage extends DialogPage implements ISearchPa
 	public ISearchPageContainer getContainer() {
 		return _container;
 	}
-
+    @Override
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
 		readConfiguration();
@@ -150,6 +150,7 @@ public abstract class AbstractSearchPage extends DialogPage implements ISearchPa
 			}
 		});
 		_pattern.addModifyListener(new ModifyListener() {
+		    @Override
 			public void modifyText(ModifyEvent e) {
 				updateOKStatus();
 			}

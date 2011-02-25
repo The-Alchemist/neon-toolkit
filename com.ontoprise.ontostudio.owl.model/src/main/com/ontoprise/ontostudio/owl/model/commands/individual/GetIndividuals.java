@@ -17,12 +17,14 @@ import java.util.Set;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.OWLIndividual;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.OWLOntologyRequestCommand;
 
 /**
  * @author werner
+ * @author Nico Stieler
  *
  */
 public class GetIndividuals extends OWLOntologyRequestCommand {
@@ -43,14 +45,15 @@ public class GetIndividuals extends OWLOntologyRequestCommand {
         _results = new ArrayList<String>();
         Set<OWLIndividual> individuals = null;
         try {
+            OWLOntology ontology = getOwlModel().getOntology();
             individuals = getOwlModel().getIndividuals((String) getArgument(2));
+            if (individuals != null) {
+                for (OWLIndividual i: individuals) {
+                    _results.add(OWLUtilities.toString(i, ontology));
+                }
+            }
         } catch (NeOnCoreException e) {
             // nothing to do
-        }
-        if (individuals != null) {
-            for (OWLIndividual i: individuals) {
-                _results.add(OWLUtilities.toString(i));
-            }
         }
     }
     

@@ -37,7 +37,8 @@ public abstract class AbstractIDPropertyPage implements IPropertyPage {
 	/* (non-Javadoc)
 	 * @see org.neontoolkit.gui.properties.IPropertyPage#getMainPage()
 	 */
-	public IMainPropertyPage getMainPage() {
+	@Override
+    public IMainPropertyPage getMainPage() {
 		return _mainPage;
 	}
 

@@ -17,10 +17,12 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
+import org.neontoolkit.core.util.IRIUtils;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeTreeElement;
+import com.ontoprise.ontostudio.owl.gui.util.DatatypeManager;
 import com.ontoprise.ontostudio.owl.model.commands.datatypes.RemoveDatatype;
 
 /**
@@ -82,6 +84,7 @@ public class DatatypeDeleteChange extends Change {
             for (int i = 0; i < _datatypes.length; i++) {
                 pm.subTask(Messages.DataPropertyDeleteChange_2 + _datatypes[i].getLocalName()); 
                 new RemoveDatatype(_datatypes[i].getProjectName(), _datatypes[i].getOntologyUri(), _datatypes[i].getId()).run();
+                DatatypeManager.INSTANCE.unregisterDatatypeHandler(IRIUtils.ensureValidIdentifierSyntax(_datatypes[i].getId()));
                 pm.worked(1);
             }
         } catch (Exception e) {

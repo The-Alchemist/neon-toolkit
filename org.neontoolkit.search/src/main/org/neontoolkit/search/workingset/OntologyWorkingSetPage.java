@@ -84,6 +84,7 @@ public class OntologyWorkingSetPage extends WizardPage implements IWorkingSetPag
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.dialogs.IWorkingSetPage#finish()
 	 */
+    @Override
 	public void finish() {
 		String workingSetName = _nameText.getText();
 		List<Object> elements = new ArrayList<Object>(10);
@@ -119,6 +120,7 @@ public class OntologyWorkingSetPage extends WizardPage implements IWorkingSetPag
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.dialogs.IWorkingSetPage#getSelection()
 	 */
+    @Override
 	public IWorkingSet getSelection() {
 		return _workingSet;
 	}
@@ -126,6 +128,7 @@ public class OntologyWorkingSetPage extends WizardPage implements IWorkingSetPag
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.dialogs.IWorkingSetPage#setSelection(org.eclipse.ui.IWorkingSet)
 	 */
+    @Override
 	public void setSelection(IWorkingSet workingSet) {
 		Assert.isNotNull(workingSet, "Working set must not be null"); //$NON-NLS-1$
 		_workingSet = workingSet;
@@ -140,6 +143,7 @@ public class OntologyWorkingSetPage extends WizardPage implements IWorkingSetPag
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
 	 */
+    @Override
 	public void createControl(Composite parent) {
 		initializeDialogUnits(parent);
 		
@@ -157,6 +161,7 @@ public class OntologyWorkingSetPage extends WizardPage implements IWorkingSetPag
 		_nameText.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL));
 		_nameText.addModifyListener(
 			new ModifyListener() {
+			    @Override
 				public void modifyText(ModifyEvent e) {
 					validateInput();
 				}
@@ -186,19 +191,23 @@ public class OntologyWorkingSetPage extends WizardPage implements IWorkingSetPag
 		_tree.setInput(ResourcesPlugin.getWorkspace().getRoot());
 
 		_tree.addCheckStateListener(new ICheckStateListener() {
+		    @Override
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				handleCheckStateChange(event);
 			}
 		});
 
 		_tree.addTreeListener(new ITreeViewerListener() {
+		    @Override
 			public void treeCollapsed(TreeExpansionEvent event) {
 			}
+		    @Override
 			public void treeExpanded(TreeExpansionEvent event) {
 				final Object element = event.getElement();
 				if (!_tree.getGrayed(element)) {
 					BusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
-						public void run() {
+					    @Override
+					    public void run() {
 							setSubtreeChecked(element, _tree.getChecked(element), false);
 						}
 					});
@@ -263,6 +272,7 @@ public class OntologyWorkingSetPage extends WizardPage implements IWorkingSetPag
 
 	void handleCheckStateChange(final CheckStateChangedEvent event) {
 		BusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
+		    @Override
 			public void run() {
 				IAdaptable element = (IAdaptable) event.getElement();
 				boolean state = event.getChecked();		
@@ -345,6 +355,7 @@ public class OntologyWorkingSetPage extends WizardPage implements IWorkingSetPag
 	private void initializeCheckedState() {
 
 		BusyIndicator.showWhile(getShell().getDisplay(), new Runnable() {
+		    @Override
 			public void run() {
 				Object[] elements;
 				if (_workingSet == null) {

@@ -13,8 +13,11 @@ package com.ontoprise.ontostudio.owl.gui.individualview;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.navigator.elements.AbstractOntologyTreeElement;
 import org.semanticweb.owlapi.model.OWLAnonymousIndividual;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
+import com.ontoprise.ontostudio.owl.model.OWLModel;
+import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 
 /**
@@ -112,7 +115,14 @@ public class AnonymousIndividualViewItem extends AbstractOntologyTreeElement imp
             if (_individualItem == null) {
                 equal = that._individualItem == null; 
             } else {
-                equal = equal(OWLUtilities.toString(_individualItem.getIndividual()), OWLUtilities.toString(that._individualItem.getIndividual()));
+                try {
+                    OWLOntology ontology = OWLModelFactory.getOWLModel(getOntologyUri(), getProjectName()).getOntology();
+                    equal = equal(OWLUtilities.toString(_individualItem.getIndividual(), ontology), 
+                            OWLUtilities.toString(that._individualItem.getIndividual(), ontology));
+                } catch (NeOnCoreException e) {
+                    // NICO how to handle this :true or false???
+                    equal = false;
+                }
             }
             return equal && equal(getOntologyUri(), that.getOntologyUri()) && equal(getProjectName(), that.getProjectName());
         }
@@ -124,7 +134,8 @@ public class AnonymousIndividualViewItem extends AbstractOntologyTreeElement imp
         try {
             idArray = OWLGUIUtilities.getIdArray(_individualItem.getIndividual(), getOntologyUri(), getProjectName());
         } catch (NeOnCoreException e) {
-            idArray = new String[] {OWLUtilities.toString(_individualItem.getIndividual())};
+            idArray = new String[] {};
+//            idArray = new String[] {OWLUtilities.toString(_individualItem.getIndividual())}; //NICO model is needed
         }
         return OWLGUIUtilities.getEntityLabel(idArray);
     }

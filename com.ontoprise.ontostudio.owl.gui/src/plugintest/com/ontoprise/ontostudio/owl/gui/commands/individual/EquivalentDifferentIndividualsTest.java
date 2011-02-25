@@ -17,15 +17,14 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDifferentIndividualsAxiom;
 import org.semanticweb.owlapi.model.OWLIndividual;
+import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
 
 import com.ontoprise.ontostudio.owl.gui.commands.AbstractOWLPluginTest;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
-import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.ApplyChanges;
 import com.ontoprise.ontostudio.owl.model.commands.clazz.CreateRootClazz;
@@ -59,8 +58,7 @@ public class EquivalentDifferentIndividualsTest extends AbstractOWLPluginTest {
         String i4 = createQualifiedIdentifier("i4", DEFAULT_NS); //$NON-NLS-1$
 
         OWLModel model = OWLModelFactory.getOWLModel(ONTOLOGY_URI, PROJECT_ID);
-        OWLNamespaces namespaces = model.getNamespaces();
-        OWLDataFactory factory = model.getOWLDataFactory();
+        OWLOntology ontology = model.getOntology();
 
         new CreateRootClazz(PROJECT_ID, ONTOLOGY_URI, c1).run();
         new CreateIndividual(PROJECT_ID, ONTOLOGY_URI, c1, i1).run();
@@ -77,7 +75,7 @@ public class EquivalentDifferentIndividualsTest extends AbstractOWLPluginTest {
         new EditEquivalentIndividuals(PROJECT_ID, ONTOLOGY_URI, expectedAxiomText, i2, i3).run();
 
         equivalentIndividualHits = new GetEquivalentIndividualHits(PROJECT_ID, ONTOLOGY_URI, i1).getResults();
-        OWLSameIndividualAxiom sameIndividual = (OWLSameIndividualAxiom) OWLUtilities.axiom(equivalentIndividualHits[0][0], namespaces, factory);
+        OWLSameIndividualAxiom sameIndividual = (OWLSameIndividualAxiom) OWLUtilities.axiom(equivalentIndividualHits[0][0], ontology);
         Set<OWLIndividual> individuals = sameIndividual.getIndividuals();
         Set<OWLIndividual> expectedIndividuals = new HashSet<OWLIndividual>();
         expectedIndividuals.add(OWLModelFactory.getOWLDataFactory(PROJECT_ID).getOWLNamedIndividual(OWLUtilities.toIRI(i1)));
@@ -101,8 +99,7 @@ public class EquivalentDifferentIndividualsTest extends AbstractOWLPluginTest {
         String i4 = createQualifiedIdentifier("i4", DEFAULT_NS); //$NON-NLS-1$
 
         OWLModel model = OWLModelFactory.getOWLModel(ONTOLOGY_URI, PROJECT_ID);
-        OWLNamespaces namespaces = model.getNamespaces();
-        OWLDataFactory factory = model.getOWLDataFactory();
+        OWLOntology ontology = model.getOntology();
 
         new CreateRootClazz(PROJECT_ID, ONTOLOGY_URI, c1).run();
         new CreateIndividual(PROJECT_ID, ONTOLOGY_URI, c1, i1).run();
@@ -119,7 +116,7 @@ public class EquivalentDifferentIndividualsTest extends AbstractOWLPluginTest {
         new EditDifferentIndividuals(PROJECT_ID, ONTOLOGY_URI, expectedAxiomText, i2, i3).run();
 
         equivalentIndividualHits = new GetDifferentIndividualHits(PROJECT_ID, ONTOLOGY_URI, i1).getResults();
-        OWLDifferentIndividualsAxiom differentIndividuals = (OWLDifferentIndividualsAxiom) OWLUtilities.axiom(equivalentIndividualHits[0][0], namespaces, factory);
+        OWLDifferentIndividualsAxiom differentIndividuals = (OWLDifferentIndividualsAxiom) OWLUtilities.axiom(equivalentIndividualHits[0][0], ontology);
         Set<OWLIndividual> individuals = differentIndividuals.getIndividuals();
         Set<OWLIndividual> expectedIndividuals = new HashSet<OWLIndividual>();
         expectedIndividuals.add(OWLModelFactory.getOWLDataFactory(PROJECT_ID).getOWLNamedIndividual(OWLUtilities.toIRI(i1)));

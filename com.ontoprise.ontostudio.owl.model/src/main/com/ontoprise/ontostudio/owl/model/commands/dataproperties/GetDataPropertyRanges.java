@@ -18,6 +18,7 @@ import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLDataRange;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.ItemHits;
 import com.ontoprise.ontostudio.owl.model.LocatedItem;
@@ -26,6 +27,7 @@ import com.ontoprise.ontostudio.owl.model.commands.OWLOntologyRequestCommand;
 
 /**
  * @author werner
+ * @author Nico Stieler
  *
  */
 public class GetDataPropertyRanges extends OWLOntologyRequestCommand {
@@ -47,11 +49,12 @@ public class GetDataPropertyRanges extends OWLOntologyRequestCommand {
         String propertyUri = (String) getArgument(2);
 
         try {
+            OWLOntology ontology = getOwlModel().getOntology();
             Set<ItemHits<OWLDataRange,OWLDataPropertyRangeAxiom>> results = getOwlModel().getDataPropertyDataRangeHits(propertyUri);
             for (ItemHits<OWLDataRange,OWLDataPropertyRangeAxiom> hit: results) {
                 Set<LocatedItem<OWLDataPropertyRangeAxiom>> axioms = hit.getAxioms();
                 for (LocatedItem<OWLDataPropertyRangeAxiom> item: axioms) {
-                    _results.add(new String[]{OWLUtilities.toString(item.getItem()), item.getOntologyURI()});
+                    _results.add(new String[]{OWLUtilities.toString(item.getItem(), ontology), item.getOntologyURI()});
                 }
             }
             

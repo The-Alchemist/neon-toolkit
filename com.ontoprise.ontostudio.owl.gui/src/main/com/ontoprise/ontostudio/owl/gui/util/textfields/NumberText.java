@@ -32,7 +32,7 @@ public class NumberText extends AbstractOwlTextField {
      * 
      */
     public NumberText(Composite parent, OWLModel owlModel) {
-        this(parent,owlModel,owlModel);
+        this(parent, owlModel, owlModel);
     }
     /**
      * 

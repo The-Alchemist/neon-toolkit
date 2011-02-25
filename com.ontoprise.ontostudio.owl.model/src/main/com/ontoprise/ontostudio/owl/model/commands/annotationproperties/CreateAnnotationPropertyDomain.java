@@ -12,17 +12,19 @@ package com.ontoprise.ontostudio.owl.model.commands.annotationproperties;
 
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.core.util.IRIUtils;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLOntology;
 
-import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.ApplyChanges;
 import com.ontoprise.ontostudio.owl.model.commands.OWLModuleChangeCommand;
 
 /**
  * @author Michael
+ * @author Nico Stieler
  *
  */
 public class CreateAnnotationPropertyDomain extends OWLModuleChangeCommand {
@@ -42,10 +44,14 @@ public class CreateAnnotationPropertyDomain extends OWLModuleChangeCommand {
         String propertyUri = (String) getArgument(2);
         String domain = (String) getArgument(3);
         try {
-            OWLNamespaces ns = getOwlModel().getNamespaces();
+            OWLOntology ontology = getOwlModel().getOntology();
             OWLDataFactory factory = getOwlModel().getOWLDataFactory();
             IRI iri = OWLUtilities.toIRI(domain);
-            new ApplyChanges(getProjectName(), getOntology(), new OWLAxiom[]{factory.getOWLAnnotationPropertyDomainAxiom(OWLUtilities.annotationProperty(propertyUri, ns, factory), iri)}, new OWLAxiom[0]).perform();
+            new ApplyChanges(getProjectName(), getOntology(), 
+                    new OWLAxiom[]{factory.getOWLAnnotationPropertyDomainAxiom(
+                            OWLUtilities.annotationProperty(IRIUtils.ensureValidIRISyntax(propertyUri), ontology), 
+                            iri)}, 
+                    new OWLAxiom[0]).perform();
         } catch (NeOnCoreException e) {
             throw new CommandException(e);
         }

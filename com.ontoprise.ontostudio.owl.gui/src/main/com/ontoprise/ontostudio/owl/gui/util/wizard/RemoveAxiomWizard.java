@@ -33,7 +33,10 @@ import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.ApplyChanges;
 import com.ontoprise.ontostudio.owl.model.util.wizard.WizardConstants;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class RemoveAxiomWizard extends RefactoringWizard {
 
     public static final String DELETE_ENTITY = Messages.RemoveAxiomWizard_0;
@@ -95,18 +98,27 @@ public class RemoveAxiomWizard extends RefactoringWizard {
         final List<String> addChanges = new ArrayList<String>();
         final List<String> removeChanges = new ArrayList<String>();
         for (OWLAxiom axiom: _axiomsToDelete) {
-            removeChanges.add(OWLUtilities.toString(axiom));
+            try {
+                removeChanges.add(OWLUtilities.toString(axiom, _owlModel.getOntology()));
+            } catch (NeOnCoreException e) {
+                e.printStackTrace();//NICO TODO How to handle that??
+            }
         }
         for (OWLAxiom axiom: _dependentAxioms) {
-            if (_mode == WizardConstants.ADD_DEPENDENT_MODE) {
-                addChanges.add(OWLUtilities.toString(axiom));
-            } else {
-                removeChanges.add(OWLUtilities.toString(axiom));
+            try {
+                if (_mode == WizardConstants.ADD_DEPENDENT_MODE) {
+                    addChanges.add(OWLUtilities.toString(axiom,_owlModel.getOntology()));
+                } else {
+                    removeChanges.add(OWLUtilities.toString(axiom,_owlModel.getOntology()));
+                }
+            } catch (NeOnCoreException e) {
+                e.printStackTrace();//NICO TODO How to handle that??
             }
         }
 
         BusyIndicator.showWhile(null, new Runnable() {
 
+            @Override
             public void run() {
                 try {
                     new ApplyChanges(_owlModel.getProjectId(), _owlModel.getOntologyURI(), addChanges.toArray(new String[addChanges.size()]), removeChanges.toArray(new String[removeChanges.size()])).run();

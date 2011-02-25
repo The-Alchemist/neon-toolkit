@@ -38,16 +38,15 @@ import org.eclipse.ui.forms.widgets.ColumnLayoutData;
 import org.eclipse.ui.forms.widgets.Section;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.core.util.IRIUtils;
 import org.neontoolkit.gui.IHelpContextIds;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
-import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
-import org.semanticweb.owlapi.model.OWLDataRange;
 import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLLiteral;
@@ -62,7 +61,7 @@ import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
 import com.ontoprise.ontostudio.owl.gui.properties.AbstractOWLMainIDPropertyPage;
 import com.ontoprise.ontostudio.owl.gui.properties.LocatedAxiom;
-import com.ontoprise.ontostudio.owl.gui.syntax.ISyntaxManager;
+import com.ontoprise.ontostudio.owl.gui.properties.ModifyPropertyListener;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.gui.util.UnknownDatatypeException;
 import com.ontoprise.ontostudio.owl.gui.util.forms.AbstractFormRow;
@@ -134,6 +133,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         // closeToolBar();
         layoutSections();
         _form.reflow(true);
+        _form.setMessage(null, IMessageProvider.NONE);
     }
 
     @Override
@@ -186,7 +186,8 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 String ontologyUri = result[1];
                 boolean isLocal = ontologyUri.equals(_ontologyUri);
 
-                OWLObjectPropertyAssertionAxiom mem = (OWLObjectPropertyAssertionAxiom) OWLUtilities.axiom(axiomText, _namespaces, _factory);
+                OWLObjectPropertyAssertionAxiom mem = 
+                    (OWLObjectPropertyAssertionAxiom) OWLUtilities.axiom(axiomText, _owlModel.getOntology());
                 createObjectPropertyRow(_objectPropertyDescriptionsComp, new LocatedAxiom(mem, isLocal), ontologyUri, false);
             }
         } catch (NeOnCoreException e1) {
@@ -295,8 +296,10 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     remove();
                     OWLObjectPropertyExpression newProp = _manager.parseObjectProperty(propertyText.getText(), _localOwlModel);
                     OWLIndividual targetIndividual = _manager.parseIndividual(valueText.getText(), _localOwlModel);
-
-                    new CreateObjectPropertyMember(_project, _sourceOwlModel.getOntologyURI(), _id, OWLUtilities.toString(newProp), OWLUtilities.toString(targetIndividual)).run();
+                    OWLOntology ontology = _localOwlModel.getOntology();
+                    new CreateObjectPropertyMember(_project, _sourceOwlModel.getOntologyURI(), _id, 
+                            OWLUtilities.toString(newProp, ontology), 
+                            OWLUtilities.toString(targetIndividual, ontology)).run();
                 } catch (NeOnCoreException e1) {
                     handleException(e1, Messages.IndividualPropertyPage2_18, valueText.getShell());
                     propertyText.setFocus();
@@ -306,10 +309,8 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     propertyText.setFocus();
                     return;
                 }
+                refresh();
                 initObjectPropertyDescriptionsSection(true);
-
-                layoutSections();
-                _form.reflow(true);
             }
 
             @Override
@@ -363,16 +364,17 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 try {
                     OWLObjectPropertyExpression newProp = _manager.parseObjectProperty(propertyText.getText(), _localOwlModel);
                     OWLIndividual targetIndividual = _manager.parseIndividual(valueText.getText(), _localOwlModel);
-
-                    new CreateObjectPropertyMember(_project, _sourceOwlModel.getOntologyURI(), _id, OWLUtilities.toString(newProp), OWLUtilities.toString(targetIndividual)).run();
+                    OWLOntology ontology = _localOwlModel.getOntology();
+                    new CreateObjectPropertyMember(_project, _sourceOwlModel.getOntologyURI(), _id, 
+                            OWLUtilities.toString(newProp, ontology), 
+                            OWLUtilities.toString(targetIndividual, ontology)).run();
                 } catch (NeOnCoreException k2e) {
                     handleException(k2e, Messages.IndividualPropertyPage2_18, valueText.getShell());
                 } catch (CommandException k2e) {
                     handleException(k2e, Messages.IndividualPropertyPage2_18, valueText.getShell());
                 }
+                refresh();
                 initObjectPropertyDescriptionsSection(true);
-                layoutSections();
-                _form.reflow(true);
             }
 
             @Override
@@ -432,7 +434,8 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 String ontologyUri = result[1];
                 boolean isLocal = ontologyUri.equals(_ontologyUri);
 
-                OWLDataPropertyAssertionAxiom mem = (OWLDataPropertyAssertionAxiom) OWLUtilities.axiom(axiomText, _namespaces, _factory);
+                OWLDataPropertyAssertionAxiom mem = 
+                    (OWLDataPropertyAssertionAxiom) OWLUtilities.axiom(axiomText, _owlModel.getOntology());
                 createDataPropertyRow(_dataPropertyDescriptionsComp, new LocatedAxiom(mem, isLocal), ontologyUri, false);
             }
         } catch (NeOnCoreException e1) {
@@ -454,18 +457,17 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         boolean error = false;
         String message = null;
         int type = IMessageProvider.NONE;
+
         if (propertyText.getText().trim().length() == 0) {
             message = Messages.AnnotationsPropertyPage2_2;
             type = IMessageProvider.ERROR;
             error = true;
         }
-
         if (valueText.getText().trim().length() == 0) {
             message = Messages.AnnotationsPropertyPage2_7;
             type = IMessageProvider.ERROR;
             error = true;
         }
-
 //        String datatype = typeText.getText();
 //        if (datatype.equals("")) { //$NON-NLS-1$
 //            message = null;
@@ -493,20 +495,31 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 //                warning = true;
 //            }
 //        }
-
-        String datatype = typeText.getText();
-        String expandedRange = _namespaces.expandString(datatype);
-        String value = valueText.getText();
-        try{
-            OWLGUIUtilities.verifyUserInput(value, expandedRange);
-        }catch (UnknownDatatypeException e){
-            message = e.getMessage();
-            type = IMessageProvider.WARNING;
-            error = false;
-        }catch (IllegalArgumentException e){
-            message = e.getMessage();
-            type = IMessageProvider.ERROR;
-            error = true;
+        if(typeText.getText().trim().length() == 0){
+            if(propertyText.getText().trim().length() == 0 && valueText.getText().trim().length() == 0){
+                message = null;
+                type = IMessageProvider.NONE;
+                error = true;
+            }else{
+                message = Messages.InputVerifier_3;
+                type = IMessageProvider.ERROR;
+                error = true;
+            }
+        }else{
+            String datatype = IRIUtils.ensureValidIdentifierSyntax(typeText.getText());
+            String expandedRange = _namespaces.expandString(datatype);
+            String value = valueText.getText();
+            try{
+                OWLGUIUtilities.verifyUserInput(value, expandedRange, _owlModel);
+            }catch (UnknownDatatypeException e){
+                message = e.getMessage();
+                type = IMessageProvider.WARNING;
+                error = false;
+            }catch (IllegalArgumentException e){
+                message = e.getMessage();
+                type = IMessageProvider.ERROR;
+                error = true;
+            }
         }
         _form.setMessage(message, type);
         formRow.getSubmitButton().setEnabled(!error);
@@ -704,7 +717,8 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     }
 
                     String[] valueArray = new String[] {valueText.getText(), languageCombo.getText()};
-                    new CreateDataPropertyMember(_project, _sourceOwlModel.getOntologyURI(), _id, ((OWLDataProperty)prop).getIRI().toString(), type.getIRI().toString(), valueArray).run();
+                    OWLOntology ontology = _localOwlModel.getOntology();
+                    new CreateDataPropertyMember(_project, _sourceOwlModel.getOntologyURI(), _id, OWLUtilities.toString(prop, ontology), OWLUtilities.toString(type, ontology), valueArray).run();
                 } catch (NeOnCoreException k2e) {
                     handleException(k2e, Messages.IndividualPropertyPage2_18, valueText.getShell());
                     propertyText.setFocus();
@@ -714,10 +728,8 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     propertyText.setFocus();
                     return;
                 }
+                refresh();
                 initDataPropertyDescriptionsSection(true);
-
-                layoutSections();
-                _form.reflow(true);
             }
 
             @Override
@@ -753,62 +765,26 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
     private void addListeners(final AbstractFormRow row, final StyledText propertyText, final StyledText valueText, final StyledText typeText, boolean empty) {
         final boolean[] systemChanged = {false};
         final boolean[] userChanged = {!empty};//initial: false, edit: true
-        propertyText.addModifyListener(new ModifyListener() {
 
+        propertyText.addModifyListener(new ModifyPropertyListener() {
             @Override
             public void modifyText(ModifyEvent e) {
-                try {
-                    if(!userChanged[0]){
-                        ISyntaxManager manager = OWLPlugin.getDefault().getSyntaxManager();
-                        String uri = manager.parseUri(propertyText.getText(), _owlModel);
-                        
-                        OWLDataProperty entity = _factory.getOWLDataProperty(IRI.create(uri));             
-                        
-                        Set<OWLOntology> ontologies = new HashSet<OWLOntology>(); 
-                        Set<OWLModel> models = _owlModel.getAllImportedOntologies();
-                        ontologies.add(_owlModel.getOntology());
-                        for(OWLModel om : models){
-                            ontologies.add(om.getOntology());
-                        }
-                        Set<OWLDataRange> ranges = entity.getRanges(ontologies);
-                        if(!(ranges == null || ranges.isEmpty())){
-                            for(OWLDataRange range : ranges){
-                                systemChanged[0] = true;
-                                typeText.setText(range.toString());
-                                break;
-                            }
-                        }else{
-                            systemChanged[0] = false;
-                            typeText.setText(""); //$NON-NLS-1$
-                        }
-                    }
-                } catch (NeOnCoreException e1) {
-                    e1.printStackTrace();
-                }
-                
+                autoComplete1DataProperty(propertyText.getText(), typeText, systemChanged, userChanged, _owlModel);                
                 verifyInput(row, propertyText, valueText, typeText);
             }
         });
-        valueText.addModifyListener(new ModifyListener() {
+        valueText.addModifyListener(new ModifyPropertyListener() {
 
             @Override
             public void modifyText(ModifyEvent e) {
                 verifyInput(row, propertyText, valueText, typeText);
             }
         });
-        typeText.addModifyListener(new ModifyListener() {
+        typeText.addModifyListener(new ModifyPropertyListener() {
 
             @Override
             public void modifyText(ModifyEvent e) {
-                if(systemChanged[0]){
-                    systemChanged[0] = false;
-                } else {
-                    if(typeText.getText().isEmpty()){ 
-                        userChanged[0] = false;
-                    } else { 
-                        userChanged[0] = true;
-                    }
-                }
+                autoComplete2Type(typeText, systemChanged, userChanged);
                 verifyInput(row, propertyText, valueText, typeText);
             }
         });
@@ -878,7 +854,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     }
 
                     OWLAxiom newAxiom = factory.getOWLDataPropertyAssertionAxiom(prop, (OWLIndividual)getOWLObject(), c);
-                    new ApplyChanges(_project, _sourceOwlModel.getOntologyURI(), new String[] {OWLUtilities.toString(newAxiom)}, new String[0]).run();
+                    new ApplyChanges(_project, _sourceOwlModel.getOntologyURI(), new String[] {OWLUtilities.toString(newAxiom, _localOwlModel.getOntology())}, new String[0]).run();
                 } catch (NeOnCoreException e1) {
                     handleException(e1, Messages.IndividualPropertyPage2_18, valueText.getShell());
                     return;
@@ -886,9 +862,8 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     handleException(e, Messages.IndividualPropertyPage2_18, valueText.getShell());
                     return;
                 }
+                refresh();
                 initDataPropertyDescriptionsSection(true);
-                layoutSections();
-                _form.reflow(true);
             }
 
             @Override
@@ -929,7 +904,8 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 try {
                     String ontologyUri1 = o1[1];
                     String ontologyUri2 = o2[1];
-                    OWLAxiom axiom1 = (OWLAxiom) OWLUtilities.axiom(o1[0], _namespaces, _factory);
+                    OWLOntology ontology = _owlModel.getOntology();
+                    OWLAxiom axiom1 = (OWLAxiom) OWLUtilities.axiom(o1[0], ontology);
                     String uri1 = ""; //$NON-NLS-1$
                     String uri2 = ""; //$NON-NLS-1$
                     if (axiom1 instanceof OWLObjectPropertyAssertionAxiom) {
@@ -937,7 +913,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                         OWLObjectPropertyExpression objProp = objPropMember.getProperty();
                         if (objProp instanceof OWLObjectProperty) {
                             uri1 = OWLGUIUtilities.getEntityLabel(((OWLObjectProperty) objProp), ontologyUri1, _project);
-                            OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0], _namespaces, _factory);
+                            OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0], ontology);
                             OWLObjectPropertyAssertionAxiom objPropMember2 = (OWLObjectPropertyAssertionAxiom) axiom2;
                             OWLObjectPropertyExpression objProp2 = objPropMember2.getProperty();
                             if (objProp2 instanceof OWLObjectProperty) {
@@ -949,7 +925,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                         OWLDataPropertyExpression dataProp = dataPropMember.getProperty();
                         if (dataProp instanceof OWLDataProperty) {
                             uri1 = OWLGUIUtilities.getEntityLabel(((OWLDataProperty) dataProp), ontologyUri1, _project);
-                            OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0], _namespaces, _factory);
+                            OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0], ontology);
                             OWLDataPropertyAssertionAxiom dataPropMember2 = (OWLDataPropertyAssertionAxiom) axiom2;
                             OWLDataPropertyExpression dataProp2 = dataPropMember2.getProperty();
                             if (dataProp2 instanceof OWLDataProperty) {

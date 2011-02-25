@@ -60,7 +60,7 @@ public class FindReferencesHelper {
         List<SearchElement> result = new ArrayList<SearchElement>();
  
         for (OWLAxiom axiom: axioms) {
-            result.add(new SearchElement(owlModel.getOntologyURI(), axiom, findType(axiom, owlModel), OWLUtilities.toString(entity), null));
+            result.add(new SearchElement(owlModel.getOntologyURI(), axiom, findType(axiom, owlModel), OWLUtilities.toString(entity,  owlModel.getOntology()), null));
         }
 
         return result;
@@ -70,7 +70,6 @@ public class FindReferencesHelper {
      * @param entity
      * @return
      */
-    @SuppressWarnings("unchecked")
     public static FieldTypes findType(OWLAxiom axiom, OWLModel owlModel) {
         AxiomType axiomType = axiom.getAxiomType();
         

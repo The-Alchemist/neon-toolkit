@@ -14,15 +14,19 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.core.util.IRIUtils;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
-import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.ApplyChanges;
 import com.ontoprise.ontostudio.owl.model.commands.OWLModuleChangeCommand;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class RemoveObjectProperty extends OWLModuleChangeCommand {
 
     /**
@@ -44,15 +48,18 @@ public class RemoveObjectProperty extends OWLModuleChangeCommand {
         String superPropertyId = getArgument(3) != null ? getArgument(3).toString() : null;
 
         try {
-            OWLNamespaces ns = getOwlModel().getNamespaces();
+            OWLOntology ontology = getOwlModel().getOntology();
             OWLDataFactory factory = getOwlModel().getOWLDataFactory();
 
             if (superPropertyId == null) {
                 // FIXME this should never be used, would lead to a loss of data as delEntity removes all axioms containing that entity
-                OWLObjectProperty objectProperty = OWLModelFactory.getOWLDataFactory(getProjectName()).getOWLObjectProperty(OWLUtilities.toIRI(subPropertyId));
+                OWLObjectProperty objectProperty = OWLModelFactory.getOWLDataFactory(getProjectName()).getOWLObjectProperty(
+                        OWLUtilities.toIRI(subPropertyId));
                 getOwlModel().delEntity(objectProperty, null);
             } else {
-                getOwlModel().removeAxiom(factory.getOWLSubObjectPropertyOfAxiom(OWLUtilities.objectProperty(subPropertyId, ns, factory), OWLUtilities.objectProperty(superPropertyId, ns, factory)));
+                getOwlModel().removeAxiom(factory.getOWLSubObjectPropertyOfAxiom(
+                        OWLUtilities.objectProperty(IRIUtils.ensureValidIRISyntax(subPropertyId), ontology), 
+                        OWLUtilities.objectProperty(IRIUtils.ensureValidIRISyntax(superPropertyId), ontology)));
             }
 
         } catch (NeOnCoreException e) {

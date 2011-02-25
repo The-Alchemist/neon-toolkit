@@ -12,10 +12,9 @@ package com.ontoprise.ontostudio.owl.model.commands.individual;
 
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
-import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDifferentIndividualsAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
 
-import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.ApplyChanges;
 import com.ontoprise.ontostudio.owl.model.commands.OWLModuleChangeCommand;
@@ -23,6 +22,7 @@ import com.ontoprise.ontostudio.owl.model.util.OWLAxiomUtils;
 
 /**
  * @author werner
+ * @author Nico Stieler
  * 
  */
 public class EditDifferentIndividuals extends OWLModuleChangeCommand {
@@ -44,11 +44,10 @@ public class EditDifferentIndividuals extends OWLModuleChangeCommand {
         String newUri = (String) getArgument(4);
 
         try {
-            OWLNamespaces namespaces = getOwlModel().getNamespaces();
-            OWLDataFactory factory = getOwlModel().getOWLDataFactory();
-            OWLDifferentIndividualsAxiom oldAxiom = (OWLDifferentIndividualsAxiom) OWLUtilities.axiom(oldAxiomText, namespaces, factory);
-            OWLDifferentIndividualsAxiom newAxiom = OWLAxiomUtils.createNewDifferentFromAxiom(oldAxiom, entityUri, newUri, getProjectName());
-            new ApplyChanges(getProjectName(), getOntology(), new String[] {OWLUtilities.toString(newAxiom)}, new String[] {OWLUtilities.toString(oldAxiom)}).perform();
+            OWLOntology ontology = getOwlModel().getOntology();
+            OWLDifferentIndividualsAxiom oldAxiom = (OWLDifferentIndividualsAxiom) OWLUtilities.axiom(oldAxiomText, ontology);
+            OWLDifferentIndividualsAxiom newAxiom = OWLAxiomUtils.createNewDifferent_FromAxiom(oldAxiom, entityUri, newUri, getOntology(), getProjectName());
+            new ApplyChanges(getProjectName(), getOntology(), new String[] {OWLUtilities.toString(newAxiom, ontology)}, new String[] {OWLUtilities.toString(oldAxiom, ontology)}).perform();
         } catch (NeOnCoreException e) {
             throw new CommandException(e);
         }

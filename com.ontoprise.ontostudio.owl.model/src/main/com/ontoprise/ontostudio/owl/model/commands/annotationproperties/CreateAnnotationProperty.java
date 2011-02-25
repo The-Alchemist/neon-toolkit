@@ -12,13 +12,17 @@ package com.ontoprise.ontostudio.owl.model.commands.annotationproperties;
 
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.core.util.IRIUtils;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLOntology;
 
-import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.OWLModuleChangeCommand;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class CreateAnnotationProperty extends OWLModuleChangeCommand {
 
     public CreateAnnotationProperty(String project, String ontologyId, String propertyId, String superPropertyId) throws NeOnCoreException {
@@ -31,12 +35,12 @@ public class CreateAnnotationProperty extends OWLModuleChangeCommand {
         String superPropertyId = (String) getArgument(3);
 
         try {
-            OWLNamespaces ns = getOwlModel().getNamespaces();
+            OWLOntology ontology = getOwlModel().getOntology();
             OWLDataFactory factory = getOwlModel().getOWLDataFactory();
-            OWLAnnotationProperty annotationProperty = OWLUtilities.annotationProperty(propertyId, ns, factory);
+            OWLAnnotationProperty annotationProperty = OWLUtilities.annotationProperty(IRIUtils.ensureValidIRISyntax(propertyId), ontology);
             
             if (superPropertyId != null) { 
-                OWLAnnotationProperty superAnnotationProperty = OWLUtilities.annotationProperty(superPropertyId, ns, factory);
+                OWLAnnotationProperty superAnnotationProperty = OWLUtilities.annotationProperty(IRIUtils.ensureValidIRISyntax(superPropertyId), ontology);
                 getOwlModel().addAxiom(factory.getOWLSubAnnotationPropertyOfAxiom(annotationProperty, superAnnotationProperty));
             } else {
                 getOwlModel().addEntity(annotationProperty);
