@@ -13,7 +13,6 @@ package com.ontoprise.ontostudio.owl.model.commands.axiom;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
@@ -35,8 +34,7 @@ public class RemoveAxiom extends OWLModuleChangeCommand {
 
         try {
             OWLModel owlModel = OWLModelFactory.getOWLModel(getOntology(), getProjectName());
-            OWLOntology ontology = owlModel.getOntology();
-            OWLAxiom axiom = (OWLAxiom) OWLUtilities.axiom(axiomText, ontology);
+            OWLAxiom axiom = (OWLAxiom) OWLUtilities.axiom(axiomText);
             owlModel.removeAxiom(axiom);
         } catch (NeOnCoreException e) {
             throw new CommandException(e);

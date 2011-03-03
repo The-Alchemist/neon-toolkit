@@ -206,7 +206,6 @@ public class AxiomSearchMatch extends OWLComplexSearchMatch {
                     }
                 }
             }catch (NullPointerException e) {
-                //                System.out.println("############# does not for sure jump to the correct tab #############"); //$NON-NLS-1$ TODO: fix that
                 //nothing to do: does not for sure jump to the correct tab 
             }
             if(epv != null && tab != null){
@@ -311,7 +310,6 @@ public class AxiomSearchMatch extends OWLComplexSearchMatch {
                 _axiom instanceof OWLObjectPropertyRangeAxiom){
                 return page instanceof ObjectPropertyPropertyPage2;
             }
-//                else System.out.println(_axiom.getClass() + " not supported yet(OWLObjectPropertyAxiom)"); //$NON-NLS-1$
         }else if(_axiom instanceof OWLDataPropertyAxiom && getMatch() instanceof DataPropertyTreeElement){
             if(_axiom instanceof OWLDataPropertyCharacteristicAxiom){
                 //                      OWLFunctionalDataPropertyAxiom  
@@ -324,26 +322,18 @@ public class AxiomSearchMatch extends OWLComplexSearchMatch {
                         || _axiom instanceof OWLSubDataPropertyOfAxiom){
                 return page instanceof DataPropertyTaxonomyPropertyPage;   
             }
-//                else System.out.println(_axiom.getClass() + " not supported yet(OWLDataPropertyAxiom)"); //$NON-NLS-1$
         }else if(_axiom instanceof OWLAnnotationAxiom && getMatch() instanceof AnnotationPropertyTreeElement){
-//            if(_axiom instanceof OWLAnnotationAssertionAxiom){
-//                return page instanceof AnnotationPropertyPage2;  
-//            }else 
             if(_axiom instanceof OWLAnnotationPropertyDomainAxiom 
                     || _axiom instanceof OWLAnnotationPropertyRangeAxiom){
                 return page instanceof AnnotationPropertyPage2; 
             }else if(_axiom instanceof OWLSubAnnotationPropertyOfAxiom){
                 return page instanceof SourceViewTab;    //TODO later taxonomy
             }
-//                    else System.out.println(_axiom.getClass() + " not supported yet(OWLDataPropertyAxiom)"); //$NON-NLS-1$
-//            }
         }else if(_axiom instanceof OWLDatatypeDefinitionAxiom && getMatch() instanceof DatatypeTreeElement){
             return page instanceof DatatypePropertyPage;  
         }else if(_axiom instanceof OWLAnnotationAssertionAxiom){
                 return page instanceof AnnotationPropertyTab; 
         }
-
-//                System.out.println(_axiom.getClass() + " not supported yet"); //$NON-NLS-1$
         return false;
     }
 

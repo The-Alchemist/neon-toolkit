@@ -18,7 +18,6 @@ import org.neontoolkit.core.util.IRIUtils;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
@@ -42,7 +41,6 @@ public class RemoveDataProperty extends OWLModuleChangeCommand {
         String superPropertyId = getArgument(3) != null ? getArgument(3).toString() : null;
 
         try {
-            OWLOntology ontology = getOwlModel().getOntology();
             OWLDataFactory factory = getOwlModel().getOWLDataFactory();
 
             // delete subproperties, or shift them one level higher
@@ -65,8 +63,8 @@ public class RemoveDataProperty extends OWLModuleChangeCommand {
             } else {
                 new ApplyChanges(getProjectName(), getOntology(), new OWLAxiom[0], 
                         new OWLAxiom[]{factory.getOWLSubDataPropertyOfAxiom(
-                                OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(subPropertyId), ontology), 
-                                OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(superPropertyId), ontology))}).perform();
+                                OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(subPropertyId)), 
+                                OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(superPropertyId)))}).perform();
             }
 
         } catch (NeOnCoreException e) {

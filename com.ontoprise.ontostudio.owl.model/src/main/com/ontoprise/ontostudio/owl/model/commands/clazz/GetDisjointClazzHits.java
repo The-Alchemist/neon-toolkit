@@ -18,7 +18,6 @@ import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.ItemHits;
 import com.ontoprise.ontostudio.owl.model.LocatedItem;
@@ -49,12 +48,11 @@ public class GetDisjointClazzHits extends OWLOntologyRequestCommand {
         String clazzUri = (String) getArgument(2);
 
         try {
-            OWLOntology ontology = getOwlModel().getOntology();
             Set<ItemHits<OWLClassExpression,OWLDisjointClassesAxiom>> disjointClassHits = getOwlModel().getDisjointDescriptionHits(clazzUri);
             for (ItemHits<OWLClassExpression,OWLDisjointClassesAxiom> hit: disjointClassHits) {
                 Set<LocatedItem<OWLDisjointClassesAxiom>> axioms = hit.getAxioms();
                 for (LocatedItem<OWLDisjointClassesAxiom> axiom: axioms) {
-                    String[] result = new String[]{OWLUtilities.toString(axiom.getItem(), ontology), axiom.getOntologyURI()};
+                    String[] result = new String[]{OWLUtilities.toString(axiom.getItem()), axiom.getOntologyURI()};
                     _results.add(result);
                 }
             }

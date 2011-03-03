@@ -20,7 +20,6 @@ import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.ItemHits;
 import com.ontoprise.ontostudio.owl.model.LocatedItem;
@@ -51,7 +50,6 @@ public class GetEquivalentClazzHits extends OWLOntologyRequestCommand {
         _results = new ArrayList<String[]>();
 
         try {
-            OWLOntology ontology = getOwlModel().getOntology();
             Set<ItemHits<?,OWLEquivalentClassesAxiom>> descriptions = new HashSet<ItemHits<?,OWLEquivalentClassesAxiom>>();
             Set<ItemHits<OWLClassExpression,OWLEquivalentClassesAxiom>> equivalentDescriptions = getOwlModel().getEquivalentDescriptionHits(clazzUri);
             Set<ItemHits<OWLClass,OWLEquivalentClassesAxiom>> equivalentClasses = getOwlModel().getEquivalentClassesHits(clazzUri);
@@ -60,7 +58,7 @@ public class GetEquivalentClazzHits extends OWLOntologyRequestCommand {
             for (ItemHits<?,OWLEquivalentClassesAxiom> hit: descriptions) {
                 Set<LocatedItem<OWLEquivalentClassesAxiom>> axioms = hit.getAxioms();
                 for (LocatedItem<OWLEquivalentClassesAxiom> axiom: axioms) {
-                    String[] result = new String[] {OWLUtilities.toString(axiom.getItem(), ontology), axiom.getOntologyURI()};
+                    String[] result = new String[] {OWLUtilities.toString(axiom.getItem()), axiom.getOntologyURI()};
                     _results.add(result);
                 }
             }

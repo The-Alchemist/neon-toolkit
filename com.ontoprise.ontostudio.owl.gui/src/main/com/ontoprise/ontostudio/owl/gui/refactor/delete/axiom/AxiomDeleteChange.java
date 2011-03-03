@@ -88,8 +88,8 @@ public class AxiomDeleteChange extends Change {
         pm.beginTask(Messages.ClazzDeleteChange_1, work); 
         try {
             for (int i = 0; i < _axiomsToDelete.size(); i++) {
-                pm.subTask(Messages.AxiomDeleteChange_2 + OWLUtilities.toString(_axiomsToDelete.get(i), _owlModel.getOntology())); 
-                new RemoveAxiom(_owlModel.getProjectId(), _owlModel.getOntologyURI(), OWLUtilities.toString(_axiomsToDelete.get(i), _owlModel.getOntology())).run();
+                pm.subTask(Messages.AxiomDeleteChange_2 + OWLUtilities.toString(_axiomsToDelete.get(i))); 
+                new RemoveAxiom(_owlModel.getProjectId(), _owlModel.getOntologyURI(), OWLUtilities.toString(_axiomsToDelete.get(i))).run();
                 pm.worked(1);
             }
         } catch (Exception e) {

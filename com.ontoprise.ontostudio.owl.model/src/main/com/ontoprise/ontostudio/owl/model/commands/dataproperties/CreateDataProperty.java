@@ -15,7 +15,6 @@ import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.core.util.IRIUtils;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
@@ -37,13 +36,12 @@ public class CreateDataProperty extends OWLModuleChangeCommand {
         String superPropertyId = (String) (getArgument(3) == null ? null : getArgument(3));
 
         try {
-            OWLOntology ontology = getOwlModel().getOntology();
             OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(getProjectName());
             OWLDataProperty dataProperty = factory.getOWLDataProperty(OWLUtilities.toIRI(propertyId));
 
             if (superPropertyId != null) {
                 getOwlModel().addAxiom(factory.getOWLSubDataPropertyOfAxiom(dataProperty, 
-                        OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(superPropertyId), ontology)));
+                        OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(superPropertyId))));
             } else {
                 getOwlModel().addEntity(dataProperty);
             }

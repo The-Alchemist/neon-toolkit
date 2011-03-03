@@ -22,6 +22,7 @@ import java.util.Set;
 import org.coode.owlapi.functionalparser.ParseException;
 import org.neontoolkit.core.exception.InternalNeOnException;
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.core.util.IRIUtils;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
@@ -62,9 +63,9 @@ import org.semanticweb.owlapi.model.OWLRuntimeException;
 import org.semanticweb.owlapi.model.SWRLRule;
 
 import com.ontoprise.ontostudio.owl.model.util.Cast;
-import com.ontoprise.ontostudio.owl.model.util.InternalParser;
 import com.ontoprise.ontostudio.owl.model.util.InternalParserException;
 import com.ontoprise.ontostudio.owl.model.util.InternalParserFunctionalSyntax;
+import com.ontoprise.ontostudio.owl.model.util.InternalParserLite;
 import com.ontoprise.ontostudio.owl.model.util.OWLFunctionalSyntaxVisitor;
 
 /**
@@ -108,6 +109,7 @@ public class OWLUtilities {
             return null;
         }
         try {
+            iri = IRIUtils.ensureValidIdentifierSyntax(iri);
             return IRI.create(iri);
         } catch (IllegalArgumentException e) {
             if (e.getCause() instanceof URISyntaxException) {
@@ -116,15 +118,9 @@ public class OWLUtilities {
             throw new OWLRuntimeException(e);
         }
     }
-    public static IRI owlFuntionalStyleSyntaxIRIToIRI(String iri, OWLOntology ontology) throws NeOnCoreException{
-        return new InternalParserFunctionalSyntax(ontology).getIRI(iri);
+    public static IRI owlFuntionalStyleSyntaxIRIToIRI(String iri) throws NeOnCoreException{
+        return new InternalParserFunctionalSyntax().getIRI(iri);
     }
-//  public static String IRIToOwlFuntionalStyleSyntaxIRI(IRI iri, OWLOntology ontology) throws NeOnCoreException{//NICO insert this method
-//  return 
-//}
-//  public static String IRIToOwlFuntionalStyleSyntaxIRI(String iri, OWLOntology ontology) throws NeOnCoreException{//NICO insert this method
-//  return toString(object, ontology);
-//}
     /**
      * Returns true iff description represents an OWL restriction on a property.
      * 
@@ -155,7 +151,7 @@ public class OWLUtilities {
     private static <E extends OWLLiteral> E constant(String constant, OWLNamespaces namespaces, OWLDataFactory factory) throws NeOnCoreException {
         try {
 //            new InternalParserFunctionalSyntax().getConstant(constant);
-            return new InternalParser(constant, namespaces, factory).parseOWLConstant();//NICO insert lite 
+            return new InternalParserLite(constant, namespaces, factory).parseOWLConstant();
             
         } catch (InternalParserException e) {
             throw new InternalNeOnException(e);
@@ -173,9 +169,9 @@ public class OWLUtilities {
      * @return
      * @throws NeOnCoreException
      */
-    public static OWLAxiom axiom(String axiomText, OWLOntology ontology) throws NeOnCoreException {
+    public static OWLAxiom axiom(String axiomText) throws NeOnCoreException {
         try {
-            return new InternalParserFunctionalSyntax(ontology).getAxiom(axiomText);
+            return new InternalParserFunctionalSyntax().getAxiom(axiomText);
         } catch (ParseException e) {
             throw new InternalNeOnException(e);
         }
@@ -189,9 +185,9 @@ public class OWLUtilities {
      * @return
      * @throws NeOnCoreException
      */
-    public static OWLClassExpression description(String description, OWLOntology ontology) throws NeOnCoreException {
+    public static OWLClassExpression description(String description) throws NeOnCoreException {
         try {
-            return new InternalParserFunctionalSyntax(ontology).getDescription(description);
+            return new InternalParserFunctionalSyntax().getDescription(description);
         } catch (ParseException e) {
             throw new InternalNeOnException(e);
         }
@@ -205,9 +201,9 @@ public class OWLUtilities {
      * @return
      * @throws NeOnCoreException
      */
-    public static OWLDataRange dataRange(String dataRange, OWLOntology ontology) throws NeOnCoreException {
+    public static OWLDataRange dataRange(String dataRange) throws NeOnCoreException {
         try {
-            return new InternalParserFunctionalSyntax(ontology).getDataRange(dataRange);
+            return new InternalParserFunctionalSyntax().getDataRange(dataRange);
         } catch (ParseException e) {
             throw new InternalNeOnException(e);
         }
@@ -221,9 +217,9 @@ public class OWLUtilities {
      * @return
      * @throws NeOnCoreException
      */
-    public static OWLIndividual individual(String individual, OWLOntology ontology) throws NeOnCoreException {
+    public static OWLIndividual individual(String individual) throws NeOnCoreException {
         try {
-            return new InternalParserFunctionalSyntax(ontology).getIndividual(individual);
+            return new InternalParserFunctionalSyntax().getIndividual(individual);
         } catch (ParseException e) {
             throw new InternalNeOnException(e);
         }
@@ -237,9 +233,9 @@ public class OWLUtilities {
      * @return
      * @throws NeOnCoreException
      */
-    public static OWLObjectProperty objectProperty(String objectProperty, OWLOntology ontology) throws NeOnCoreException {
+    public static OWLObjectProperty objectProperty(String objectProperty) throws NeOnCoreException {
         try {
-            return new InternalParserFunctionalSyntax(ontology).getObjectProperty(objectProperty);
+            return new InternalParserFunctionalSyntax().getObjectProperty(objectProperty);
         } catch (ParseException e) {
             throw new InternalNeOnException(e);
         }
@@ -253,9 +249,9 @@ public class OWLUtilities {
      * @return
      * @throws NeOnCoreException
      */
-    public static OWLAnnotationProperty annotationProperty(String annotationProperty, OWLOntology ontology) throws NeOnCoreException {
+    public static OWLAnnotationProperty annotationProperty(String annotationProperty) throws NeOnCoreException {
         try {
-            return new InternalParserFunctionalSyntax(ontology).getAnnotationProperty(annotationProperty);
+            return new InternalParserFunctionalSyntax().getAnnotationProperty(annotationProperty);
         } catch (ParseException e) {
             throw new InternalNeOnException(e);
         }
@@ -269,9 +265,9 @@ public class OWLUtilities {
      * @return
      * @throws NeOnCoreException
      */
-    public static OWLDataProperty dataProperty(String dataProperty, OWLOntology ontology) throws NeOnCoreException {
+    public static OWLDataProperty dataProperty(String dataProperty) throws NeOnCoreException {
         try {
-            return new InternalParserFunctionalSyntax(ontology).getDataProperty(dataProperty);
+            return new InternalParserFunctionalSyntax().getDataProperty(dataProperty);
         } catch (ParseException e) {
             throw new InternalNeOnException(e);
         }
@@ -280,10 +276,10 @@ public class OWLUtilities {
         if(id.getDefaultDocumentIRI() == null ) return null;
         return id.getDefaultDocumentIRI().toURI().toString();
     }
-    public static List<String> toString(List<OWLObjectPropertyExpression> chain, OWLOntology ontology) {//NICO TODO check usage
+    public static List<String> toString(List<OWLObjectPropertyExpression> chain) {//NICO TODO check usage
         List<String> result = new ArrayList<String>();
         for (OWLObjectPropertyExpression e: chain) {
-            result.add(toString(e, ontology));
+            result.add(toString(e));
         }
         return result;
     }
@@ -296,9 +292,9 @@ public class OWLUtilities {
      * @return 
      * @throws NeOnCoreException
      */
-    public static String toString(OWLObject object, OWLOntology ontology) {
+    public static String toString(OWLObject object) {
         StringBuffer buffer = new StringBuffer();
-        toString(object, buffer, ontology);
+        toString(object, buffer);
         return buffer.toString();
     }
     /**
@@ -309,9 +305,9 @@ public class OWLUtilities {
      * @param ontology
      * @throws NeOnCoreException
      */
-    public static void toString(OWLObject object, StringBuffer buffer, OWLOntology ontology) {
+    public static void toString(OWLObject object, StringBuffer buffer) {
         StringWriter writer = new StringWriter();
-        object.accept(new OWLFunctionalSyntaxVisitor(writer, ontology));
+        object.accept(new OWLFunctionalSyntaxVisitor(writer, InternalParserFunctionalSyntax.getOntology()));
         buffer.append(writer.toString());
     }
     /**
@@ -530,227 +526,4 @@ public class OWLUtilities {
         }
         return null;
     }
-    
-    //NICO start remove
-
-//    private static <E extends OWLAxiom> E axiom(String axiomText, OWLNamespaces namespaces, OWLDataFactory factory) throws NeOnCoreException {
-//        try {
-//            return new InternalParser(axiomText, namespaces, factory).parseOWLAxiom();
-//        } catch (InternalParserException e) {
-//           throw new InternalNeOnException(e);
-//        }
-//    }
-//    private static <E extends OWLClassExpression> E description(String description, OWLNamespaces namespaces, OWLDataFactory factory) throws NeOnCoreException {
-//        try {
-//            return new InternalParser(description, namespaces, factory).parseOWLDescription();
-//        } catch (InternalParserException e) {
-//            throw new InternalNeOnException(e);
-//        }
-//    }   
-
-//  private static <E extends OWLDataRange> E dataRange(String dataRange, OWLNamespaces namespaces, OWLDataFactory factory) throws NeOnCoreException {
-//      try {
-//          return new InternalParser(dataRange, namespaces, factory).parseOWLDataRange();
-//      } catch (InternalParserException e) {
-//          throw new InternalNeOnException(e);
-//      }
-//  }
-//  public static OWLAxiom axiom(String axiomText, OWLNamespaces namespaces, OWLDataFactory factory, OWLModel model) throws NeOnCoreException {
-////      return axiom(axiomText, namespaces, factory);
-//      return axiom(axiomText, model);
-//  }
-//  public static OWLClassExpression description(String description, OWLNamespaces namespaces, OWLDataFactory factory, OWLModel model) throws NeOnCoreException {
-////    return description(description, namespaces, factory);
-//    return description(description, model);
-//}
-//  public static OWLLiteral constant(String constant, OWLNamespaces namespaces, OWLDataFactory factory, OWLModel model) throws NeOnCoreException {
-////      return constant(constant, namespaces, factory);
-//      return constant(constant, model);
-//  }
-//  public static OWLDataRange dataRange(String dataRange, OWLNamespaces namespaces, OWLDataFactory factory, OWLModel model) throws NeOnCoreException {
-////      return dataRange(dataRange, namespaces, factory);
-//      return dataRange(dataRange, model);
-//   }
-//  public static OWLAxiom axiom(String axiomText, OWLModel model) throws NeOnCoreException {
-//      return axiom(axiomText, model.getOntology());
-//  }
-//  public static OWLClassExpression description(String description, OWLModel model) throws NeOnCoreException {
-//      return description(description, model.getOntology());
-//  }
-    
-
-//  public static OWLDataRange dataRange(String dataRange, OWLModel model) throws NeOnCoreException {
-//      return dataRange(dataRange, model.getOntology());
-//  }
-
-//  public static OWLLiteral constant(String constant, OWLOntology ontology) throws NeOnCoreException {
-//      //NICO using OWLSyntax: parser
-//      try {
-//          return new InternalParserFunctionalSyntax(ontology).getConstant(constant);
-//      } catch (ParseException e) {
-//          throw new InternalNeOnException(e);
-//      }
-//  }
-//    private static OWLIndividual individual(String unexpandedURI, OWLNamespaces namespaces, OWLDataFactory factory) {
-//        return factory.getOWLNamedIndividual(toIRI(namespaces.expandString(unexpandedURI)));
-//    }
-//    public static OWLObjectProperty objectPropertyFromURI(String unexpandedURI, OWLNamespaces namespaces, OWLDataFactory factory) {
-//        return factory.getOWLObjectProperty(toIRI(namespaces.expandString(unexpandedURI)));
-//    }
-//    public static OWLAnnotationProperty annotationPropertyFromURI(String unexpandedURI, OWLNamespaces namespaces, OWLDataFactory factory) {
-//        return factory.getOWLAnnotationProperty(toIRI(namespaces.expandString(unexpandedURI)));
-//    }
-//    public static OWLDataProperty dataPropertyFromURI(String unexpandedURI, OWLNamespaces namespaces, OWLDataFactory factory) {
-//        return factory.getOWLDataProperty(toIRI(namespaces.expandString(unexpandedURI)));
-//    }
-//
-//    private static OWLIndividual individual(String unexpandedURI, OWLNamespaces namespaces, OWLDataFactory factory, OWLModel model) 
-//    throws NeOnCoreException {
-//        return individual(unexpandedURI, namespaces, factory, model.getOntology());
-////        return individual(unexpandedURI, namespaces, factory);
-//    }
-//    private static OWLObjectProperty objectProperty(String unexpandedURI, OWLNamespaces namespaces, OWLDataFactory factory, OWLModel model) 
-//    throws NeOnCoreException {
-//      return objectProperty(unexpandedURI, namespaces, factory, model.getOntology());
-////      return objectProperty(unexpandedURI, namespaces, factory);
-//    }
-//    private static OWLAnnotationProperty annotationProperty(String unexpandedURI, OWLNamespaces namespaces, OWLDataFactory factory, OWLModel model) 
-//    throws NeOnCoreException {
-//        return annotationProperty(unexpandedURI, namespaces, factory, model.getOntology());
-////        return annotationProperty(unexpandedURI, namespaces, factory);
-//    }
-//    private static OWLDataProperty dataProperty(String unexpandedURI, OWLNamespaces namespaces, OWLDataFactory factory, OWLModel model) 
-//    throws NeOnCoreException {
-//        return dataProperty(unexpandedURI, namespaces, factory, model.getOntology());
-////        return dataProperty(unexpandedURI, namespaces, factory);
-//    }
-//    private static OWLIndividual individual(String individual, OWLNamespaces namespaces, OWLDataFactory factory, OWLOntology ontology) throws NeOnCoreException {
-//        return individual(individual, ontology);
-//    }
-//    public static OWLObjectProperty objectProperty(String objectProperty, OWLNamespaces namespaces, OWLDataFactory factory, OWLOntology ontology) throws NeOnCoreException {
-//        return objectProperty(objectProperty, ontology);
-//    }
-//    public static OWLAnnotationProperty annotationProperty(String annotationProperty, OWLNamespaces namespaces, OWLDataFactory factory, OWLOntology ontology) throws NeOnCoreException {
-//        return annotationProperty(annotationProperty, ontology);
-//    }
-//    public static OWLDataProperty dataProperty(String dataProperty, OWLNamespaces namespaces, OWLDataFactory factory, OWLOntology ontology) throws NeOnCoreException {
-//        return dataProperty(dataProperty, ontology);
-//    }
-//    public static OWLIndividual individual(String individual, OWLOntology ontology) throws NeOnCoreException {
-//        //NICO using OWLSyntax: parser
-//        try {
-//            InternalParserFunctionalSyntax p = new InternalParserFunctionalSyntax(ontology);
-//            OWLIndividual indi =  p.getIndividual(individual);
-//            String x = toString(indi, ontology);
-//            System.out.println(x);
-//            System.out.println(p.getIRI(x));
-//            System.out.println("done");
-//            
-//            return indi;
-//        } catch (ParseException e) {
-//            throw new InternalNeOnException(e);
-//        }
-//    }
-
-//  private static String toString(OWLObject object) {//NICO TODO check usage
-//      return toString(object, (OWLNamespaces)OWLNamespaces.INSTANCE);
-//  }
-//  private static String toString(OWLObject object, OWLNamespaces namespaces) {//NICO TODO check usage
-//      StringBuffer buffer = new StringBuffer();
-//      toString((OWLObject)object, buffer, namespaces);
-//      return buffer.toString();
-//  }
-
-//  public static void toString(OWLObject object, StringBuffer buffer) { //NICO unused CODE
-//      toString(object, buffer, (OWLNamespaces)OWLNamespaces.INSTANCE);
-//  }
-//  private static void toString(OWLObject object, StringBuffer buffer, OWLNamespaces namespaces) {//NICO TODO check usage
-//      object.accept(new OWLFormattingVisitor(buffer, namespaces));
-//  }
-//
-//  // methods to use while testing
-//  public static String toString(OWLObject object, OWLModel model, OWLModel model2) {
-////      return toString(object);
-//      return toString(object, model);
-//  }
-//  public static String toString(OWLObject object, OWLOntology ontology, OWLOntology model2) {
-////      return toString(object);
-//      return toString(object, ontology);
-//  }
-//  public static String toString(OWLObject object, OWLNamespaces namespaces, OWLModel model) {
-////      return toString(object, namespaces);
-//      return toString(object, model);
-//  }
-//  public static String toString(OWLObject object, OWLNamespaces namespaces, OWLOntology ontology) {
-////      return toString(object, namespaces);
-//      return toString(object, ontology);
-//  }
-//  public static void toString(OWLObject object, StringBuffer buffer, OWLNamespaces namespaces, OWLModel model) {
-//      toString(object, buffer, model);
-//  }
-//  // methods you should use
-//  public static String toString(OWLObject object, OWLModel model) {
-//      StringBuffer buffer = new StringBuffer();
-//      toString(object, buffer, model);
-//      return buffer.toString();
-//  }
-
-//  public static void toString(OWLObject object, StringBuffer buffer, OWLModel model) {
-//  try {
-//      toString(object, buffer, model.getOntology());
-//  } catch (NeOnCoreException e) {
-//      // TODO Auto-generated catch block
-//      e.printStackTrace();
-//  }
-//}
-//    /**
-//     * @param string
-//     */
-//    private static void test(OWLObject object, String text, OWLOntology ontology) {
-//        text = IRIUtils.ensureValidIRISyntax(text);
-//        try {
-//            if(object instanceof OWLAxiom){
-//                OWLAxiom object2 = axiom(text, ontology);
-//                if(!object2.equals(object)){
-//                    System.err.println(object2 + " != " + object); //$NON-NLS-1$
-//                }
-//            }else if(object instanceof OWLClassExpression){
-//                OWLClassExpression object2 = description(text, ontology);
-//                if(!object2.equals(object)){
-//                    System.err.println(object2 + " != " + object); //$NON-NLS-1$
-//                }
-//            }else if(object instanceof OWLDataRange){
-//                OWLDataRange object2 = dataRange(text, ontology);
-//                if(!object2.equals(object)){
-//                    System.err.println(object2 + " != " + object); //$NON-NLS-1$
-//                }
-//            }else if(object instanceof OWLIndividual){
-//                OWLIndividual object2 = individual(text, ontology);
-//                if(!object2.equals(object)){
-//                    System.err.println(object2 + " != " + object); //$NON-NLS-1$
-//                }
-//            }else if(object instanceof OWLObjectProperty){
-//                OWLObjectProperty object2 = objectProperty(text, ontology);
-//                if(!object2.equals(object)){
-//                    System.err.println(object2 + " != " + object); //$NON-NLS-1$
-//                }
-//            }else if(object instanceof OWLAnnotationProperty){
-//                OWLAnnotationProperty object2 = annotationProperty(text, ontology);
-//                if(!object2.equals(object)){
-//                    System.err.println(object2 + " != " + object); //$NON-NLS-1$
-//                }
-//            }else if(object instanceof OWLDataProperty){
-//                OWLDataProperty object2 = dataProperty(text, ontology);
-//                if(!object2.equals(object)){
-//                    System.err.println(object2 + " != " + object); //$NON-NLS-1$
-//                }
-//            }else{
-//                System.err.println(object + "does not fit to these Types"); //$NON-NLS-1$
-//            }
-//        } catch (NeOnCoreException e) {
-//            System.err.println(text + " throws exception");
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//    }
 }

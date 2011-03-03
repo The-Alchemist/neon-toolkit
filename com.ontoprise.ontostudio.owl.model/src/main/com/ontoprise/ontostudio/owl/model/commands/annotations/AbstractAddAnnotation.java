@@ -22,7 +22,6 @@ import org.semanticweb.owlapi.model.OWLAnnotationSubject;
 import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
@@ -62,12 +61,11 @@ public abstract class AbstractAddAnnotation extends OWLModuleChangeCommand {
         try {
             OWLNamespaces namespaces = getOwlModel().getNamespaces();
             OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(getProjectName());
-            OWLOntology ontology = getOwlModel().getOntology();
 
             
             String expandedRange = null;
             String expandedProperty = namespaces.expandString(property);
-            OWLAnnotationProperty annotProp = OWLUtilities.annotationProperty(IRIUtils.ensureValidIRISyntax(expandedProperty), ontology);
+            OWLAnnotationProperty annotProp = OWLUtilities.annotationProperty(IRIUtils.ensureValidIRISyntax(expandedProperty));
 //            factory.getOWLAnnotationProperty(OWLUtilities.toIRI(expandedProperty));
             OWLAnnotationValue c = null;
             if (language.equals(OWLCommandUtils.EMPTY_LANGUAGE) || language.equals("")) { //$NON-NLS-1$

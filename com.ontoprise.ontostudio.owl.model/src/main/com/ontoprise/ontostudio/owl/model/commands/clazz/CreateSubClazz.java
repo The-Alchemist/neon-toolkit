@@ -15,7 +15,6 @@ import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.core.util.IRIUtils;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.OWLModuleChangeCommand;
@@ -33,9 +32,8 @@ public class CreateSubClazz extends OWLModuleChangeCommand {
     public void doPerform() throws CommandException {
         try {
             OWLDataFactory factory = getOwlModel().getOWLDataFactory();
-            OWLOntology ontology = getOwlModel().getOntology();
-            OWLClassExpression subClazzId = OWLUtilities.description(IRIUtils.ensureValidIRISyntax(getArgument(2).toString()), ontology);
-            OWLClassExpression superClazzId = OWLUtilities.description(IRIUtils.ensureValidIRISyntax(getArgument(3).toString()), ontology);
+            OWLClassExpression subClazzId = OWLUtilities.description(IRIUtils.ensureValidIRISyntax(getArgument(2).toString()));
+            OWLClassExpression superClazzId = OWLUtilities.description(IRIUtils.ensureValidIRISyntax(getArgument(3).toString()));
             getOwlModel().addAxiom(factory.getOWLSubClassOfAxiom(subClazzId, superClazzId));
         } catch (NeOnCoreException e) {
             throw new CommandException(e);

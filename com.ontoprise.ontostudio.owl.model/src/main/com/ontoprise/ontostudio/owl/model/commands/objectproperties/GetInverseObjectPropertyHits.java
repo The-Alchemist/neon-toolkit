@@ -19,7 +19,6 @@ import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLInverseObjectPropertiesAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.ItemHits;
 import com.ontoprise.ontostudio.owl.model.LocatedItem;
@@ -49,12 +48,11 @@ public class GetInverseObjectPropertyHits extends OWLOntologyRequestCommand {
         _results = new ArrayList<String[]>();
         String propertyUri = (String) getArgument(2);
         try {
-            OWLOntology ontology = getOwlModel().getOntology();
             Set<ItemHits<OWLClassExpression,OWLInverseObjectPropertiesAxiom>> results = getOwlModel().getInverseObjectPropertyHits(propertyUri);
             for (ItemHits<OWLClassExpression,OWLInverseObjectPropertiesAxiom> hit: results) {
                 Set<LocatedItem<OWLInverseObjectPropertiesAxiom>> axioms = hit.getAxioms();
                 for (LocatedItem<OWLInverseObjectPropertiesAxiom> axiom: axioms) {
-                    String[] array = new String[] {OWLUtilities.toString(axiom.getItem(), ontology), axiom.getOntologyURI()};
+                    String[] array = new String[] {OWLUtilities.toString(axiom.getItem()), axiom.getOntologyURI()};
                     if (!_results.contains(array)) {
                         _results.add(array);
                     }

@@ -519,7 +519,6 @@ public class InternalParserTest {
    
     @Theory
     public void testOWLAxiom(OWLAxiom object) throws Exception {
-//        System.out.println(object);
         testSerialization(object);
         testSerialization(object.getAnnotatedAxiom(new LinkedHashSet<OWLAnnotation>(Arrays.asList(constantAnnotation0))));
         testSerialization(object.getAnnotatedAxiom(new LinkedHashSet<OWLAnnotation>(Arrays.asList(constantAnnotation0, constantAnnotation1))));
@@ -531,7 +530,6 @@ public class InternalParserTest {
         OWLFormattingVisitor serializer = new OWLFormattingVisitor(target, OWLNamespaces.EMPTY_INSTANCE);
         object.accept(serializer);
         String serialization = target.toString();
-//        System.out.println(serialization);
         InternalParser parser = new InternalParser(serialization, OWLNamespaces.EMPTY_INSTANCE, _f);
         OWLAxiom parsedObject = parser.parseOWLAxiom();
         assertEquals(object, parsedObject);

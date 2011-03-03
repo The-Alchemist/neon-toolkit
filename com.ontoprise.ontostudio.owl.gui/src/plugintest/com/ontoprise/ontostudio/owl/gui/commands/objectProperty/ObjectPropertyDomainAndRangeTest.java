@@ -17,11 +17,8 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.semanticweb.owlapi.model.OWLObjectPropertyDomainAxiom;
 import org.semanticweb.owlapi.model.OWLObjectPropertyRangeAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.gui.commands.AbstractOWLPluginTest;
-import com.ontoprise.ontostudio.owl.model.OWLModel;
-import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.ApplyChanges;
 import com.ontoprise.ontostudio.owl.model.commands.clazz.CreateRootClazz;
@@ -33,6 +30,7 @@ import com.ontoprise.ontostudio.owl.model.commands.objectproperties.GetObjectPro
 
 /**
  * @author werner
+ * @author Nico Stieler
  *
  */
 public class ObjectPropertyDomainAndRangeTest extends AbstractOWLPluginTest {
@@ -62,13 +60,11 @@ public class ObjectPropertyDomainAndRangeTest extends AbstractOWLPluginTest {
         Assert.assertEquals(1, domains.length);
         Assert.assertEquals(1, ranges.length);
         
-        OWLModel model = OWLModelFactory.getOWLModel(ONTOLOGY_URI, PROJECT_ID);
-        OWLOntology ontology = model.getOntology();
-        OWLObjectPropertyDomainAxiom domain = (OWLObjectPropertyDomainAxiom) OWLUtilities.axiom(domains[0][0], ontology);
-        Assert.assertEquals(c1, OWLUtilities.toString(domain.getDomain(), ontology));
+        OWLObjectPropertyDomainAxiom domain = (OWLObjectPropertyDomainAxiom) OWLUtilities.axiom(domains[0][0]);
+        Assert.assertEquals(c1, OWLUtilities.toString(domain.getDomain()));
         
-        OWLObjectPropertyRangeAxiom range = (OWLObjectPropertyRangeAxiom) OWLUtilities.axiom(ranges[0][0], ontology);
-        Assert.assertEquals(c2, OWLUtilities.toString(range.getRange(), ontology));
+        OWLObjectPropertyRangeAxiom range = (OWLObjectPropertyRangeAxiom) OWLUtilities.axiom(ranges[0][0]);
+        Assert.assertEquals(c2, OWLUtilities.toString(range.getRange()));
         
         String domainAxiom = new StringBuilder("[objectDomain ").append(op1).append(" ").append(c1).append("]").toString(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         String rangeAxiom = new StringBuilder("[objectRange ").append(op1).append(" ").append(c2).append("]").toString(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

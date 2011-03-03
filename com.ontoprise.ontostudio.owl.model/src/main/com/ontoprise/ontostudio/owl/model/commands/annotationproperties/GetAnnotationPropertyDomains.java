@@ -18,7 +18,6 @@ import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationPropertyDomainAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.ItemHits;
 import com.ontoprise.ontostudio.owl.model.LocatedItem;
@@ -49,12 +48,11 @@ public class GetAnnotationPropertyDomains extends OWLOntologyRequestCommand {
         String propertyUri = (String) getArgument(2);
 
         try {
-            OWLOntology ontology = getOwlModel().getOntology();
             Set<ItemHits<IRI,OWLAnnotationPropertyDomainAxiom>> domainHits = getOwlModel().getAnnotationPropertyDomainHits(propertyUri);
             for (ItemHits<IRI,OWLAnnotationPropertyDomainAxiom> hit: domainHits) {
                 Set<LocatedItem<OWLAnnotationPropertyDomainAxiom>> axioms = hit.getAxioms();
                 for (LocatedItem<OWLAnnotationPropertyDomainAxiom> item: axioms) {
-                    _results.add(new String[]{OWLUtilities.toString(item.getItem(), ontology), item.getOntologyURI()});
+                    _results.add(new String[]{OWLUtilities.toString(item.getItem()), item.getOntologyURI()});
                 }
             }
             

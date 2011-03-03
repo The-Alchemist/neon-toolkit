@@ -58,7 +58,7 @@ public class DeleteIndividualRefactoringFactory implements IRefactoringFactory {
 //                OWLIndividual individual = OWLModelFactory.getOWLDataFactory(element.getProjectName()).getOWLNamedIndividual(OWLUtilities.toIRI(individualUri));
                 
                 OWLIndividual individual = 
-                    OWLUtilities.individual(individualUri, owlModel.getOntology());
+                    OWLUtilities.individual(individualUri);
 
                 //OWLAnonymousIndividual's are no entities and are not defined as entities. So only the axioms will be removed
                 if (!entities.contains(individual) && individual instanceof OWLEntity) {

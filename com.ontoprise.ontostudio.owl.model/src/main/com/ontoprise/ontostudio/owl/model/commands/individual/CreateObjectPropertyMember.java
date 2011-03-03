@@ -16,7 +16,6 @@ import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
@@ -47,14 +46,13 @@ public class CreateObjectPropertyMember extends OWLModuleChangeCommand {
         String targetIndividualUri = (String) getArgument(4);
 
         try {
-            OWLOntology ontology = getOwlModel().getOntology();
             OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(getProjectName());
-            OWLIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(individualUri, ontology));
-            OWLIndividual targetIndividual = factory.getOWLNamedIndividual(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(targetIndividualUri, ontology));
-            OWLObjectPropertyExpression objPropExpr = factory.getOWLObjectProperty(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(propertyUri, ontology));
+            OWLIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(individualUri));
+            OWLIndividual targetIndividual = factory.getOWLNamedIndividual(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(targetIndividualUri));
+            OWLObjectPropertyExpression objPropExpr = factory.getOWLObjectProperty(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(propertyUri));
             OWLObjectPropertyAssertionAxiom newAxiom = factory.getOWLObjectPropertyAssertionAxiom(objPropExpr, individual, targetIndividual);
 
-            new ApplyChanges(getProjectName(), getOntology(), new String[] {OWLUtilities.toString(newAxiom, ontology)}, new String[0]).perform();
+            new ApplyChanges(getProjectName(), getOntology(), new String[] {OWLUtilities.toString(newAxiom)}, new String[0]).perform();
         } catch (NeOnCoreException e) {
             throw new CommandException(e);
         }

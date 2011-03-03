@@ -299,7 +299,7 @@ public class OntologyAnnotationsPropertyPage2 extends AbstractOWLIdPropertyPage 
      */
     private void handleAnnotationValue(OWLObjectVisitorEx visitor, String annotationText) throws NeOnCoreException {
         OWLAnnotationAssertionAxiom dummyEntityAnnotation = 
-            (OWLAnnotationAssertionAxiom) OWLUtilities.axiom(annotationText, _owlModel.getOntology());
+            (OWLAnnotationAssertionAxiom) OWLUtilities.axiom(annotationText);//NICO internal parser needed??
         OWLAnnotationProperty prop = dummyEntityAnnotation.getAnnotation().getProperty();
         OWLObject o = dummyEntityAnnotation.getAnnotation().getValue();
         String language = OWLCommandUtils.EMPTY_LANGUAGE;

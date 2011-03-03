@@ -105,7 +105,6 @@ public abstract class OWLValueSearchMatch extends OWLComplexSearchMatch {
                   }
               }  
             }catch (NullPointerException e) {
-//                System.out.println("############# does not for sure jump to the correct Tab #############"); //$NON-NLS-1$ TODO: has to be done
                 //nothing to do: does not for sure jump to the correct Tab 
             }
             if(epv != null && tab != null){
@@ -124,7 +123,7 @@ public abstract class OWLValueSearchMatch extends OWLComplexSearchMatch {
                 entityId = AnnotationPropertyTreeElement.class.toString();
             } else if (getMatch() instanceof DatatypeTreeElement) {
                 entityId = DatatypeTreeElement.class.toString();
-            } else if (getMatch() instanceof OntologyTreeElement) { //NICO Ontology
+            } else if (getMatch() instanceof OntologyTreeElement) { 
                 entityId = OntologyTreeElement.class.toString();
             }
             IMainPropertyPage mainTab = null;

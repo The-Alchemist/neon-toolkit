@@ -18,7 +18,6 @@ import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationSubject;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.LocatedItem;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
@@ -49,9 +48,8 @@ public abstract class AbstractGetAnnotationHits extends OWLOntologyRequestComman
             OWLAnnotationSubject annotationSubject = getAnnotationSubject();
             _results = new ArrayList<String[]>();
             Set<LocatedItem<OWLAnnotationAssertionAxiom>> annots = getOwlModel().getAnnotationHits(annotationSubject);
-            OWLOntology ontology = getOwlModel().getOntology();
             for (LocatedItem<OWLAnnotationAssertionAxiom> annotation: annots) {
-                String axiom = OWLUtilities.toString(annotation.getItem(), ontology);
+                String axiom = OWLUtilities.toString(annotation.getItem());
                 String ontologyUri = annotation.getOntologyURI();
                 _results.add(new String[] {axiom, ontologyUri});
             }

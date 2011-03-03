@@ -49,7 +49,7 @@ public abstract class ModifyPropertyListener implements ModifyListener {
                 String uri = manager.parseUri(propertyText, owlModel);
                 
     //            OWLDataProperty entity = _factory.getOWLDataProperty(IRI.create(uri));             
-                OWLDataProperty entity = OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(uri), owlModel.getOntology());
+                OWLDataProperty entity = OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(uri));
                 Set<OWLOntology> ontologies = new HashSet<OWLOntology>(); 
                 Set<OWLModel> models = owlModel.getAllImportedOntologies();
                 ontologies.add(owlModel.getOntology());
@@ -94,7 +94,7 @@ public abstract class ModifyPropertyListener implements ModifyListener {
                     String uri = manager.parseUri(propertyText, owlModel);
                     
         //            OWLDataProperty entity = _factory.getOWLDataProperty(IRI.create(uri));             
-                    OWLDataProperty entity = OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(uri), owlModel.getOntology());
+                    OWLDataProperty entity = OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(uri));
                     Set<OWLOntology> ontologies = new HashSet<OWLOntology>(); 
                     Set<OWLModel> models = owlModel.getAllImportedOntologies();
                     ontologies.add(owlModel.getOntology());

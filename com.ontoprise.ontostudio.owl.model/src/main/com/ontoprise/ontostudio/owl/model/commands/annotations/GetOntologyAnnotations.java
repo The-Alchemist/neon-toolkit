@@ -55,7 +55,7 @@ public class GetOntologyAnnotations extends OWLOntologyRequestCommand {
             for (OWLAnnotation annotation: annots) {
                 OWLAnnotationAssertionAxiom ontologyAnnotation = factory.getOWLAnnotationAssertionAxiom(annotation.getProperty(), IRI.create(DUMMY_ONTOLOGY_URI), annotation.getValue());
                 
-                String axiom = OWLUtilities.toString(ontologyAnnotation, getOwlModel().getOntology());
+                String axiom = OWLUtilities.toString(ontologyAnnotation);
                 _results.add(axiom);
             }
         } catch (NeOnCoreException e) {

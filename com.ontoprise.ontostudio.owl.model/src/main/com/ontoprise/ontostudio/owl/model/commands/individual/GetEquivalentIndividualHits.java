@@ -17,7 +17,6 @@ import java.util.Set;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.OWLIndividual;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
 
 import com.ontoprise.ontostudio.owl.model.ItemHits;
@@ -48,12 +47,11 @@ public class GetEquivalentIndividualHits extends OWLOntologyRequestCommand {
         _results = new ArrayList<String[]>();
         String individualUri = (String) getArgument(2);
         try {
-            OWLOntology ontology = getOwlModel().getOntology();
             Set<ItemHits<OWLIndividual,OWLSameIndividualAxiom>> differentIndividualHits = getOwlModel().getEquivalentIndividualHits(individualUri);
             for (ItemHits<OWLIndividual,OWLSameIndividualAxiom> hit: differentIndividualHits) {
                 Set<LocatedItem<OWLSameIndividualAxiom>> axioms = hit.getAxioms();
                 for (LocatedItem<OWLSameIndividualAxiom> axiom: axioms) {
-                    String[] result = new String[] {OWLUtilities.toString(axiom.getItem(), ontology), axiom.getOntologyURI()};
+                    String[] result = new String[] {OWLUtilities.toString(axiom.getItem()), axiom.getOntologyURI()};
                     _results.add(result);
                 }
             }

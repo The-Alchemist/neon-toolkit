@@ -19,12 +19,9 @@ import org.neontoolkit.core.project.IOntologyProject;
 import org.neontoolkit.core.project.OntologyProjectManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 import com.ontoprise.ontostudio.owl.gui.commands.AbstractOWLPluginTest;
-import com.ontoprise.ontostudio.owl.model.OWLModel;
-import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLModelPlugin;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.clazz.CreateRootClazz;
@@ -71,12 +68,10 @@ public class GetDescriptionHitsTest extends AbstractOWLPluginTest {
         readAndDispatch();
 
         results = new GetDescriptionHits(PROJECT_ID, ONTOLOGY_URI, i1).getResults();
-        OWLModel model = OWLModelFactory.getOWLModel(ONTOLOGY_URI, PROJECT_ID);
-        OWLOntology ontology = model.getOntology();
-        OWLClassAssertionAxiom clazzMember = (OWLClassAssertionAxiom) OWLUtilities.axiom(results[0][0], ontology);
+        OWLClassAssertionAxiom clazzMember = (OWLClassAssertionAxiom) OWLUtilities.axiom(results[0][0]);
         
         Assert.assertEquals(1, results.length);
-        Assert.assertEquals(c2, OWLUtilities.toString(clazzMember.getClassExpression(), ontology));
+        Assert.assertEquals(c2, OWLUtilities.toString(clazzMember.getClassExpression()));
 
         results2 = new GetDescriptionHits(PROJECT_ID, ONTOLOGY_URI, i2).getResults();
         Assert.assertEquals(1, results2.length);

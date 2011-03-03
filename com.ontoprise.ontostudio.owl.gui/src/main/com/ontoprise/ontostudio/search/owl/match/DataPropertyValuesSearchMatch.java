@@ -131,7 +131,6 @@ public class DataPropertyValuesSearchMatch extends OWLValueSearchMatch {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     protected boolean isCorrespondingTab(IPropertyPage tab){
         if (getMatch() instanceof IIndividualTreeElement) 
             return tab instanceof IndividualPropertyPage2;
@@ -141,7 +140,6 @@ public class DataPropertyValuesSearchMatch extends OWLValueSearchMatch {
                 || getMatch() instanceof AnnotationPropertyTreeElement
                 || getMatch() instanceof DatatypeTreeElement) 
             return tab instanceof AnnotationPropertyTab;
-        //NICO vergiss das nicht
         return false;
     }
 

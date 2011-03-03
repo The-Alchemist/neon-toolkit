@@ -15,7 +15,6 @@ import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLEquivalentDataPropertiesAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.ApplyChanges;
@@ -44,12 +43,11 @@ public class CreateEquivalentDataProperty extends OWLModuleChangeCommand {
         String propertyUri2 = (String) getArgument(3);
         try {
             OWLDataFactory factory = getOwlModel().getOWLDataFactory();
-            OWLOntology ontology = getOwlModel().getOntology();
             
-            OWLDataProperty dataproperty1 = OWLUtilities.dataProperty(propertyUri1, ontology);
-            OWLDataProperty dataproperty2 = OWLUtilities.dataProperty(propertyUri2, ontology);
+            OWLDataProperty dataproperty1 = OWLUtilities.dataProperty(propertyUri1);
+            OWLDataProperty dataproperty2 = OWLUtilities.dataProperty(propertyUri2);
             OWLEquivalentDataPropertiesAxiom axiom = factory.getOWLEquivalentDataPropertiesAxiom(dataproperty1, dataproperty2);
-            new ApplyChanges(getProjectName(), getOntology(), new String[] {OWLUtilities.toString(axiom, ontology)}, new String[0]).perform();
+            new ApplyChanges(getProjectName(), getOntology(), new String[] {OWLUtilities.toString(axiom)}, new String[0]).perform();
         } catch (NeOnCoreException e) {
             throw new CommandException(e);
         }

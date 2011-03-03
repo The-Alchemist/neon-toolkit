@@ -40,7 +40,6 @@ import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 import org.semanticweb.owlapi.model.OWLEquivalentDataPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLSubDataPropertyOfAxiom;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
@@ -137,7 +136,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                 String ontologyUri = result[1];
                 boolean isLocal = ontologyUri.equals(_ontologyUri);
 
-                OWLSubDataPropertyOfAxiom axiom = (OWLSubDataPropertyOfAxiom) OWLUtilities.axiom(axiomText, _owlModel.getOntology());
+                OWLSubDataPropertyOfAxiom axiom = (OWLSubDataPropertyOfAxiom) OWLUtilities.axiom(axiomText);
                 createRow(new LocatedAxiom(axiom, isLocal), axiom.getSuperProperty(), ontologyUri, false, SUPER);
             }
         } catch (NeOnCoreException e1) {
@@ -180,7 +179,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                 String ontologyUri = result[1];
                 boolean isLocal = ontologyUri.equals(_ontologyUri);
 
-                OWLSubDataPropertyOfAxiom axiom = (OWLSubDataPropertyOfAxiom) OWLUtilities.axiom(axiomText, _owlModel.getOntology());
+                OWLSubDataPropertyOfAxiom axiom = (OWLSubDataPropertyOfAxiom) OWLUtilities.axiom(axiomText);
                 createRow(new LocatedAxiom(axiom, isLocal), axiom.getSubProperty(), ontologyUri, false, SUB);
             }
         } catch (NeOnCoreException e1) {
@@ -220,8 +219,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
             String[][] results = new GetEquivalentDataPropertyHits(_project, _ontologyUri, _id).getResults();
             TreeSet<String[]> sortedSet = getSortedSet(results, EQUIV);
 
-            OWLOntology ontology = _owlModel.getOntology();
-            String thisProperty = OWLUtilities.toString(OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(_id), ontology), ontology);
+            String thisProperty = OWLUtilities.toString(OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(_id)));
             List<String> sourceOntoList = new ArrayList<String>();
             List<LocatedAxiom> axiomList = new ArrayList<LocatedAxiom>();
             for (String[] result: sortedSet) {
@@ -230,11 +228,11 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                 boolean isLocal = ontologyUri.equals(_ontologyUri);
 
                 sourceOntoList.add(ontologyUri);
-                OWLEquivalentDataPropertiesAxiom equivObjProps = (OWLEquivalentDataPropertiesAxiom) OWLUtilities.axiom(axiomText, ontology);
+                OWLEquivalentDataPropertiesAxiom equivObjProps = (OWLEquivalentDataPropertiesAxiom) OWLUtilities.axiom(axiomText);
                 axiomList.add(new LocatedAxiom(equivObjProps, isLocal));
                 Set<OWLDataPropertyExpression> DataProperties = equivObjProps.getProperties();
                 for (OWLDataPropertyExpression prop: DataProperties) {
-                    if (!OWLUtilities.toString(prop, ontology).equals(thisProperty)) {
+                    if (!OWLUtilities.toString(prop).equals(thisProperty)) {
                         createRow(axiomList, (OWLDataProperty) prop, false, ontologyUri, EQUIV);
                     }
                 }
@@ -312,7 +310,6 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                 // save modified entries
                 String value = textWidget.getText();
                 try {
-                    OWLOntology ontology = _localOwlModel.getOntology();
                     OWLDataProperty dataProp = _manager.parseDataProperty(value, _localOwlModel);
                     remove();
                     if (mode == SUPER) {
@@ -324,7 +321,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                         initSuperSection(false);
                         initSubSection(true);
                     } else {
-                        new CreateEquivalentDataProperty(_project, _sourceOwlModel.getOntologyURI(), OWLUtilities.toString(dataProp, ontology), value);
+                        new CreateEquivalentDataProperty(_project, _sourceOwlModel.getOntologyURI(), OWLUtilities.toString(dataProp), value);
                         initEquivSection(true);
                     }
                 } catch (NeOnCoreException k2e) {
@@ -376,7 +373,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
 
         OWLModel sourceOwlModel =_owlModel;
         if(imported){
-            sourceOwlModel = OWLModelFactory.getOWLModel(sourceOnto, _project); //NICO Onto
+            sourceOwlModel = OWLModelFactory.getOWLModel(sourceOnto, _project);
         }
        
         FormRow row = new FormRow(_toolkit, parent, NUM_COLS, imported, sourceOnto, sourceOwlModel.getProjectId(),_id);
@@ -397,7 +394,6 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                 // save modified entries
                 String value = text.getText();
                 try {
-                    OWLOntology ontology = _localOwlModel.getOntology();
                     OWLDataProperty dataProp = _manager.parseDataProperty(value, _localOwlModel);
                     if (mode == SUPER) {
                         new CreateDataProperty(_project, _sourceOwlModel.getOntologyURI(), _id, dataProp.getIRI().toString()).run();
@@ -406,7 +402,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                         new CreateDataProperty(_project, _sourceOwlModel.getOntologyURI(), dataProp.getIRI().toString(), _id).run();
                         initSubSection(true);
                     } else {
-                        new CreateEquivalentDataProperty(_project, _sourceOwlModel.getOntologyURI(), OWLUtilities.toString(dataProp, ontology), value);
+                        new CreateEquivalentDataProperty(_project, _sourceOwlModel.getOntologyURI(), OWLUtilities.toString(dataProp), value);
                         initEquivSection(true);
                     }
 
@@ -434,10 +430,9 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                         owlAxioms.add(a.getAxiom());//NICO think about that
                     }
                 }
-                OWLOntology ontology = _localOwlModel.getOntology();
-                OWLObjectProperty thisObjectProperty = OWLUtilities.objectProperty(IRIUtils.ensureValidIRISyntax(_id), ontology);
+                OWLObjectProperty thisObjectProperty = OWLUtilities.objectProperty(IRIUtils.ensureValidIRISyntax(_id));
                 
-                OWLAxiomUtils.triggerRemovePressed(owlAxioms, getEntity(), _namespaces, OWLUtilities.toString(thisObjectProperty, ontology), _sourceOwlModel, WizardConstants.ADD_DEPENDENT_MODE);
+                OWLAxiomUtils.triggerRemovePressed(owlAxioms, getEntity(), _namespaces, OWLUtilities.toString(thisObjectProperty), _sourceOwlModel, WizardConstants.ADD_DEPENDENT_MODE);
                 refresh();
             }
 
@@ -491,7 +486,6 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                 try {
                     String value = text.getText();
                     OWLDataProperty dataProp = _manager.parseDataProperty(value, _localOwlModel);
-                    OWLOntology ontology = _localOwlModel.getOntology();
 
                     switch (mode) {
                         case SUPER:
@@ -505,9 +499,9 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                             initSubSection(true);
                             break;
                         case EQUIV:
-                            String thisEntity = OWLUtilities.toString(OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(_id), ontology), ontology);
-                            if (!OWLUtilities.toString(dataProp, ontology).equals(thisEntity)) {
-                                new CreateEquivalentDataProperty(_project, _sourceOwlModel.getOntologyURI(), thisEntity, OWLUtilities.toString(dataProp, ontology)).run();
+                            String thisEntity = OWLUtilities.toString(OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(_id)));
+                            if (!OWLUtilities.toString(dataProp).equals(thisEntity)) {
+                                new CreateEquivalentDataProperty(_project, _sourceOwlModel.getOntologyURI(), thisEntity, OWLUtilities.toString(dataProp)).run();
                                 initEquivSection(true);
                             } else {
                                 String modeString = Messages.DataPropertyTaxonomyPropertyPage_0;
@@ -574,7 +568,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                     String thisId = DataPropertyTaxonomyPropertyPage.this._id;
                     String ontologyUri1 = o1[1];
                     String ontologyUri2 = o2[1];
-                    OWLAxiom axiom1 = (OWLAxiom) OWLUtilities.axiom(o1[0], _owlModel.getOntology());
+                    OWLAxiom axiom1 = (OWLAxiom) OWLUtilities.axiom(o1[0]);
                     String uri1 = ""; //$NON-NLS-1$
                     String uri2 = ""; //$NON-NLS-1$
                     if (mode == SUPER) {
@@ -582,7 +576,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                         OWLDataPropertyExpression objProp = subObjProp.getSuperProperty();
                         if (objProp instanceof OWLDataProperty) {
                             uri1 = OWLGUIUtilities.getEntityLabel(((OWLDataProperty) objProp), ontologyUri1, _project); 
-                            OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0], _owlModel.getOntology());
+                            OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0]);
                             OWLSubDataPropertyOfAxiom subObjProp2 = (OWLSubDataPropertyOfAxiom) axiom2;
                             OWLDataPropertyExpression objProp2 = subObjProp2.getSuperProperty();
                             if (objProp2 instanceof OWLDataProperty) {
@@ -595,7 +589,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                         if (dpe instanceof OWLDataProperty) {
                             OWLDataProperty DataProperty = (OWLDataProperty)dpe;
                             uri1 = OWLGUIUtilities.getEntityLabel(DataProperty, ontologyUri1, _project);
-                            OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0], _owlModel.getOntology());
+                            OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0]);
                             OWLSubDataPropertyOfAxiom subObjProp2 = (OWLSubDataPropertyOfAxiom) axiom2;
                             OWLDataPropertyExpression ope2 = subObjProp2.getSubProperty(); 
                             if (ope2 instanceof OWLDataProperty) {
@@ -616,7 +610,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                             }
                         }
                         
-                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0], _owlModel.getOntology());
+                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0]);
                         OWLEquivalentDataPropertiesAxiom eop2 = (OWLEquivalentDataPropertiesAxiom) axiom2;
                         Set<OWLDataPropertyExpression> equivalentDataProps2 = eop2.getProperties();
                         for (OWLDataPropertyExpression expr: equivalentDataProps2) {

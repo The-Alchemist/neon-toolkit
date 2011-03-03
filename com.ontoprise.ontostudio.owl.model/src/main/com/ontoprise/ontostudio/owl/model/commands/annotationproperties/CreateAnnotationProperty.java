@@ -15,7 +15,6 @@ import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.core.util.IRIUtils;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.OWLModuleChangeCommand;
@@ -35,12 +34,11 @@ public class CreateAnnotationProperty extends OWLModuleChangeCommand {
         String superPropertyId = (String) getArgument(3);
 
         try {
-            OWLOntology ontology = getOwlModel().getOntology();
             OWLDataFactory factory = getOwlModel().getOWLDataFactory();
-            OWLAnnotationProperty annotationProperty = OWLUtilities.annotationProperty(IRIUtils.ensureValidIRISyntax(propertyId), ontology);
+            OWLAnnotationProperty annotationProperty = OWLUtilities.annotationProperty(IRIUtils.ensureValidIRISyntax(propertyId));
             
             if (superPropertyId != null) { 
-                OWLAnnotationProperty superAnnotationProperty = OWLUtilities.annotationProperty(IRIUtils.ensureValidIRISyntax(superPropertyId), ontology);
+                OWLAnnotationProperty superAnnotationProperty = OWLUtilities.annotationProperty(IRIUtils.ensureValidIRISyntax(superPropertyId));
                 getOwlModel().addAxiom(factory.getOWLSubAnnotationPropertyOfAxiom(annotationProperty, superAnnotationProperty));
             } else {
                 getOwlModel().addEntity(annotationProperty);

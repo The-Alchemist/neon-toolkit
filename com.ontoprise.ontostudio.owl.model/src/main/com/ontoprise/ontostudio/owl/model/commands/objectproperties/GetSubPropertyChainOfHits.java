@@ -18,7 +18,6 @@ import java.util.Set;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLSubPropertyChainOfAxiom;
 
 import com.ontoprise.ontostudio.owl.model.ItemHits;
@@ -51,12 +50,11 @@ public class GetSubPropertyChainOfHits extends OWLOntologyRequestCommand {
 
         Set<ItemHits<List<OWLObjectPropertyExpression>,OWLSubPropertyChainOfAxiom>> results = new LinkedHashSet<ItemHits<List<OWLObjectPropertyExpression>,OWLSubPropertyChainOfAxiom>>();
         try {
-            OWLOntology ontology = getOwlModel().getOntology();
             results = getOwlModel().getSubPropertyChainOfHits(propertyUri);
             for (ItemHits<List<OWLObjectPropertyExpression>,OWLSubPropertyChainOfAxiom> hit: results) {
                 Set<LocatedItem<OWLSubPropertyChainOfAxiom>> axioms = hit.getAxioms();
                 for (LocatedItem<OWLSubPropertyChainOfAxiom> axiom: axioms) {
-                    _results.add(new String[] {OWLUtilities.toString(axiom.getItem(), ontology), axiom.getOntologyURI()});
+                    _results.add(new String[] {OWLUtilities.toString(axiom.getItem()), axiom.getOntologyURI()});
                 }
             }
         } catch (NeOnCoreException e1) {

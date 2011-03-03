@@ -16,11 +16,13 @@ import org.neontoolkit.core.util.IRIUtils;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataRange;
 import org.semanticweb.owlapi.model.OWLDatatype;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.OWLModuleChangeCommand;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class CreateSubDatatype extends OWLModuleChangeCommand {
 
     public CreateSubDatatype(String project, String ontologyId, String subId, String superId) throws NeOnCoreException {
@@ -30,10 +32,9 @@ public class CreateSubDatatype extends OWLModuleChangeCommand {
     @Override
     public void doPerform() throws CommandException {
         try {
-            OWLOntology ontology = getOwlModel().getOntology();
             OWLDataFactory factory = getOwlModel().getOWLDataFactory();
-            OWLDatatype subDatatype = (OWLDatatype)OWLUtilities.dataRange(IRIUtils.ensureValidIRISyntax(getArgument(2).toString()), ontology);
-            OWLDataRange superDatatype = OWLUtilities.dataRange(IRIUtils.ensureValidIRISyntax(getArgument(3).toString()), ontology);
+            OWLDatatype subDatatype = (OWLDatatype)OWLUtilities.dataRange(IRIUtils.ensureValidIRISyntax(getArgument(2).toString()));
+            OWLDataRange superDatatype = OWLUtilities.dataRange(IRIUtils.ensureValidIRISyntax(getArgument(3).toString()));
             getOwlModel().addAxiom(factory.getOWLDatatypeDefinitionAxiom(subDatatype, superDatatype));
         } catch (NeOnCoreException e) {
             throw new CommandException(e);

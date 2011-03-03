@@ -16,7 +16,6 @@ import org.neontoolkit.core.util.IRIUtils;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.ApplyChanges;
@@ -42,11 +41,10 @@ public class CreateInverseObjectProperty extends OWLModuleChangeCommand {
     @Override
     protected void doPerform() throws CommandException {
         try {
-            OWLOntology ontology = getOwlModel().getOntology();
             OWLDataFactory factory = getOwlModel().getOWLDataFactory();
 
-            OWLObjectProperty propertyUri = OWLUtilities.objectProperty(IRIUtils.ensureValidIRISyntax((String) getArgument(2)), ontology);
-            OWLObjectProperty inversePropertyUri = OWLUtilities.objectProperty(IRIUtils.ensureValidIRISyntax((String) getArgument(3)), ontology);
+            OWLObjectProperty propertyUri = OWLUtilities.objectProperty(IRIUtils.ensureValidIRISyntax((String) getArgument(2)));
+            OWLObjectProperty inversePropertyUri = OWLUtilities.objectProperty(IRIUtils.ensureValidIRISyntax((String) getArgument(3)));
 
             new ApplyChanges(getProjectName(), getOntology(), new OWLAxiom[] {factory.getOWLInverseObjectPropertiesAxiom(propertyUri, inversePropertyUri)}, new OWLAxiom[0]).perform();
         } catch (NeOnCoreException e) {

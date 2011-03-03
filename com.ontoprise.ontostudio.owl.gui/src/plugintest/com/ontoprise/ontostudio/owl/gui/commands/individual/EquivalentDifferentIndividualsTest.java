@@ -38,6 +38,7 @@ import com.ontoprise.ontostudio.owl.model.commands.individual.GetEquivalentIndiv
 
 /**
  * @author werner
+ * @author Nico Stieler
  * 
  */
 public class EquivalentDifferentIndividualsTest extends AbstractOWLPluginTest {
@@ -75,7 +76,7 @@ public class EquivalentDifferentIndividualsTest extends AbstractOWLPluginTest {
         new EditEquivalentIndividuals(PROJECT_ID, ONTOLOGY_URI, expectedAxiomText, i2, i3).run();
 
         equivalentIndividualHits = new GetEquivalentIndividualHits(PROJECT_ID, ONTOLOGY_URI, i1).getResults();
-        OWLSameIndividualAxiom sameIndividual = (OWLSameIndividualAxiom) OWLUtilities.axiom(equivalentIndividualHits[0][0], ontology);
+        OWLSameIndividualAxiom sameIndividual = (OWLSameIndividualAxiom) OWLUtilities.axiom(equivalentIndividualHits[0][0]);
         Set<OWLIndividual> individuals = sameIndividual.getIndividuals();
         Set<OWLIndividual> expectedIndividuals = new HashSet<OWLIndividual>();
         expectedIndividuals.add(OWLModelFactory.getOWLDataFactory(PROJECT_ID).getOWLNamedIndividual(OWLUtilities.toIRI(i1)));
@@ -116,7 +117,7 @@ public class EquivalentDifferentIndividualsTest extends AbstractOWLPluginTest {
         new EditDifferentIndividuals(PROJECT_ID, ONTOLOGY_URI, expectedAxiomText, i2, i3).run();
 
         equivalentIndividualHits = new GetDifferentIndividualHits(PROJECT_ID, ONTOLOGY_URI, i1).getResults();
-        OWLDifferentIndividualsAxiom differentIndividuals = (OWLDifferentIndividualsAxiom) OWLUtilities.axiom(equivalentIndividualHits[0][0], ontology);
+        OWLDifferentIndividualsAxiom differentIndividuals = (OWLDifferentIndividualsAxiom) OWLUtilities.axiom(equivalentIndividualHits[0][0]);
         Set<OWLIndividual> individuals = differentIndividuals.getIndividuals();
         Set<OWLIndividual> expectedIndividuals = new HashSet<OWLIndividual>();
         expectedIndividuals.add(OWLModelFactory.getOWLDataFactory(PROJECT_ID).getOWLNamedIndividual(OWLUtilities.toIRI(i1)));
