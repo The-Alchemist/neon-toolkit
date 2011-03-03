@@ -22,6 +22,7 @@ import com.ontoprise.ontostudio.owl.model.commands.OWLOntologyRequestCommand;
 
 /**
  * @author werner
+ * @author Nico Stieler
  * 
  */
 public class GetSuperObjectProperties extends OWLOntologyRequestCommand {

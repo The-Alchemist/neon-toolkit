@@ -33,7 +33,7 @@ public abstract class AbstractOwlProposalProvider implements IContentProposalPro
 
 
     public AbstractOwlProposalProvider(OWLModel owlModel) {
-        this(owlModel,owlModel);//NICO check me
+        this(owlModel,owlModel);
     }
 
     public AbstractOwlProposalProvider(OWLModel localOwlModel, OWLModel sourceOwlModel) {

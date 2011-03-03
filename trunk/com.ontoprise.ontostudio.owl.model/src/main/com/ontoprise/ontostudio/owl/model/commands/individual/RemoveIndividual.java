@@ -20,7 +20,6 @@ import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
@@ -48,18 +47,17 @@ public class RemoveIndividual extends OWLModuleChangeCommand {
         for (int i = 0; i < individuals.length; i++) {
             try {
                 OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(getProjectName());
-                OWLOntology ontology = OWLModelFactory.getOWLModel(getOntology(), getProjectName()).getOntology();
 
-                OWLIndividual individual = OWLUtilities.individual(individuals[i], ontology);
+                OWLIndividual individual = OWLUtilities.individual(individuals[i]);
                 if(individual instanceof OWLNamedIndividual){
                     OWLNamedIndividual namedIndividual = (OWLNamedIndividual) individual;
                     if (removeReferringAxioms) {
                         getOwlModel().delEntity(namedIndividual, null);
                     } else {
                         // called from MoveIndividual, so don' t remove all referring axioms
-                        OWLClassExpression clazzDescription = OWLUtilities.description(IRIUtils.ensureValidIRISyntax(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(clazzUri, ontology).toString()), ontology);
+                        OWLClassExpression clazzDescription = OWLUtilities.description(IRIUtils.ensureValidIRISyntax(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(clazzUri).toString()));
                         OWLClassAssertionAxiom clazzMember = factory.getOWLClassAssertionAxiom(clazzDescription, namedIndividual);
-                        new ApplyChanges(getProjectName(), getOntology(), new String[0], new String[] {OWLUtilities.toString(clazzMember, ontology)}).perform();
+                        new ApplyChanges(getProjectName(), getOntology(), new String[0], new String[] {OWLUtilities.toString(clazzMember)}).perform();
                     }
                 }
             } catch (NeOnCoreException e) {

@@ -37,7 +37,7 @@ public class ApplyChanges extends OWLModuleChangeCommand {
         }
         String[] strings = new String[axioms.length];
         for (int i = 0; i < axioms.length; i++) {
-            strings[i] = OWLUtilities.toString(axioms[i], ontology);
+            strings[i] = OWLUtilities.toString(axioms[i]);
         }
         return strings;
     }
@@ -63,16 +63,15 @@ public class ApplyChanges extends OWLModuleChangeCommand {
         String[] removeChanges = (String[]) getArgument(3);
         List<OWLAxiomChange> changes = new ArrayList<OWLAxiomChange>();
         try {
-            OWLOntology ontology = getOwlModel().getOntology();
             for (String removeChange: removeChanges) {
-                OWLAxiom axiom = OWLUtilities.axiom(removeChange, ontology);
+                OWLAxiom axiom = OWLUtilities.axiom(removeChange);
                 OWLAxiomChange changeEvent = getOwlModel().getRemoveAxiom(axiom);
                 if (!changes.contains(changeEvent)) {
                     changes.add(changeEvent);
                 }
             }
             for (String addChange: addChanges) {
-                OWLAxiom axiom = OWLUtilities.axiom(addChange, ontology);
+                OWLAxiom axiom = OWLUtilities.axiom(addChange);
                 OWLAxiomChange changeEvent = getOwlModel().getAddAxiom(axiom);
                 if (!changes.contains(changeEvent)) {
                     changes.add(changeEvent);

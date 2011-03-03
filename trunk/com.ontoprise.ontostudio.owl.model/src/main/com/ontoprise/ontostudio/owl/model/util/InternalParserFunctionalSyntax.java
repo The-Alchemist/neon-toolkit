@@ -8,16 +8,21 @@ import java.io.ByteArrayInputStream;
 import org.coode.owlapi.functionalparser.OWLFunctionalSyntaxParser;
 import org.coode.owlapi.functionalparser.ParseException;
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.io.RDFXMLOntologyFormat;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataRange;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyFormat;
 import org.semanticweb.owlapi.model.OWLOntologyLoaderConfiguration;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
@@ -29,13 +34,34 @@ import uk.ac.manchester.cs.owl.owlapi.mansyntaxrenderer.ManchesterOWLSyntaxPrefi
  */
 public class InternalParserFunctionalSyntax {
 
-    private OWLOntology ontology;
+    private static OWLOntology ontology;
+    /**
+     * @return the ontology
+     */
+    public static OWLOntology getOntology() {
+        return ontology;
+    }
+
+
+    private static OWLOntologyManager ontologyManager;
+    private static OWLOntologyFormat ontologyFormat;
+    static{ 
+        ontologyManager = OWLManager.createOWLOntologyManager();
+        OWLDataFactory factory = ontologyManager.getOWLDataFactory();
+        try {
+            ontology = ontologyManager.createOntology(IRI.create("http://www.test.org/test/testontologies/testontology")); //$NON-NLS-1$
+        } catch (OWLOntologyCreationException e) {
+            e.printStackTrace();
+        }         
+        ontologyFormat = new RDFXMLOntologyFormat();
+
+    }
+    
     private OWLFunctionalSyntaxParser parser;
     /**
      * @param model
      */
-    public InternalParserFunctionalSyntax(OWLOntology ontology) {
-        this.ontology = ontology;
+    public InternalParserFunctionalSyntax() {
     }
 
     /**
@@ -46,7 +72,7 @@ public class InternalParserFunctionalSyntax {
         updateInput(input);
         OWLOntologyManager ontologyManager = ontology.getOWLOntologyManager();
         this.parser.setUp(ontologyManager, ontology, new OWLOntologyLoaderConfiguration());
-        this.parser.setPrefixes(new ManchesterOWLSyntaxPrefixNameShortFormProvider(ontologyManager, ontology).getPrefixManager());
+        this.parser.setPrefixes(new ManchesterOWLSyntaxPrefixNameShortFormProvider(ontologyFormat).getPrefixManager());
     }
     /**
      * @param axiomText

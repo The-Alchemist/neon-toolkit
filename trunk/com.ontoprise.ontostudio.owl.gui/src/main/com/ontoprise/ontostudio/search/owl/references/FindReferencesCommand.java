@@ -134,7 +134,7 @@ public class FindReferencesCommand extends AbstractSearchCommand{
                     Set<OWLClass> classes;
                     try {
                         OWLModel model = OWLModelFactory.getOWLModel(ontology, project);
-                        classes = model.getClasses(OWLUtilities.toString(indi, model.getOntology()));
+                        classes = model.getClasses(OWLUtilities.toString(indi));
                         for (OWLClass c: classes) {
                             elem = IndividualItem.createNewInstance(indi, c.getIRI().toString(), ontology, project);
                             break; // only add the match once
@@ -150,7 +150,6 @@ public class FindReferencesCommand extends AbstractSearchCommand{
                     break;
                     
                 default:
-                    System.out.println("!!! found strange element "+element); //$NON-NLS-1$
                     //ignore
                     break;
             }

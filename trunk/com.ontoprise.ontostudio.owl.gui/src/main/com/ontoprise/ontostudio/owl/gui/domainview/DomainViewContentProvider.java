@@ -193,11 +193,7 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
                 String ontologyUri = hit[1];
 
                 boolean isImported = !ontologyUri.equals(_ontologyUri);
-//                OWLAxiom axiom = (OWLAxiom) OWLUtilities.axiom(axiomText, 
-//                        OWLNamespaces.EMPTY_INSTANCE, 
-//                        OWLModelFactory.getOWLDataFactory(_projectId), 
-//                        OWLModelFactory.getOWLModel(_ontologyUri,_projectId));
-                OWLAxiom axiom = OWLUtilities.axiom(axiomText, OWLModelFactory.getOWLModel(_ontologyUri,_projectId).getOntology());
+                OWLAxiom axiom = OWLUtilities.axiom(axiomText);
                 OWLEntity property;
                 if(axiom instanceof OWLAnnotationPropertyDomainAxiom) {
                     property = ((OWLAnnotationPropertyDomainAxiom)axiom).getProperty();

@@ -186,7 +186,7 @@ public class RangeViewContentProvider implements IStructuredContentProvider, ITr
                 String ontologyUri = hit[1];
 
                 boolean isImported = !ontologyUri.equals(_ontologyUri);
-                OWLAxiom axiom = (OWLAxiom) OWLUtilities.axiom(axiomText, OWLModelFactory.getOWLModel(_ontologyUri, _projectId).getOntology());
+                OWLAxiom axiom = (OWLAxiom) OWLUtilities.axiom(axiomText);
                 
                 OWLEntity property;
                 if(axiom instanceof OWLAnnotationPropertyRangeAxiom) {

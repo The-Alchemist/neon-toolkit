@@ -47,7 +47,6 @@ import org.neontoolkit.gui.navigator.ITreeElementPath;
 import org.neontoolkit.gui.navigator.MTreeView;
 import org.neontoolkit.gui.navigator.TreeProviderManager;
 import org.neontoolkit.gui.util.PerspectiveChangeHandler;
-import org.neontoolkit.gui.util.URIUtils;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -577,7 +576,7 @@ public class OWLGUIUtilities {
                                 OWLModel model = OWLModelFactory.getOWLModel(ontologyURI, project);
                                 uri = IRIUtils.ensureValidIRISyntax(uri);
                                 Set<OWLClass> clazzes = model.getClasses(uri);
-                                OWLIndividual individual = OWLUtilities.individual(uri, model.getOntology());// factory.getOWLNamedIndividual(OWLUtilities.toIRI(uri));
+                                OWLIndividual individual = OWLUtilities.individual(uri);// factory.getOWLNamedIndividual(OWLUtilities.toIRI(uri));
                                 if (clazzes.size() > 0) {
                                     // FIXME if individual exists for multiple classes, a dialog to select one would be nice
                                     // FIXME also consider individuals of OWL.Thing (displayed if class folder is selected)
@@ -729,18 +728,14 @@ public class OWLGUIUtilities {
     public static List<OWLAxiom> getDependentAxioms(OWLAxiom oldAxiom, List<OWLAxiom> list, List<OWLEntity> entities, List<String> uris, String ontologyURI, String projectId) {
         if (entities.size() > 0) {
             for (OWLEntity e: entities) {
-                try {
-                    OWLAxiom newAxiom = 
-                        OWLAxiomUtils.createNewAxiom(
-                                oldAxiom, 
-                                OWLUtilities.toString(e, OWLModelFactory.getOWLModel(ontologyURI, projectId).getOntology()), 
-                                ontologyURI, 
-                                projectId);
-                    if (newAxiom != null && !newAxiom.equals(oldAxiom)) {
-                        list.add(newAxiom);
-                    }
-                } catch (NeOnCoreException e1) {
-                    // nothing to do
+                OWLAxiom newAxiom = 
+                    OWLAxiomUtils.createNewAxiom(
+                            oldAxiom, 
+                            OWLUtilities.toString(e), 
+                            ontologyURI, 
+                            projectId);
+                if (newAxiom != null && !newAxiom.equals(oldAxiom)) {
+                    list.add(newAxiom);
                 }
             }
         } else {
@@ -767,7 +762,7 @@ public class OWLGUIUtilities {
 		return quantifierCombo;
 	}
 
-    public static String getUriForSorting(OWLClassExpression desc, OWLModel owlModel) throws NeOnCoreException {
+    public static String getUriForSorting(OWLClassExpression desc, OWLModel owlModel){
         ISyntaxManager manager = OWLPlugin.getDefault().getSyntaxManager();
         int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
         OWLObjectVisitorEx<?> visitor = manager.getVisitor(owlModel, idDisplayStyle);
@@ -780,55 +775,55 @@ public class OWLGUIUtilities {
         } else if (desc instanceof OWLDataAllValuesFrom) {
             OWLDataAllValuesFrom dataAll = (OWLDataAllValuesFrom) desc;
             resultArray = (String[]) dataAll.getProperty().accept(visitor);
-            result = OWLUtilities.toString(dataAll.getProperty(), owlModel.getOntology());
+            result = OWLUtilities.toString(dataAll.getProperty());
         } else if (desc instanceof OWLDataCardinalityRestriction) {
             OWLDataCardinalityRestriction dataCard = (OWLDataCardinalityRestriction)desc;
             resultArray = (String[]) dataCard.getProperty().accept(visitor);
-            result = OWLUtilities.toString(dataCard.getProperty(), owlModel.getOntology());
+            result = OWLUtilities.toString(dataCard.getProperty());
         } else if (desc instanceof OWLDataHasValue) {
             OWLDataHasValue dataHasValue = (OWLDataHasValue) desc;
             resultArray = (String[]) dataHasValue.getProperty().accept(visitor);
-            result = OWLUtilities.toString(dataHasValue.getProperty(), owlModel.getOntology());
+            result = OWLUtilities.toString(dataHasValue.getProperty());
         } else if (desc instanceof OWLDataSomeValuesFrom) {
             OWLDataSomeValuesFrom dataSome = (OWLDataSomeValuesFrom) desc;
             resultArray = (String[]) dataSome.getProperty().accept(visitor);
-            result = OWLUtilities.toString(dataSome.getProperty(), owlModel.getOntology());
+            result = OWLUtilities.toString(dataSome.getProperty());
         } else if (desc instanceof OWLObjectAllValuesFrom) {
             OWLObjectAllValuesFrom objectAll = (OWLObjectAllValuesFrom) desc;
             resultArray = (String[]) objectAll.getProperty().accept(visitor);
-            result = OWLUtilities.toString(objectAll.getProperty(), owlModel.getOntology());
+            result = OWLUtilities.toString(objectAll.getProperty());
         } else if (desc instanceof OWLObjectIntersectionOf) {
             OWLObjectIntersectionOf objectAnd = (OWLObjectIntersectionOf) desc;
 //            resultArray = (String[]) dataHasValue.getDataProperty().accept(visitor);
-            result = OWLUtilities.toString(objectAnd, owlModel.getOntology());
+            result = OWLUtilities.toString(objectAnd);
         } else if (desc instanceof OWLObjectCardinalityRestriction) {
             OWLObjectCardinalityRestriction objectCard = (OWLObjectCardinalityRestriction) desc;
             resultArray = (String[]) objectCard.getProperty().accept(visitor);
-            result = OWLUtilities.toString(objectCard.getProperty(), owlModel.getOntology());
+            result = OWLUtilities.toString(objectCard.getProperty());
         } else if (desc instanceof OWLObjectHasSelf) {
             OWLObjectHasSelf objExistsSelf = (OWLObjectHasSelf) desc;
             resultArray = (String[]) objExistsSelf.getProperty().accept(visitor);
-            result = OWLUtilities.toString(objExistsSelf.getProperty(), owlModel.getOntology());
+            result = OWLUtilities.toString(objExistsSelf.getProperty());
         } else if (desc instanceof OWLObjectHasValue) {
             OWLObjectHasValue objHasValue = (OWLObjectHasValue) desc;
             resultArray = (String[]) objHasValue.getProperty().accept(visitor);
-            result = OWLUtilities.toString(objHasValue.getProperty(), owlModel.getOntology());
+            result = OWLUtilities.toString(objHasValue.getProperty());
         } else if (desc instanceof OWLObjectComplementOf) {
             OWLObjectComplementOf objNot = (OWLObjectComplementOf) desc;
 //            resultArray = (String[]) dataHasValue.getDataProperty().accept(visitor);
-            result = OWLUtilities.toString(objNot, owlModel.getOntology());
+            result = OWLUtilities.toString(objNot);
         } else if (desc instanceof OWLObjectOneOf) {
             OWLObjectOneOf objOneOf = (OWLObjectOneOf) desc;
 //            resultArray = (String[]) dataHasValue.getDataProperty().accept(visitor);
-            result = OWLUtilities.toString(objOneOf, owlModel.getOntology());
+            result = OWLUtilities.toString(objOneOf);
         } else if (desc instanceof OWLObjectUnionOf) {
             OWLObjectUnionOf objOr = (OWLObjectUnionOf) desc;
 //            resultArray = (String[]) dataHasValue.getDataProperty().accept(visitor);
-            result = OWLUtilities.toString(objOr, owlModel.getOntology());
+            result = OWLUtilities.toString(objOr);
         } else if (desc instanceof OWLObjectSomeValuesFrom) {
             OWLObjectSomeValuesFrom objectSome = (OWLObjectSomeValuesFrom) desc;
             resultArray = (String[]) objectSome.getProperty().accept(visitor);
-            result = OWLUtilities.toString(objectSome.getProperty(), owlModel.getOntology());
+            result = OWLUtilities.toString(objectSome.getProperty());
         }
         if (resultArray != null) {
             return getEntityLabel(resultArray);

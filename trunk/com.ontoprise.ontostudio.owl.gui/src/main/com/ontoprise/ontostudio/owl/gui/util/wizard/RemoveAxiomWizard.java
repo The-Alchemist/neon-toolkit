@@ -98,21 +98,13 @@ public class RemoveAxiomWizard extends RefactoringWizard {
         final List<String> addChanges = new ArrayList<String>();
         final List<String> removeChanges = new ArrayList<String>();
         for (OWLAxiom axiom: _axiomsToDelete) {
-            try {
-                removeChanges.add(OWLUtilities.toString(axiom, _owlModel.getOntology()));
-            } catch (NeOnCoreException e) {
-                e.printStackTrace();//NICO TODO How to handle that??
-            }
+            removeChanges.add(OWLUtilities.toString(axiom));
         }
         for (OWLAxiom axiom: _dependentAxioms) {
-            try {
-                if (_mode == WizardConstants.ADD_DEPENDENT_MODE) {
-                    addChanges.add(OWLUtilities.toString(axiom,_owlModel.getOntology()));
-                } else {
-                    removeChanges.add(OWLUtilities.toString(axiom,_owlModel.getOntology()));
-                }
-            } catch (NeOnCoreException e) {
-                e.printStackTrace();//NICO TODO How to handle that??
+            if (_mode == WizardConstants.ADD_DEPENDENT_MODE) {
+                addChanges.add(OWLUtilities.toString(axiom));
+            } else {
+                removeChanges.add(OWLUtilities.toString(axiom));
             }
         }
 

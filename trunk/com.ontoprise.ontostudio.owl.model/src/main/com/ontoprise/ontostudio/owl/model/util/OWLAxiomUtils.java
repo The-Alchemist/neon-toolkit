@@ -36,7 +36,6 @@ import org.semanticweb.owlapi.model.OWLObjectIntersectionOf;
 import org.semanticweb.owlapi.model.OWLObjectOneOf;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLObjectUnionOf;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
 
 import com.ontoprise.ontostudio.owl.model.OWLModel;
@@ -94,13 +93,8 @@ public class OWLAxiomUtils {
                 Set<OWLIndividual> individualsLocal = objectOneOf.getIndividuals();
                 clonedDescriptions.add(createNewObjectOneOfDescription(individualsLocal, descriptionToRemove, ontologyURI, projectId));
             } else {
-                try {
-                    OWLOntology ontology = OWLModelFactory.getOWLModel(ontologyURI, projectId).getOntology();
-                    if (!OWLUtilities.toString(desc, ontology).equals(descriptionToRemove)) {
-                        clonedDescriptions.add(desc);
-                    }
-                } catch (NeOnCoreException e) {
-                    e.printStackTrace(); // OWLOntology(OWLModel) is needed to serialize
+                if (!OWLUtilities.toString(desc).equals(descriptionToRemove)) {
+                    clonedDescriptions.add(desc);
                 }
             }
         }
@@ -124,13 +118,8 @@ public class OWLAxiomUtils {
                 Set<OWLIndividual> individualsLocal = ((OWLObjectOneOf) d).getIndividuals();
                 newDescriptions.add(createNewObjectOneOfDescription(individualsLocal, descriptionToRemove, ontologyURI, projectId));
             } else {
-                try {
-                    OWLOntology ontology = OWLModelFactory.getOWLModel(ontologyURI, projectId).getOntology();
-                    if (!OWLUtilities.toString(d, ontology).equals(descriptionToRemove)) {
-                        newDescriptions.add(d);
-                    }
-                } catch (NeOnCoreException e) {
-                    e.printStackTrace(); // OWLOntology(OWLModel) is needed to serialize
+                if (!OWLUtilities.toString(d).equals(descriptionToRemove)) {
+                    newDescriptions.add(d);
                 }
             }
         }
@@ -141,13 +130,8 @@ public class OWLAxiomUtils {
     private static OWLClassExpression createNewObjectOneOfDescription(Set<OWLIndividual> individuals, String descriptionToRemove, String ontologyURI, String projectId) {
         Set<OWLIndividual> individualsLocal = new HashSet<OWLIndividual>();
         for (OWLIndividual i: individuals) {
-            try {
-                OWLOntology ontology = OWLModelFactory.getOWLModel(ontologyURI, projectId).getOntology();
-                if (!OWLUtilities.toString(i, ontology).equals(descriptionToRemove)) {
-                    individualsLocal.add(i);
-                }
-            } catch (NeOnCoreException e) {
-                e.printStackTrace(); // OWLOntology(OWLModel) is needed to serialize
+            if (!OWLUtilities.toString(i).equals(descriptionToRemove)) {
+                individualsLocal.add(i);
             }
         }
         OWLDataFactory factory = getFactory(projectId);
@@ -167,13 +151,8 @@ public class OWLAxiomUtils {
                 Set<OWLIndividual> individualsLocal = ((OWLObjectOneOf) d).getIndividuals();
                 newDescriptions.add(createNewObjectOneOfDescription(individualsLocal, descriptionToRemove, ontologyURI, projectId));
             } else {
-                try {
-                    OWLOntology ontology = OWLModelFactory.getOWLModel(ontologyURI, projectId).getOntology();
-                    if (!OWLUtilities.toString(d, ontology).equals(descriptionToRemove)) {
-                        newDescriptions.add(d);
-                    }
-                } catch (NeOnCoreException e) {
-                    e.printStackTrace(); // OWLOntology(OWLModel) is needed to serialize
+                if (!OWLUtilities.toString(d).equals(descriptionToRemove)) {
+                    newDescriptions.add(d);
                 }
             }
         }
@@ -185,13 +164,8 @@ public class OWLAxiomUtils {
         Set<OWLClassExpression> descriptions = ((OWLDisjointClassesAxiom) oldAxiom).getClassExpressions();
         Set<OWLClassExpression> clonedDescriptions = new HashSet<OWLClassExpression>();
         for (OWLClassExpression desc: descriptions) {
-            try {
-                OWLOntology ontology = OWLModelFactory.getOWLModel(ontologyURI, projectId).getOntology();
-                if (!OWLUtilities.toString(desc, ontology).equals(descriptionToRemove)) {
-                    clonedDescriptions.add(desc);
-                }
-            } catch (NeOnCoreException e) {
-                e.printStackTrace(); // OWLOntology(OWLModel) is needed to serialize
+            if (!OWLUtilities.toString(desc).equals(descriptionToRemove)) {
+                clonedDescriptions.add(desc);
             }
         }
         if (clonedDescriptions.size() < 2) {
@@ -205,14 +179,13 @@ public class OWLAxiomUtils {
         Set<OWLIndividual> individuals = ((OWLDifferentIndividualsAxiom) oldAxiom).getIndividuals();
         Set<OWLIndividual> clonedIndividuals = new HashSet<OWLIndividual>();
         try {
-            OWLOntology ontology = OWLModelFactory.getOWLModel(ontologyURI, projectId).getOntology();
             for (OWLIndividual ind: individuals) {
-                if (!OWLUtilities.toString(ind, ontology).equals(idToRemove)) {
+                if (!OWLUtilities.toString(ind).equals(idToRemove)) {
                     clonedIndividuals.add(ind);
                 }
             }
             OWLDataFactory factory = getFactory(projectId);
-            OWLNamedIndividual newIndividual = factory.getOWLNamedIndividual(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(idToAdd, ontology));
+            OWLNamedIndividual newIndividual = factory.getOWLNamedIndividual(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(idToAdd));
             clonedIndividuals.add(newIndividual);
             return factory.getOWLDifferentIndividualsAxiom(clonedIndividuals);
         } catch (NeOnCoreException e) {
@@ -225,13 +198,8 @@ public class OWLAxiomUtils {
         Set<OWLIndividual> individuals = ((OWLDifferentIndividualsAxiom) oldAxiom).getIndividuals();
         Set<OWLIndividual> clonedIndividuals = new HashSet<OWLIndividual>();
         for (OWLIndividual ind: individuals) {
-            try {
-                OWLOntology ontology = OWLModelFactory.getOWLModel(ontologyURI, projectId).getOntology();
-                if (!OWLUtilities.toString(ind, ontology).equals(idToRemove)) {
-                    clonedIndividuals.add(ind);
-                }
-            } catch (NeOnCoreException e) {
-                e.printStackTrace(); // OWLOntology(OWLModel) is needed to serialize
+            if (!OWLUtilities.toString(ind).equals(idToRemove)) {
+                clonedIndividuals.add(ind);
             }
         }
         if (clonedIndividuals.size() < 2) {
@@ -245,14 +213,13 @@ public class OWLAxiomUtils {
         Set<OWLIndividual> individuals = ((OWLSameIndividualAxiom) oldAxiom).getIndividuals();
         Set<OWLIndividual> clonedIndividuals = new HashSet<OWLIndividual>();
         try {
-            OWLOntology ontology = OWLModelFactory.getOWLModel(ontologyURI, projectId).getOntology();
             for (OWLIndividual ind: individuals) {
-                if (!OWLUtilities.toString(ind, ontology).equals(idToRemove)) {
+                if (!OWLUtilities.toString(ind).equals(idToRemove)) {
                     clonedIndividuals.add(ind);
                 }
             }
             OWLDataFactory factory = getFactory(projectId);
-            OWLNamedIndividual newIndividual = factory.getOWLNamedIndividual(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(idToAdd, ontology));
+            OWLNamedIndividual newIndividual = factory.getOWLNamedIndividual(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(idToAdd));
             clonedIndividuals.add(newIndividual);
             return factory.getOWLSameIndividualAxiom(clonedIndividuals);
         } catch (NeOnCoreException e) {
@@ -265,13 +232,8 @@ public class OWLAxiomUtils {
         Set<OWLIndividual> individuals = ((OWLSameIndividualAxiom) oldAxiom).getIndividuals();
         Set<OWLIndividual> clonedIndividuals = new HashSet<OWLIndividual>();
         for (OWLIndividual ind: individuals) {
-            try {
-                OWLOntology ontology = OWLModelFactory.getOWLModel(ontologyURI, projectId).getOntology();
-                if (!OWLUtilities.toString(ind, ontology).equals(idToRemove)) {
-                    clonedIndividuals.add(ind);
-                }
-            } catch (NeOnCoreException e) {
-                e.printStackTrace(); // OWLOntology(OWLModel) is needed to serialize
+            if (!OWLUtilities.toString(ind).equals(idToRemove)) {
+                clonedIndividuals.add(ind);
             }
         }
         if (clonedIndividuals.size() < 2) {
@@ -285,13 +247,8 @@ public class OWLAxiomUtils {
         Set<OWLObjectPropertyExpression> props = ((OWLEquivalentObjectPropertiesAxiom) oldAxiom).getProperties();
         Set<OWLObjectPropertyExpression> clonedProps = new HashSet<OWLObjectPropertyExpression>();
         for (OWLObjectPropertyExpression p: props) {
-            try {
-                OWLOntology ontology = OWLModelFactory.getOWLModel(ontologyURI, projectId).getOntology();
-                if (!propertyToRemove.equals(OWLUtilities.toString(p, ontology))) {
-                    clonedProps.add(p);
-                }
-            } catch (NeOnCoreException e) {
-                e.printStackTrace(); // OWLOntology(OWLModel) is needed to serialize
+            if (!propertyToRemove.equals(OWLUtilities.toString(p))) {
+                clonedProps.add(p);
             }
         }
         if (clonedProps.size() < 2) {
@@ -305,13 +262,8 @@ public class OWLAxiomUtils {
         Set<OWLObjectPropertyExpression> props = ((OWLDisjointObjectPropertiesAxiom) oldAxiom).getProperties();
         Set<OWLObjectPropertyExpression> clonedProps = new HashSet<OWLObjectPropertyExpression>();
         for (OWLObjectPropertyExpression p: props) {
-            try {
-                OWLOntology ontology = OWLModelFactory.getOWLModel(ontologyURI, projectId).getOntology();
-                if (!propertyToRemove.equals(OWLUtilities.toString(p, ontology))) {
-                    clonedProps.add(p);
-                }
-            } catch (NeOnCoreException e) {
-                e.printStackTrace(); // OWLOntology(OWLModel) is needed to serialize
+            if (!propertyToRemove.equals(OWLUtilities.toString(p))) {
+                clonedProps.add(p);
             }
         }
         if (clonedProps.size() < 2) {
@@ -325,13 +277,8 @@ public class OWLAxiomUtils {
         Set<OWLDataPropertyExpression> props = ((OWLEquivalentDataPropertiesAxiom) oldAxiom).getProperties();
         Set<OWLDataPropertyExpression> clonedProps = new HashSet<OWLDataPropertyExpression>();
         for (OWLDataPropertyExpression p: props) {
-            try {
-                OWLOntology ontology = OWLModelFactory.getOWLModel(ontologyURI, projectId).getOntology();
-                if (!propertyToRemove.equals(OWLUtilities.toString(p, ontology))) {
-                    clonedProps.add(p);
-                }
-            } catch (NeOnCoreException e) {
-                e.printStackTrace(); // OWLOntology(OWLModel) is needed to serialize
+            if (!propertyToRemove.equals(OWLUtilities.toString(p))) {
+                clonedProps.add(p);
             }
         }
         if (clonedProps.size() < 2) {
@@ -356,14 +303,13 @@ public class OWLAxiomUtils {
 
     public static void triggerRemovePressed(List<OWLAxiom> axioms, OWLEntity entity, OWLNamespaces namespaces, String id, OWLModel owlModel, int mode) throws NeOnCoreException {
         try {
-            OWLOntology ontology = owlModel.getOntology();
             GenericRefactoringExecutionStarter.startRefactoring(
                     PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
                     "com.ontoprise.ontostudio.owl.gui.refactor.deleteAxiom", //$NON-NLS-1$
                     axioms,
                     id,
                     namespaces,
-                    OWLUtilities.toString(entity, ontology),
+                    OWLUtilities.toString(entity),
                     owlModel); 
         } catch (CoreException e) {
             throw new InternalNeOnException(e);

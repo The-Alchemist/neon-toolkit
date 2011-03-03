@@ -18,7 +18,6 @@ import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.ItemHits;
 import com.ontoprise.ontostudio.owl.model.LocatedItem;
@@ -47,14 +46,13 @@ public class GetDescriptionHits extends OWLOntologyRequestCommand {
         _results = new ArrayList<String[]>();
         String individualUri = (String) getArgument(2);
         try {
-            OWLOntology ontology = getOwlModel().getOntology();
             Set<ItemHits<OWLClassExpression,OWLClassAssertionAxiom>> descriptionHits = getOwlModel().getDescriptionHits(individualUri);
             Set<ItemHits<OWLClassExpression,OWLClassAssertionAxiom>> clazzHits = getOwlModel().getClassHits(individualUri);
             descriptionHits.addAll(clazzHits);
             for (ItemHits<OWLClassExpression, OWLClassAssertionAxiom> hit: descriptionHits) {
                 Set<LocatedItem<OWLClassAssertionAxiom>> axioms = hit.getAxioms();
                 for (LocatedItem<OWLClassAssertionAxiom> axiom: axioms) {
-                    String[] result = new String[]{OWLUtilities.toString(axiom.getItem(), ontology), axiom.getOntologyURI()};
+                    String[] result = new String[]{OWLUtilities.toString(axiom.getItem()), axiom.getOntologyURI()};
                     _results.add(result);
                 }
             }

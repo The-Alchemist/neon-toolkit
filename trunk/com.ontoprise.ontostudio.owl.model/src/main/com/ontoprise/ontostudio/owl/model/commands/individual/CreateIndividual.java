@@ -17,7 +17,6 @@ import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLRuntimeException;
 
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
@@ -36,16 +35,15 @@ public class CreateIndividual extends OWLModuleChangeCommand {
     @Override
     public void doPerform() throws CommandException {
         try {
-            OWLOntology ontology = getOwlModel().getOntology();
             OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(getProjectName());
             IRI clazzIRI,individualIRI;
             try{
-                clazzIRI = OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(getArgument(2).toString(), ontology);
+                clazzIRI = OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(getArgument(2).toString());
             }catch(OWLRuntimeException e){
                 clazzIRI = OWLUtilities.toIRI(getArgument(2).toString());
             }
             try{
-                individualIRI = OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(getArgument(3).toString(), ontology);   
+                individualIRI = OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(getArgument(3).toString());   
             }catch(OWLRuntimeException e){
                 individualIRI = OWLUtilities.toIRI(getArgument(3).toString());
             }

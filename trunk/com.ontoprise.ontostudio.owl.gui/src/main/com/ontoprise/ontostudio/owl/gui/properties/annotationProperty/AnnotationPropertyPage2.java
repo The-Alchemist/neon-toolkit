@@ -186,7 +186,7 @@ public class AnnotationPropertyPage2 extends AbstractOWLMainIDPropertyPage imple
                String ontologyUri = domain[1];
                boolean isLocal = ontologyUri.equals(_ontologyUri);
                OWLAnnotationPropertyDomainAxiom dataPropertyDomain = 
-                   (OWLAnnotationPropertyDomainAxiom) OWLUtilities.axiom(axiomText, _owlModel.getOntology());
+                   (OWLAnnotationPropertyDomainAxiom) OWLUtilities.axiom(axiomText);
    
                createRow(new LocatedAxiom(dataPropertyDomain, isLocal), ontologyUri, false, DOMAIN);
            }
@@ -240,7 +240,7 @@ public class AnnotationPropertyPage2 extends AbstractOWLMainIDPropertyPage imple
                String ontologyUri = domain[1];
                boolean isLocal = ontologyUri.equals(_ontologyUri);
                OWLAnnotationPropertyRangeAxiom annotationPropertyRange = 
-                   (OWLAnnotationPropertyRangeAxiom) OWLUtilities.axiom(axiomText, _owlModel.getOntology());
+                   (OWLAnnotationPropertyRangeAxiom) OWLUtilities.axiom(axiomText);
    
                createRow(new LocatedAxiom(annotationPropertyRange, isLocal), ontologyUri, true, RANGE);
            }
@@ -425,14 +425,14 @@ public class AnnotationPropertyPage2 extends AbstractOWLMainIDPropertyPage imple
                 try {
                     String ontologyUri1 = o1[1];
                     String ontologyUri2 = o2[1];
-                    OWLAxiom axiom1 = (OWLAxiom) OWLUtilities.axiom(o1[0], _owlModel.getOntology());
+                    OWLAxiom axiom1 = (OWLAxiom) OWLUtilities.axiom(o1[0]);
                     IRI uri1 = null;
                     IRI uri2 = null;
                     if (axiom1 instanceof OWLAnnotationPropertyDomainAxiom) {
                         OWLAnnotationPropertyDomainAxiom domain = (OWLAnnotationPropertyDomainAxiom) axiom1;
                         uri1 = domain.getDomain();
 
-                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0], _owlModel.getOntology());
+                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0]);
                         if (axiom2 instanceof OWLAnnotationPropertyDomainAxiom) {
                             OWLAnnotationPropertyDomainAxiom domain2 = (OWLAnnotationPropertyDomainAxiom) axiom2;
                             uri2 = domain2.getDomain();
@@ -442,7 +442,7 @@ public class AnnotationPropertyPage2 extends AbstractOWLMainIDPropertyPage imple
                         OWLAnnotationPropertyRangeAxiom range = (OWLAnnotationPropertyRangeAxiom) axiom1;
                         uri1 = range.getRange();
 
-                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0], _owlModel.getOntology());
+                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0]);
                         if (axiom2 instanceof OWLAnnotationPropertyRangeAxiom) {
                             OWLAnnotationPropertyRangeAxiom range2 = (OWLAnnotationPropertyRangeAxiom) axiom2;
                             uri2 = range2.getRange();

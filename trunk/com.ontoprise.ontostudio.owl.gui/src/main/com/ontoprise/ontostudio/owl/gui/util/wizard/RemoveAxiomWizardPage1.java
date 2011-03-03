@@ -171,9 +171,8 @@ public class RemoveAxiomWizardPage1 extends UserInputWizardPage {
             }
         } else {
             info.append(Messages.RemoveAxiomWizardPage1_6);
-            OWLOntology ontology = OWLModelFactory.getOWLModel(_ontologyUri, _projectId).getOntology();
-            OWLClassExpression sourceDesc = OWLUtilities.description(_sourceEntityUri, ontology);
-            OWLClassExpression targetDesc = OWLUtilities.description(_targetEntityUri, ontology);
+            OWLClassExpression sourceDesc = OWLUtilities.description(_sourceEntityUri);
+            OWLClassExpression targetDesc = OWLUtilities.description(_targetEntityUri);
             String sourceUriToDisplay = OWLGUIUtilities.getEntityLabel(sourceDesc, _ontologyUri, _projectId);
             String targetUriToDisplay = OWLGUIUtilities.getEntityLabel(targetDesc, _ontologyUri, _projectId);
             if (sourceUriToDisplay.length() > 80) {
@@ -230,7 +229,7 @@ public class RemoveAxiomWizardPage1 extends UserInputWizardPage {
                 int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();
                 String[] result = (String[]) axiom.accept(OWLPlugin.getDefault().getSyntaxManager().getVisitor(owlModel, idDisplayStyle));
                 StringBuffer buffer = new StringBuffer();
-                OWLUtilities.toString(axiom, owlModel.getOntology());
+                OWLUtilities.toString(axiom);
                 String id = buffer.toString();
                 if (result != null) {
                     id = OWLGUIUtilities.getEntityLabel(result);

@@ -24,19 +24,16 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.neontoolkit.core.NeOnCorePlugin;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.neontoolkit.gui.navigator.elements.IOntologyElement;
 import org.neontoolkit.gui.navigator.elements.IProjectElement;
-import org.neontoolkit.gui.properties.EntityPropertiesView;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
@@ -211,28 +208,23 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
 
             int i = 0;
             for (String individualUri: individualUris) {
-                OWLOntology ontology = OWLModelFactory.getOWLModel(_ontologyUri, _projectId).getOntology();
 //                if(individualUri.startsWith("_:"))individualUri = individualUri.substring(2); //$NON-NLS-1$
 //                OWLIndividual individual = OWLModelFactory.getOWLDataFactory(_projectId).getOWLNamedIndividual(OWLUtilities.toIRI(individualUri));
                 boolean newIndividuum = true;
                 int oldPos = 0;
                 for(oldPos = 0 ; oldPos < oldItems.length ; oldPos++){
-                    if(oldItems[oldPos] != null && OWLUtilities.toString(oldItems[oldPos].getIndividual(), ontology).equals(i)){
+                    if(oldItems[oldPos] != null && OWLUtilities.toString(oldItems[oldPos].getIndividual()).equals(i)){
                         newIndividuum = false;
                         break;
                     }
                 }
                 if(newIndividuum){
-                    OWLIndividual individual = OWLUtilities.individual(individualUri, ontology);
+                    OWLIndividual individual = OWLUtilities.individual(individualUri);
                     _items[i++] = IndividualItem.createNewInstance(individual, _selectedClazz, _ontologyUri, _projectId);
                 }else{
                     _items[i++] = oldItems[oldPos];
                     oldItems[oldPos] = null;
                 }
-            }
-            
-            if(oldItems != null && oldItems.length > 0 && oldItems[0] != null && _items[0] != null){
-                System.err.println("select " + _items[0] + " or its class " + _items[0].getClazz());
             }
             Arrays.sort(_items, new Comparator<IIndividualTreeElement>() {
                 @Override
@@ -406,7 +398,7 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
             directInstances = new ArrayList<IIndividualTreeElement>();
             String[] individualUris = new GetIndividuals(_projectId, _ontologyUri, _selectedClazz).getResults();
             for (String individualUri: individualUris) {
-                OWLIndividual individual = OWLUtilities.individual(individualUri, OWLModelFactory.getOWLModel(_ontologyUri, _projectId).getOntology());
+                OWLIndividual individual = OWLUtilities.individual(individualUri);
                 directInstances.add(IndividualItem.createNewInstance(individual, _selectedClazz, _ontologyUri, _projectId));
             }
             _items = new IIndividualTreeElement[directInstances.size()];

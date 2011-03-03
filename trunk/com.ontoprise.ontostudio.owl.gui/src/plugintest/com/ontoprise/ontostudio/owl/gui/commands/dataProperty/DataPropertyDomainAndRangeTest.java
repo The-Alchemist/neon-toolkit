@@ -17,11 +17,8 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.semanticweb.owlapi.model.OWLDataPropertyDomainAxiom;
 import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.gui.commands.AbstractOWLPluginTest;
-import com.ontoprise.ontostudio.owl.model.OWLModel;
-import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.ApplyChanges;
 import com.ontoprise.ontostudio.owl.model.commands.clazz.CreateRootClazz;
@@ -63,13 +60,11 @@ public class DataPropertyDomainAndRangeTest extends AbstractOWLPluginTest {
         Assert.assertEquals(1, domains.length);
         Assert.assertEquals(1, ranges.length);
         
-        OWLModel model = OWLModelFactory.getOWLModel(ONTOLOGY_URI, PROJECT_ID);
-        OWLOntology ontology = model.getOntology();
-        OWLDataPropertyDomainAxiom domain = (OWLDataPropertyDomainAxiom) OWLUtilities.axiom(domains[0][0], ontology);
-        Assert.assertEquals(c1, OWLUtilities.toString(domain.getDomain(), model.getOntology()));
+        OWLDataPropertyDomainAxiom domain = (OWLDataPropertyDomainAxiom) OWLUtilities.axiom(domains[0][0]);
+        Assert.assertEquals(c1, OWLUtilities.toString(domain.getDomain()));
         
-        OWLDataPropertyRangeAxiom range = (OWLDataPropertyRangeAxiom) OWLUtilities.axiom(ranges[0][0], ontology);
-        Assert.assertEquals(c2, OWLUtilities.toString(range.getRange(), model.getOntology()));
+        OWLDataPropertyRangeAxiom range = (OWLDataPropertyRangeAxiom) OWLUtilities.axiom(ranges[0][0]);
+        Assert.assertEquals(c2, OWLUtilities.toString(range.getRange()));
         
         String domainAxiom = new StringBuilder("[dataDomain ").append(dp1).append(" ").append(c1).append("]").toString(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         String rangeAxiom = new StringBuilder("[dataRange ").append(dp1).append(" ").append(c2).append("]").toString(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

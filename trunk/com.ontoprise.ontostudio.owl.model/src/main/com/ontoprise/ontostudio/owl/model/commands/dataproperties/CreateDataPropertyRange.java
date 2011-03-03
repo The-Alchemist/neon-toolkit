@@ -15,7 +15,6 @@ import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.core.util.IRIUtils;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
@@ -45,12 +44,11 @@ public class CreateDataPropertyRange extends OWLModuleChangeCommand {
         String range = (String) getArgument(3);
         try {
             OWLModel model = getOwlModel();
-            OWLOntology ontology = model.getOntology();
             OWLDataFactory factory = model.getOWLDataFactory();
             new ApplyChanges(getProjectName(), getOntology(), 
                     new OWLAxiom[]{factory.getOWLDataPropertyRangeAxiom(
-                            OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(propertyUri), ontology), 
-                            OWLUtilities.dataRange(range, ontology))}, 
+                            OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(propertyUri)), 
+                            OWLUtilities.dataRange(range))}, 
                     new OWLAxiom[0]).perform();
         } catch (NeOnCoreException e) {
             throw new CommandException(e);

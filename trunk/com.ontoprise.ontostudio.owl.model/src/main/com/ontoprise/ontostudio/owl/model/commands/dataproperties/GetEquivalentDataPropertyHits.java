@@ -19,7 +19,6 @@ import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLEquivalentDataPropertiesAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.ItemHits;
 import com.ontoprise.ontostudio.owl.model.LocatedItem;
@@ -50,12 +49,11 @@ public class GetEquivalentDataPropertyHits extends OWLOntologyRequestCommand {
         _results = new ArrayList<String[]>();
 
         try {
-            OWLOntology ontology = getOwlModel().getOntology();
             Set<ItemHits<OWLClassExpression,OWLEquivalentDataPropertiesAxiom>> list = getOwlModel().getEquivalentDataPropertyHits(propertyUri);
             for (ItemHits<OWLClassExpression,OWLEquivalentDataPropertiesAxiom> hit: list) {
                 Set<LocatedItem<OWLEquivalentDataPropertiesAxiom>> axioms = hit.getAxioms();
                 for (LocatedItem<OWLEquivalentDataPropertiesAxiom> axiom: axioms) {
-                    _results.add(new String[] {OWLUtilities.toString(axiom.getItem(), ontology), axiom.getOntologyURI()});
+                    _results.add(new String[] {OWLUtilities.toString(axiom.getItem()), axiom.getOntologyURI()});
                 }
             }
         } catch (NeOnCoreException e1) {

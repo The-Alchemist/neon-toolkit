@@ -1254,11 +1254,11 @@ public class OWLModelCore implements OWLModel {
                     OWLSubClassOfAxiom axiom = (OWLSubClassOfAxiom)event.getAxiom();
                     if (event instanceof AddAxiom) {
                         if (!_subClassOfAxioms.add(axiom)) {
-                            _log.error("Adding sub class relation already contained in the cache, ignoring: " + OWLUtilities.toString(axiom, getOntology()));
+                            _log.error("Adding sub class relation already contained in the cache, ignoring: " + OWLUtilities.toString(axiom));
                         }
                     } else {
                         if (!_subClassOfAxioms.remove(axiom)) {
-                            _log.error("Removing sub class relation not contained in the cache, ignoring: " + OWLUtilities.toString(axiom, getOntology()));
+                            _log.error("Removing sub class relation not contained in the cache, ignoring: " + OWLUtilities.toString(axiom));
                         }
                     }
                 }
@@ -1280,7 +1280,7 @@ public class OWLModelCore implements OWLModel {
                 Class<? extends OWLObject> type = Cast.cast(entity.accept(visitor));
                 if (_entities.containsKey(type)) {
                     if (!_entities.get(type).remove(entity)) {
-                        _log.error("Removing entity not contained in the cache, ignoring: " + OWLUtilities.toString(entity, getOntology()));
+                        _log.error("Removing entity not contained in the cache, ignoring: " + OWLUtilities.toString(entity));
                     }
                 }
             }
@@ -2548,7 +2548,7 @@ public class OWLModelCore implements OWLModel {
     }
 
     private OWLIndividual individual(String uri) throws NeOnCoreException {
-        return OWLUtilities.individual(uri, _ontology);
+        return OWLUtilities.individual(uri);
     }
 
     private OWLClass owlClass(String uri) throws NeOnCoreException {
@@ -2556,9 +2556,7 @@ public class OWLModelCore implements OWLModel {
     }
     private OWLDatatype owlDatatype(String uri) throws NeOnCoreException {
         OWLDatatype oWLDatatype = getOWLDataFactory().getOWLDatatype(OWLUtilities.toIRI(uri));
-        System.out.println(oWLDatatype);
         return oWLDatatype;
-//        return getOWLDataFactory().getOWLDatatype(OWLUtilities.toIRI(uri));
     }
 
     private OWLDeclarationAxiom declaration(OWLEntity entity) throws NeOnCoreException {

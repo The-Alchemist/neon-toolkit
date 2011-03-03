@@ -18,7 +18,6 @@ import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.LocatedItem;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
@@ -48,10 +47,9 @@ public class GetDataPropertyMemberHitsForProperty extends OWLOntologyRequestComm
         _results = new ArrayList<String[]>();
 
         try {
-            OWLOntology ontology = getOwlModel().getOntology();
             Set<LocatedItem<OWLDataPropertyAssertionAxiom>> objMem = getOwlModel().getDataPropertyMemberHitsForProperty(property);
             for (LocatedItem<OWLDataPropertyAssertionAxiom> item: objMem) {
-                _results.add(new String[] {OWLUtilities.toString(item.getItem(), ontology), item.getOntologyURI()});
+                _results.add(new String[] {OWLUtilities.toString(item.getItem()), item.getOntologyURI()});
             }
         } catch (NeOnCoreException e) {
             throw new CommandException(e);

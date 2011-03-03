@@ -13,7 +13,6 @@ package com.ontoprise.ontostudio.owl.model.commands.clazz;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.ApplyChanges;
@@ -44,10 +43,9 @@ public class RemoveRestriction extends OWLModuleChangeCommand {
         String clazzType = (String) getArgument(2);
 
         try {
-            OWLOntology ontology = getOwlModel().getOntology();
             OWLAxiom axiom = OWLCommandUtils.createAxiom(subClazzDescription, superClazzDescription, clazzType, getOntology(), getProjectName());
             if (axiom != null) {
-                new ApplyChanges(getProjectName(), getOntology(), new String[0], new String[]{OWLUtilities.toString(axiom, ontology)}).perform();
+                new ApplyChanges(getProjectName(), getOntology(), new String[0], new String[]{OWLUtilities.toString(axiom)}).perform();
             }
         } catch (NeOnCoreException e) {
             throw new CommandException(e);

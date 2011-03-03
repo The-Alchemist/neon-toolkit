@@ -10,8 +10,6 @@
 
 package com.ontoprise.ontostudio.owl.gui.util.textfields;
 
-import  org.eclipse.swt.graphics.Color;
-
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
@@ -227,9 +225,6 @@ public class DescriptionText extends AbstractOwlTextField {
         _toolbarShell.addMouseMoveListener(new MouseMoveListener() {
             @Override
             public void mouseMove(MouseEvent e) {
-//                System.out.println(new Point(e.x, e.y));
-//                System.out.println(_toolbarShell.getLocation());
-//                System.out.println("-------------------------");
                 if (_originalToolBarPosition == null)
                     return;
                 Point point = Display.getDefault().map(_toolbarShell, null, e.x, e.y);

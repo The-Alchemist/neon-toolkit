@@ -19,7 +19,6 @@ import org.neontoolkit.core.util.IRIUtils;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.ApplyChanges;
@@ -45,13 +44,12 @@ public class CreateEquivalentObjectProperty extends OWLModuleChangeCommand {
     @Override
     protected void doPerform() throws CommandException {
         try {
-            OWLOntology ontology = getOwlModel().getOntology();
             OWLDataFactory factory = getOwlModel().getOWLDataFactory();
             
             OWLObjectPropertyExpression propertyUri = 
-                OWLUtilities.objectProperty(IRIUtils.ensureValidIRISyntax((String) getArgument(2)), ontology);
+                OWLUtilities.objectProperty(IRIUtils.ensureValidIRISyntax((String) getArgument(2)));
             OWLObjectPropertyExpression equivalentPropertyUri = 
-                OWLUtilities.objectProperty(IRIUtils.ensureValidIRISyntax((String) getArgument(3)), ontology);
+                OWLUtilities.objectProperty(IRIUtils.ensureValidIRISyntax((String) getArgument(3)));
 
             new ApplyChanges(getProjectName(), getOntology(), 
                     new OWLAxiom[] {factory.getOWLEquivalentObjectPropertiesAxiom(new LinkedHashSet<OWLObjectPropertyExpression>(

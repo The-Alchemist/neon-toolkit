@@ -22,7 +22,6 @@ import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDeclarationAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
@@ -66,7 +65,6 @@ public class RemoveClazz extends OWLModuleChangeCommand {
         boolean removeAllAxioms = ((Boolean) getArgument(4)).booleanValue();
 
         try {
-            OWLOntology ontology = getOwlModel().getOntology();
             OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(getProjectName());
             OWLClass subClazz = factory.getOWLClass(OWLUtilities.toIRI(subClazzId));
             if (removeAllAxioms) {
@@ -75,22 +73,22 @@ public class RemoveClazz extends OWLModuleChangeCommand {
                 List<String> axiomTexts = new ArrayList<String>();
                 
                 for (OWLAxiom a: axiomsToRemove) {
-                    String axiomText = OWLUtilities.toString(a, ontology);
+                    String axiomText = OWLUtilities.toString(a);
                     axiomTexts.add(axiomText);
                 }
                 new ApplyChanges(getProjectName(), getOntology(), new String[0], axiomTexts.toArray(new String[axiomTexts.size()])).perform();
             } else {
                 if (superClazzId != null) {
                     // subclass
-                    OWLClassExpression superClazzDesc = OWLUtilities.description(superClazzId, ontology);
+                    OWLClassExpression superClazzDesc = OWLUtilities.description(superClazzId);
         
                     OWLAxiom subClassOf = factory.getOWLSubClassOfAxiom(subClazz, superClazzDesc);
-                    new ApplyChanges(getProjectName(), getOntology(), new String[0], new String[]{OWLUtilities.toString(subClassOf, ontology)}).perform();
+                    new ApplyChanges(getProjectName(), getOntology(), new String[0], new String[]{OWLUtilities.toString(subClassOf)}).perform();
                 } else {
                     // root class
                     OWLEntity entity = factory.getOWLClass(OWLUtilities.toIRI(subClazzId));
                     OWLDeclarationAxiom declaration = factory.getOWLDeclarationAxiom(entity);
-                    new ApplyChanges(getProjectName(), getOntology(), new String[0], new String[]{OWLUtilities.toString(declaration, ontology)}).perform();
+                    new ApplyChanges(getProjectName(), getOntology(), new String[0], new String[]{OWLUtilities.toString(declaration)}).perform();
                 }
             }
             

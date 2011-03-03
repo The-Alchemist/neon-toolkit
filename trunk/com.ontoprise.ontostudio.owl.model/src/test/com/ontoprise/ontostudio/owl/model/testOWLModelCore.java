@@ -24,23 +24,21 @@ public class testOWLModelCore {
     private static final OWLDataFactory _f = OWLManager.createOWLOntologyManager().getOWLDataFactory();
     
     @Test
-    public void test() throws OWLOntologyCreationException, NeOnCoreException{
-        String ontologyIRI = "http://test.org/ontology#";
-        OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-        OWLOntology ontology = manager.createOntology(IRI.create(ontologyIRI)); 
+    public void test() throws NeOnCoreException{
+        String ontologyIRI = "http://test.org/ontology#"; //$NON-NLS-1$
 //        ontology.
 //        PrefixManager pm = new DefaultPrefixManager(ontologyIRI);
 
-        String AString = ontologyIRI + "A";
-        String BString = ontologyIRI + "B";
-        String CString = ontologyIRI + "C";
-        String DString = ontologyIRI + "D";
+        String AString = ontologyIRI + "A"; //$NON-NLS-1$
+        String BString = ontologyIRI + "B"; //$NON-NLS-1$
+        String CString = ontologyIRI + "C"; //$NON-NLS-1$
+        String DString = ontologyIRI + "D"; //$NON-NLS-1$
         
         OWLClass A = _f.getOWLClass(IRI.create(AString));
         OWLClass B = _f.getOWLClass(IRI.create(BString));
         OWLClass C = _f.getOWLClass(IRI.create(CString));
         OWLClass D = _f.getOWLClass(IRI.create(DString));
-        OWLClassExpression E1 = OWLUtilities.description( "ObjectIntersectionOf(" + AString + " " + BString + ")", ontology);
+        OWLClassExpression E1 = OWLUtilities.description( "ObjectIntersectionOf(" + AString + " " + BString + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         System.out.println(E1.toString());
     }
 }

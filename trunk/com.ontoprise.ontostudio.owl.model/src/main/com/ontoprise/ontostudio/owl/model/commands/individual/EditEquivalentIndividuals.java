@@ -12,8 +12,6 @@ package com.ontoprise.ontostudio.owl.model.commands.individual;
 
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
-import org.neontoolkit.core.util.IRIUtils;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
 
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
@@ -45,10 +43,9 @@ public class EditEquivalentIndividuals extends OWLModuleChangeCommand {
         String newUri = (String) getArgument(4);
 
         try {
-            OWLOntology ontology = getOwlModel().getOntology();
-            OWLSameIndividualAxiom oldAxiom = (OWLSameIndividualAxiom) OWLUtilities.axiom(oldAxiomText, ontology);
+            OWLSameIndividualAxiom oldAxiom = (OWLSameIndividualAxiom) OWLUtilities.axiom(oldAxiomText);
             OWLSameIndividualAxiom newAxiom = OWLAxiomUtils.createNewSame_AsAxiom(oldAxiom, entityUri, newUri, getOntology(), getProjectName());
-            new ApplyChanges(getProjectName(), getOntology(), new String[]{OWLUtilities.toString(newAxiom, ontology)}, new String[]{OWLUtilities.toString(oldAxiom, ontology)}).perform();
+            new ApplyChanges(getProjectName(), getOntology(), new String[]{OWLUtilities.toString(newAxiom)}, new String[]{OWLUtilities.toString(oldAxiom)}).perform();
         } catch (NeOnCoreException e) {
             throw new CommandException(e);
         }

@@ -41,7 +41,6 @@ import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
-import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.annotations.GetAnnotationHits;
 import com.ontoprise.ontostudio.owl.model.commands.dataproperties.GetDataPropertyMemberHitsForProperty;
@@ -191,7 +190,7 @@ public class PropertyMemberViewContentProvider implements IStructuredContentProv
                 String axiomText = hit[0];
                 String ontologyUri = hit[1];
 
-                OWLAxiom axiom = OWLUtilities.axiom(axiomText, OWLModelFactory.getOWLModel(_ontologyUri, _projectId).getOntology());
+                OWLAxiom axiom = OWLUtilities.axiom(axiomText);
                 
                 OWLObject subject = null;
                 OWLObject value = null;

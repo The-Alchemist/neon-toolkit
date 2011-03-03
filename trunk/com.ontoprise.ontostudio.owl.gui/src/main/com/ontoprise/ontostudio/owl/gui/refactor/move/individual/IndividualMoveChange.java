@@ -17,13 +17,11 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
-import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.individual.MoveIndividual;
 
@@ -97,8 +95,7 @@ public class IndividualMoveChange extends Change {
                 if (_target == null) {
                     throw new CoreException(new Status(IStatus.ERROR, OWLPlugin.getDefault().getBundle().getSymbolicName(), IStatus.OK, Messages.IndividualMoveChange_3, new Exception()));
                 }
-                OWLOntology ontology = OWLModelFactory.getOWLModel(_target.getOntologyUri(), _target.getProjectName()).getOntology();
-                new MoveIndividual(_target.getProjectName(), _target.getOntologyUri(), OWLUtilities.toString(_elements[i].getIndividual(), ontology), OWLUtilities.toString(_parent.getEntity(), ontology), OWLUtilities.toString(_target.getEntity(), ontology)).run();
+                new MoveIndividual(_target.getProjectName(), _target.getOntologyUri(), OWLUtilities.toString(_elements[i].getIndividual()), OWLUtilities.toString(_parent.getEntity()), OWLUtilities.toString(_target.getEntity())).run();
                 pm.worked(1);
             }
         } catch (Exception e) {

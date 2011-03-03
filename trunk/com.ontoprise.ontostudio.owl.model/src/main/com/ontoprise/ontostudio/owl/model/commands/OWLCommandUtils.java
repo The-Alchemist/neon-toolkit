@@ -21,7 +21,6 @@ import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 import org.semanticweb.owlapi.model.OWLDataRange;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.OWLConstants;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
@@ -58,13 +57,11 @@ public class OWLCommandUtils {
     public static final String HAS_SELF = "has self"; //$NON-NLS-1$
 
     public static OWLAxiom createAxiom(String clazzId, String clazzType, String quantor, String propertyId, String range, String quantity, String ontologyId, String project) throws NeOnCoreException {
-        OWLOntology ontology = OWLModelFactory.getOWLModel(ontologyId, project).getOntology();
-        return (OWLAxiom) OWLUtilities.axiom(createAxiomText(clazzId, clazzType, quantor, propertyId, range, quantity, ontologyId, project), ontology);
+        return (OWLAxiom) OWLUtilities.axiom(createAxiomText(clazzId, clazzType, quantor, propertyId, range, quantity, ontologyId, project));
     }
 
     public static String createAxiomText(String clazzId, String clazzType, String quantor, String propertyId, String range, String quantity, String ontologyId, String project) throws NeOnCoreException {
         OWLModel owlModel = OWLModelFactory.getOWLModel(ontologyId, project);
-        OWLOntology ontology = owlModel.getOntology();
         OWLDataFactory factory = owlModel.getOWLDataFactory();
 //        String expandedURI = ns.expandString(propertyId);
 
@@ -76,11 +73,11 @@ public class OWLCommandUtils {
         OWLClassExpression desc = null;
         try {
             if (isDataProperty(propertyId, ontologyId, project)) { //isDataProperty(expandedURI, ontologyId, project)
-                OWLDataPropertyExpression property = factory.getOWLDataProperty(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(propertyId, ontology));
+                OWLDataPropertyExpression property = factory.getOWLDataProperty(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(propertyId));
                 if (quantor.equals(HAS_VALUE)) {
                     desc = factory.getOWLDataHasValue(property, OWLUtilities.constant(range, owlModel));
                 } else {
-                    OWLDataRange propertyRange = OWLUtilities.dataRange(range, ontology);
+                    OWLDataRange propertyRange = OWLUtilities.dataRange(range);
                     if (quantor.equals(ONLY)) {
                         desc = factory.getOWLDataAllValuesFrom((OWLDataPropertyExpression)property, (OWLDataRange)propertyRange);
                     } else if (quantor.equals(SOME)) {
@@ -100,14 +97,14 @@ public class OWLCommandUtils {
                     }
                 }
             } else {
-                OWLObjectPropertyExpression property = factory.getOWLObjectProperty(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(propertyId, ontology));
+                OWLObjectPropertyExpression property = factory.getOWLObjectProperty(OWLUtilities.toIRI(propertyId));
                 if (quantor.equals(HAS_VALUE)) {
-                    desc = factory.getOWLObjectHasValue(property, OWLUtilities.individual(range, owlModel.getOntology()));
+                    desc = factory.getOWLObjectHasValue(property, OWLUtilities.individual(range));
 //                    desc = factory.getOWLObjectHasValue(property, OWLUtilities.individual(IRIUtils.ensureValidIRISyntax(range), owlModel.getOntology()));
                 } else if (quantor.equals(HAS_SELF)){
                     desc = factory.getOWLObjectHasSelf((OWLObjectPropertyExpression)property);
                 } else {
-                    OWLClassExpression propertyRange = OWLUtilities.description(range, owlModel.getOntology());
+                    OWLClassExpression propertyRange = OWLUtilities.description(range);
                     if (quantor.equals(ONLY)) {
                         desc = factory.getOWLObjectAllValuesFrom((OWLObjectPropertyExpression)property, (OWLClassExpression)propertyRange);
                     } else if (quantor.equals(SOME)) {
@@ -130,34 +127,32 @@ public class OWLCommandUtils {
             
 
             if (clazzType.equals(INCL)) {
-                axiom = factory.getOWLSubClassOfAxiom(OWLUtilities.description(clazzId, ontology), desc);
+                axiom = factory.getOWLSubClassOfAxiom(OWLUtilities.description(clazzId), desc);
             } else {
-                axiom = factory.getOWLEquivalentClassesAxiom(OWLUtilities.description(clazzId, ontology), desc);
+                axiom = factory.getOWLEquivalentClassesAxiom(OWLUtilities.description(clazzId), desc);
             }
         } catch (IllegalArgumentException iae) {
             throw new InternalNeOnException(iae);
         }
-        return OWLUtilities.toString(axiom, ontology);
+        return OWLUtilities.toString(axiom);
     }
 
     public static OWLAxiom createAxiom(String subClazzDescription, String superClazzDescription, String clazzType, String ontologyId, String project) throws NeOnCoreException {
-        OWLOntology ontology = OWLModelFactory.getOWLModel(ontologyId, project).getOntology();
-        return (OWLAxiom) OWLUtilities.axiom(createAxiomText(subClazzDescription, superClazzDescription, clazzType, ontologyId, project), ontology);
+        return (OWLAxiom) OWLUtilities.axiom(createAxiomText(subClazzDescription, superClazzDescription, clazzType, ontologyId, project));
     }
 
     public static String createAxiomText(String subClazzDescription, String superClazzDescription, String clazzType, String ontologyId, String project) throws NeOnCoreException {
         OWLModel owlModel = OWLModelFactory.getOWLModel(ontologyId, project);
-        OWLOntology ontology = owlModel.getOntology();
         OWLDataFactory factory = owlModel.getOWLDataFactory();
-        OWLClassExpression subClazz = OWLUtilities.description(subClazzDescription, ontology);
-        OWLClassExpression superClazz = OWLUtilities.description(superClazzDescription, ontology);
+        OWLClassExpression subClazz = OWLUtilities.description(subClazzDescription);
+        OWLClassExpression superClazz = OWLUtilities.description(superClazzDescription);
         OWLAxiom axiom;
         if (clazzType.equals(INCL)) {
             axiom = factory.getOWLSubClassOfAxiom(subClazz, superClazz);
         } else {
             axiom = factory.getOWLEquivalentClassesAxiom(subClazz, superClazz);
         }
-        return OWLUtilities.toString(axiom, ontology);
+        return OWLUtilities.toString(axiom);
     }
 
     public static boolean isDataProperty(String propertyUri, String ontologyUri, String projectId) throws NeOnCoreException {

@@ -42,7 +42,6 @@ import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
 import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
@@ -173,7 +172,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
                 String ontologyUri = hit[1];
 
                 boolean imported = !ontologyUri.equals(_ontologyUri);
-                OWLSubClassOfAxiom axiom = (OWLSubClassOfAxiom) OWLUtilities.axiom(axiomText, _owlModel.getOntology());
+                OWLSubClassOfAxiom axiom = (OWLSubClassOfAxiom) OWLUtilities.axiom(axiomText);
                 LocatedAxiom locatedAxiom = new LocatedAxiom(axiom, !imported);
                 OWLClassExpression superDescription = axiom.getSuperClass();
                 createSuperOrSubRow(_superClazzesComp, superDescription, locatedAxiom, ontologyUri, false, SUPER_MODE);
@@ -229,7 +228,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
                 String ontologyUri = hit[1];
 
                 boolean imported = !ontologyUri.equals(_ontologyUri);
-                OWLSubClassOfAxiom axiom = (OWLSubClassOfAxiom) OWLUtilities.axiom(axiomText, _owlModel.getOntology());
+                OWLSubClassOfAxiom axiom = (OWLSubClassOfAxiom) OWLUtilities.axiom(axiomText);
                 LocatedAxiom locatedAxiom = new LocatedAxiom(axiom, !imported);
                 OWLClassExpression subDescription = axiom.getSubClass();
                 createSuperOrSubRow(_subClazzesComp, subDescription, locatedAxiom, ontologyUri, false, SUB_MODE);
@@ -327,7 +326,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
 
                 sourceOntoList.add(ontologyUri);
                 OWLEquivalentClassesAxiom equivalentClazzes = 
-                    (OWLEquivalentClassesAxiom) OWLUtilities.axiom(axiomText, _owlModel.getOntology());
+                    (OWLEquivalentClassesAxiom) OWLUtilities.axiom(axiomText);
                 axiomList.add(new LocatedAxiom(equivalentClazzes, isLocal));
                 Set<OWLClassExpression> descriptions = equivalentClazzes.getClassExpressions();
                 for (OWLClassExpression desc: descriptions) {
@@ -430,7 +429,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
 
                 sourceOntoList.add(ontologyUri);
                 OWLDisjointClassesAxiom disjointClazzes = 
-                    (OWLDisjointClassesAxiom) OWLUtilities.axiom(axiomText, _owlModel.getOntology());
+                    (OWLDisjointClassesAxiom) OWLUtilities.axiom(axiomText);
                 axiomList.add(new LocatedAxiom(disjointClazzes, isLocal));
                 Set<OWLClassExpression> descriptions = disjointClazzes.getClassExpressions();
 
@@ -486,16 +485,16 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
                                 newAxiom = factory.getOWLSubClassOfAxiom(thisClazzDesc, thatClazzDesc);
                                 break;
                             case EQUIV_MODE:
-                                if (!OWLUtilities.toString(thisClazzDesc, _localOwlModel.getOntology()).
-                                        equals(OWLUtilities.toString(thatClazzDesc, _localOwlModel.getOntology()))) {
+                                if (!OWLUtilities.toString(thisClazzDesc).
+                                        equals(OWLUtilities.toString(thatClazzDesc))) {
                                     newAxiom = factory.getOWLEquivalentClassesAxiom(thisClazzDesc, thatClazzDesc);
                                 } else {
                                     modeString = Messages.ClazzTaxonomyPropertyPage2_0;
                                 }
                                 break;
                             case DISJOINT_MODE:
-                                if (!OWLUtilities.toString(thisClazzDesc, _localOwlModel.getOntology()).
-                                        equals(OWLUtilities.toString(thatClazzDesc, _localOwlModel.getOntology()))) {
+                                if (!OWLUtilities.toString(thisClazzDesc).
+                                        equals(OWLUtilities.toString(thatClazzDesc))) {
                                     newAxiom = factory.getOWLDisjointClassesAxiom(thisClazzDesc, thatClazzDesc);
                                 } else {
                                     modeString = Messages.ClazzTaxonomyPropertyPage2_1;
@@ -512,7 +511,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
                     }
 
                     if (newAxiom != null) {
-                        new ApplyChanges(_project, _ontologyUri, new String[] {OWLUtilities.toString(newAxiom, _localOwlModel.getOntology())}, new String[0]).run();
+                        new ApplyChanges(_project, _ontologyUri, new String[] {OWLUtilities.toString(newAxiom)}, new String[0]).run();
                     } else {
                         MessageDialog.openWarning(_disjointClazzesComp.getShell(), Messages.ClazzTaxonomyPropertyPage2_ApplyChanges, Messages.ClazzTaxonomyPropertyPage2_2 + " " + modeString + Messages.ClazzTaxonomyPropertyPage2_3); //$NON-NLS-1$ 
                     }
@@ -558,7 +557,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
                 }
                 OWLClassExpression desc = null;
                 try {
-                    desc = OWLUtilities.description(clazzText.getText(), _owlModel.getOntology());
+                    desc = OWLUtilities.description(clazzText.getText());
                 } catch (NeOnCoreException e) {
                 }
                 if (desc != null) {
@@ -630,8 +629,6 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
                     OWLAxiom axiomToAdd;
                     OWLClassExpression id = getClazzDescription();
 
-//                    value = _manager.parseUri(value, _owlModel);
-//                    System.out.println(value);
                     if (mode == SUPER_MODE) {
                         OWLClassExpression superClazzDesc = _manager.parseDescription(value, _localOwlModel);
                         axiomToAdd = factory.getOWLSubClassOfAxiom(id, superClazzDesc);
@@ -643,8 +640,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
                     }
 
                     if (axiomToRemove != null) {
-                        OWLOntology ontology =  _localOwlModel.getOntology();
-                        new ApplyChanges(_project, _sourceOwlModel.getOntologyURI(), new String[] {OWLUtilities.toString(axiomToAdd, ontology)}, new String[] {OWLUtilities.toString(axiomToRemove, ontology)}).run();
+                        new ApplyChanges(_project, _sourceOwlModel.getOntologyURI(), new String[] {OWLUtilities.toString(axiomToAdd)}, new String[] {OWLUtilities.toString(axiomToRemove)}).run();
                     }
 
                 } catch (NeOnCoreException k2e) {
@@ -737,19 +733,17 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
                     for (LocatedAxiom axiom: getAxioms()) {
                         if (axiom != null) {
                             OWLAxiom axiomToRemove = axiom.getAxiom();
-                            OWLOntology ontology =  _localOwlModel.getOntology();
-                            new ApplyChanges(_project, _sourceOwlModel.getOntologyURI(), new String[] {OWLUtilities.toString(axiomToAdd, ontology)}, new String[] {OWLUtilities.toString(axiomToRemove, ontology)}).run();
+                            new ApplyChanges(_project, _sourceOwlModel.getOntologyURI(), new String[] {OWLUtilities.toString(axiomToAdd)}, new String[] {OWLUtilities.toString(axiomToRemove)}).run();
                         } else {
                             String[] axiomsToRemove = new String[0];
                             if (mode == DISJOINT_MODE) {
                                 OWLClassExpression targetClazzDesc = _manager.parseDescription(clazzText.getText(), _localOwlModel);
-                                axiomsToRemove = new String[] {OWLUtilities.toString(factory.getOWLDisjointClassesAxiom(id, targetClazzDesc), _localOwlModel.getOntology())};
+                                axiomsToRemove = new String[] {OWLUtilities.toString(factory.getOWLDisjointClassesAxiom(id, targetClazzDesc))};
                             } else if (mode == EQUIV_MODE) {
                                 OWLClassExpression eqClazzDesc = (OWLClassExpression) clazzText.getData();
-                                axiomsToRemove = new String[] {OWLUtilities.toString(factory.getOWLEquivalentClassesAxiom(id, eqClazzDesc), _localOwlModel.getOntology())};
+                                axiomsToRemove = new String[] {OWLUtilities.toString(factory.getOWLEquivalentClassesAxiom(id, eqClazzDesc))};
                             }
-                            OWLOntology ontology =  _localOwlModel.getOntology();
-                            new ApplyChanges(_project, _sourceOwlModel.getOntologyURI(), new String[] {OWLUtilities.toString(axiomToAdd, ontology)}, axiomsToRemove).run();
+                            new ApplyChanges(_project, _sourceOwlModel.getOntologyURI(), new String[] {OWLUtilities.toString(axiomToAdd)}, axiomsToRemove).run();
                         }
                     }
                 } catch (NeOnCoreException k2e) {
@@ -771,9 +765,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
                         owlAxioms.add(a.getAxiom());
                     }
                 }
-                OWLOntology ontology = _sourceOwlModel.getOntology();
-                String thisClass =  OWLUtilities.toString(OWLUtilities.description(IRIUtils.ensureValidIRISyntax(_id), ontology), ontology);
-                OWLAxiomUtils.triggerRemovePressed(owlAxioms, OWLUtilities.toString(description, ontology), _namespaces, thisClass, _sourceOwlModel);
+                OWLAxiomUtils.triggerRemovePressed(owlAxioms, OWLUtilities.toString(description), _namespaces, IRIUtils.ensureValidIRISyntax(_id), _sourceOwlModel);
                 refresh();
             }
 
@@ -816,7 +808,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
      * @throws NeOnCoreException
      */
     protected OWLClassExpression getClazzDescription() throws NeOnCoreException {
-        return OWLUtilities.description(IRIUtils.ensureValidIRISyntax(_id), _owlModel.getOntology());
+        return OWLUtilities.description(IRIUtils.ensureValidIRISyntax(_id));
     }
 
     private TreeSet<String[]> getSortedSet(String[][] clazzesArray) {
@@ -828,7 +820,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
                 try {
                     String ontologyUri1 = o1[1];
                     String ontologyUri2 = o2[1];
-                    OWLAxiom axiom1 = (OWLAxiom) OWLUtilities.axiom(o1[0], _owlModel.getOntology());
+                    OWLAxiom axiom1 = (OWLAxiom) OWLUtilities.axiom(o1[0]);
                     String propertyUri1 = ""; //$NON-NLS-1$
                     String propertyUri2 = ""; //$NON-NLS-1$
                     if (axiom1 instanceof OWLEquivalentClassesAxiom) {
@@ -842,7 +834,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
                             }
                         }
 
-                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0], _owlModel.getOntology());
+                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0]);
                         if (axiom2 instanceof OWLEquivalentClassesAxiom) {
                             clazzes = (OWLEquivalentClassesAxiom) axiom2;
                             descriptions = clazzes.getClassExpressions();
@@ -859,7 +851,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
                         OWLClassExpression thisDescription = ClazzTaxonomyPropertyPage2.this.getClazzDescription();
                         OWLClassExpression desc1 = ((OWLSubClassOfAxiom) axiom1).getSuperClass();
 
-                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0], _owlModel.getOntology());
+                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0]);
                         OWLClassExpression desc2 = ((OWLSubClassOfAxiom) axiom2).getSuperClass();
                         if (desc1.equals(thisDescription)) {
                             desc1 = ((OWLSubClassOfAxiom) axiom1).getSubClass();
@@ -878,7 +870,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
                                 break;
                             }
                         }
-                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0], _owlModel.getOntology());
+                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0]);
                         if (axiom2 instanceof OWLDisjointClassesAxiom) {
                             clazzes = (OWLDisjointClassesAxiom) axiom2;
                             descs = clazzes.getClassExpressions();

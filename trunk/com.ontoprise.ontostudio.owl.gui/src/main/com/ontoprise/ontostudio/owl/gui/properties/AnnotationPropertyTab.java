@@ -51,7 +51,6 @@ import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
@@ -162,7 +161,7 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
             
             createAnnotationRowTitles(_annotationsComp, annotationValueHits.length > 0);
             for (String[] annotationValueHit: sortedSet) {
-                OWLAnnotationAssertionAxiom axiom = (OWLAnnotationAssertionAxiom) OWLUtilities.axiom(annotationValueHit[0],_owlModel.getOntology());
+                OWLAnnotationAssertionAxiom axiom = (OWLAnnotationAssertionAxiom) OWLUtilities.axiom(annotationValueHit[0]);
                 String ontologyUri = annotationValueHit[1];
                 boolean imported = !ontologyUri.equals(_ontologyUri);
                 handleAnnotationValue(visitor, axiom, imported, ontologyUri);
@@ -409,7 +408,7 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
                 try {
                     String[] values = getNewValues(propertyTextWidget, valueTextWidget, typeTextWidget, languageCombo);
                     new EditEntityAnnotation(_project, _sourceOwlModel.getOntologyURI(), _id, 
-                            OWLUtilities.toString(getAxiom(), _localOwlModel.getOntology()), values).run();
+                            OWLUtilities.toString(getAxiom()), values).run();
                     
                 } catch (NeOnCoreException k2e) {
                     handleException(k2e, Messages.AnnotationsPropertyPage2_15, propertyTextWidget.getShell());
@@ -678,23 +677,22 @@ public class AnnotationPropertyTab extends AbstractOWLIdPropertyPage implements 
                 try {
                     String ontologyUri1 = o1[1];
                     String ontologyUri2 = o2[1];
-                    OWLOntology ontology = _owlModel.getOntology();
-                    OWLAxiom axiom1 = (OWLAxiom) OWLUtilities.axiom(o1[0], ontology);
+                    OWLAxiom axiom1 = (OWLAxiom) OWLUtilities.axiom(o1[0]);
                     int result = 1;
                     if (axiom1 instanceof OWLAnnotationAssertionAxiom) {
                         OWLAnnotationAssertionAxiom ea = (OWLAnnotationAssertionAxiom)axiom1;
                         OWLAnnotationProperty annotationProperty = ea.getAnnotation().getProperty();
                         String propertyUri1 = OWLGUIUtilities.getEntityLabel(annotationProperty, ontologyUri1, _project);
                         
-                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0], ontology);
+                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0]);
                         if (axiom2 instanceof OWLAnnotationAssertionAxiom) {
                             OWLAnnotationAssertionAxiom ea2 = (OWLAnnotationAssertionAxiom)axiom2;
                             OWLAnnotationProperty annotationProperty2 = ea2.getAnnotation().getProperty();
                             String propertyUri2 = OWLGUIUtilities.getEntityLabel(annotationProperty2, ontologyUri2, _project);
                             result = propertyUri1.compareTo(propertyUri2);
                             if (result == 0) {
-                                result = OWLUtilities.toString(ea2.getAnnotation().getValue(), ontology).compareTo(
-                                        OWLUtilities.toString(ea.getAnnotation().getValue(), ontology));  
+                                result = OWLUtilities.toString(ea2.getAnnotation().getValue()).compareTo(
+                                        OWLUtilities.toString(ea.getAnnotation().getValue()));  
                             }
                         }
                     }

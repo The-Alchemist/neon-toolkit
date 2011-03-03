@@ -10,14 +10,10 @@
  ******************************************************************************/
 package com.ontoprise.ontostudio.owl.gui.individualview;
 
-import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.OWLAnonymousIndividual;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
-import org.semanticweb.owlapi.model.OWLOntology;
 
-import com.ontoprise.ontostudio.owl.model.OWLModel;
-import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 
 /**
@@ -31,13 +27,7 @@ public class IndividualItem<T extends OWLIndividual>{
     private String _clazz;
 
     protected IndividualItem(T individual, String clazzUri, String ontologyUri, String projectName){
-        try {
-            OWLOntology ontology = OWLModelFactory.getOWLModel(ontologyUri, projectName).getOntology();
-            _id = OWLUtilities.toString(individual, ontology);
-        } catch (NeOnCoreException e) {
-            // NICO how to handle this exception ????
-            _id = individual.toStringID();
-        }
+        _id = OWLUtilities.toString(individual);
         _individual = individual;
         _clazz = clazzUri;
     }

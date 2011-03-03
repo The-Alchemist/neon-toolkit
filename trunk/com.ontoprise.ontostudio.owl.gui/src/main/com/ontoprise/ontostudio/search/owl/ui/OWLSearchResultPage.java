@@ -159,20 +159,7 @@ public class OWLSearchResultPage extends AbstractTextSearchViewPage implements I
     }
 
     private void gotoNextMatch(boolean activateEditor) {
-//        Match currentMatch = getCurrentMatch();
-//        if(currentMatch != null){
-//            Object currentSearchMatch = currentMatch.getElement();
-//            System.out.println("currentMatch: " + currentSearchMatch);
-//            if(currentSearchMatch != null && currentSearchMatch instanceof OwlSearchMatch){
-//                SearchMatch nextMatch = _contentProvider.getNextMatch((OwlSearchMatch)currentSearchMatch);
-//                System.out.println("nextMatch: " + nextMatch);
-//                if (nextMatch != null) {
-////                    _currentPathIndex = 0;
-                    navigateNext(true);
-//                    showMatch(nextMatch);
-//                }
-//            }
-//        }
+        navigateNext(true);
         showCurrentMatch();
     }
     
@@ -187,24 +174,7 @@ public class OWLSearchResultPage extends AbstractTextSearchViewPage implements I
     }
 
     private void gotoPreviousMatch(boolean activateEditor) {
-//        Match currentMatch = getCurrentMatch();
-//        if(currentMatch != null){
-//            Object currentSearchMatch = currentMatch.getElement();
-//            System.out.println("currentMatch: " + currentSearchMatch);
-//            if(currentSearchMatch != null && currentSearchMatch instanceof OwlSearchMatch){
-//                SearchMatch previousMatch = _contentProvider.getPreviousMatch((OwlSearchMatch)currentSearchMatch);
-//                System.out.println("previousMatch: " + previousMatch);
-//                if (previousMatch != null) {
-//                    showMatch(previousMatch);
-                    navigateNext(false);
-//                    _currentPathIndex = 0;
-//                    nextMatch = getSelectedMatch();
-//                    if (nextMatch != null) {
-//                        _currentPathIndex = nextMatch.getOccurenceCount()-1;
-//                    }
-//                }
-//            }
-//        }
+        navigateNext(false);
         showCurrentMatch();
     }
 

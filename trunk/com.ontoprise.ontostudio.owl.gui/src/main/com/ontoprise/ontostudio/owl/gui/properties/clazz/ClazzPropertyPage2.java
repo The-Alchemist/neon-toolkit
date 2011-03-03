@@ -182,7 +182,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 
                 boolean imported = !ontologyUri.equals(_ontologyUri);
                 OWLEquivalentClassesAxiom axiom = 
-                    (OWLEquivalentClassesAxiom) OWLUtilities.axiom(axiomText, _owlModel.getOntology());
+                    (OWLEquivalentClassesAxiom) OWLUtilities.axiom(axiomText);
                 List<LocatedAxiom> axiomList = new ArrayList<LocatedAxiom>();
                 axiomList.add(new LocatedAxiom(axiom, !imported));
                 Set<OWLClassExpression> descriptions = axiom.getClassExpressions();
@@ -218,8 +218,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 try {
                     String ontologyUri1 = o1[1];
                     String ontologyUri2 = o2[1];
-                    OWLOntology ontology = _owlModel.getOntology();
-                    OWLAxiom axiom1 = (OWLAxiom) OWLUtilities.axiom(o1[0], ontology);
+                    OWLAxiom axiom1 = (OWLAxiom) OWLUtilities.axiom(o1[0]);
                     String propertyUri1 = ""; //$NON-NLS-1$
                     String propertyUri2 = ""; //$NON-NLS-1$
                     if (axiom1 instanceof OWLEquivalentClassesAxiom) {
@@ -232,7 +231,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                             }
                         }
                         
-                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0], ontology);
+                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0]);
                         if (axiom2 instanceof OWLEquivalentClassesAxiom) {
                             clazzes = (OWLEquivalentClassesAxiom) axiom2;
                             descriptions = clazzes.getClassExpressions();
@@ -248,7 +247,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                         OWLClassExpression desc1 = ((OWLSubClassOfAxiom)axiom1).getSuperClass();
                         propertyUri1 = OWLGUIUtilities.getUriForSorting(desc1, _owlModel);
 
-                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0], ontology);
+                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0]);
                         OWLClassExpression desc2 = ((OWLSubClassOfAxiom)axiom2).getSuperClass();
                         propertyUri2 = OWLGUIUtilities.getUriForSorting(desc2, _owlModel);
                     }
@@ -336,7 +335,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 
                 boolean imported = !ontologyUri.equals(_ontologyUri);
                 OWLSubClassOfAxiom axiom = 
-                    (OWLSubClassOfAxiom) OWLUtilities.axiom(axiomText, _owlModel.getOntology());
+                    (OWLSubClassOfAxiom) OWLUtilities.axiom(axiomText);
                 List<LocatedAxiom> axiomList = new ArrayList<LocatedAxiom>();
                 axiomList.add(new LocatedAxiom(axiom, !imported));
                 OWLClassExpression desc = axiom.getSuperClass();
@@ -456,9 +455,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 // add new entry
                 try {
                     String[] newValues = getNewValues(quantifierCombo, propertyText, formRow.getRangeText(), cardinalityText);
-                    OWLOntology ontology = _localOwlModel.getOntology();
-                    String thisClass = OWLUtilities.toString(OWLUtilities.description(IRIUtils.ensureValidIRISyntax(_id), ontology), ontology);
-                    new AddRestriction(_project, _sourceOwlModel.getOntologyURI(), thisClass, newValues, clazzType).run();
+                    new AddRestriction(_project, _sourceOwlModel.getOntologyURI(), IRIUtils.ensureValidIRISyntax(_id), newValues, clazzType).run();
 
                     OWLGUIUtilities.enable(quantifierCombo, false);
                     if (clazzType.equals(OWLCommandUtils.EQUIV)) {
@@ -559,9 +556,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     // save modified entries
                     try {
                         String[] values = getNewValues(quantifierCombo, propertyTextWidget, row.getRangeText(), cardinalityText);
-                        OWLOntology ontology = _localOwlModel.getOntology();
-                        String thisClass = OWLUtilities.toString(OWLUtilities.description(IRIUtils.ensureValidIRISyntax(_id), ontology), ontology);
-                        new EditRestriction(_project, _sourceOwlModel.getOntologyURI(), clazzType, thisClass, values, OWLUtilities.toString(description, ontology)).run();
+                        new EditRestriction(_project, _sourceOwlModel.getOntologyURI(), clazzType, IRIUtils.ensureValidIRISyntax(_id), values, OWLUtilities.toString(description)).run();
                     } catch (NeOnCoreException k2e) {
                         handleException(k2e, Messages.ClazzPropertyPage2_30, _equivRestrictionsComp.getShell());
                         rangeTextWidget.setFocus();
@@ -599,16 +594,14 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 
         } else {
             final String[] descriptionArrayOLD = getArrayFromDescription(description);//NICO maybe this can be used again, but with a new content
-            final String[] descriptionArray = new String[]{OWLUtilities.toString(description, _owlModel.getOntology())};
+            final String[] descriptionArray = new String[]{OWLUtilities.toString(description)};
             rowHandler = new DescriptionRowHandler(this, _owlModel, sourceOwlModel, descriptionArray, axioms) {
 
                 @Override
                 public void savePressed() {
                     try {
                         String[] values = getNewValues(quantifierCombo, propertyTextWidget, row.getRangeText(), cardinalityText);
-                        OWLOntology ontology = _localOwlModel.getOntology();
-                        String thisClass = OWLUtilities.toString(OWLUtilities.description(IRIUtils.ensureValidIRISyntax(_id), ontology), ontology);
-                        new EditRestriction(_project, _ontologyUri, clazzType, thisClass, values, OWLUtilities.toString(description, ontology)).run();
+                        new EditRestriction(_project, _ontologyUri, clazzType, IRIUtils.ensureValidIRISyntax(_id), values, OWLUtilities.toString(description)).run();
                     } catch (NeOnCoreException k2e) {
                         handleException(k2e, Messages.ClazzPropertyPage2_30, _equivRestrictionsComp.getShell());
                         rangeTextWidget.setFocus();
@@ -631,9 +624,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                         }
                     }
                     try {
-                        OWLOntology ontology = _localOwlModel.getOntology();
-                        String thisClass = OWLUtilities.toString(OWLUtilities.description(IRIUtils.ensureValidIRISyntax(_id), ontology), ontology);
-                        OWLAxiomUtils.triggerRemovePressed(owlAxioms, OWLGUIUtilities.getEntityLabel(getDescriptionArray()), _namespaces, thisClass, _sourceOwlModel);
+                        OWLAxiomUtils.triggerRemovePressed(owlAxioms, OWLGUIUtilities.getEntityLabel(getDescriptionArray()), _namespaces, IRIUtils.ensureValidIRISyntax(_id), _sourceOwlModel);
                     } catch (NeOnCoreException e) {
                         throw new RuntimeException(e);
                     }
@@ -818,7 +809,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     }
                 } else {
                     OWLObjectPropertyExpression objProp = manager.parseObjectProperty(input, sourceOwlModel);
-                    boolean isObjectProperty = new IsObjectProperty(_project, _ontologyUri, OWLUtilities.toString(objProp, _owlModel.getOntology())).isObjectProperty();
+                    boolean isObjectProperty = new IsObjectProperty(_project, _ontologyUri, OWLUtilities.toString(objProp)).isObjectProperty();
                     if (isObjectProperty) {
                         if (hasValue) {
                             finalRangeText = new IndividualText(formRow.getParent(), _owlModel, sourceOwlModel).getStyledText();
@@ -1074,7 +1065,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                         }
                     }
                 } else {
-                    rangeDesc = OWLUtilities.dataRange(IRIUtils.ensureValidIRISyntax(_owlModel.getNamespaces().expandString(range)), ontology);
+                    rangeDesc = OWLUtilities.dataRange(IRIUtils.ensureValidIRISyntax(_owlModel.getNamespaces().expandString(range)));
     //                    rangeDesc = manager.parseDataRange(range, _owlModel);
                 }
             }
@@ -1082,16 +1073,16 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
             propertyObject = factory.getOWLObjectProperty(OWLUtilities.toIRI(_owlModel.getNamespaces().expandString(property)));
             if (range.trim().length() > 0) {
                 if (quantifier.equals(OWLCommandUtils.HAS_VALUE)) {
-                    rangeDesc = OWLUtilities.individual(IRIUtils.ensureValidIRISyntax(_owlModel.getNamespaces().expandString(range)), ontology);
+                    rangeDesc = OWLUtilities.individual(IRIUtils.ensureValidIRISyntax(_owlModel.getNamespaces().expandString(range)));
     //                    rangeDesc = manager.parseIndividual(range, _owlModel);
                 } else {
-                    rangeDesc = OWLUtilities.description(IRIUtils.ensureValidIRISyntax(_owlModel.getNamespaces().expandString(range)), ontology);
+                    rangeDesc = OWLUtilities.description(IRIUtils.ensureValidIRISyntax(_owlModel.getNamespaces().expandString(range)));
     //                    rangeDesc = manager.parseDescription(range, _owlModel);
                 }
             }
         }
-        String rangeStr = rangeDesc != null ? OWLUtilities.toString(rangeDesc, ontology) : range;
-        String propertyStr = propertyObject != null ? OWLUtilities.toString(propertyObject, ontology) : property;
+        String rangeStr = rangeDesc != null ? OWLUtilities.toString(rangeDesc) : range;
+        String propertyStr = propertyObject != null ? OWLUtilities.toString(propertyObject) : property;
         String[] newValues = new String[] {quantifier, propertyStr, rangeStr, cardinality};
         return newValues;
     }
@@ -1137,7 +1128,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
     }
 
     protected OWLClassExpression getClazzDescription() throws NeOnCoreException {
-        return OWLUtilities.description(IRIUtils.ensureValidIRISyntax(_id), _owlModel.getOntology());
+        return OWLUtilities.description(IRIUtils.ensureValidIRISyntax(_id));
     }
 
     /*

@@ -13,7 +13,6 @@ package com.ontoprise.ontostudio.owl.model.commands.individual;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.OWLDifferentIndividualsAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.ApplyChanges;
@@ -44,10 +43,9 @@ public class EditDifferentIndividuals extends OWLModuleChangeCommand {
         String newUri = (String) getArgument(4);
 
         try {
-            OWLOntology ontology = getOwlModel().getOntology();
-            OWLDifferentIndividualsAxiom oldAxiom = (OWLDifferentIndividualsAxiom) OWLUtilities.axiom(oldAxiomText, ontology);
+            OWLDifferentIndividualsAxiom oldAxiom = (OWLDifferentIndividualsAxiom) OWLUtilities.axiom(oldAxiomText);
             OWLDifferentIndividualsAxiom newAxiom = OWLAxiomUtils.createNewDifferent_FromAxiom(oldAxiom, entityUri, newUri, getOntology(), getProjectName());
-            new ApplyChanges(getProjectName(), getOntology(), new String[] {OWLUtilities.toString(newAxiom, ontology)}, new String[] {OWLUtilities.toString(oldAxiom, ontology)}).perform();
+            new ApplyChanges(getProjectName(), getOntology(), new String[] {OWLUtilities.toString(newAxiom)}, new String[] {OWLUtilities.toString(oldAxiom)}).perform();
         } catch (NeOnCoreException e) {
             throw new CommandException(e);
         }

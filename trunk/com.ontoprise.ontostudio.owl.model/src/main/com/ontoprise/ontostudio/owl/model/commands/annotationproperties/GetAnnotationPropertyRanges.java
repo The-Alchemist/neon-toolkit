@@ -18,7 +18,6 @@ import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotationPropertyRangeAxiom;
-import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.model.ItemHits;
 import com.ontoprise.ontostudio.owl.model.LocatedItem;
@@ -51,14 +50,12 @@ public class GetAnnotationPropertyRanges extends OWLOntologyRequestCommand {
         String propertyUri = (String) getArgument(2);
 
         try {
-            OWLOntology ontology = getOwlModel().getOntology();
             Set<ItemHits<IRI,OWLAnnotationPropertyRangeAxiom>> rangeHits = getOwlModel().getAnnotationPropertyRangeHits(propertyUri);
             for (ItemHits<IRI,OWLAnnotationPropertyRangeAxiom> hit: rangeHits) {
                 Set<LocatedItem<OWLAnnotationPropertyRangeAxiom>> axioms = hit.getAxioms();
                 for (LocatedItem<OWLAnnotationPropertyRangeAxiom> item: axioms) {
-                    _results.add(new String[]{OWLUtilities.toString(item.getItem(), ontology), item.getOntologyURI()});        
+                    _results.add(new String[]{OWLUtilities.toString(item.getItem()), item.getOntologyURI()});        
                     _results2.add(item.getItem().getRange());
-                    System.out.println(item);
                 }
             }
 

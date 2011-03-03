@@ -167,7 +167,7 @@ public class ObjectPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 String ontologyUri = domain[1];
                 boolean isLocal = ontologyUri.equals(_ontologyUri);
                 OWLObjectPropertyDomainAxiom objectPropertyDomain = 
-                    (OWLObjectPropertyDomainAxiom) OWLUtilities.axiom(axiomText, _owlModel.getOntology());
+                    (OWLObjectPropertyDomainAxiom) OWLUtilities.axiom(axiomText);
                 createRow(new LocatedAxiom(objectPropertyDomain, isLocal), ontologyUri, false, DOMAIN);
             }
         } catch (NeOnCoreException e1) {
@@ -218,7 +218,7 @@ public class ObjectPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 String ontologyUri = range[1];
                 boolean isLocal = ontologyUri.equals(_ontologyUri);
                 OWLObjectPropertyRangeAxiom objectPropertyRange = 
-                    (OWLObjectPropertyRangeAxiom) OWLUtilities.axiom(axiomText, _owlModel.getOntology());
+                    (OWLObjectPropertyRangeAxiom) OWLUtilities.axiom(axiomText);
                 createRow(new LocatedAxiom(objectPropertyRange, isLocal), ontologyUri, true, RANGE);
             }
         } catch (NeOnCoreException e) {
@@ -493,11 +493,11 @@ public class ObjectPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     remove();
                     if (mode == DOMAIN) {
                         new CreateObjectPropertyDomain(_project, _sourceOwlModel.getOntologyURI(), _id, 
-                                OWLUtilities.toString(newDescription, _localOwlModel.getOntology())).run();
+                                OWLUtilities.toString(newDescription)).run();
                         initDomainSection(true);
                     } else {
                         new CreateObjectPropertyRange(_project, _sourceOwlModel.getOntologyURI(), _id, 
-                                OWLUtilities.toString(newDescription, _localOwlModel.getOntology())).run();
+                                OWLUtilities.toString(newDescription)).run();
                         initRangeSection(true);
                     }
                 } catch (NeOnCoreException k2e) {
@@ -557,7 +557,7 @@ public class ObjectPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 // add new entry
                 String input = text.getText();
                 try {
-                    String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDescription(input, _localOwlModel), _localOwlModel.getOntology());
+                    String value = OWLUtilities.toString(OWLPlugin.getDefault().getSyntaxManager().parseDescription(input, _localOwlModel));
                     if (domainOrRange == DOMAIN) {
                         new CreateObjectPropertyDomain(_project, _sourceOwlModel.getOntologyURI(), _id, value).run();
                         initDomainSection(true);
@@ -629,7 +629,7 @@ public class ObjectPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 try {
                     String ontologyUri1 = o1[1];
                     String ontologyUri2 = o2[1];
-                    OWLAxiom axiom1 = (OWLAxiom) OWLUtilities.axiom(o1[0], _owlModel.getOntology());
+                    OWLAxiom axiom1 = (OWLAxiom) OWLUtilities.axiom(o1[0]);
                     String uri1 = ""; //$NON-NLS-1$
                     String uri2 = ""; //$NON-NLS-1$
                     if (axiom1 instanceof OWLObjectPropertyDomainAxiom) {
@@ -637,7 +637,7 @@ public class ObjectPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                         OWLClassExpression desc1 = domain.getDomain();
                         uri1 = OWLGUIUtilities.getUriForSorting(desc1, _owlModel);
 
-                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0], _owlModel.getOntology());
+                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0]);
                         if (axiom2 instanceof OWLObjectPropertyDomainAxiom) {
                             OWLObjectPropertyDomainAxiom domain2 = (OWLObjectPropertyDomainAxiom) axiom2;
                             OWLClassExpression desc2 = domain2.getDomain();
@@ -648,7 +648,7 @@ public class ObjectPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                         OWLClassExpression desc1 = range.getRange();
                         uri1 = OWLGUIUtilities.getUriForSorting(desc1, _owlModel);
 
-                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0], _owlModel.getOntology());
+                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0]);
                         if (axiom2 instanceof OWLObjectPropertyRangeAxiom) {
                             OWLObjectPropertyRangeAxiom range2 = (OWLObjectPropertyRangeAxiom) axiom2;
                             OWLClassExpression desc2 = range2.getRange();

@@ -269,10 +269,10 @@ public class OwlSearchCommand extends AbstractSearchCommand {
                     break;
                     
                 case INDIVIDUALS:
-                    OWLIndividual indi = OWLUtilities.individual(element.getEntityUri(), owlModel.getOntology());// factory.getOWLNamedIndividual(OWLUtilities.toIRI(element.getEntityUri()));
+                    OWLIndividual indi = OWLUtilities.individual(element.getEntityUri());// factory.getOWLNamedIndividual(OWLUtilities.toIRI(element.getEntityUri()));
                     Set<OWLClass> classes;
                     try {
-                        classes = owlModel.getClasses(OWLUtilities.toString(indi, owlModel.getOntology()));
+                        classes = owlModel.getClasses(OWLUtilities.toString(indi));
                         ClassSearchMatch classMatch = null;
                         for (OWLClass c: classes) {
                             classMatch = new ClassSearchMatch(new ClazzTreeElement(c, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class)));
@@ -291,7 +291,7 @@ public class OwlSearchCommand extends AbstractSearchCommand {
                         OWLIndividual subject = axiom.getSubject();
                         OWLDataPropertyExpression prop = axiom.getProperty();
     
-                        classes = OWLModelFactory.getOWLModel(ontology, project).getClasses(OWLUtilities.toString(subject,  owlModel.getOntology()));
+                        classes = OWLModelFactory.getOWLModel(ontology, project).getClasses(OWLUtilities.toString(subject));
                         ClassSearchMatch classMatch = null;
                         for (OWLClass c: classes) {
                             classMatch = new ClassSearchMatch(new ClazzTreeElement(c, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class)));
@@ -380,7 +380,7 @@ public class OwlSearchCommand extends AbstractSearchCommand {
             Set<OWLClass> classes;
             try {
                 OWLModel owlModel = OWLModelFactory.getOWLModel(ontology, project);
-                classes = owlModel.getClasses(OWLUtilities.toString(entity,  owlModel.getOntology()));
+                classes = owlModel.getClasses(OWLUtilities.toString(entity));
 //                ClassSearchMatch classMatch = null;
                 for (OWLClass c: classes) {
 //                    classMatch = new ClassSearchMatch(new ClazzTreeElement(c, ontology, project, TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class)));
