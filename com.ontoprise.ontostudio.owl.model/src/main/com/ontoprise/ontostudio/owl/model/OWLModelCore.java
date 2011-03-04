@@ -2490,8 +2490,10 @@ public class OWLModelCore implements OWLModel {
         List<OWLAxiomChange> annotationValueChanges = new ArrayList<OWLAxiomChange>();
         Set<OWLAnnotationAssertionAxiom> annotationAssertions2 = getOntology().getAxioms(AxiomType.ANNOTATION_ASSERTION);
         for (OWLAnnotationAssertionAxiom a: annotationAssertions2) {
-            annotationValueChanges.add(getRemoveAxiom(a));
-            annotationValueChanges.add(getAddAxiom(getOWLDataFactory().getOWLAnnotationAssertionAxiom(a.getAnnotation().getProperty(), a.getSubject(), newIRI)));
+            if(a.getValue().toString().equals(OWLUtilities.toString(oldEntity))){
+                annotationValueChanges.add(getRemoveAxiom(a));
+                annotationValueChanges.add(getAddAxiom(getOWLDataFactory().getOWLAnnotationAssertionAxiom(a.getAnnotation().getProperty(), a.getSubject(), newIRI)));
+            }
             monitor.worked(1);
         }
         applyChanges(annotationValueChanges);
