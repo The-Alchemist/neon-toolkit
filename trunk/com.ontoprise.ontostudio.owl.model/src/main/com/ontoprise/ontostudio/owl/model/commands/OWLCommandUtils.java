@@ -26,6 +26,7 @@ import com.ontoprise.ontostudio.owl.model.OWLConstants;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
+import com.ontoprise.ontostudio.owl.model.util.InternalParserException;
 
 /**
  * @author werner
@@ -75,7 +76,16 @@ public class OWLCommandUtils {
             if (isDataProperty(propertyId, ontologyId, project)) { //isDataProperty(expandedURI, ontologyId, project)
                 OWLDataPropertyExpression property = factory.getOWLDataProperty(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(propertyId));
                 if (quantor.equals(HAS_VALUE)) {
-                    desc = factory.getOWLDataHasValue(property, OWLUtilities.constant(range, owlModel));
+//                    ISyntaxManager manager = OWLPlugin.getDefault().getSyntaxManager();
+//                    try {
+//                        desc = manager.parseConstant(range, owlModel);
+//                    } catch (NeOnCoreException e) {
+//                        if (e.getCause() instanceof InternalParserException) {
+////                        if (e.getCause() instanceof ParserException) {
+//                            desc = manager.parseConstant("\"" + range + "\"", owlModel);  //$NON-NLS-1$//$NON-NLS-2$
+//                        }
+//                    }
+                    desc = factory.getOWLDataHasValue(property, OWLUtilities.constant(range, owlModel));//NICO using manchester Syntax Parser
                 } else {
                     OWLDataRange propertyRange = OWLUtilities.dataRange(range);
                     if (quantor.equals(ONLY)) {
