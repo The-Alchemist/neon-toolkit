@@ -103,6 +103,7 @@ import com.ontoprise.ontostudio.owl.model.commands.clazz.GetEquivalentRestrictio
 import com.ontoprise.ontostudio.owl.model.commands.clazz.GetSuperRestrictionHits;
 import com.ontoprise.ontostudio.owl.model.commands.dataproperties.IsDataProperty;
 import com.ontoprise.ontostudio.owl.model.commands.objectproperties.IsObjectProperty;
+import com.ontoprise.ontostudio.owl.model.util.InternalParserException;
 import com.ontoprise.ontostudio.owl.model.util.OWLAxiomUtils;
 /**
  * 
@@ -663,7 +664,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         OWLModel sourceOwlModel  =_owlModel;
         if(imported){
             try {
-                sourceOwlModel = OWLModelFactory.getOWLModel(_owlModel.getOntologyURI(), _project);//NICO  unsolved: ontoname
+                sourceOwlModel = OWLModelFactory.getOWLModel(_owlModel.getOntologyURI(), _project);
 //              owlModel = OWLModelFactory.getOWLModel(ontologyUri, _project);
             } catch (NeOnCoreException e) {
                 e.printStackTrace();
@@ -920,7 +921,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     type = IMessageProvider.WARNING;
                 }
             }
-            if (formRow instanceof AbstractRestrictionRow) {
+            if (formRow instanceof AbstractRestrictionRow) {//check
                 AbstractRestrictionRow row = (AbstractRestrictionRow) formRow;
                 if (row.getRangeText().getText().trim().length() == 0 && (
                         quantifier.equals(OWLCommandUtils.SOME) || 
@@ -1042,9 +1043,8 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 //        rangeText.d
         String range = rangeText.getText();
         String cardinality = cardText.getText();
-        OWLOntology ontology = _owlModel.getOntology();
 
-//        ISyntaxManager manager = OWLPlugin.getDefault().getSyntaxManager();
+        ISyntaxManager manager = OWLPlugin.getDefault().getSyntaxManager();
         OWLDataFactory factory = _owlModel.getOWLDataFactory();
         // range is optional, so may be empty.
         OWLObject rangeDesc = null;
@@ -1055,29 +1055,26 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 if (quantifier.equals(OWLCommandUtils.HAS_VALUE)) {
                     // peter as value is rejected. should be stored like "peter"^^ xsd:string instead
                     try {
-                        rangeDesc = OWLUtilities.constant(range, _owlModel);
-    //                        rangeDesc = manager.parseConstant(range, _owlModel);
+                        rangeDesc = manager.parseConstant(range, _owlModel);
                     } catch (NeOnCoreException e) {
-                        // bugfix for #9898
-                        if (e.getCause() instanceof ParserException) {
-                            rangeDesc = OWLUtilities.constant("\"" + range + "\"", _owlModel);  //$NON-NLS-1$//$NON-NLS-2$
-    //                            rangeDesc = manager.parseConstant("\"" + range + "\"", _owlModel);  //$NON-NLS-1$//$NON-NLS-2$
+                        if (e.getCause() instanceof InternalParserException || e.getCause() instanceof ParserException) {
+                            rangeDesc = manager.parseConstant("\"" + range + "\"", _owlModel);  //$NON-NLS-1$//$NON-NLS-2$
                         }
                     }
                 } else {
-                    rangeDesc = OWLUtilities.dataRange(IRIUtils.ensureValidIRISyntax(_owlModel.getNamespaces().expandString(range)));
-    //                    rangeDesc = manager.parseDataRange(range, _owlModel);
+//                    rangeDesc = OWLUtilities.dataRange(IRIUtils.ensureValidIRISyntax(_owlModel.getNamespaces().expandString(range)));
+                    rangeDesc = manager.parseDataRange(range, _owlModel);
                 }
             }
         } else {
             propertyObject = factory.getOWLObjectProperty(OWLUtilities.toIRI(_owlModel.getNamespaces().expandString(property)));
             if (range.trim().length() > 0) {
                 if (quantifier.equals(OWLCommandUtils.HAS_VALUE)) {
-                    rangeDesc = OWLUtilities.individual(IRIUtils.ensureValidIRISyntax(_owlModel.getNamespaces().expandString(range)));
-    //                    rangeDesc = manager.parseIndividual(range, _owlModel);
+//                    rangeDesc = OWLUtilities.individual(IRIUtils.ensureValidIRISyntax(_owlModel.getNamespaces().expandString(range)));
+                    rangeDesc = manager.parseIndividual(range, _owlModel);
                 } else {
-                    rangeDesc = OWLUtilities.description(IRIUtils.ensureValidIRISyntax(_owlModel.getNamespaces().expandString(range)));
-    //                    rangeDesc = manager.parseDescription(range, _owlModel);
+//                    rangeDesc = OWLUtilities.description(IRIUtils.ensureValidIRISyntax(_owlModel.getNamespaces().expandString(range)));
+                    rangeDesc = manager.parseDescription(range, _owlModel);
                 }
             }
         }
