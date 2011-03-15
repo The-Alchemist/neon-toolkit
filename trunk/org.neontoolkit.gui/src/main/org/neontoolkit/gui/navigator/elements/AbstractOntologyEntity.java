@@ -36,16 +36,14 @@ public abstract class AbstractOntologyEntity extends AbstractOntologyTreeElement
 		super(projectName, ontologyUri, provider);
 		_entityUri = entityUri;
 	}
-
-
     /*
      * (non-Javadoc)
      * @see org.neontoolkit.gui.navigator.elements.IEntityElement#getId()
      */
-	public String getId() {
+	@Override
+    public String getId() {
 	    return _entityUri;
 	}
-	
 	/*
 	 * (non-Javadoc)
 	 * @see org.neontoolkit.gui.navigator.elements.TreeElement#equals(java.lang.Object)

@@ -42,6 +42,7 @@ public abstract class AbstractOntologyTreeElement extends
 	 * (non-Javadoc)
 	 * @see org.neontoolkit.gui.navigator.elements.IOntologyElement#getOntologyUri()
 	 */
+    @Override
     public String getOntologyUri() {
     	return _ontologyUri;
     }
@@ -49,6 +50,7 @@ public abstract class AbstractOntologyTreeElement extends
     /* (non-Javadoc)
      * @see org.neontoolkit.gui.navigator.elements.IOntologyElement#isImported()
      */
+    @Override
     public boolean isImported() {
 		return _isImported;
 	}
@@ -56,5 +58,4 @@ public abstract class AbstractOntologyTreeElement extends
 	public void setIsImported(boolean isImported) {
 		_isImported = isImported;
 	}
-
 }

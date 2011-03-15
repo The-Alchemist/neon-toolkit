@@ -34,9 +34,6 @@ public class AnonymousIndividualViewItem extends AbstractOntologyTreeElement imp
         super(projectName, ontologyUri, null);
         _individualItem = new IndividualItem<OWLAnonymousIndividual>(individual, clazzUri, ontologyUri, projectName);
     }
-
-    
-    
     /**
      * @return
      * @see com.ontoprise.ontostudio.owl.gui.individualview.IndividualItem#getClazz()
@@ -45,9 +42,6 @@ public class AnonymousIndividualViewItem extends AbstractOntologyTreeElement imp
     public String getClazz() {
         return _individualItem.getClazz();
     }
-
-
-
     /**
      * @return
      * @see com.ontoprise.ontostudio.owl.gui.individualview.IndividualItem#getEditableValue()
@@ -55,9 +49,6 @@ public class AnonymousIndividualViewItem extends AbstractOntologyTreeElement imp
     public Object getEditableValue() {
         return _individualItem.getEditableValue();
     }
-
-
-
     /**
      * @return
      * @see com.ontoprise.ontostudio.owl.gui.individualview.IndividualItem#getId()
@@ -66,9 +57,6 @@ public class AnonymousIndividualViewItem extends AbstractOntologyTreeElement imp
     public String getId() {
         return _individualItem.getId();
     }
-
-
-
     /**
      * @return
      * @see com.ontoprise.ontostudio.owl.gui.individualview.IndividualItem#getIndividual()
@@ -77,9 +65,6 @@ public class AnonymousIndividualViewItem extends AbstractOntologyTreeElement imp
     public OWLAnonymousIndividual getIndividual() {
         return _individualItem.getIndividual();
     }
-
-
-
     /**
      * @return
      * @see com.ontoprise.ontostudio.owl.gui.individualview.IndividualItem#isDirect()
@@ -88,9 +73,6 @@ public class AnonymousIndividualViewItem extends AbstractOntologyTreeElement imp
     public boolean isDirect() {
         return _individualItem.isDirect();
     }
-
-
-
     /**
      * @param s
      * @see com.ontoprise.ontostudio.owl.gui.individualview.IndividualItem#setIndividualId(java.lang.String)
@@ -99,9 +81,6 @@ public class AnonymousIndividualViewItem extends AbstractOntologyTreeElement imp
     public void setIndividualId(String s) {
         _individualItem.setIndividualId(s);
     }
-
-
-
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof AnonymousIndividualViewItem)) {
@@ -118,7 +97,6 @@ public class AnonymousIndividualViewItem extends AbstractOntologyTreeElement imp
             return equal && equal(getOntologyUri(), that.getOntologyUri()) && equal(getProjectName(), that.getProjectName());
         }
     }
-    
     @Override
     public String toString() {
         String[] idArray;
@@ -130,5 +108,4 @@ public class AnonymousIndividualViewItem extends AbstractOntologyTreeElement imp
         }
         return OWLGUIUtilities.getEntityLabel(idArray);
     }
-
 }
