@@ -52,10 +52,14 @@ import org.neontoolkit.gui.Messages;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.SharedImages;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
+import org.neontoolkit.gui.history.IOWLHistoryEntry;
+import org.neontoolkit.gui.history.OWLHistoryManager;
 import org.neontoolkit.gui.internal.properties.PropertyPageInfo;
+import org.neontoolkit.gui.navigator.elements.AbstractProjectTreeElement;
 import org.neontoolkit.gui.navigator.elements.IFolderElement;
 import org.neontoolkit.gui.navigator.elements.IOntologyElement;
 import org.neontoolkit.gui.navigator.elements.IProjectElement;
+
 
 /* 
  * Created on: 31.01.2005
@@ -65,13 +69,15 @@ import org.neontoolkit.gui.navigator.elements.IProjectElement;
  */
 /**
  * View that displays the property pages defined via the entityProperties extension point.
+ * 
+ * @author Nico Stieler
  */
 public class EntityPropertiesView extends ViewPart implements ISelectionListener {
 
     public static final String ID = "org.neontoolkit.gui.views.propertiesview"; //$NON-NLS-1$
 
     private static Map<String,IPropertyPage> PROPERTY_PAGES_FOR_TESTING = new HashMap<String,IPropertyPage>();
-
+    
     private PropertyPageInfo[] _propertyActivators;
 
     private CTabFolder _container;
@@ -243,10 +249,16 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
                                     _container.setSelection(tabItem);
                                     _oldMainPage.setSelection(part, sel);
                                     _currentSelectedTab.selectTab();
-
                                     if (!page.isDisposed()) {
                                         setTitleImage(((IMainPropertyPage) page).getImage());
                                     }
+                                }
+                                if(_selection.getFirstElement() instanceof AbstractProjectTreeElement){
+                                    IOWLHistoryEntry currentSelectedEntity = OWLHistoryManager.getCurrentSelection();
+                                    AbstractProjectTreeElement element = (AbstractProjectTreeElement) _selection.getFirstElement();
+                                    IOWLHistoryEntry historyEntry = element.getOWLHistoryEntry();
+                                    if(currentSelectedEntity == null || !historyEntry.equals(currentSelectedEntity))
+                                        OWLHistoryManager.addHistoryElement(historyEntry);
                                 }
                                 return;
                             }

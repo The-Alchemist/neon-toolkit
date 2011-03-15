@@ -30,19 +30,18 @@ public class AbstractProjectOntologyFolder extends AbstractOntologyTreeElement i
 		super(project, ontologyURI, provider);
 		_folderName = folderName;
 	}
-	
+    @Override
 	public String getId() {
 		return _folderName;
 	}
-
+    @Override
 	public String getLocalName() {
 		return _folderName;
 	}
-
-	public String getNamespace() {
+	@Override
+    public String getNamespace() {
 		return _folderName;
 	}
-	
 	@Override
 	public boolean equals(Object o) {
 		if (o == null) {
@@ -81,5 +80,4 @@ public class AbstractProjectOntologyFolder extends AbstractOntologyTreeElement i
 	public boolean isImported() {
     	return false;
     }
-
 }

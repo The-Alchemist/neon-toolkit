@@ -13,6 +13,8 @@ package org.neontoolkit.gui.navigator.elements;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
 import org.neontoolkit.core.NeOnCorePlugin;
+import org.neontoolkit.gui.history.EmptyOWLHistoryEntry;
+import org.neontoolkit.gui.history.IOWLHistoryEntry;
 import org.neontoolkit.gui.navigator.ITreeDataProvider;
 
 /*
@@ -25,6 +27,8 @@ import org.neontoolkit.gui.navigator.ITreeDataProvider;
 /**
  * This is an abstract superclass for all tree elements that represent
  * projects or elements contained in projects.
+ * 
+ * @author Nico Stieler
  */
 public abstract class AbstractProjectTreeElement extends TreeElement implements IProjectElement, IAdaptable {
 	private String _projectName; 
@@ -40,7 +44,8 @@ public abstract class AbstractProjectTreeElement extends TreeElement implements 
 	 * (non-Javadoc)
 	 * @see org.neontoolkit.gui.navigator.elements.IProjectElement#getProjectName()
 	 */
-	public String getProjectName() {
+	@Override
+    public String getProjectName() {
 		return _projectName;
 	}
 	
@@ -66,5 +71,12 @@ public abstract class AbstractProjectTreeElement extends TreeElement implements 
             return NeOnCorePlugin.getDefault().getProject(_projectName);
         }
         return super.getAdapter(adapter);
+    }
+    /**
+     * has to be overridden in order to be considered by the History
+     * @return OWL History Entry, in case its not overridden, an empty one
+     */
+    public IOWLHistoryEntry getOWLHistoryEntry(){
+        return new EmptyOWLHistoryEntry();
     }
 }

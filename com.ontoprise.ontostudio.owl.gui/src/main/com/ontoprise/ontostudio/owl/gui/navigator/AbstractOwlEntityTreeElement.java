@@ -13,12 +13,15 @@ package com.ontoprise.ontostudio.owl.gui.navigator;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.NeOnUIPlugin;
+import org.neontoolkit.gui.history.IOWLHistoryEntry;
 import org.neontoolkit.gui.navigator.ITreeDataProvider;
 import org.neontoolkit.gui.navigator.elements.AbstractOntologyEntity;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
+import com.ontoprise.ontostudio.owl.gui.history.OWLHistoryEntry;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
+import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 
 /**
  * @author mer
@@ -28,6 +31,7 @@ public abstract class AbstractOwlEntityTreeElement extends AbstractOntologyEntit
 
     private String _uri;
     private OWLEntity _entity;
+    private IOWLHistoryEntry _historyEntry;
 
     public AbstractOwlEntityTreeElement(OWLEntity entity, String ontologyURI, String projectName, ITreeDataProvider provider) {
         super(projectName, ontologyURI, entity.toStringID(), provider);
@@ -128,5 +132,12 @@ public abstract class AbstractOwlEntityTreeElement extends AbstractOntologyEntit
     @Override
     public String getNamespace() {
         return _uri;
+    }
+    @Override
+    public IOWLHistoryEntry getOWLHistoryEntry() {
+        if(_historyEntry == null){
+            _historyEntry = new OWLHistoryEntry(OWLUtilities.toString(_entity), getOntologyUri(), getProjectName());
+        }
+        return _historyEntry;
     }
 }

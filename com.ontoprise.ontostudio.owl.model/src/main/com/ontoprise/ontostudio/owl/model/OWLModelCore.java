@@ -298,7 +298,7 @@ public class OWLModelCore implements OWLModel {
         }
     };
 
-    /** A filter returning true iff a given <code>Description</code> is a restriction on a property. */
+    /** A filter returning true iff a given <code>Description</code> is no restriction on a property. */
     private static final Filter<OWLClassExpression> NO_RESTRICTION_FILTER = new Filter<OWLClassExpression>() {
         @Override
         public boolean matches(OWLClassExpression item) {

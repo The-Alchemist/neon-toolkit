@@ -52,10 +52,12 @@ public class OntologyTreeElement extends AbstractOntologyTreeElement implements 
      * (non-Javadoc) NOTICE: not needed for OWL
      * @see org.neontoolkit.gui.navigator.elements.IEntityElement#getLocalName()
      */
+    @Override
     public String getNamespace() {
         return getId();
     }
 
+    @Override
     public String getId() {
         return getOntologyUri();
     }
@@ -72,11 +74,11 @@ public class OntologyTreeElement extends AbstractOntologyTreeElement implements 
         }
         return result;
     }
-
     /*
      * (non-Javadoc) NOTICE: not needed for OWL
      * @see org.neontoolkit.gui.navigator.elements.IEntityElement#getLocalName()
      */
+    @Override
     public String getLocalName() {
         return getId();
     }
