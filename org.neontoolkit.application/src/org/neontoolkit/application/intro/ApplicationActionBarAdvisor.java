@@ -245,14 +245,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IPageListener;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.actions.BuildAction;
 import org.eclipse.ui.actions.ContributionItemFactory;
 import org.eclipse.ui.actions.NewWizardMenu;
-import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.ide.IDEActionFactory;
@@ -274,6 +273,7 @@ import org.eclipse.ui.internal.provisional.application.IActionBarConfigurer2;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
 import org.eclipse.ui.menus.IMenuService;
+import org.neontoolkit.gui.action.OWLNavigationHistoryAction;
 
 /**
  * @author Nico Stieler
@@ -297,9 +297,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     private IWorkbenchAction saveAllAction;
 
-    private IWorkbenchAction newWindowAction;
-    
-    private IWorkbenchAction newEditorAction;
+//    private IWorkbenchAction newWindowAction;
+//    
+//    private IWorkbenchAction newEditorAction;
 
     private IWorkbenchAction helpContentsAction;
 
@@ -327,33 +327,33 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     private IWorkbenchAction closeAllPerspsAction;
 
-    private IWorkbenchAction showViewMenuAction;
-
-    private IWorkbenchAction showPartPaneMenuAction;
-
-    private IWorkbenchAction nextPartAction;
-
-    private IWorkbenchAction prevPartAction;
-
-    private IWorkbenchAction nextEditorAction;
-
-    private IWorkbenchAction prevEditorAction;
-
-    private IWorkbenchAction nextPerspectiveAction;
-
-    private IWorkbenchAction prevPerspectiveAction;
-
-    private IWorkbenchAction activateEditorAction;
-
-    private IWorkbenchAction maximizePartAction;
-    
-    private IWorkbenchAction minimizePartAction;
-
-    private IWorkbenchAction switchToEditorAction;
-
-	private IWorkbenchAction workbookEditorsAction;
-
-    private IWorkbenchAction quickAccessAction;
+//    private IWorkbenchAction showViewMenuAction;
+//
+//    private IWorkbenchAction showPartPaneMenuAction;
+//
+//    private IWorkbenchAction nextPartAction;
+//
+//    private IWorkbenchAction prevPartAction;
+//
+//    private IWorkbenchAction nextEditorAction;
+//
+//    private IWorkbenchAction prevEditorAction;
+//
+//    private IWorkbenchAction nextPerspectiveAction;
+//
+//    private IWorkbenchAction prevPerspectiveAction;
+//
+//    private IWorkbenchAction activateEditorAction;
+//
+//    private IWorkbenchAction maximizePartAction;
+//    
+//    private IWorkbenchAction minimizePartAction;
+//
+//    private IWorkbenchAction switchToEditorAction;
+//
+//	private IWorkbenchAction workbookEditorsAction;
+//
+//    private IWorkbenchAction quickAccessAction;
 
     private IWorkbenchAction backwardHistoryAction;
 
@@ -366,17 +366,17 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     private IWorkbenchAction quitAction;
 
-    private IWorkbenchAction goIntoAction;
-
-    private IWorkbenchAction backAction;
-
-    private IWorkbenchAction forwardAction;
-
-    private IWorkbenchAction upAction;
-
-    private IWorkbenchAction nextAction;
-
-    private IWorkbenchAction previousAction;
+//    private IWorkbenchAction goIntoAction;
+//
+//    private IWorkbenchAction backAction;
+//
+//    private IWorkbenchAction forwardAction;
+//
+//    private IWorkbenchAction upAction;
+//
+//    private IWorkbenchAction nextAction;
+//
+//    private IWorkbenchAction previousAction;
 
     // IDE-specific actions
     private IWorkbenchAction openWorkspaceAction;
@@ -403,7 +403,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     private IWorkbenchAction tipsAndTricksAction;
 
-    private QuickMenuAction showInQuickMenu;
+//    private QuickMenuAction showInQuickMenu;
 
     private QuickMenuAction newQuickMenu;
 
@@ -598,8 +598,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
                     IWorkbenchActionConstants.HISTORY_GROUP));
             navToolBar
                     .add(new GroupMarker(IWorkbenchActionConstants.GROUP_APP));
-//            navToolBar.add(backwardHistoryAction);
-//            navToolBar.add(forwardHistoryAction);
+            navToolBar.add(backwardHistoryAction);
+            navToolBar.add(forwardHistoryAction);
             navToolBar.add(new Separator(IWorkbenchActionConstants.PIN_GROUP));
             navToolBar.add(getPinEditorItem());
 
@@ -750,43 +750,43 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         MenuManager menu = new MenuManager(
                 IDEWorkbenchMessages.Workbench_navigate, IWorkbenchActionConstants.M_NAVIGATE);
         menu.add(new GroupMarker(IWorkbenchActionConstants.NAV_START));
-        menu.add(goIntoAction);
+//        menu.add(goIntoAction);
 
-        MenuManager goToSubMenu = new MenuManager(IDEWorkbenchMessages.Workbench_goTo, IWorkbenchActionConstants.GO_TO);
-        menu.add(goToSubMenu);
-        goToSubMenu.add(backAction);
-        goToSubMenu.add(forwardAction);
-        goToSubMenu.add(upAction);
-        goToSubMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-
-        menu.add(new Separator(IWorkbenchActionConstants.OPEN_EXT));
-        for (int i = 2; i < 5; ++i) {
-            menu.add(new Separator(IWorkbenchActionConstants.OPEN_EXT + i));
-        }
-        menu.add(new Separator(IWorkbenchActionConstants.SHOW_EXT));
-        {
-			MenuManager showInSubMenu = new MenuManager(
-					IDEWorkbenchMessages.Workbench_showIn, "showIn"); //$NON-NLS-1$
-			showInSubMenu.setActionDefinitionId(showInQuickMenu
-					.getActionDefinitionId());
-			showInSubMenu.add(ContributionItemFactory.VIEWS_SHOW_IN
-					.create(getWindow()));
-			menu.add(showInSubMenu);
-		}
-        for (int i = 2; i < 5; ++i) {
-            menu.add(new Separator(IWorkbenchActionConstants.SHOW_EXT + i));
-        }
-        menu.add(new Separator());
-        menu.add(nextAction);
-        menu.add(previousAction);
+//        MenuManager goToSubMenu = new MenuManager(IDEWorkbenchMessages.Workbench_goTo, IWorkbenchActionConstants.GO_TO);
+//        menu.add(goToSubMenu);
+//        goToSubMenu.add(backAction);
+//        goToSubMenu.add(forwardAction);
+//        goToSubMenu.add(upAction);
+//        goToSubMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+//
+//        menu.add(new Separator(IWorkbenchActionConstants.OPEN_EXT));
+//        for (int i = 2; i < 5; ++i) {
+//            menu.add(new Separator(IWorkbenchActionConstants.OPEN_EXT + i));
+//        }
+//        menu.add(new Separator(IWorkbenchActionConstants.SHOW_EXT));
+//        {
+//			MenuManager showInSubMenu = new MenuManager(
+//					IDEWorkbenchMessages.Workbench_showIn, "showIn"); //$NON-NLS-1$
+//			showInSubMenu.setActionDefinitionId(showInQuickMenu
+//					.getActionDefinitionId());
+//			showInSubMenu.add(ContributionItemFactory.VIEWS_SHOW_IN
+//					.create(getWindow()));
+//			menu.add(showInSubMenu);
+//		}
+//        for (int i = 2; i < 5; ++i) {
+//            menu.add(new Separator(IWorkbenchActionConstants.SHOW_EXT + i));
+//        }
+//        menu.add(new Separator());
+//        menu.add(nextAction);
+//        menu.add(previousAction);
         menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-        menu.add(new GroupMarker(IWorkbenchActionConstants.NAV_END));
-
-        //TBD: Location of this actions
+//        menu.add(new GroupMarker(IWorkbenchActionConstants.NAV_END));
+//
+//        //TBD: Location of this actions
         menu.add(new Separator());
         menu.add(backwardHistoryAction);
         menu.add(forwardHistoryAction);
-        menu.setVisible(false);
+        menu.setVisible(true);
         return menu;
     }
 
@@ -834,13 +834,13 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         MenuManager menu = new MenuManager(
                 IDEWorkbenchMessages.Workbench_window, IWorkbenchActionConstants.M_WINDOW);
 
-        menu.add(newWindowAction);
-		menu.add(newEditorAction);
+//        menu.add(newWindowAction);
+//		menu.add(newEditorAction);
 		
-        menu.add(new Separator());
+//        menu.add(new Separator());
         addPerspectiveActions(menu);
         menu.add(new Separator());
-        addKeyboardShortcuts(menu);
+//        addKeyboardShortcuts(menu);
         Separator sep = new Separator(IWorkbenchActionConstants.MB_ADDITIONS);
 		sep.setVisible(!Util.isMac());
 		menu.add(sep);
@@ -893,30 +893,30 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         menu.add(buildWorkingSetMenu);
     }
 
-    /**
-     * Adds the keyboard navigation submenu to the specified menu.
-     */
-    private void addKeyboardShortcuts(MenuManager menu) {
-        MenuManager subMenu = new MenuManager(IDEWorkbenchMessages.Workbench_shortcuts, "shortcuts"); //$NON-NLS-1$
-        menu.add(subMenu);
-        subMenu.add(showPartPaneMenuAction);
-        subMenu.add(showViewMenuAction);
-        subMenu.add(quickAccessAction);
-        subMenu.add(new Separator());
-        subMenu.add(maximizePartAction);
-        subMenu.add(minimizePartAction);
-        subMenu.add(new Separator());
-        subMenu.add(activateEditorAction);
-        subMenu.add(nextEditorAction);
-        subMenu.add(prevEditorAction);
-        subMenu.add(switchToEditorAction);
-        subMenu.add(new Separator());
-        subMenu.add(nextPartAction);
-        subMenu.add(prevPartAction);
-        subMenu.add(new Separator());
-        subMenu.add(nextPerspectiveAction);
-        subMenu.add(prevPerspectiveAction);
-    }
+//    /**
+//     * Adds the keyboard navigation submenu to the specified menu.
+//     */
+//    private void addKeyboardShortcuts(MenuManager menu) {
+//        MenuManager subMenu = new MenuManager(IDEWorkbenchMessages.Workbench_shortcuts, "shortcuts"); //$NON-NLS-1$
+//        menu.add(subMenu);
+//        subMenu.add(showPartPaneMenuAction);
+//        subMenu.add(showViewMenuAction);
+//        subMenu.add(quickAccessAction);
+//        subMenu.add(new Separator());
+//        subMenu.add(maximizePartAction);
+//        subMenu.add(minimizePartAction);
+//        subMenu.add(new Separator());
+//        subMenu.add(activateEditorAction);
+//        subMenu.add(nextEditorAction);
+//        subMenu.add(prevEditorAction);
+//        subMenu.add(switchToEditorAction);
+//        subMenu.add(new Separator());
+//        subMenu.add(nextPartAction);
+//        subMenu.add(prevPartAction);
+//        subMenu.add(new Separator());
+//        subMenu.add(nextPerspectiveAction);
+//        subMenu.add(prevPerspectiveAction);
+//    }
 
     /**
 	 * Creates and returns the Help menu.
@@ -1014,7 +1014,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
             resourceListener = null;
         }
 
-        showInQuickMenu.dispose();
+//        showInQuickMenu.dispose();
         newQuickMenu.dispose();
         
         // null out actions to make leak debugging easier
@@ -1024,8 +1024,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         closeOthersAction = null;
         saveAction = null;
         saveAllAction = null;
-        newWindowAction = null;
-		newEditorAction = null;
+//        newWindowAction = null;
+//		newEditorAction = null;
         helpContentsAction = null;
         helpSearchAction = null;
 		dynamicHelpAction = null;
@@ -1039,31 +1039,31 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         closePerspAction = null;
         lockToolBarAction = null;
         closeAllPerspsAction = null;
-        showViewMenuAction = null;
-        showPartPaneMenuAction = null;
-        nextPartAction = null;
-        prevPartAction = null;
-        nextEditorAction = null;
-        prevEditorAction = null;
-        nextPerspectiveAction = null;
-        prevPerspectiveAction = null;
-        activateEditorAction = null;
-        maximizePartAction = null;
-        minimizePartAction = null;
-        switchToEditorAction = null;
-        quickAccessAction.dispose();
-        quickAccessAction = null;
+//        showViewMenuAction = null;
+//        showPartPaneMenuAction = null;
+//        nextPartAction = null;
+//        prevPartAction = null;
+//        nextEditorAction = null;
+//        prevEditorAction = null;
+//        nextPerspectiveAction = null;
+//        prevPerspectiveAction = null;
+//        activateEditorAction = null;
+//        maximizePartAction = null;
+//        minimizePartAction = null;
+//        switchToEditorAction = null;
+//        quickAccessAction.dispose();
+//        quickAccessAction = null;
         backwardHistoryAction = null;
         forwardHistoryAction = null;
         undoAction = null;
         redoAction = null;
         quitAction = null;
-        goIntoAction = null;
-        backAction = null;
-        forwardAction = null;
-        upAction = null;
-        nextAction = null;
-        previousAction = null;
+//        goIntoAction = null;
+//        backAction = null;
+//        forwardAction = null;
+//        upAction = null;
+//        nextAction = null;
+//        previousAction = null;
         openWorkspaceAction = null;
         projectPropertyDialogAction = null;
         newWizardAction = null;
@@ -1076,7 +1076,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         buildWorkingSetMenu = null;
         quickStartAction = null;
         tipsAndTricksAction = null;
-        showInQuickMenu = null;
+//        showInQuickMenu = null;
         newQuickMenu = null;
         buildProjectAction = null;
         newWizardMenu = null;
@@ -1167,22 +1167,18 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         saveAllAction = ActionFactory.SAVE_ALL.create(window);
         register(saveAllAction);
 		
-        newWindowAction = ActionFactory.OPEN_NEW_WINDOW.create(getWindow());
-        newWindowAction.setText(IDEWorkbenchMessages.Workbench_openNewWindow);
-        register(newWindowAction);
-
-		newEditorAction = ActionFactory.NEW_EDITOR.create(window);
-		register(newEditorAction);
+//        newWindowAction = ActionFactory.OPEN_NEW_WINDOW.create(getWindow());
+//        newWindowAction.setText(IDEWorkbenchMessages.Workbench_openNewWindow);
+//        register(newWindowAction);
+//
+//		newEditorAction = ActionFactory.NEW_EDITOR.create(window);
+//		register(newEditorAction);
 
         undoAction = ActionFactory.UNDO.create(window);
         register(undoAction);
 
         redoAction = ActionFactory.REDO.create(window);
         register(redoAction);
-
-
-
-
 
 
         closeAction = ActionFactory.CLOSE.create(window);
@@ -1215,61 +1211,57 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         openPreferencesAction = ActionFactory.PREFERENCES.create(window);
         register(openPreferencesAction);
 
-        
-
-
-
         makeFeatureDependentActions(window);
 
         // Actions for invisible accelerators
-        showViewMenuAction = ActionFactory.SHOW_VIEW_MENU.create(window);
-        register(showViewMenuAction);
-
-        showPartPaneMenuAction = ActionFactory.SHOW_PART_PANE_MENU
-                .create(window);
-        register(showPartPaneMenuAction);
-
-        nextEditorAction = ActionFactory.NEXT_EDITOR.create(window);
-        register(nextEditorAction);
-        prevEditorAction = ActionFactory.PREVIOUS_EDITOR.create(window);
-        register(prevEditorAction);
-        ActionFactory.linkCycleActionPair(nextEditorAction, prevEditorAction);
-
-        nextPartAction = ActionFactory.NEXT_PART.create(window);
-        register(nextPartAction);
-        prevPartAction = ActionFactory.PREVIOUS_PART.create(window);
-        register(prevPartAction);
-        ActionFactory.linkCycleActionPair(nextPartAction, prevPartAction);
-
-        nextPerspectiveAction = ActionFactory.NEXT_PERSPECTIVE
-                .create(window);
-        register(nextPerspectiveAction);
-        prevPerspectiveAction = ActionFactory.PREVIOUS_PERSPECTIVE
-                .create(window);
-        register(prevPerspectiveAction);
-        ActionFactory.linkCycleActionPair(nextPerspectiveAction,
-                prevPerspectiveAction);
-
-        activateEditorAction = ActionFactory.ACTIVATE_EDITOR
-                .create(window);
-        register(activateEditorAction);
-
-        maximizePartAction = ActionFactory.MAXIMIZE.create(window);
-        register(maximizePartAction);
-
-		minimizePartAction = ActionFactory.MINIMIZE.create(window);
-		register(minimizePartAction);
-        
-        switchToEditorAction = ActionFactory.SHOW_OPEN_EDITORS
-                .create(window);
-        register(switchToEditorAction);
-
-        workbookEditorsAction = ActionFactory.SHOW_WORKBOOK_EDITORS
-        		.create(window);
-        register(workbookEditorsAction);
-        
-        quickAccessAction = ActionFactory.SHOW_QUICK_ACCESS
-        	.create(window);
+//        showViewMenuAction = ActionFactory.SHOW_VIEW_MENU.create(window);
+//        register(showViewMenuAction);
+//
+//        showPartPaneMenuAction = ActionFactory.SHOW_PART_PANE_MENU
+//                .create(window);
+//        register(showPartPaneMenuAction);
+//
+//        nextEditorAction = ActionFactory.NEXT_EDITOR.create(window);
+//        register(nextEditorAction);
+//        prevEditorAction = ActionFactory.PREVIOUS_EDITOR.create(window);
+//        register(prevEditorAction);
+//        ActionFactory.linkCycleActionPair(nextEditorAction, prevEditorAction);
+//
+//        nextPartAction = ActionFactory.NEXT_PART.create(window);
+//        register(nextPartAction);
+//        prevPartAction = ActionFactory.PREVIOUS_PART.create(window);
+//        register(prevPartAction);
+//        ActionFactory.linkCycleActionPair(nextPartAction, prevPartAction);
+//
+//        nextPerspectiveAction = ActionFactory.NEXT_PERSPECTIVE
+//                .create(window);
+//        register(nextPerspectiveAction);
+//        prevPerspectiveAction = ActionFactory.PREVIOUS_PERSPECTIVE
+//                .create(window);
+//        register(prevPerspectiveAction);
+//        ActionFactory.linkCycleActionPair(nextPerspectiveAction,
+//                prevPerspectiveAction);
+//
+//        activateEditorAction = ActionFactory.ACTIVATE_EDITOR
+//                .create(window);
+//        register(activateEditorAction);
+//
+//        maximizePartAction = ActionFactory.MAXIMIZE.create(window);
+//        register(maximizePartAction);
+//
+//		minimizePartAction = ActionFactory.MINIMIZE.create(window);
+//		register(minimizePartAction);
+//        
+//        switchToEditorAction = ActionFactory.SHOW_OPEN_EDITORS
+//                .create(window);
+//        register(switchToEditorAction);
+//
+//        workbookEditorsAction = ActionFactory.SHOW_WORKBOOK_EDITORS
+//        		.create(window);
+//        register(workbookEditorsAction);
+//        
+//        quickAccessAction = ActionFactory.SHOW_QUICK_ACCESS
+//        	.create(window);
 
         hideShowEditorAction = ActionFactory.SHOW_EDITOR.create(window);
         register(hideShowEditorAction);
@@ -1290,12 +1282,34 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
                 .create(window);
         register(closeAllPerspsAction);
 
-        forwardHistoryAction = ActionFactory.FORWARD_HISTORY
-                .create(window);
+        forwardHistoryAction = new ActionFactory("forwardHistory") {//$NON-NLS-1$ 
+        	/* (non-Javadoc) 
+        	 * @see org.eclipse.ui.actions.ActionFactory#create(org.eclipse.ui.IWorkbenchWindow) 
+        	 */ 
+        	public IWorkbenchAction create(IWorkbenchWindow window) {
+        		if (window == null) { 
+        			throw new IllegalArgumentException(); 
+        		}
+    			IWorkbenchAction action = new OWLNavigationHistoryAction(window, true); 
+    			action.setId(getId()); 
+    			return action; 
+			} 
+		}.create(window);
         register(forwardHistoryAction);
 
-        backwardHistoryAction = ActionFactory.BACKWARD_HISTORY
-                .create(window);
+        backwardHistoryAction = new ActionFactory("backwardHistory") {//$NON-NLS-1$ 
+        	/* (non-Javadoc) 
+        	 * @see org.eclipse.ui.actions.ActionFactory#create(org.eclipse.ui.IWorkbenchWindow) 
+        	 */ 
+        	public IWorkbenchAction create(IWorkbenchWindow window) {
+        		if (window == null) { 
+        			throw new IllegalArgumentException(); 
+        		}
+    			IWorkbenchAction action = new OWLNavigationHistoryAction(window, false); 
+    			action.setId(getId()); 
+    			return action; 
+			} 
+		}.create(window); 
         register(backwardHistoryAction);
 
 
@@ -1306,29 +1320,29 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
 
 
-        goIntoAction = ActionFactory.GO_INTO.create(window);
-        register(goIntoAction);
-
-        backAction = ActionFactory.BACK.create(window);
-        register(backAction);
-
-        forwardAction = ActionFactory.FORWARD.create(window);
-        register(forwardAction);
-
-        upAction = ActionFactory.UP.create(window);
-        register(upAction);
-
-        nextAction = ActionFactory.NEXT.create(window);
-        nextAction
-                .setImageDescriptor(IDEInternalWorkbenchImages
-                        .getImageDescriptor(IDEInternalWorkbenchImages.IMG_ETOOL_NEXT_NAV));
-        register(nextAction);
-
-        previousAction = ActionFactory.PREVIOUS.create(window);
-        previousAction
-                .setImageDescriptor(IDEInternalWorkbenchImages
-                        .getImageDescriptor(IDEInternalWorkbenchImages.IMG_ETOOL_PREVIOUS_NAV));
-        register(previousAction);
+//        goIntoAction = ActionFactory.GO_INTO.create(window);
+//        register(goIntoAction);
+//
+//        backAction = ActionFactory.BACK.create(window);
+//        register(backAction);
+//
+//        forwardAction = ActionFactory.FORWARD.create(window);
+//        register(forwardAction);
+//
+//        upAction = ActionFactory.UP.create(window);
+//        register(upAction);
+//
+//        nextAction = ActionFactory.NEXT.create(window);
+//        nextAction
+//                .setImageDescriptor(IDEInternalWorkbenchImages
+//                        .getImageDescriptor(IDEInternalWorkbenchImages.IMG_ETOOL_NEXT_NAV));
+//        register(nextAction);
+//
+//        previousAction = ActionFactory.PREVIOUS.create(window);
+//        previousAction
+//                .setImageDescriptor(IDEInternalWorkbenchImages
+//                        .getImageDescriptor(IDEInternalWorkbenchImages.IMG_ETOOL_PREVIOUS_NAV));
+//        register(previousAction);
 
         buildProjectAction = IDEActionFactory.BUILD_PROJECT.create(window);
         register(buildProjectAction);
@@ -1346,14 +1360,14 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
             register(introAction);
         }
 
-        String showInQuickMenuId = IWorkbenchCommandConstants.NAVIGATE_SHOW_IN_QUICK_MENU;
-        showInQuickMenu = new QuickMenuAction(showInQuickMenuId) {
-            protected void fillMenu(IMenuManager menu) {
-                menu.add(ContributionItemFactory.VIEWS_SHOW_IN
-                        .create(window));
-            }
-        };
-        register(showInQuickMenu);
+//        String showInQuickMenuId = IWorkbenchCommandConstants.NAVIGATE_SHOW_IN_QUICK_MENU;
+//        showInQuickMenu = new QuickMenuAction(showInQuickMenuId) {
+//            protected void fillMenu(IMenuManager menu) {
+//                menu.add(ContributionItemFactory.VIEWS_SHOW_IN
+//                        .create(window));
+//            }
+//        };
+//        register(showInQuickMenu);
 
         final String newQuickMenuId = "org.eclipse.ui.file.newQuickMenu"; //$NON-NLS-1$
         newQuickMenu = new QuickMenuAction(newQuickMenuId) {

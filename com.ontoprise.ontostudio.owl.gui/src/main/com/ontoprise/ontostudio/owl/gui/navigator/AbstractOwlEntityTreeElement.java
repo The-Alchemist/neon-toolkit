@@ -13,21 +13,26 @@ package com.ontoprise.ontostudio.owl.gui.navigator;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.NeOnUIPlugin;
+import org.neontoolkit.gui.history.IOWLHistoryEntry;
 import org.neontoolkit.gui.navigator.ITreeDataProvider;
 import org.neontoolkit.gui.navigator.elements.AbstractOntologyEntity;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
+import com.ontoprise.ontostudio.owl.gui.history.OWLHistoryEntry;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
+import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 
 /**
  * @author mer
+ * @author Nico Stieler
  * 
  */
 public abstract class AbstractOwlEntityTreeElement extends AbstractOntologyEntity {
 
     private String _uri;
     private OWLEntity _entity;
+    private IOWLHistoryEntry _historyEntry;
 
     public AbstractOwlEntityTreeElement(OWLEntity entity, String ontologyURI, String projectName, ITreeDataProvider provider) {
         super(projectName, ontologyURI, entity.getIRI().toString(), provider);
@@ -78,7 +83,7 @@ public abstract class AbstractOwlEntityTreeElement extends AbstractOntologyEntit
             int nbDInstances = OWLGUIUtilities.getNumberOfDirectInstances(_entity, getOntologyUri(), getProjectName());
             int nbIInstances = OWLGUIUtilities.getNumberOfInDirectInstances(_entity, getOntologyUri(), getProjectName());
             if (nbIInstances != 0)
-                result+=" "+nbDInstances+"|"+nbIInstances;
+                result+=" "+nbDInstances+"|"+nbIInstances;  //$NON-NLS-1$//$NON-NLS-2$
         }
         return result;
     }
@@ -117,6 +122,7 @@ public abstract class AbstractOwlEntityTreeElement extends AbstractOntologyEntit
     /* (non-Javadoc) NOTE: not needed for OWL
      * @see org.neontoolkit.gui.navigator.elements.IEntityElement#getLocalName()
      */
+    @Override 
     public String getLocalName() {
         return _uri;
     }
@@ -124,7 +130,17 @@ public abstract class AbstractOwlEntityTreeElement extends AbstractOntologyEntit
     /* (non-Javadoc) NOTE: not needed for OWL
      * @see org.neontoolkit.gui.navigator.elements.IEntityElement#getNamespace()
      */
+    @Override 
     public String getNamespace() {
         return _uri;
     }
+    @Override 
+    public IOWLHistoryEntry getOWLHistoryEntry() {
+        if(_historyEntry == null){ 
+            _historyEntry = new OWLHistoryEntry(OWLUtilities.toString(_entity), getOntologyUri(), getProjectName()); 
+            }
+        return _historyEntry;
+        } 
+
+
 }

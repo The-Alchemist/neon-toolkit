@@ -52,7 +52,10 @@ import org.neontoolkit.gui.Messages;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.SharedImages;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
+import org.neontoolkit.gui.history.IOWLHistoryEntry;
+import org.neontoolkit.gui.history.OWLHistoryManager;
 import org.neontoolkit.gui.internal.properties.PropertyPageInfo;
+import org.neontoolkit.gui.navigator.elements.AbstractProjectTreeElement;
 import org.neontoolkit.gui.navigator.elements.IFolderElement;
 import org.neontoolkit.gui.navigator.elements.IOntologyElement;
 import org.neontoolkit.gui.navigator.elements.IProjectElement;
@@ -66,6 +69,7 @@ import org.neontoolkit.gui.navigator.elements.IProjectElement;
 /**
  * View that displays the property pages defined via the entityProperties extension
  * point.
+ * @author Nico Stieler
  */
 public class EntityPropertiesView extends ViewPart implements ISelectionListener {
 
@@ -246,6 +250,14 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
 							            setTitleImage(((IMainPropertyPage)page).getImage());
 							        }
 					        	}
+					        	if(_selection.getFirstElement() instanceof AbstractProjectTreeElement){ 
+					        	    IOWLHistoryEntry currentSelectedEntity = OWLHistoryManager.getCurrentSelection(); 
+					        	    AbstractProjectTreeElement element = (AbstractProjectTreeElement) _selection.getFirstElement(); 
+					        	    IOWLHistoryEntry historyEntry = element.getOWLHistoryEntry();
+					        	    if(currentSelectedEntity == null || !historyEntry.equals(currentSelectedEntity)) 
+					        	        OWLHistoryManager.addHistoryElement(historyEntry); 
+				        	    } 
+
 						        return;
 					        }
 				        } catch (Exception ce) {

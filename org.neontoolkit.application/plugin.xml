@@ -174,5 +174,15 @@
          	categoryId="com.ontoprise.ontostudio.EclipsePlugins">
          </categoryActivityBinding>
 	</extension>
+	<extension 
+		point="org.eclipse.ui.activities"> 
+		<activity 
+			name="Remove Unused Icons Manager" 
+			id="activity.removeUnusedIcons" /> 
+		<activityPatternBinding
+			activityId="activity.removeUnusedIcons" 
+			pattern="org\.eclipse\.ui\.editors/org\.eclipse\.ui\.edit\.text\.gotoLastEditPosition"> 
+		</activityPatternBinding> 	
+	</extension> 
   
 </plugin>
