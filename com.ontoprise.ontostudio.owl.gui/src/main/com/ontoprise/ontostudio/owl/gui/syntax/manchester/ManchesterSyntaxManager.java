@@ -126,13 +126,8 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
             if (error != null) {
                 expandedValue = RESERVED_NAMESPACE + expandedValue;
             }
-            if (!expandedValue.startsWith(IRIUtils.TURTLE_IRI_OPEN)) {
-                expandedValue = IRIUtils.TURTLE_IRI_OPEN + expandedValue; 
-            }
-            if (!expandedValue.endsWith(IRIUtils.TURTLE_IRI_CLOSE)) {
-                expandedValue += IRIUtils.TURTLE_IRI_CLOSE;
-            }
-            return new ManchesterOWLSyntaxEditorParser(owlModel.getOWLDataFactory(), expandedValue).parseIRI().toString();//NICO problem is maybe here??
+            expandedValue = IRIUtils.ensureValidIRISyntax(expandedValue);
+            return new ManchesterOWLSyntaxEditorParser(owlModel.getOWLDataFactory(), expandedValue).parseIRI().toString();
 
         } catch (ParserException e) {
             throw new InternalNeOnException(e);

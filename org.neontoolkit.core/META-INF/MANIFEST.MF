@@ -3,7 +3,7 @@ Eclipse-RegisterBuddy: dependencies
 Bundle-ManifestVersion: 2
 Bundle-Name: %plugin.name
 Bundle-SymbolicName: org.neontoolkit.core;singleton:=true
-Bundle-Version: 2.4.1
+Bundle-Version: 2.4.2
 Bundle-Activator: org.neontoolkit.core.NeOnCorePlugin
 Bundle-Vendor: %neonFoundation
 Bundle-Localization: plugin
