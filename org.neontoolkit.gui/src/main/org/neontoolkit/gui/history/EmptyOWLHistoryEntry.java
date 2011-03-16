@@ -46,4 +46,9 @@ public class EmptyOWLHistoryEntry implements IOWLHistoryEntry {
     public boolean isEmpty() {
         return true;
     }
+    @Override
+    public boolean setEmpty(boolean empty) {
+        //Nothing to do, is always empty
+        return false;
+    }
 }
