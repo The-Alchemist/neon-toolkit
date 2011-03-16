@@ -10,6 +10,28 @@
   <body>
     <b><font size="4">Release notes - NeOn Toolkit</font></b>
     <p>
+	    <b><font size="3">What's new in the NeOn Toolkit 2.4.2</font></b>
+	    <p><b><font size="2">New version of KC-Viz (1.3) </font></b></p>
+<ul><li> new library for handling internal data structures to compute the key concept values
+</li><li> (bug fix) object properties and data properties will be considered in calculating key concept values of the ontology classes
+</li><li> KCE improved for ontologies with a large number of individuals
+</li></ul>
+	    
+	    <p><b><font size="2">Changes_in_NTK_Core</font></b></p>
+<ul><li> The verify information of an new created datatype is set by using the verify information of the "super datatype".
+</li><li> When deleting an entity in the Ontology Navigator, the parent tree element(super element or, in case its a root element, the folder) is selected and shown in the EPV, in case the folder is selected a empty page is shown in the EPV.
+</li><li> Correct handling and error messaging for "has self"-restrictions. When selecting "has self" in Class Restrictions tab...
+<ul><li> ...set warning "Please provide an Object Property", if an Data Property is entered and ...
+</li><li> ...unable the range field.
+</li></ul>
+</li><li> When deleting the last Class Assertion axiom of an entity a dialog opens and asks the user, if he wants to add an explicit assertion axiom instead.
+<ul><li> the user decision is handled
+</li><li> the user decision can be saved in the preferences
+</li><li> special case: if the class of this Class Assertion is owl:Thing the user will always be asked, independent on the saved preferences. 
+</li></ul>
+</li></ul>
+	    
+	 
 	    <b><font size="3">What's new in the NeOn Toolkit 2.4.1</font></b>
 	    <p><b>Bug Fix:
 </b></p>
