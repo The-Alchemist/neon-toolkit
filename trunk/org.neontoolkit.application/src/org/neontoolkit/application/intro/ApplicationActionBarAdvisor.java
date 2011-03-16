@@ -186,7 +186,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     private IWorkbenchAction tipsAndTricksAction;
 
-    private QuickMenuAction showInQuickMenu;
+//    private QuickMenuAction showInQuickMenu;
 
     private QuickMenuAction newQuickMenu;
 
@@ -803,7 +803,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
             resourceListener = null;
         }
 
-        showInQuickMenu.dispose();
+//        showInQuickMenu.dispose();
         newQuickMenu.dispose();
         
         // null out actions to make leak debugging easier
@@ -865,7 +865,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         buildWorkingSetMenu = null;
         quickStartAction = null;
         tipsAndTricksAction = null;
-        showInQuickMenu = null;
+//        showInQuickMenu = null;
         newQuickMenu = null;
         buildProjectAction = null;
         newWizardMenu = null;

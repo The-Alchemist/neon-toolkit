@@ -257,7 +257,7 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
                                     IOWLHistoryEntry currentSelectedEntity = OWLHistoryManager.getCurrentSelection();
                                     AbstractProjectTreeElement element = (AbstractProjectTreeElement) _selection.getFirstElement();
                                     IOWLHistoryEntry historyEntry = element.getOWLHistoryEntry();
-                                    if(currentSelectedEntity == null || !historyEntry.equals(currentSelectedEntity))
+                                    if(currentSelectedEntity == null || !historyEntry.equals(currentSelectedEntity) )
                                         OWLHistoryManager.addHistoryElement(historyEntry);
                                 }
                                 return;

@@ -24,6 +24,7 @@ public class OWLHistoryEntry implements IOWLHistoryEntry{
     private String ontologyUri;
     private String projectName;
     private OWLModel model;
+    private boolean empty = false;
 
     /**
      * @param string
@@ -64,7 +65,8 @@ public class OWLHistoryEntry implements IOWLHistoryEntry{
     }
     @Override
     public boolean isEmpty() {
-        return (entity == null || ontologyUri == null || projectName == null);
+        empty  = empty || (entity == null || ontologyUri == null || projectName == null);
+        return empty;
     }
     @Override
     public boolean equals(final Object obj) {
@@ -79,5 +81,10 @@ public class OWLHistoryEntry implements IOWLHistoryEntry{
     @Override
     public int hashCode() {
         return super.hashCode();
+    }
+    @Override
+    public boolean setEmpty(boolean empty) {
+        this.empty = empty;
+        return true;
     }
 }

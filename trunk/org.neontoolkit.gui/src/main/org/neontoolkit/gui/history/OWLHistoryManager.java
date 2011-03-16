@@ -38,6 +38,9 @@ public class OWLHistoryManager implements INavigationHistory{
     }
     //should not be called while navigating in history
     public static void addHistoryElement(IOWLHistoryEntry object){
+        IOWLHistoryEntry lastNoneEmptyElement = getLastNoneEmptyElement();
+        if(object.equals(lastNoneEmptyElement))
+            object.setEmpty(true);
         currentPosition++;
         last = currentPosition;
         history[currentPosition % maxLength] = object;
@@ -200,5 +203,25 @@ public class OWLHistoryManager implements INavigationHistory{
         if(currentPosition != -1) 
             return getHistoryElement(currentPosition);
         return null;
+    }
+    /**
+     * @return the first none empty Element before the current selection iff there exists one
+     */
+    private static IOWLHistoryEntry getLastNoneEmptyElement() {
+        int cP = currentPosition;
+        while(true){
+            if(cP != -1 && cP >= first) {
+                IOWLHistoryEntry currentElement = getHistoryElement(currentPosition);
+                if(currentElement.isEmpty()){
+                    cP--;
+                    continue;
+                }else{
+                    return currentElement;
+                }
+                
+            }else{
+                return null;
+            }
+        }
     }
 }
