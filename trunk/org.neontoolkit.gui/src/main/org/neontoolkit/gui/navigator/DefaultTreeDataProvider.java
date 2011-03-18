@@ -53,6 +53,7 @@ public abstract class DefaultTreeDataProvider implements ITreeDataProvider, ISav
      * 
      * @see com.ontoprise.ontostudio.gui.navigator.ITreeDataProvider#dispose()
      */
+    @Override
     public void dispose() {
         // default implementation does nothing
 
@@ -63,6 +64,7 @@ public abstract class DefaultTreeDataProvider implements ITreeDataProvider, ISav
      * 
      * @see com.ontoprise.ontostudio.gui.navigator.ITreeDataProvider#getImage(com.ontoprise.ontostudio.gui.navigator.ITreeElement)
      */
+    @Override
     public Image getImage(ITreeElement element) {
         return null;
     }
@@ -72,6 +74,7 @@ public abstract class DefaultTreeDataProvider implements ITreeDataProvider, ISav
      * 
      * @see com.ontoprise.ontostudio.gui.navigator.ITreeDataProvider#getText(com.ontoprise.ontostudio.gui.navigator.ITreeElement)
      */
+    @Override
     public String getText(ITreeElement element) {
         return element.toString();
     }
@@ -81,6 +84,7 @@ public abstract class DefaultTreeDataProvider implements ITreeDataProvider, ISav
      * 
      * @see com.ontoprise.ontostudio.gui.navigator.ITreeDataProvider#setId(java.lang.String)
      */
+    @Override
     public void setId(String id) {
         _id = id;
     }
@@ -90,6 +94,7 @@ public abstract class DefaultTreeDataProvider implements ITreeDataProvider, ISav
      * 
      * @see com.ontoprise.ontostudio.gui.navigator.ITreeDataProvider#getId()
      */
+    @Override
     public String getId() {
         return _id;
     }
@@ -99,10 +104,11 @@ public abstract class DefaultTreeDataProvider implements ITreeDataProvider, ISav
      * 
      * @see com.ontoprise.ontostudio.gui.navigator.ITreeDataProvider#setExtensionHandler(com.ontoprise.ontostudio.gui.TreeExtensionHandler)
      */
+    @Override
     public void setExtensionHandler(ITreeExtensionHandler handler) {
         _handler = handler;
     }
-
+    @Override
     public ITreeExtensionHandler getExtensionHandler() {
         return _handler;
     }
@@ -127,6 +133,7 @@ public abstract class DefaultTreeDataProvider implements ITreeDataProvider, ISav
 
     protected void addChild(final Object parent, final Object child, final IElementComparer comparer) {
         syncExec(new Runnable() {
+            @Override
             public void run() {
                 Object parentElement = parent;
                 if (parent == null) {
@@ -149,6 +156,7 @@ public abstract class DefaultTreeDataProvider implements ITreeDataProvider, ISav
 
     protected void addChildAsync(final Object parent, final Object child, final IElementComparer comparer) {
         asyncExec(new Runnable() {
+            @Override
             public void run() {
                 Object parentElement = parent;
                 if (parent == null) {
@@ -171,6 +179,7 @@ public abstract class DefaultTreeDataProvider implements ITreeDataProvider, ISav
 
     protected void removeChild(final Object parent, final Object child) {
         syncExec(new Runnable() {
+            @Override
             public void run() {
                 Object parentElement = parent;
                 if (parent == null) {
@@ -186,6 +195,7 @@ public abstract class DefaultTreeDataProvider implements ITreeDataProvider, ISav
 
     protected void remove(final Object element) {
         asyncExec(new Runnable() {
+            @Override
             public void run() {
                 getViewer().remove(element);
             }
@@ -194,6 +204,7 @@ public abstract class DefaultTreeDataProvider implements ITreeDataProvider, ISav
 
     protected void removeChild(final Object parent, final Object child, final IElementComparer comparer) {
         syncExec(new Runnable() {
+            @Override
             public void run() {
                 IElementComparer oldComparer = getViewer().getComparer();
                 getViewer().setComparer(comparer);
@@ -205,6 +216,7 @@ public abstract class DefaultTreeDataProvider implements ITreeDataProvider, ISav
 
     protected void insertChild(final Object parent, final Object child, final Comparator<Object> comparator) {
         syncExec(new Runnable() {
+            @Override
             public void run() {
                 Widget[] items = getViewer().findTreeItems(parent);
                 for (Widget item: items) {
@@ -242,6 +254,7 @@ public abstract class DefaultTreeDataProvider implements ITreeDataProvider, ISav
 
     protected void refresh() {
         syncExec(new Runnable() {
+            @Override
             public void run() {
                 getViewer().refresh();
             }
@@ -250,12 +263,14 @@ public abstract class DefaultTreeDataProvider implements ITreeDataProvider, ISav
 
     protected void refresh(final Object element) {
         syncExec(new Runnable() {
+            @Override
             public void run() {
                 getViewer().refresh(element);
             }
         });
     }
 
+    @Override
     public void doSave(IProgressMonitor progress, ITreeElement element) {
         if (!(element instanceof IProjectElement)) {
             return;
@@ -326,10 +341,12 @@ public abstract class DefaultTreeDataProvider implements ITreeDataProvider, ISav
 //    }
 
 
+    @Override
     public void doSaveAs(ITreeElement element) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public boolean isDirty(ITreeElement element) {
         if (!(element instanceof IProjectElement)) {
             return false;
@@ -353,6 +370,7 @@ public abstract class DefaultTreeDataProvider implements ITreeDataProvider, ISav
         return false;
     }
 
+    @Override
     public boolean isSaveAsAllowed(ITreeElement element) {
         return true;
     }

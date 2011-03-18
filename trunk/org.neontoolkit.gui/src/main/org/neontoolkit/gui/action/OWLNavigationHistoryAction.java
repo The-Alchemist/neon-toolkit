@@ -1,5 +1,6 @@
 /*****************************************************************************
  * written by the NeOn Technologies Foundation Ltd.
+ * based on NavigationHistoryAction by IBM
  ******************************************************************************/
 package org.neontoolkit.gui.action;
 
