@@ -134,20 +134,7 @@
 
       </viewerContribution>
    </extension>
-<!--    <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            locationURI="menu:file?after=New">
-         <action
-               class="org.neontoolkit.gui.navigator.ontology.SaveAllOntologiesAction"
-               label="Save All"
-               style="push"
-               tooltip="Save All">
-         </action>
-      </menuContribution>
-   </extension>
-   -->
-   <extension point="org.eclipse.ui.editorActions"> 
+ <!--  <extension point="org.eclipse.ui.editorActions"> 
 	   <editorContribution 
 	      id="org.eclipse.ui.articles.action.contribution.editor2" 
 	   targetID="org.eclipse.ui.DefaultTextEditor">
@@ -160,6 +147,7 @@
 	      </action>
 	   </editorContribution>
    </extension>
+   -->
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution

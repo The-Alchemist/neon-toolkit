@@ -40,7 +40,8 @@ public class SaveOntologyRunnableWithProgress implements IRunnableWithProgress {
 	}
 	
 
-	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+	@Override
+    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         try {
         	monitor.beginTask(Messages.SaveOntologyRunnableWithProgress_0 + _ontologyUri, IProgressMonitor.UNKNOWN);
         	IOntologyProject ontoProject = NeOnCorePlugin.getDefault().getOntologyProject(_project);

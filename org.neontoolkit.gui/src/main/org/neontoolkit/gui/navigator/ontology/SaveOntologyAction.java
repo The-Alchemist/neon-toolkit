@@ -32,6 +32,8 @@ import org.neontoolkit.gui.properties.ProgressMonitorWithExceptionDialog;
 /**
  * Action for saving an ontology.
  */
+
+//NICO DELETE ME I AM NOT USED
 public class SaveOntologyAction implements IObjectActionDelegate {
 	private MTreeView _view;
 	
@@ -39,7 +41,8 @@ public class SaveOntologyAction implements IObjectActionDelegate {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction, org.eclipse.ui.IWorkbenchPart)
 	 */
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+	@Override
+    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		if (targetPart instanceof MTreeView) {
 			_view = (MTreeView) targetPart;
 		}
@@ -48,7 +51,8 @@ public class SaveOntologyAction implements IObjectActionDelegate {
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
 	 */
-	public void run(IAction action) {
+	@Override
+    public void run(IAction action) {
         if (_view != null) {
             IStructuredSelection selectedItems = (IStructuredSelection) _view.getTreeViewer().getSelection();
             Object selectedElement = selectedItems.getFirstElement();
@@ -80,7 +84,11 @@ public class SaveOntologyAction implements IObjectActionDelegate {
     /* (non-Javadoc)
 	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
 	 */
-	public void selectionChanged(IAction action, ISelection selection) {
+	@Override
+    public void selectionChanged(IAction action, ISelection selection) {
+	    System.out.println("selectionChanged"); //$NON-NLS-1$
+	    
+//	    action.setEnabled()
 	}
 
 }

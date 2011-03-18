@@ -57,6 +57,8 @@ import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
 import org.eclipse.ui.menus.IMenuService;
 import org.neontoolkit.gui.action.OWLNavigationHistoryAction;
+import org.neontoolkit.gui.action.OWLSaveAction;
+import org.neontoolkit.gui.action.OWLSaveAllAction;
 
 /**
  * @author Nico Stieler
@@ -94,7 +96,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     private IWorkbenchAction openPreferencesAction;
 
-    private IWorkbenchAction saveAsAction;
+//    private IWorkbenchAction saveAsAction;
 
     private IWorkbenchAction hideShowEditorAction;
 
@@ -346,6 +348,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
             fileToolBar.add(new GroupMarker(
                     IWorkbenchActionConstants.SAVE_GROUP));
             fileToolBar.add(saveAction);
+            fileToolBar.add(saveAllAction);
             fileToolBar
                     .add(new GroupMarker(IWorkbenchActionConstants.SAVE_EXT));
 //            fileToolBar.add(getPrintItem());
@@ -452,7 +455,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         menu.add(new Separator());
         menu.add(saveAction);
 //        menu.add(saveAsAction);
-//        menu.add(saveAllAction);
+        menu.add(saveAllAction);
 //        menu.add(getRevertItem());
 //        menu.add(new Separator());
 //        menu.add(getMoveItem());
@@ -820,7 +823,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		dynamicHelpAction = null;
         aboutAction = null;
         openPreferencesAction = null;
-        saveAsAction = null;
+//        saveAsAction = null;
         hideShowEditorAction = null;
         savePerspectiveAction = null;
         resetPerspectiveAction = null;
@@ -847,7 +850,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         undoAction = null;
         redoAction = null;
         quitAction = null;
-//        goIntoAction = null;//NICO
+//        goIntoAction = null;
 //        backAction = null;
 //        forwardAction = null;
 //        upAction = null;
@@ -947,13 +950,37 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
                 .create(window);
         register(toggleAutoBuildAction);
 
-        saveAction = ActionFactory.SAVE.create(window);
+        saveAction = new ActionFactory("save") {//$NON-NLS-1$
+        	/* (non-Javadoc)
+        	 * @see org.eclipse.ui.actions.ActionFactory#create(org.eclipse.ui.IWorkbenchWindow)
+        	 */
+        	public IWorkbenchAction create(IWorkbenchWindow window) {
+        		if (window == null) {
+        			throw new IllegalArgumentException();
+        			}
+        		IWorkbenchAction action = new OWLSaveAction(window);
+        		action.setId(getId());
+        		return action;
+        		}
+        	}.create(window);
         register(saveAction);
 
-        saveAsAction = ActionFactory.SAVE_AS.create(window);
-        register(saveAsAction);
+//        saveAsAction = ActionFactory.SAVE_AS.create(window);
+//        register(saveAsAction);
 
-        saveAllAction = ActionFactory.SAVE_ALL.create(window);//NICO Save All
+        saveAllAction = new ActionFactory("saveAll") {//$NON-NLS-1$
+        	/* (non-Javadoc)
+        	 * @see org.eclipse.ui.actions.ActionFactory#create(org.eclipse.ui.IWorkbenchWindow)
+        	 */
+        	public IWorkbenchAction create(IWorkbenchWindow window) {
+        		if (window == null) {
+        			throw new IllegalArgumentException();
+        			}
+        		IWorkbenchAction action = new OWLSaveAllAction(window);
+        		action.setId(getId());
+        		return action;
+        		}
+        	}.create(window);
         register(saveAllAction);
 		
 //        newWindowAction = ActionFactory.OPEN_NEW_WINDOW.create(getWindow());

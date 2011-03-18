@@ -11,6 +11,7 @@
 package org.neontoolkit.gui.navigator;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -61,6 +62,7 @@ import org.neontoolkit.gui.Messages;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.internal.navigator.MTreeDragListener;
 import org.neontoolkit.gui.internal.navigator.MTreeDropListener;
+import org.neontoolkit.gui.navigator.elements.AbstractOntologyTreeElement;
 import org.neontoolkit.gui.navigator.elements.IFolderElement;
 
 /* 
@@ -107,6 +109,11 @@ public class MTreeView extends ViewPart implements ISetSelectionTarget, ISaveabl
 	 */
 	private ListenerList _listeners;
 
+    private Hashtable<String, Boolean> dirtytable = new Hashtable<String, Boolean>();
+    
+    public Hashtable<String, Boolean> getDirtytable(){
+        return dirtytable;
+    }
 	/**
 	 * Listener reacting on the namespace on/off switch
 	 */
@@ -114,10 +121,12 @@ public class MTreeView extends ViewPart implements ISetSelectionTarget, ISaveabl
 		/* (non-Javadoc)
 		 * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
 		 */
-		public void propertyChange(PropertyChangeEvent event) {
+		@Override
+        public void propertyChange(PropertyChangeEvent event) {
 			if (event.getProperty().equals(NeOnUIPlugin.ID_DISPLAY_PREFERENCE)) {
 				BusyIndicator.showWhile(getTreeViewer().getTree().getDisplay(), new Runnable(){
-					public void run() {
+					@Override
+                    public void run() {
 						getTreeViewer().updateLabels();
 					}
 				});
@@ -132,16 +141,49 @@ public class MTreeView extends ViewPart implements ISetSelectionTarget, ISaveabl
 	 */
 	private class OntologyProjectListener extends OntologyProjectAdapter {
 
-	    @Override
-		public void ontologyModified(String projectName, String ontologyUri,
-				boolean modified) {
+	    private void changeValueInDirtyTable(String projectName, String ontologyUri, boolean dirty){
+            dirtytable.remove(getKey(projectName, ontologyUri));
+            dirtytable.put(getKey(projectName, ontologyUri), dirty);
+        }
+        private String getKey(String projectName, String ontologyUri){
+            if(projectName == null || ontologyUri == null)
+                return null;
+            return projectName + ", " + ontologyUri; //$NON-NLS-1$
+        }
+        
+        @Override
+		public void ontologyModified(String projectName, String ontologyUri, boolean modified) {
+            //use information of current selection to enable/disable the Save button
+            try {
+                String key = getKey(projectName, ontologyUri);
+                Boolean value = (Boolean) dirtytable.get(key);
+                if(value == null){
+                    //add value
+                    dirtytable.put(getKey(projectName, ontologyUri), modified);
+                }else{
+                    if(value.equals(false)){
+                        //if dirty change entry
+                        if(modified){
+                            changeValueInDirtyTable(projectName, ontologyUri, modified);
+                        }
+                    }else{
+                        //if not dirty change entry
+                        if(!modified){
+                            changeValueInDirtyTable(projectName, ontologyUri, modified);
+                        }
+                    }
+                }
+            } catch (NullPointerException e) {
+                //nothing to do
+            }
 			if(modified && !_isDirty) {
 			    try {
 			        IOntologyProject ontoProject = NeOnCorePlugin.getDefault().getOntologyProject(projectName);
 			        if (ontoProject != null && !ontoProject.isPersistent()) {
         				_isDirty = true;
         				_tree.getDisplay().asyncExec(new Runnable() {
-        					public void run() {
+        					@Override
+                            public void run() {
         						firePropertyChange(ISaveablePart.PROP_DIRTY);
         					}
         				});
@@ -159,7 +201,8 @@ public class MTreeView extends ViewPart implements ISetSelectionTarget, ISaveabl
             			if(!_isDirty) {
             				_isDirty = true;
             				_tree.getDisplay().syncExec(new Runnable() {
-            					public void run() {
+            					@Override
+                                public void run() {
             						firePropertyChange(ISaveablePart.PROP_DIRTY);
             					}
             				});
@@ -177,7 +220,8 @@ public class MTreeView extends ViewPart implements ISetSelectionTarget, ISaveabl
             	//put the property change event sending in the UI thread, to avoid exception in
             	//eclipse components. See bug #7125 
             	_tree.getDisplay().asyncExec(new Runnable() {
-            		public void run() {
+            		@Override
+                    public void run() {
             			firePropertyChange(ISaveablePart.PROP_DIRTY);
             		}
             	});
@@ -486,7 +530,8 @@ public class MTreeView extends ViewPart implements ISetSelectionTarget, ISaveabl
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.part.ISetSelectionTarget#selectReveal(org.eclipse.jface.viewers.ISelection)
 	 */
-	public void selectReveal(ISelection selection) {
+	@Override
+    public void selectReveal(ISelection selection) {
 		this._viewer.setSelection(selection, true);
 	}
 	
@@ -498,7 +543,8 @@ public class MTreeView extends ViewPart implements ISetSelectionTarget, ISaveabl
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.ISaveablePart#doSave(org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	public void doSave(IProgressMonitor monitor) {
+	@Override
+    public void doSave(IProgressMonitor monitor) {
 		ISelection selection = _viewer.getSelection();
 		IStructuredSelection sel = (IStructuredSelection) selection;
 		for (Iterator<?> selIterator = sel.iterator(); selIterator.hasNext();) {
@@ -511,12 +557,29 @@ public class MTreeView extends ViewPart implements ISetSelectionTarget, ISaveabl
 			}
 		}
 	}
-	
+    public void doSaveAll(IProgressMonitor monitor) {
+        Tree tree = _viewer.getTree();
+        TreeItem[] projects = tree.getItems();
+        for(TreeItem project : projects){
+            TreeItem[] ontologies = project.getItems();
+
+            for(TreeItem ontology : ontologies){
+                if(ontology.getData() instanceof AbstractOntologyTreeElement){
+                    AbstractOntologyTreeElement ontologytreeElement = (AbstractOntologyTreeElement) ontology.getData();
+                    ITreeDataProvider provider = ((ITreeElement)ontologytreeElement).getProvider();
+                    if (provider instanceof ISaveableProvider) {
+                        ((ISaveableProvider)provider).doSave(monitor, ontologytreeElement);
+                    }
+                }
+            }
+        }
+    }
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.ISaveablePart#doSaveAs()
 	 */
-	public void doSaveAs() {
+	@Override
+    public void doSaveAs() {
 		ISelection selection = _viewer.getSelection();
 		IStructuredSelection sel = (IStructuredSelection) selection;
 		for (Iterator<?> selIterator = sel.iterator(); selIterator.hasNext();) {
@@ -534,7 +597,8 @@ public class MTreeView extends ViewPart implements ISetSelectionTarget, ISaveabl
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.ISaveablePart#isDirty()
 	 */
-	public boolean isDirty() {
+	@Override
+    public boolean isDirty() {
 		return _isDirty;
 //		ISelection selection = _viewer.getSelection();
 //		IStructuredSelection sel = (IStructuredSelection) selection;
@@ -558,7 +622,8 @@ public class MTreeView extends ViewPart implements ISetSelectionTarget, ISaveabl
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.ISaveablePart#isSaveAsAllowed()
 	 */
-	public boolean isSaveAsAllowed() {
+	@Override
+    public boolean isSaveAsAllowed() {
 		ISelection selection = _viewer.getSelection();
 		IStructuredSelection sel = (IStructuredSelection) selection;
 		Object element = sel.getFirstElement();
@@ -577,7 +642,8 @@ public class MTreeView extends ViewPart implements ISetSelectionTarget, ISaveabl
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.ISaveablePart#isSaveOnCloseNeeded()
 	 */
-	public boolean isSaveOnCloseNeeded() {
+	@Override
+    public boolean isSaveOnCloseNeeded() {
 		return false;
 	}
 	
