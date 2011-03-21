@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<feature
+<?xml version="1.0" encoding="UTF-8"?><feature
       id="org.eclipse.rcp"
       label="%featureName"
       version="3.6.1.r361_v20100827-9OArFLdFjY-ThSQXmKvKz0_T"
@@ -35,23 +34,23 @@
          download-size="0"
          install-size="0"
          version="3.6.0.I20100512-1500"
-         unpack="false"/>
-
-   <plugin
+         unpack="false"/>      
+        
+    <plugin
          id="org.eclipse.core.databinding"
          download-size="0"
          install-size="0"
          version="1.3.100.I20100601-0800"
-         unpack="false"/>
+         unpack="false"/>         
 
    <plugin
          id="org.eclipse.core.databinding.observable"
          download-size="0"
          install-size="0"
          version="1.3.0.I20100601-0800"
-         unpack="false"/>
-
-   <plugin
+         unpack="false"/>       
+             
+  <plugin
          id="org.eclipse.core.databinding.property"
          download-size="0"
          install-size="0"
@@ -99,7 +98,7 @@
          install-size="0"
          version="3.6.1.R36x_v20100806"
          unpack="false"/>
-
+         
    <plugin
          id="org.eclipse.osgi.services"
          download-size="0"
@@ -158,17 +157,17 @@
          version="4.0.100.M20100825-0800"
          fragment="true"
          unpack="false"/>
-
-   <plugin
+         
+    <plugin
          id="org.eclipse.ui.cocoa"
          os="macosx"
-         ws="cocoa"
+         ws="cocoa"    
          download-size="0"
          install-size="0"
          version="1.0.2.M20100825-0800"
          fragment="true"
-         unpack="false"/>
-
+         unpack="false"/> 
+                                  
    <plugin
          id="org.eclipse.update.configurator"
          download-size="0"
@@ -215,8 +214,8 @@
          version="3.6.1.v3655c"
          fragment="true"
          unpack="false"/>
-
-   <plugin
+         
+    <plugin
          id="org.eclipse.swt.gtk.linux.s390x"
          os="linux"
          ws="gtk"
@@ -226,8 +225,8 @@
          version="3.6.1.v3655c"
          fragment="true"
          unpack="false"/>
-
-   <plugin
+         
+    <plugin
          id="org.eclipse.swt.gtk.linux.s390"
          os="linux"
          ws="gtk"
@@ -248,7 +247,7 @@
          version="3.6.1.v3655c"
          fragment="true"
          unpack="false"/>
-
+         
    <plugin
          id="org.eclipse.swt.gtk.solaris.x86"
          os="solaris"
@@ -270,7 +269,7 @@
          version="3.6.1.v3655c"
          fragment="true"
          unpack="false"/>
-
+         
    <plugin
          id="org.eclipse.swt.gtk.linux.ppc64"
          os="linux"
@@ -303,8 +302,8 @@
          version="3.6.1.v3655c"
          fragment="true"
          unpack="false"/>
-
-   <plugin
+         
+    <plugin
          id="org.eclipse.swt.carbon.macosx"
          os="macosx"
          ws="carbon"
@@ -314,8 +313,8 @@
          version="3.6.1.v3655c"
          fragment="true"
          unpack="false"/>
-
-   <plugin
+         
+    <plugin
          id="org.eclipse.swt.cocoa.macosx"
          os="macosx"
          ws="cocoa"
@@ -325,8 +324,8 @@
          version="3.6.1.v3655c"
          fragment="true"
          unpack="false"/>
-
-   <plugin
+         
+    <plugin
          id="org.eclipse.swt.cocoa.macosx"
          os="macosx"
          ws="cocoa"
@@ -336,8 +335,8 @@
          version="3.6.1.v3655c"
          fragment="true"
          unpack="false"/>
-
-   <plugin
+         
+    <plugin
          id="org.eclipse.swt.cocoa.macosx.x86_64"
          os="macosx"
          ws="cocoa"
@@ -346,7 +345,7 @@
          install-size="0"
          version="3.6.1.v3655c"
          fragment="true"
-         unpack="false"/>
+         unpack="false"/>           
 
    <plugin
          id="org.eclipse.swt.motif.aix.ppc"
@@ -379,7 +378,7 @@
          install-size="0"
          version="3.6.1.v3655c"
          fragment="true"
-         unpack="false"/>
+         unpack="false"/>   
 
    <plugin
          id="org.eclipse.swt.motif.solaris.sparc"
@@ -429,22 +428,22 @@
          download-size="0"
          install-size="0"
          version="3.6.0.v20100503"
-         unpack="false"/>
-
-   <plugin
+         unpack="false"/>         
+         
+    <plugin
          id="org.eclipse.equinox.ds"
          download-size="0"
          install-size="0"
          version="1.2.1.R36x_v20100803"
-         unpack="false"/>
-
-   <plugin
+         unpack="false"/>       
+        
+    <plugin
          id="org.eclipse.equinox.util"
          download-size="0"
          install-size="0"
          version="1.0.200.v20100503"
          unpack="false"/>
-
+ 
    <plugin
          id="org.eclipse.equinox.preferences"
          download-size="0"
@@ -475,8 +474,8 @@
          install-size="0"
          version="1.1.1.R36x_v20100810"
          fragment="true"/>
-
-   <plugin
+         
+    <plugin
          id="org.eclipse.equinox.launcher.gtk.solaris.x86"
          os="solaris"
          ws="gtk"
@@ -495,8 +494,8 @@
          install-size="0"
          version="1.1.1.R36x_v20100810"
          fragment="true"/>
-
-   <plugin
+         
+    <plugin
          id="org.eclipse.equinox.launcher.carbon.macosx"
          os="macosx"
          ws="carbon"
@@ -505,8 +504,8 @@
          install-size="0"
          version="1.1.1.R36x_v20100810"
          fragment="true"/>
-
-   <plugin
+    
+    <plugin
          id="org.eclipse.equinox.launcher.cocoa.macosx"
          os="macosx"
          ws="cocoa"
@@ -515,8 +514,8 @@
          install-size="0"
          version="1.1.1.R36x_v20100810"
          fragment="true"/>
-
-   <plugin
+         
+    <plugin
          id="org.eclipse.equinox.launcher.cocoa.macosx"
          os="macosx"
          ws="cocoa"
@@ -524,8 +523,8 @@
          download-size="0"
          install-size="0"
          version="1.1.1.R36x_v20100810"
-         fragment="true"/>
-
+         fragment="true"/>       
+            
    <plugin
          id="org.eclipse.equinox.launcher.cocoa.macosx.x86_64"
          os="macosx"
@@ -545,7 +544,7 @@
          install-size="0"
          version="1.1.1.R36x_v20100810"
          fragment="true"/>
-
+         
    <plugin
          id="org.eclipse.equinox.launcher.gtk.linux.ppc64"
          os="linux"
@@ -555,6 +554,7 @@
          install-size="0"
          version="1.0.1.R36x_v20100810"
          fragment="true"/>
+         
 
    <plugin
          id="org.eclipse.equinox.launcher.gtk.linux.x86"
@@ -575,7 +575,7 @@
          install-size="0"
          version="1.1.1.R36x_v20100823"
          fragment="true"/>
-
+         
    <plugin
          id="org.eclipse.equinox.launcher.gtk.linux.s390"
          os="linux"
@@ -624,8 +624,8 @@
          download-size="0"
          install-size="0"
          version="1.1.1.R36x_v20100810"
-         fragment="true"/>
-
+         fragment="true"/>  
+ 
    <plugin
          id="org.eclipse.equinox.launcher.win32.win32.x86"
          os="win32"
@@ -645,5 +645,6 @@
          install-size="0"
          version="1.1.1.R36x_v20100810"
          fragment="true"/>
+
 
 </feature>
