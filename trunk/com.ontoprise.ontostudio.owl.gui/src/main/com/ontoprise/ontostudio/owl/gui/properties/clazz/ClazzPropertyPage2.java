@@ -65,7 +65,6 @@ import org.semanticweb.owlapi.model.OWLObjectHasValue;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
@@ -532,7 +531,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         final StyledText rangeTextWidget = getRangeText(description, row.getParent(), imported, rangeArray[1]);
         OWLGUIUtilities.enable(rangeTextWidget, false);
 
-        if (rangeArray != null) {//NICO thats a strange hack
+        if (rangeArray != null) {
             // ignore OWL:Thing
             if (!rangeArray[0].equals(OWLConstants.OWL_THING_URI)) {
                 String id = OWLGUIUtilities.getEntityLabel(rangeArray);
@@ -798,6 +797,7 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 ISyntaxManager manager = OWLPlugin.getDefault().getSyntaxManager();
                 String input = propertyText.getText();
                 if (input.trim().equals("")) { //$NON-NLS-1$
+                    initWarnings(formRow, quantifierCombo, cardinalityText, propertyText);
                     return;
                 }
                 OWLDataProperty prop = manager.parseDataProperty(input, sourceOwlModel);
@@ -883,8 +883,10 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     formRow.setCancelButton(cancelButton);
                 }
             } catch (CommandException e) {
+                e.printStackTrace();
                 // nothing to do
             } catch (NeOnCoreException e) {
+                e.printStackTrace();
                 // TODO: migration
                 // do nothing
             }
@@ -901,7 +903,9 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 
         String quantifier = quantifierCombo.getText();
         if (propertyText.getText().trim().length() == 0) {
-            if (formRow instanceof AbstractRestrictionRow && ((AbstractRestrictionRow) formRow).getRangeText().getText().trim().length() == 0){
+            if (formRow instanceof AbstractRestrictionRow && 
+                    (((AbstractRestrictionRow) formRow).getRangeText().getText().trim().length() == 0 || 
+                            quantifier.equals(OWLCommandUtils.HAS_SELF))){
                 message = null;
                 type = IMessageProvider.NONE;
             }else{
