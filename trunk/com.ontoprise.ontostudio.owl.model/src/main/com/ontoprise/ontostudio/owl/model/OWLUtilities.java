@@ -220,8 +220,12 @@ public class OWLUtilities {
     public static OWLIndividual individual(String individual) throws NeOnCoreException {
         try {
             return new InternalParserFunctionalSyntax().getIndividual(individual);
-        } catch (ParseException e) {
-            throw new InternalNeOnException(e);
+        } catch (ParseException firstException) {
+            try {
+                return new InternalParserFunctionalSyntax().getIndividual(IRIUtils.ensureValidIRISyntax(individual));
+            } catch (ParseException e1) {
+                throw new InternalNeOnException(firstException);
+            }
         }
     }
     /**

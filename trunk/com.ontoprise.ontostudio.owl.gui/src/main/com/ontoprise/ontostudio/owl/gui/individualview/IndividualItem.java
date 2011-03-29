@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.ontoprise.ontostudio.owl.gui.individualview;
 
+import org.neontoolkit.core.util.IRIUtils;
 import org.semanticweb.owlapi.model.OWLAnonymousIndividual;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
@@ -27,7 +28,7 @@ public class IndividualItem<T extends OWLIndividual>{
     private String _clazz;
 
     protected IndividualItem(T individual, String clazzUri, String ontologyUri, String projectName){
-        _id = OWLUtilities.toString(individual);
+        _id = IRIUtils.ensureValidIdentifierSyntax(OWLUtilities.toString(individual));
         _individual = individual;
         _clazz = clazzUri;
     }
