@@ -20,14 +20,16 @@ import java.util.Set;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
 import org.semanticweb.owlapi.model.OWLObjectIntersectionOf;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
-
-import com.ontoprise.ontostudio.owl.model.OWLUtilities;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class OWLClassHandler implements EntityHierarchyUpdater.EntityHandler<OWLClassExpression> {
     @SuppressWarnings("unchecked")
     private static final Set<AxiomType<? extends OWLAxiom>> HANDLED_AXIOMS = Collections.unmodifiableSet(new LinkedHashSet<AxiomType<? extends OWLAxiom>>(Arrays.asList(AxiomType.SUBCLASS_OF, AxiomType.EQUIVALENT_CLASSES)));
@@ -69,21 +71,21 @@ public class OWLClassHandler implements EntityHierarchyUpdater.EntityHandler<OWL
     @Override
     public boolean isEdgeAxiom(OWLAxiom axiom) {
         if (axiom instanceof OWLSubClassOfAxiom) {
-            OWLClassExpression subDescription = ((OWLSubClassOfAxiom)axiom).getSubClass();
-            OWLClassExpression superDescription = ((OWLSubClassOfAxiom)axiom).getSuperClass();
-
-            if (isThingOrNothing(subDescription) || isThingOrNothing(superDescription)) {
-                return false;
-            }
             return true;
         } else if (axiom instanceof OWLEquivalentClassesAxiom) {
             return true;
         }
         return false;
     }
-    
+
     private boolean isThingOrNothing(OWLClassExpression description) {
-        return _factory.getOWLThing().equals(description) || _factory.getOWLNothing().equals(description);
+        return isThing(description) || isNothing(description);
+    }
+    private boolean isThing(OWLClassExpression description) {
+        return _factory.getOWLThing().equals(description);
+    }
+    private boolean isNothing(OWLClassExpression description) {
+        return _factory.getOWLNothing().equals(description);
     }
 
     @Override
@@ -194,6 +196,7 @@ public class OWLClassHandler implements EntityHierarchyUpdater.EntityHandler<OWL
 
     @Override
     public boolean handleNodeEntity(OWLClassExpression entity) {
-        return !OWLUtilities.isOWLNothing(entity) && !OWLUtilities.isOWLThing(entity);
+//        return !OWLUtilities.isOWLNothing(entity) && !OWLUtilities.isOWLThing(entity);
+        return true;
     }
 }

@@ -1549,7 +1549,8 @@ public class OWLModelCore implements OWLModel {
 
     @Override
     public Set<OWLClass> getRootClasses() throws NeOnCoreException {
-        Set<OWLClassExpression> roots = getHierarchy(OWLClassExpression.class, getIncludeImportedOntologies()).getRootEquivalenceClassRepresentatives();
+        EntityHierarchy<OWLClassExpression> hierarchy = getHierarchy(OWLClassExpression.class, getIncludeImportedOntologies());
+        Set<OWLClassExpression> roots = hierarchy.getRootEquivalenceClassRepresentatives();
         roots = new LinkedHashSet<OWLClassExpression>(roots);
         assert(getOWLClasses(roots).size() == roots.size());
         return Cast.cast(roots);

@@ -883,10 +883,8 @@ public class ClazzPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     formRow.setCancelButton(cancelButton);
                 }
             } catch (CommandException e) {
-                e.printStackTrace();
                 // nothing to do
             } catch (NeOnCoreException e) {
-                e.printStackTrace();
                 // TODO: migration
                 // do nothing
             }

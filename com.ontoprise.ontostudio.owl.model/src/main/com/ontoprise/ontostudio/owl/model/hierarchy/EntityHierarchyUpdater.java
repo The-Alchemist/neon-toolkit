@@ -20,6 +20,7 @@ import org.semanticweb.owlapi.model.AddAxiom;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLAxiomChange;
+import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDeclarationAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
@@ -31,6 +32,7 @@ import com.ontoprise.ontostudio.owl.model.util.Cast;
 
 /**
  * @author krekeler
+ * @author Nico Stieler
  *
  */
 public class EntityHierarchyUpdater<E> {
@@ -121,7 +123,8 @@ public class EntityHierarchyUpdater<E> {
         for (OWLOntology o: relevantOntologies) {
             if (OWLEntity.class.isAssignableFrom(_entityHandler.getEntityType())) {
                 Class<? extends OWLEntity> entityType = Cast.cast(_entityHandler.getEntityType());
-                for (OWLEntity entity: OWLUtilities.getReferencedEntities(o, entityType)) {
+                Set<? extends OWLEntity> entities = OWLUtilities.getReferencedEntities(o, entityType);
+                for (OWLEntity entity : entities) {
                     E concreteEntity = Cast.cast(entity);
                     if (_entityHandler.handleNodeEntity(concreteEntity)) {
                         OWLAxiom axiom = _factory.getOWLDeclarationAxiom(entity);
@@ -131,7 +134,8 @@ public class EntityHierarchyUpdater<E> {
                 }
             }
             for (AxiomType<? extends OWLAxiom> axiomType: _entityHandler.getHandledAxiomTypes()) {
-                for (OWLAxiom axiom: o.getAxioms(axiomType)) {
+                Set<? extends OWLAxiom> axioms = o.getAxioms(axiomType);
+                for (OWLAxiom axiom: axioms) {
                     if (_entityHandler.isNodeAxiom(axiom)) {
                         assertNonDeclarationAxiom(axiom);
                         _hierarchy.addAxiom(axiom, o);
@@ -146,6 +150,19 @@ public class EntityHierarchyUpdater<E> {
                             _hierarchy.addEdgeAxiom(child, parent, axiom);
                         }
                     }
+                }
+            }
+        }
+        if(_entityHandler instanceof OWLClassHandler){// && E == OWLClassExpression
+//            insert implicit edges owl:Thing - "root" class
+            OWLClassExpression[] rootEntities = new OWLClassExpression[0];
+            rootEntities = _hierarchy.getRootEntities().toArray(rootEntities);
+            for(OWLClassExpression x : rootEntities){
+//                System.out.println(x);
+                if(! x.equals(_factory.getOWLThing())){
+                    ImplicitOWLSubClassOfAxiomImpl implicitAxiom = new ImplicitOWLSubClassOfAxiomImpl(_factory, (OWLClassExpression) x, _factory.getOWLThing());
+                    _hierarchy.addAxiom(implicitAxiom, _ontology);
+                    _hierarchy.addEdgeAxiom((E) x, (E) _factory.getOWLThing(), implicitAxiom);
                 }
             }
         }
@@ -183,7 +200,12 @@ public class EntityHierarchyUpdater<E> {
                         for (int i = 0; i < parents.size(); i++) {
                             E parent = parents.get(i);
                             E child = children.get(i);
-                            _hierarchy.addEdgeAxiom(child, parent, axiom);
+                            if(_hierarchy.addEdgeAxiom(child, parent, axiom) && _entityHandler instanceof OWLClassHandler ){
+                                ImplicitOWLSubClassOfAxiomImpl removeAxiom = new ImplicitOWLSubClassOfAxiomImpl(_factory, (OWLClassExpression) child, _factory.getOWLThing());
+                                if(_hierarchy.removeAxiom(removeAxiom, ontology)){
+                                    _hierarchy.removeEdgeAxiom(child, (E) _factory.getOWLThing(), removeAxiom);
+                                }
+                            }
                         }
                     } else {
                         // missed update or implementation bug
@@ -197,6 +219,7 @@ public class EntityHierarchyUpdater<E> {
                                 E parent = parents.get(i);
                                 E child = children.get(i);
                                 _hierarchy.removeEdgeAxiom(child, parent, axiom);
+                                //NICO if Entity still exists and its root add implicit edge to owl:Thing: it should still exist
                             }
                         }
                         _hierarchy.removeAxiom(axiom, ontology);
@@ -218,6 +241,12 @@ public class EntityHierarchyUpdater<E> {
                                 _hierarchy.removeNodeAxiom(concreteEntity, axiom);
                             }
                             _hierarchy.removeAxiom(axiom, ontology);
+                            if(_entityHandler instanceof OWLClassHandler ){
+                                ImplicitOWLSubClassOfAxiomImpl removeAxiom = new ImplicitOWLSubClassOfAxiomImpl(_factory, (OWLClassExpression) concreteEntity, _factory.getOWLThing());
+                                if(_hierarchy.removeAxiom(removeAxiom, ontology)){
+                                    _hierarchy.removeEdgeAxiom(concreteEntity, (E) _factory.getOWLThing(), removeAxiom);
+                                }
+                            }
                         } else {
                             // missed update or implementation bug
                         }
@@ -231,6 +260,11 @@ public class EntityHierarchyUpdater<E> {
                         OWLAxiom axiom = _factory.getOWLDeclarationAxiom((OWLEntity)concreteEntity);
                         if (_hierarchy.addAxiom(axiom, ontology)) {
                             _hierarchy.addNodeAxiom(concreteEntity, axiom);
+                            if(_entityHandler instanceof OWLClassHandler && _hierarchy.getRootEntities().contains(concreteEntity)){
+                                ImplicitOWLSubClassOfAxiomImpl implicitAxiom = new ImplicitOWLSubClassOfAxiomImpl(_factory, (OWLClassExpression) concreteEntity, _factory.getOWLThing());
+                                if(_hierarchy.addAxiom(implicitAxiom, _ontology))
+                                    _hierarchy.addEdgeAxiom((E) concreteEntity, (E) _factory.getOWLThing(), implicitAxiom);
+                            }
                         } else {
                             // can happen regularly since a potentially added entity must not necessarily be new
                         }
