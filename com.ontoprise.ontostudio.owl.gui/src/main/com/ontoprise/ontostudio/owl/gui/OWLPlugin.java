@@ -41,6 +41,7 @@ import com.ontoprise.ontostudio.owl.model.OWLModelPlugin;
 
 /**
  * This is the plugin activator for the gui plugin. this plugin provides various extension points.
+ *@author Nico Stieler
  */
 public class OWLPlugin extends AbstractUIPlugin {
     public static final String ID = "com.ontoprise.ontostudio.owl.gui"; //$NON-NLS-1$
@@ -74,6 +75,8 @@ public class OWLPlugin extends AbstractUIPlugin {
     public static final String FONT_WIDGET_FONT = "com.ontoprise.ontostudio.gui.widgetfont"; //$NON-NLS-1$
 
     public static final String SHOW_NB_INSTANCES_PREFERENCE = OWLPlugin.class.getName() + ".shownbinstances"; //$NON-NLS-1$
+
+    public static final String SHOW_INSTANCES_OF_ALL_SUBCLASSES_PREFERENCE = OWLPlugin.class.getName() + ".showInstancesOfAllSubclasses"; //$NON-NLS-1$
 
     // The shared instance.
     private static OWLPlugin _plugin;

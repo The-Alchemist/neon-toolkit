@@ -152,7 +152,7 @@ public class AnnotationValuesSearchMatch extends OWLValueSearchMatch {
         String project = match.getProjectName();
         Set<OWLEntity> entities = null;
         try {
-            entities = OWLModelFactory.getOWLModel(ontology, project).getEntity(match.getClazz());
+            entities = OWLModelFactory.getOWLModel(ontology, project).getEntity(match.getCurrentClazz());
         } catch (NeOnCoreException e) {
             e.printStackTrace();
         }

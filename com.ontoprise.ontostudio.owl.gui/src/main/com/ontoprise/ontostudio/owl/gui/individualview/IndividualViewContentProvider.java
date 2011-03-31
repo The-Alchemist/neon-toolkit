@@ -13,6 +13,9 @@ package com.ontoprise.ontostudio.owl.gui.individualview;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -28,6 +31,8 @@ import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
+import org.neontoolkit.gui.navigator.ITreeDataProvider;
+import org.neontoolkit.gui.navigator.ITreeElement;
 import org.neontoolkit.gui.navigator.elements.IOntologyElement;
 import org.neontoolkit.gui.navigator.elements.IProjectElement;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
@@ -37,9 +42,8 @@ import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
-import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzFolderTreeElement;
+import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzHierarchyProvider;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
-import com.ontoprise.ontostudio.owl.model.OWLConstants;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
@@ -60,6 +64,7 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
      * The items to display;
      */
 //    private AbstractOwlEntityTreeElement[] _items;
+    @SuppressWarnings("rawtypes")
     private IIndividualTreeElement[] _items;
 
     /**
@@ -71,14 +76,14 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
     private IPreferenceStore _guiStore;
     private IPreferenceStore _owlStore;
 
-    String _selectedClazz;
+    ClazzTreeElement _selectedClazzTreeElement;
     String _ontologyUri;
     String _projectId;
 
     /**
      * An temporary item for inserting new individuals
      */
-    protected IIndividualTreeElement _newItem;
+    protected IIndividualTreeElement<OWLNamedIndividual> _newItem;
     protected int _style;
 
     private OWLAxiomListener _axiomListener;
@@ -91,6 +96,7 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
                 public void modelChanged(OWLChangeEvent event) {
 
                     _individualTree.getTree().getDisplay().syncExec(new Runnable() {
+                        @Override
                         public void run() {
                             forceUpdate();
                             _individualTree.refresh();
@@ -123,6 +129,18 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
                             _individualTree.refresh();
                         }
                     });
+                }
+                if (event.getProperty().equals(OWLPlugin.SHOW_INSTANCES_OF_ALL_SUBCLASSES_PREFERENCE)) {
+//                    _individualTree.getTree().getDisplay().syncExec(new Runnable() {
+//
+//                        @Override
+//                        public void run() {
+//                            // refreshElements();
+//                            // setDirty();
+                            forceUpdate();
+                            _individualTree.refresh();
+//                        }
+//                    });
                 }
             }
         };
@@ -171,24 +189,60 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
             Object[] array = (Object[]) newInput;
             if (array[0] instanceof ClazzTreeElement) {
                 ClazzTreeElement elem = (ClazzTreeElement) array[0];
-                if (array[1].equals(_projectId) && elem.getId().equals(_selectedClazz) && elem.getOntologyUri().equals(_ontologyUri)) {
+                if (array[1].equals(_projectId) && _selectedClazzTreeElement != null && elem.getId().equals(getSelectedClazz()) && elem.getOntologyUri().equals(_ontologyUri)) {
                     return;
                 }
                 _projectId = (String) array[1];
-                _selectedClazz = elem.getId();
+                _selectedClazzTreeElement = elem;
                 _ontologyUri = elem.getOntologyUri();
                 updateItems();
-            } else if (array[0] instanceof ClazzFolderTreeElement) {
-                ClazzFolderTreeElement elem = (ClazzFolderTreeElement) array[0];
-                _projectId = (String) array[1];
-                _selectedClazz = OWLConstants.OWL_THING_URI;
-                _ontologyUri = elem.getOntologyUri();
-                updateItems();
-            }
+            } 
+//            else if (array[0] instanceof ClazzFolderTreeElement) {
+//                ClazzFolderTreeElement elem = (ClazzFolderTreeElement) array[0];
+//                _projectId = (String) array[1];
+//                _selectedClazz = OWLConstants.OWL_THING_URI;
+//                _ontologyUri = elem.getOntologyUri();
+//                updateItems();
+//            }
         } else {
             _projectId = null;
-            _selectedClazz = ""; //$NON-NLS-1$
+            _selectedClazzTreeElement = null;
         }
+    }
+
+    /**
+     * @param element 
+     * @return
+     */
+    private HashSet<String> determineIndividualClasses(ClazzTreeElement element) {
+        HashSet<String> set = new HashSet<String>();
+        addSubclassesToIndividualsClasses(element, set);
+        return set;
+    }
+
+    /**
+     * @param element
+     */
+    private boolean addSubclassesToIndividualsClasses(ClazzTreeElement element, HashSet<String> set) {
+        if(!set.add(element.getId()))
+            return false;
+
+      if(NeOnUIPlugin.getDefault().getPreferenceStore().getBoolean(OWLPlugin.SHOW_INSTANCES_OF_ALL_SUBCLASSES_PREFERENCE)){
+          boolean newSubclasses = false;        
+          ITreeDataProvider provider = element.getProvider();
+          if(provider instanceof ClazzHierarchyProvider){
+              ClazzHierarchyProvider clazzHierarchyProvider = (ClazzHierarchyProvider)provider;
+              for(ITreeElement child : clazzHierarchyProvider.getChildren(element, 0, 0)){
+                  if(child instanceof ClazzTreeElement){
+                      addSubclassesToIndividualsClasses((ClazzTreeElement)child, set);
+                  }
+              }
+              
+          }
+          return newSubclasses;
+      }else{
+          return false;
+      } 
     }
 
     public boolean update() {
@@ -196,20 +250,36 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
         return true;
     }
 
+    @SuppressWarnings("rawtypes")
     private void updateItems() {
-        if (_selectedClazz == null || _ontologyUri == null) {
+        if (_selectedClazzTreeElement == null || getSelectedClazz() == null || _ontologyUri == null) {
             return;
         }
 
         try {
-            String[] individualUris = new GetIndividuals(_projectId, _ontologyUri, _selectedClazz).getResults();
+            HashSet<String> individualsClasses = determineIndividualClasses(_selectedClazzTreeElement);
+            HashMap<String,LinkedList<String>> newIndividualUrisList = new HashMap<String,LinkedList<String>>();
+//            HashSet<IIndividualTreeElement<OWLIndividual>> oldItems = new HashSet<IIndividualTreeElement<OWLIndividual>>();
+//            for(IIndividualTreeElement<OWLIndividual> oldInd : (IIndividualTreeElement[]) getElements(null)){
+//                oldItems.add(oldInd);
+//            }
+            for(String individualClass : individualsClasses){
+                for(String individual : new GetIndividuals(_projectId, _ontologyUri, individualClass).getResults()){
+                    if(newIndividualUrisList.containsKey(individual)){
+                        newIndividualUrisList.get(individual).add(individualClass);
+                        
+                    }else{
+                        LinkedList<String> classes = new LinkedList<String>();
+                        classes.add(individualClass);
+                        newIndividualUrisList.put(individual, classes);
+                    }
+                }
+            }
             IIndividualTreeElement[] oldItems = (IIndividualTreeElement[]) getElements(null);
-            _items = new IIndividualTreeElement[individualUris.length];
+            _items = new IIndividualTreeElement[newIndividualUrisList.size()];
 
             int i = 0;
-            for (String individualUri: individualUris) {
-//                if(individualUri.startsWith("_:"))individualUri = individualUri.substring(2); //$NON-NLS-1$
-//                OWLIndividual individual = OWLModelFactory.getOWLDataFactory(_projectId).getOWLNamedIndividual(OWLUtilities.toIRI(individualUri));
+            for (String individualUri: newIndividualUrisList.keySet()) {
                 boolean newIndividuum = true;
                 int oldPos = 0;
                 for(oldPos = 0 ; oldPos < oldItems.length ; oldPos++){
@@ -220,7 +290,14 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
                 }
                 if(newIndividuum){
                     OWLIndividual individual = OWLUtilities.individual(individualUri);
-                    _items[i++] = IndividualItem.createNewInstance(individual, _selectedClazz, _ontologyUri, _projectId);
+                    LinkedList<String> clazzUris = newIndividualUrisList.get(individualUri);
+                    _items[i++] = IndividualItem.createNewInstance(
+                            individual, 
+                            _selectedClazzTreeElement.getId(), 
+                            clazzUris.toArray(new String[clazzUris.size()]), 
+                            _ontologyUri, 
+                            _projectId, 
+                            clazzUris.size() == 1 && clazzUris.contains(_selectedClazzTreeElement.getId()));
                 }else{
                     _items[i++] = oldItems[oldPos];
                     oldItems[oldPos] = null;
@@ -294,7 +371,7 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
             }
         }
 
-        new CreateIndividual(_projectId, _ontologyUri, _newItem.getClazz(), newURI).perform();
+        new CreateIndividual(_projectId, _ontologyUri, _newItem.getCurrentClazz(), newURI).perform();
 
     }
 
@@ -328,7 +405,9 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
      * Returns the current class the view is displaying the individuals of.
      */
     public String getSelectedClazz() {
-        return _selectedClazz;
+        if(_selectedClazzTreeElement == null)
+            return ""; //$NON-NLS-1$
+        return _selectedClazzTreeElement.getId();
     }
 
     /**
@@ -362,7 +441,7 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
         } catch (NeOnCoreException e) {
             throw new RuntimeException(e);
         }
-        _newItem = new NamedIndividualViewItem(individual, _selectedClazz, _ontologyUri, _projectId); 
+        _newItem = new NamedIndividualViewItem(individual, getSelectedClazz(), _ontologyUri, _projectId); 
         _items = new IIndividualTreeElement[oldItems.length + 1];
         _items[0] = _newItem;
         System.arraycopy(oldItems, 0, _items, 1, oldItems.length);
@@ -389,17 +468,18 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
         return false;
     }
 
+    @SuppressWarnings("rawtypes")
     private void updateItems(int index, int amount) {
         try {
-            if (_selectedClazz == null || _ontologyUri == null) {
+            if (_selectedClazzTreeElement == null || getSelectedClazz() == null || _ontologyUri == null) {
                 return;
             }
             List<IIndividualTreeElement> directInstances = null;
             directInstances = new ArrayList<IIndividualTreeElement>();
-            String[] individualUris = new GetIndividuals(_projectId, _ontologyUri, _selectedClazz).getResults();
+            String[] individualUris = new GetIndividuals(_projectId, _ontologyUri, getSelectedClazz()).getResults();
             for (String individualUri: individualUris) {
                 OWLIndividual individual = OWLUtilities.individual(individualUri);
-                directInstances.add(IndividualItem.createNewInstance(individual, _selectedClazz, _ontologyUri, _projectId));
+                directInstances.add(IndividualItem.createNewInstance(individual, getSelectedClazz(), _ontologyUri, _projectId));
             }
             _items = new IIndividualTreeElement[directInstances.size()];
             int i = 0;
@@ -422,6 +502,7 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
     @SuppressWarnings("unchecked")
     private void registerAxiomListener(String projectId, String ontologyId) {
         try {
+            @SuppressWarnings("rawtypes")
             Class[] clazzes = new Class[] {OWLClassAssertionAxiom.class};
             OWLModelFactory.getOWLModel(ontologyId, projectId).addAxiomListener(getAxiomListener(), clazzes);
         } catch (NeOnCoreException e1) {

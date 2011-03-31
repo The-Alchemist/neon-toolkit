@@ -12,6 +12,7 @@ package com.ontoprise.ontostudio.owl.model.commands.individual;
 
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.core.util.IRIUtils;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
@@ -37,16 +38,16 @@ public class CreateIndividual extends OWLModuleChangeCommand {
         try {
             OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(getProjectName());
             IRI clazzIRI,individualIRI;
-            try{
-                clazzIRI = OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(getArgument(2).toString());
-            }catch(OWLRuntimeException e){
-                clazzIRI = OWLUtilities.toIRI(getArgument(2).toString());
-            }
-            try{
-                individualIRI = OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(getArgument(3).toString());   
-            }catch(OWLRuntimeException e){
-                individualIRI = OWLUtilities.toIRI(getArgument(3).toString());
-            }
+//            try{
+//                clazzIRI = OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(getArgument(2).toString());
+//            }catch(OWLRuntimeException e){
+                clazzIRI = OWLUtilities.toIRI(IRIUtils.ensureValidIRISyntax(getArgument(2).toString()));
+//            }
+//            try{
+//                individualIRI = OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(getArgument(3).toString());   
+//            }catch(OWLRuntimeException e){
+                individualIRI = OWLUtilities.toIRI(IRIUtils.ensureValidIRISyntax(getArgument(3).toString()));
+//            }
             OWLClass clazz = factory.getOWLClass(clazzIRI);
             OWLNamedIndividual individual = factory.getOWLNamedIndividual(individualIRI);
             OWLClassAssertionAxiom clazzMember = factory.getOWLClassAssertionAxiom(clazz, individual);

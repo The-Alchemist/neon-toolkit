@@ -56,7 +56,10 @@ import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzFolderTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class IndividualView extends ViewPart implements ISelectionListener {
 
     public static final String ID = "com.ontoprise.ontostudio.owl.views.individualview"; //$NON-NLS-1$
@@ -73,6 +76,7 @@ public class IndividualView extends ViewPart implements ISelectionListener {
     private String _ontologyId;
 
     public IndividualView() {
+        
     }
 
     @Override
@@ -184,6 +188,7 @@ public class IndividualView extends ViewPart implements ISelectionListener {
         }
     }
 
+    @SuppressWarnings("rawtypes")
     public void prepareItemForEdit(IIndividualTreeElement item) {
         TreeItem treeItem = getTreeItem(item);
         _viewer.getTree().setFocus();
@@ -203,6 +208,7 @@ public class IndividualView extends ViewPart implements ISelectionListener {
         _treeEditor.setEditor(_text, treeItem);
     }
 
+    @SuppressWarnings("rawtypes")
     private TreeItem getTreeItem(IIndividualTreeElement individual) {
         TreeItem[] items = _viewer.getTree().getItems();
         for (int i = 0; i < items.length; i++) {
@@ -284,6 +290,7 @@ public class IndividualView extends ViewPart implements ISelectionListener {
         return _clazzTreeElement;
     }
 
+    @SuppressWarnings("rawtypes")
     public void stopEditing(boolean success) throws CommandException,NeOnCoreException {
         if (_treeEditor != null && _text != null && !_text.isDisposed()) {
             try {

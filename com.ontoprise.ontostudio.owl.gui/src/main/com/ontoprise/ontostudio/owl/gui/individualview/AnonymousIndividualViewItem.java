@@ -19,6 +19,7 @@ import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 
 /**
  * @author janiko
+ * @author Nico Stieler
  * Created on: 05.10.2009
  */
 public class AnonymousIndividualViewItem extends AbstractOntologyTreeElement implements IIndividualTreeElement<OWLAnonymousIndividual>{
@@ -31,16 +32,26 @@ public class AnonymousIndividualViewItem extends AbstractOntologyTreeElement imp
      * @param projectName
      */
     public AnonymousIndividualViewItem(OWLAnonymousIndividual individual, String clazzUri, String ontologyUri, String projectName) {
+        this(individual, clazzUri, new String[]{clazzUri}, ontologyUri, projectName, true);
+    }
+    /**
+     * @param individual
+     * @param objects
+     * @param ontologyUri
+     * @param projectName
+     * @param direct
+     */
+    public AnonymousIndividualViewItem(OWLAnonymousIndividual individual, String currentClazzUri, String[] clazzUris, String ontologyUri, String projectName, boolean direct) {
         super(projectName, ontologyUri, null);
-        _individualItem = new IndividualItem<OWLAnonymousIndividual>(individual, clazzUri, ontologyUri, projectName);
+        _individualItem = new IndividualItem<OWLAnonymousIndividual>(individual, currentClazzUri, clazzUris, ontologyUri, projectName, direct);
     }
     /**
      * @return
      * @see com.ontoprise.ontostudio.owl.gui.individualview.IndividualItem#getClazz()
      */
     @Override
-    public String getClazz() {
-        return _individualItem.getClazz();
+    public String[] getClazzUris() {
+        return _individualItem.getClazzUris();
     }
     /**
      * @return
@@ -107,5 +118,10 @@ public class AnonymousIndividualViewItem extends AbstractOntologyTreeElement imp
 //            idArray = new String[] {OWLUtilities.toString(_individualItem.getIndividual())}; //NICO model is needed
         }
         return OWLGUIUtilities.getEntityLabel(idArray);
+    }
+    @Override
+    public String getCurrentClazz() {
+        String[] uris = getClazzUris();
+        return uris[uris.length - 1];
     }
 }
