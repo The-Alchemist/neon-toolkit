@@ -91,13 +91,13 @@
             name="%individualView"/>
       <view
             category="org.neontoolkit.gui.views.general"
-            class="com.ontoprise.ontostudio.owl.gui.domainview.DomainView"
+            class="com.ontoprise.ontostudio.owl.gui.views.domainview.DomainView"
             icon="icons/domain.gif"
             id="com.ontoprise.ontostudio.owl.views.domainview"
             name="%DomainView"/>
       <view
             category="org.neontoolkit.gui.views.general"
-            class="com.ontoprise.ontostudio.owl.gui.rangeView.RangeView"
+            class="com.ontoprise.ontostudio.owl.gui.views.rangeView.RangeView"
             icon="icons/range.gif"
             id="com.ontoprise.ontostudio.owl.views.rangeview"
             name="%RangeView"/>
@@ -319,6 +319,19 @@
       </menuContribution>
    </extension>
    
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="toolbar:com.ontoprise.ontostudio.owl.views.individualview">
+         <command
+               commandId="com.ontoprise.ontostudio.owl.views.individualView.showIndividualsOfAllSubClassesCommand"
+               icon="icons/icon_TH_inher_co.gif"
+			   tooltip="%showIndividualsOfAllSubClasses"
+			   state="false"
+			   style="toogle">
+         </command>
+      </menuContribution>
+   </extension>
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
@@ -1176,26 +1189,6 @@
             </reference>
          </activeWhen> 
       </handler>
-<!--      <handler
-            class="com.ontoprise.ontostudio.search.owl.references.FindReferencesHandler"
-			commandId="com.ontoprise.ontostudio.owl.gui.navigator.findIn">
-         <activeWhen>
-            <reference
-	              definitionId="com.ontoprise.ontostudio.owl.gui.navigator.nOntologiesOrProjetctSelected">
-            </reference>
-         </activeWhen> 
-      </handler>
-      -->
-<!--      <handler
-            class="com.ontoprise.ontostudio.search.owl.references.FindReferencesHandler"
-			commandId="com.ontoprise.ontostudio.owl.gui.navigator.findIn">
-         <activeWhen>
-            <reference
-	              definitionId="com.ontoprise.ontostudio.owl.gui.navigator.nProjectsSelected">
-            </reference>
-         </activeWhen> 
-      </handler>
-     -->
    </extension>
 
    <extension
@@ -1230,6 +1223,10 @@
                   definitionId="com.ontoprise.ontostudio.owl.gui.navigator.nIndividualsSelected">
             </reference>
          </activeWhen>
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.individualview.ShowIndividualsOfAllSubclasses"
+            commandId="com.ontoprise.ontostudio.owl.views.individualView.showIndividualsOfAllSubClassesCommand">
       </handler>
    </extension>
 <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
@@ -1619,12 +1616,11 @@
 			id="com.ontoprise.ontostudio.owl.gui.navigator.findReferencesCommand"
             name="%findReferencesLabel">
       </command>
-<!--      <command
-            description="%findReferencesDescription2"
-			id="com.ontoprise.ontostudio.owl.gui.navigator.findIn"
-            name="%findReferencesLabel2">
+      <command
+            description="%showIndividualsOfAllSubClasses"
+			id="com.ontoprise.ontostudio.owl.views.individualView.showIndividualsOfAllSubClassesCommand"
+            name="%showIndividualsOfAllSubClasses">
       </command>
-      -->
    </extension>
 <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
 <!--+++++++++++++++++++++++++++++ KEY BINDINGS ++++++++++++++++++++++++++++-->

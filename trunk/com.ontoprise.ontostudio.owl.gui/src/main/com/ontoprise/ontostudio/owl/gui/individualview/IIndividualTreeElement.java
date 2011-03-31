@@ -18,6 +18,7 @@ import org.semanticweb.owlapi.model.OWLIndividual;
 
 /**Interface for all OWL individuals. 
  * @author janiko
+ * @author Nico Stieler
  * Created on: 05.10.2009
  */
 public interface IIndividualTreeElement<T extends OWLIndividual> extends IQualifiedIDElement, ITreeElement, IProjectElement, IOntologyElement{
@@ -26,7 +27,9 @@ public interface IIndividualTreeElement<T extends OWLIndividual> extends IQualif
     
     public boolean isDirect();
 
-    public String getClazz();
+    public String[] getClazzUris();
+    
+    public String getCurrentClazz();
     
     public T getIndividual();
 

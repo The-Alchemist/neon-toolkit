@@ -19,25 +19,36 @@ import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 
 /**
  * @author janiko
+ * @author Nico Stieler
  * Created on: 07.10.2009
  */
 public class IndividualItem<T extends OWLIndividual>{
 
     T _individual;
     private String _id;
-    private String _clazz;
+    private String[] _clazzUris;
+    private String _currentClazz;
+    private boolean _direct;
 
     protected IndividualItem(T individual, String clazzUri, String ontologyUri, String projectName){
+        this(individual, clazzUri, new String[]{clazzUri}, ontologyUri, projectName, true);
+    }
+    protected IndividualItem(T individual, String currentClazzUri, String[] clazzUris, String ontologyUri, String projectName, boolean direct){
         _id = IRIUtils.ensureValidIdentifierSyntax(OWLUtilities.toString(individual));
         _individual = individual;
-        _clazz = clazzUri;
+        _clazzUris = clazzUris;
+        _currentClazz = currentClazzUri;
+        _direct = direct;
     }
-    
+
     public static IIndividualTreeElement<?> createNewInstance(OWLIndividual individual, String clazzUri, String ontologyUri, String projectName){
+        return createNewInstance(individual, clazzUri, new String[]{clazzUri}, ontologyUri, projectName, true);
+    }
+    public static IIndividualTreeElement<?> createNewInstance(OWLIndividual individual, String currentClazzUri, String[] clazzUris, String ontologyUri, String projectName, boolean direct){
         if(individual instanceof OWLNamedIndividual) { 
-            return new NamedIndividualViewItem((OWLNamedIndividual)individual, clazzUri, ontologyUri, projectName);
+            return new NamedIndividualViewItem((OWLNamedIndividual)individual, currentClazzUri, clazzUris, ontologyUri, projectName, direct);
         } else { 
-            return new AnonymousIndividualViewItem((OWLAnonymousIndividual)individual, clazzUri, ontologyUri, projectName);
+            return new AnonymousIndividualViewItem((OWLAnonymousIndividual)individual, currentClazzUri, clazzUris, ontologyUri, projectName, direct);
         }
     }
 
@@ -62,13 +73,12 @@ public class IndividualItem<T extends OWLIndividual>{
         return this;
     }
 
-    // TODO implement
     public boolean isDirect() {
-        return true;
+        return _direct;
     }
 
-    public String getClazz() {
-        return _clazz;
+    public String[] getClazzUris() {
+        return _clazzUris;
     }
 
 //    //Not needed for OWL
@@ -82,8 +92,12 @@ public class IndividualItem<T extends OWLIndividual>{
 //    public String getNamespace() {
 //        return getId();
 //    }
-    
-
+    /**
+     * @return the _currentClazz
+     */
+    public String getCurrentClazz() {
+        return _currentClazz;
+    }
     
 
 }

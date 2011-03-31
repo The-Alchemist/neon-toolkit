@@ -18,17 +18,21 @@ import org.eclipse.swt.graphics.Image;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class IndividualViewLabelProvider extends LabelProvider implements IColorProvider {
 
     @Override
+    @SuppressWarnings("rawtypes")
     public Color getBackground(Object element) {
         if (element instanceof IIndividualTreeElement) {
             IIndividualTreeElement item = (IIndividualTreeElement) element;
-            if (item.isDirect()) {
-                return null;
+            if (item.isImported()) {
+                return OWLGUIUtilities.COLOR_FOR_IMPORTED_AXIOMS;
             } else {
-                return OWLGUIUtilities.COLOR_FOR_INHERITED_FACTS;
+                return null;
             }
         }
         return null;

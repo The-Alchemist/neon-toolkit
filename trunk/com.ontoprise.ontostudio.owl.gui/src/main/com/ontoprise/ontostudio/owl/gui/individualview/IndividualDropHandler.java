@@ -44,6 +44,7 @@ import com.ontoprise.ontostudio.owl.model.commands.individual.CreateIndividual;
  */
 /**
  * Drop handler managing dragging and dropping of instances on concepts.
+ * @author Nico Stieler
  */
 public class IndividualDropHandler implements DropTargetListener {
 
@@ -52,6 +53,7 @@ public class IndividualDropHandler implements DropTargetListener {
      * 
      * @see org.eclipse.swt.dnd.DropTargetListener#dragEnter(org.eclipse.swt.dnd.DropTargetEvent)
      */
+    @Override
     public void dragEnter(DropTargetEvent event) {
     }
 
@@ -60,6 +62,7 @@ public class IndividualDropHandler implements DropTargetListener {
      * 
      * @see org.eclipse.swt.dnd.DropTargetListener#dragLeave(org.eclipse.swt.dnd.DropTargetEvent)
      */
+    @Override
     public void dragLeave(DropTargetEvent event) {
     }
 
@@ -68,6 +71,7 @@ public class IndividualDropHandler implements DropTargetListener {
      * 
      * @see org.eclipse.swt.dnd.DropTargetListener#dragOperationChanged(org.eclipse.swt.dnd.DropTargetEvent)
      */
+    @Override
     public void dragOperationChanged(DropTargetEvent event) {
     }
 
@@ -76,6 +80,7 @@ public class IndividualDropHandler implements DropTargetListener {
      * 
      * @see org.eclipse.swt.dnd.DropTargetListener#dragOver(org.eclipse.swt.dnd.DropTargetEvent)
      */
+    @Override
     public void dragOver(DropTargetEvent event) {
     }
 
@@ -84,6 +89,8 @@ public class IndividualDropHandler implements DropTargetListener {
      * 
      * @see org.eclipse.swt.dnd.DropTargetListener#drop(org.eclipse.swt.dnd.DropTargetEvent)
      */
+    @SuppressWarnings("rawtypes")
+    @Override
     public void drop(DropTargetEvent event) {
         // elements have to be IndividualViewItems, as specified in the extension
         Object dropElem = event.data;
@@ -129,11 +136,13 @@ public class IndividualDropHandler implements DropTargetListener {
      * 
      * @see org.eclipse.swt.dnd.DropTargetListener#dropAccept(org.eclipse.swt.dnd.DropTargetEvent)
      */
+    @Override
     public void dropAccept(DropTargetEvent event) {
         // TODO Auto-generated method stub
 
     }
 
+    @SuppressWarnings("rawtypes")
     protected void doCopy(IIndividualTreeElement[] elem, Object target) {
         if (target instanceof ClazzTreeElement) {
             // instance is dropped on a concept
@@ -156,6 +165,7 @@ public class IndividualDropHandler implements DropTargetListener {
         }
     }
 
+    @SuppressWarnings("rawtypes")
     protected void doMove(IIndividualTreeElement elem[], Object target) {
         if (target instanceof ClazzTreeElement) {
             try {
@@ -165,7 +175,7 @@ public class IndividualDropHandler implements DropTargetListener {
                 ArrayList<IIndividualTreeElement> movedInstances = new ArrayList<IIndividualTreeElement>();
 
                 for (int i = 0; i < elem.length; i++) {
-                    String clazzUri = elem[i].getClazz();
+                    String clazzUri = elem[i].getCurrentClazz();
                     OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(elem[i].getProjectName());
                     OWLClass clazz = factory.getOWLClass(OWLUtilities.toIRI(clazzUri));
                     ClazzTreeElement oldParent = new ClazzTreeElement(clazz, elem[i].getOntologyUri(), elem[i].getProjectName(), TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class));
