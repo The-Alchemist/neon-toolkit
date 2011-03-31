@@ -12,7 +12,6 @@ package com.ontoprise.ontostudio.owl.gui.navigator.clazz;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -49,7 +48,6 @@ import com.ontoprise.ontostudio.owl.gui.control.AlphabeticalOWLEntityTreeElement
 import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.project.OWLProjectTreeElement;
-import com.ontoprise.ontostudio.owl.model.OWLConstants;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLModelPlugin;
@@ -240,18 +238,18 @@ public class ClazzHierarchyProvider extends DefaultTreeDataProvider {
             
             for (String clazzUri: subClazzUris) {
                 ClazzTreeElement cte = null;
-                if (clazzUri.equals(OWLConstants.OWL_THING_URI)) {
-                    Set<OWLClass> subElems = _owlModel.getAllSubClasses(clazzUri);
-                    for (Iterator<OWLClass> iter = subElems.iterator(); iter.hasNext();) {
-                        OWLClass element = (OWLClass) iter.next();
-                        cte = new ClazzTreeElement(element, ontologyId, projectId, this);
-                        clazzNodesList.add(cte);
-                    }
-                } else {
+//                if (clazzUri.equals(OWLConstants.OWL_THING_URI)) {
+//                    Set<OWLClass> subElems = _owlModel.getAllSubClasses(clazzUri);
+//                    for (Iterator<OWLClass> iter = subElems.iterator(); iter.hasNext();) {
+//                        OWLClass element = (OWLClass) iter.next();
+//                        cte = new ClazzTreeElement(element, ontologyId, projectId, this);
+//                        clazzNodesList.add(cte);
+//                    }
+//                } else {
                     OWLClass clazz = OWLModelFactory.getOWLDataFactory(projectId).getOWLClass(OWLUtilities.toIRI(clazzUri));
                     cte = new ClazzTreeElement(clazz, ontologyId, projectId, this);
                     clazzNodesList.add(cte);
-                }
+//                }
             }
             Collections.sort(clazzNodesList, new AlphabeticalOWLEntityTreeElementComparator<ClazzTreeElement>());
             return clazzNodesList.toArray(new ClazzTreeElement[clazzNodesList.size()]);
