@@ -214,9 +214,25 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
 
     private static String escapeLiteral(String literal) {
         String y;
-        y = literal.replaceAll("\\\\", "\\\\\\"); //$NON-NLS-1$ //$NON-NLS-2$
-        y = y.replaceAll(new Character('"').toString(), "\\\\\""); // MER this is strange should actually only be "\\\"" resulting in a backslash followed by a //$NON-NLS-1$
-                                                                   // double quote
+        try{
+            y = literal.replaceAll("\\\\", "\\\\\\"); //$NON-NLS-1$ //$NON-NLS-2$
+        }catch(RuntimeException e){
+            try{
+                y = literal.replace("\\\\", "\\\\\\"); //$NON-NLS-1$ //$NON-NLS-2$
+            }catch(RuntimeException e2){
+                throw e;
+            }
+        }
+        try{
+            y = y.replaceAll(new Character('"').toString(), "\\\\\""); // MER this is strange should actually only be "\\\"" resulting in a backslash followed by a //$NON-NLS-1$
+                                                                       // double quote
+        }catch(RuntimeException e){
+            try{
+                y = y.replace(new Character('"').toString(), "\\\\\""); //$NON-NLS-1$
+            }catch(RuntimeException e2){
+                throw e;
+            }
+        }
         return y;
     }
 
