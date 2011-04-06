@@ -21,7 +21,10 @@ import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.softwareag.neontoolkit.ontostat.StatsPlugin;
 import com.softwareag.neontoolkit.ontostat.StatsProvider;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 @SuppressWarnings("nls")
 public class ProjectStatsPropertyPage extends AbstractOWLMainIDPropertyPage {
 
