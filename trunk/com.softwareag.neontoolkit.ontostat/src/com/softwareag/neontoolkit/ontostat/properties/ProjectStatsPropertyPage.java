@@ -109,7 +109,7 @@ public class ProjectStatsPropertyPage extends AbstractOWLMainIDPropertyPage {
             int intValue = 0;
             try {
                 for (OWLModel owlModel: OWLModelFactory.getOWLModels(_project)) {
-                    Object o = provider.getValue(owlModel);
+                    Object o = provider.getLocalValue(owlModel);
                     if(o instanceof Integer) {
                         intValue += (Integer)o;
                     } else {

@@ -18,7 +18,10 @@ import com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.properties.AbstractOWLMainIDPropertyPage;
 import com.softwareag.neontoolkit.ontostat.StatsPlugin;
 import com.softwareag.neontoolkit.ontostat.StatsProvider;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 @SuppressWarnings("nls")
 public class OntologyStatsPropertyPage extends AbstractOWLMainIDPropertyPage {
 
@@ -78,7 +81,7 @@ public class OntologyStatsPropertyPage extends AbstractOWLMainIDPropertyPage {
         });
         _statsComp = _toolkit.createComposite(_statsSection, SWT.NONE);
         GridLayout gridLayout = new GridLayout();
-        gridLayout.numColumns=3;
+        gridLayout.numColumns=4;
         _statsComp.setLayout(gridLayout);
         ColumnLayoutData data = new ColumnLayoutData();
         _statsComp.setLayoutData(data);
@@ -86,10 +89,19 @@ public class OntologyStatsPropertyPage extends AbstractOWLMainIDPropertyPage {
         (new Label(_statsComp, SWT.NONE)).setText("sss");
         _toolkit.adapt(_statsComp);
         _statsSection.setClient(_statsComp);
+        createTitleRow();
     }
 
+    private void createTitleRow(){
+        (new Label(_statsComp, SWT.NONE)).setText("");
+        (new Label(_statsComp, SWT.NONE)).setText("");
+        (new Label(_statsComp, SWT.NONE)).setText("local");
+        (new Label(_statsComp, SWT.NONE)).setText("incl. imports");
+        
+    }
     private void initStatsSection() {
         clearComposite(_statsComp);
+        createTitleRow();
         
 
        	Object otesel =getMainPage().getSelection().getFirstElement();
@@ -106,15 +118,38 @@ public class OntologyStatsPropertyPage extends AbstractOWLMainIDPropertyPage {
         StatsProvider[] providers = StatsPlugin.getDefault().getStatsProviders();
         for (StatsProvider provider:providers) {
 
-        	(new Label(_statsComp, SWT.NONE)).setImage(provider.getIconImage());
-        	(new Label(_statsComp, SWT.NONE)).setText(provider.getTitle());
+            Label image = new Label(_statsComp, SWT.NONE);
+            image.setImage(provider.getIconImage());
+            
+            Label title = new Label(_statsComp, SWT.NONE);
+            title.setText(provider.getTitle());
         	
-            Text statText = new Text(_statsComp, SWT.SINGLE | SWT.BORDER);
+            Text statLocalText = new Text(_statsComp, SWT.SINGLE | SWT.BORDER);
         	GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
             gridData.widthHint=50;
-            statText.setLayoutData(gridData);
-            statText.setEditable(false);
-            statText.setText(provider.getValue(_owlModel).toString());
+            statLocalText.setLayoutData(gridData);
+            statLocalText.setEditable(false);
+            statLocalText.setText(provider.getLocalValue(_owlModel).toString());
+            
+            Text statGlobalText = new Text(_statsComp, SWT.SINGLE | SWT.BORDER);
+            GridData gridData2 = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+            gridData2.widthHint=50;
+            statGlobalText.setLayoutData(gridData);
+            statGlobalText.setEditable(false);
+            statGlobalText.setText(provider.getGlobalValue(_owlModel).toString());
+
+            if(provider.getImageTooltip() != null){
+                image.setToolTipText(provider.getImageTooltip());
+            }
+            if(provider.getTitleTooltip() != null){
+                title.setToolTipText(provider.getTitleTooltip());
+            }
+            if(provider.getLocalTooltip() != null){
+                statLocalText.setToolTipText(provider.getLocalTooltip());
+            }
+            if(provider.getGlobalTooltip() != null){
+                statGlobalText.setToolTipText(provider.getGlobalTooltip());
+            }
         }        
 
     }

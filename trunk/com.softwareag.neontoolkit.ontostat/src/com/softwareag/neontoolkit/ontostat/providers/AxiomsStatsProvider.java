@@ -7,26 +7,61 @@ import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.softwareag.neontoolkit.ontostat.StatsProvider;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class AxiomsStatsProvider extends StatsProvider {
 
-	@Override
+    @Override
+    public Object getLocalValue(OWLModel model) {
+        try {
+            return model.getOntology().getAxiomCount();//NICO TODO local
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+    @Override
+    public Object getGlobalValue(OWLModel model) {
+        try {
+            return model.getOntology().getAxiomCount();//NICO TODO global
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+    @Override
     public Object getValue(OWLModel model) {
-		try {
-			return model.getOntology().getAxiomCount();
-		} catch (Exception e) {
-			return 0;
-		}
-	}
-	
-	@Override
+        try {
+            return model.getOntology().getAxiomCount();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    @Override
     public OWLAxiom[] getElements(OWLModel model) {
-		try {
-			return model.getOntology().getAxioms().toArray(new OWLAxiom[0]);
-		} catch (Exception e) {
-			return null;
-		}
-	}
+        try {
+            return model.getOntology().getAxioms().toArray(new OWLAxiom[0]);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    @Override
+    public OWLAxiom[] getLocalElements(OWLModel model) {
+        try {
+            return model.getOntology().getAxioms().toArray(new OWLAxiom[0]);//NICO TODO local
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    @Override
+    public OWLAxiom[] getGlobalElements(OWLModel model) {
+        try {
+            return model.getOntology().getAxioms().toArray(new OWLAxiom[0]);//NICO TODO global
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
 	@Override
     public Class<?> getType() {

@@ -7,26 +7,61 @@ import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.softwareag.neontoolkit.ontostat.StatsProvider;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class IndividualsStatsProvider extends StatsProvider {
 
-	@Override
+    @Override
+    public Object getLocalValue(OWLModel model) {
+        try {
+            return model.getAllIndividuals(false).size();
+        } catch (Exception e) {
+            return 0;
+        }   
+    }
+    @Override
+    public Object getGlobalValue(OWLModel model) {
+        try {
+            return model.getAllIndividuals(true).size();
+        } catch (Exception e) {
+            return 0;
+        }   
+    }
+    @Override
     public Object getValue(OWLModel model) {
-		try {
-			return model.getOntology().getIndividualsInSignature().size();
-		} catch (Exception e) {
-			return 0;
-		}	
-	}
-	
-	@Override
+        try {
+            return model.getOntology().getIndividualsInSignature().size();
+        } catch (Exception e) {
+            return 0;
+        }   
+    }
+    
+    @Override
     public OWLIndividual[] getElements(OWLModel model) {
-		try {
-			return model.getOntology().getIndividualsInSignature().toArray(new OWLIndividual[0]);
-		} catch (Exception e) {
-			return null;
-		}
-	}
+        try {
+            return model.getOntology().getIndividualsInSignature().toArray(new OWLIndividual[0]);
+        } catch (Exception e) {
+            return null;
+        }
+    } 
+    @Override
+    public OWLIndividual[] getLocalElements(OWLModel model) {
+        try {
+            return model.getAllIndividuals(false).toArray(new OWLIndividual[0]);
+        } catch (Exception e) {
+            return null;
+        }
+    }   
+    @Override
+    public OWLIndividual[] getGlobalElements(OWLModel model) {
+        try {
+            return model.getAllIndividuals(true).toArray(new OWLIndividual[0]);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 	
 	@Override
     public Class<?> getType() {
