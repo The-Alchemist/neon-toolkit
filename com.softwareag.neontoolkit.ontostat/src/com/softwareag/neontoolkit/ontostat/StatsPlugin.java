@@ -54,13 +54,14 @@ public class StatsPlugin extends AbstractUIPlugin {
 					order=Integer.parseInt(order_str);
 				} catch (NumberFormatException e) {				
 				}
-				String title = confe.getAttribute("title");
+                String title = confe.getAttribute("title");
+                String tooltip = confe.getAttribute("tooltip");
 				String iconImageURL = confe.getAttribute("icon");
 				ImageDescriptor iconImage=null;
 				if (iconImageURL!=null && !iconImageURL.isEmpty())
 					iconImage = ImageDescriptor.createFromURL(FileLocator.find(this.getBundle(), new Path(iconImageURL), null));
 				if (o instanceof StatsProvider) {
-					((StatsProvider)o).setDefaults(title, iconImage!=null?iconImage.createImage():null);
+					((StatsProvider)o).setDefaults(title, iconImage!=null?iconImage.createImage():null, tooltip);
 					res.put((order<10?"0":"")+order+title+id, (StatsProvider)o);
 				}
 			} catch (Exception e1) {

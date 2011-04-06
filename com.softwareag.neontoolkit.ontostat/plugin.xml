@@ -68,13 +68,7 @@
             id="com.softwareag.neontoolkit.ontostat.ImportedOntologiesStatsProvider"
             order="40"
             providerClass="com.softwareag.neontoolkit.ontostat.providers.ImportedOntologiesStatsProvider"
-            title="Imported Ontologies (direct)">
-      </StatsProvider>
-      <StatsProvider
-            id="com.softwareag.neontoolkit.ontostat.ImportedOntologiesClosureStatsProvider"
-            order="41"
-            providerClass="com.softwareag.neontoolkit.ontostat.providers.ImportedOntologiesClosureStatsProvider"
-            title="Imported Ontologies (closure)">
+            title="Imported Ontologies">
       </StatsProvider>
    </extension>
    

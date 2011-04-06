@@ -7,17 +7,36 @@ import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.softwareag.neontoolkit.ontostat.StatsProvider;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class DataTypesStatsProvider extends StatsProvider {
 
-	@Override
+    @Override
+    public Object getLocalValue(OWLModel model) {
+        try {
+            return model.getAllDatatypes(false).size();//NICO TODO local
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+    @Override
+    public Object getGlobalValue(OWLModel model) {
+        try {
+            return model.getAllDatatypes(true).size();//NICO TODO global
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+    @Override
     public Object getValue(OWLModel model) {
-		try {
-			return model.getAllDatatypes().size();
-		} catch (Exception e) {
-			return 0;
-		}
-	}
+        try {
+            return model.getAllDatatypes().size();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
 	
 	@Override
     public OWLDatatype[] getElements(OWLModel model) {
@@ -27,7 +46,22 @@ public class DataTypesStatsProvider extends StatsProvider {
 			return null;
 		}
 	}
-	
+    @Override
+    public OWLDatatype[] getLocalElements(OWLModel model) {
+        try {
+            return model.getAllDatatypes(false).toArray(new OWLDatatype[0]);//NICO TODO local
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    @Override
+    public OWLDatatype[] getGlobalElements(OWLModel model) {
+        try {
+            return model.getAllDatatypes(true).toArray(new OWLDatatype[0]);//NICO TODO global
+        } catch (Exception e) {
+            return null;
+        }
+    }
 	@Override
     public Class<?> getType() {
 		return OWLDatatype.class;
