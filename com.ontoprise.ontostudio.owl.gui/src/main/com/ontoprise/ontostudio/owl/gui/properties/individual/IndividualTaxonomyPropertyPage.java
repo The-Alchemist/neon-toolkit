@@ -355,9 +355,8 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
                     try {
                         String otherIndividual = OWLGUIUtilities.getValidURI(text.getText(), _localOwlModel.getOntologyURI(), _project);
                         if (otherIndividual != null) {
-                            String thisIndividual = OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(_id).toString();
-                            if (!otherIndividual.equals(thisIndividual)) {
-                                new CreateDifferentIndividuals(_project, _sourceOwlModel.getOntologyURI(), new String[] {thisIndividual, otherIndividual}).run();
+                            if (!otherIndividual.equals(_id)) {
+                                new CreateDifferentIndividuals(_project, _sourceOwlModel.getOntologyURI(), new String[] {_id, otherIndividual}).run();
                             } else {
                                 MessageDialog.openWarning(_clazzesComp.getShell(), Messages.IndividualPropertyPage2_45, Messages.IndividualTaxonomyPropertyPage_0);
                             }
@@ -391,9 +390,8 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
                     // add new entry
                     try {
                         String sameIndividual = OWLGUIUtilities.getValidURI(text.getText(), _localOwlModel.getOntologyURI(), _project);
-                        String thisIndividual = OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(_id).toString();
-                        if (!sameIndividual.equals(thisIndividual)) {
-                            new CreateSameIndividuals(_project, _sourceOwlModel.getOntologyURI(), new String[] {thisIndividual, sameIndividual}).run();
+                        if (!sameIndividual.equals(_id)) {
+                            new CreateSameIndividuals(_project, _sourceOwlModel.getOntologyURI(), new String[] {_id, sameIndividual}).run();
                         } else {
                             MessageDialog.openWarning(_clazzesComp.getShell(), Messages.IndividualPropertyPage2_45, Messages.IndividualTaxonomyPropertyPage_1);
                         }
@@ -427,7 +425,7 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
                     try {
                         OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(_project);
                         OWLClassExpression newValue = _manager.parseDescription(text.getText(), _localOwlModel);
-                        OWLIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(_id));
+                        OWLIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.toIRI(_id));
                         OWLAxiom newAxiom = factory.getOWLClassAssertionAxiom((OWLClassExpression) newValue, individual);
                         _sourceOwlModel.addAxiom(newAxiom);
                     } catch (NeOnCoreException k2e) {
@@ -547,7 +545,7 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
                     String value = text.getText();
                     OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(_project);
                     OWLClassExpression clazzDesc = _manager.parseDescription(value, _localOwlModel);
-                    OWLIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(_id));
+                    OWLIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.toIRI(_id));
                     OWLAxiom oldAxiom = factory.getOWLClassAssertionAxiom(((OWLClassAssertionAxiom) axiom.getAxiom()).getClassExpression(), individual);
                     OWLAxiom newAxiom = factory.getOWLClassAssertionAxiom(clazzDesc, individual);
                     new ApplyChanges(_project, _sourceOwlModel.getOntologyURI(), 
@@ -586,20 +584,20 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
             public void removePressed() throws NeOnCoreException {
                 try {
                     OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(_project);
-                    OWLIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(_id));
+                    OWLIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.toIRI(_id));
                     OWLAxiom oldAxiom = factory.getOWLClassAssertionAxiom(((OWLClassAssertionAxiom) axiom.getAxiom()).getClassExpression(), individual);
                     String[] newAxioms = new String[0];
 
                     String  checkboxID = OWLModelPlugin.INSERT_EXPLICIT_CLASS_ASSERTION_AXIOM_TO_OWLTHING_OPEN_DIALOG;
                     String  decisionID = OWLModelPlugin.INSERT_EXPLICIT_CLASS_ASSERTION_AXIOM_TO_OWLTHING_YES_OR_NO;
-                    String  dialogTitle = Messages.RemoveLastClassAssertionAxiom_Title;
-                    String  dialogText = Messages.RemoveLastClassAssertionAxiom_Text;
+                    String  dialogTitle = Messages.InsertClassAssertionAxiom_Title;
+                    String  dialogText = Messages.InsertClassAssertionAxiom_RemoveLastClass_Text;
                     String[][] hits = new GetDescriptionHits(_project, _ontologyUri, _id).getResults();
                     if(hits.length == 1){
                         boolean decision = false;
                         OWLClassAssertionAxiom axiom = (OWLClassAssertionAxiom) OWLUtilities.axiom(hits[0][0]);
                         if(axiom.getClassExpression().equals(OWLDataFactoryVocabulary.OWLThing)){
-                            dialogText = Messages.RemoveLastClassAssertionAxiom_Text_OWLTHING;
+                            dialogText = Messages.InsertClassAssertionAxiom_RemoveLastClass_Text_OWLTHING;
                             switch(new CheckboxDesicionDialog(null,dialogTitle, dialogText, checkboxID, decisionID, true).open()){
                                 case CheckboxDesicionDialog.NO:
                                     decision = false;
@@ -680,8 +678,7 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
                 // save modified entries
                 try {
                     String value = OWLGUIUtilities.getValidURI(textWidget.getText(), _localOwlModel.getOntologyURI(), _project);
-                    String thisIndividual = OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(_id).toString();
-                    if (!value.equals(thisIndividual)) {
+                    if (!value.equals(_id)) {
                         List<LocatedAxiom> axioms = getAxioms();
                         for (LocatedAxiom oldAxiom: axioms) {
                             String oldAxiomText = OWLUtilities.toString(oldAxiom.getAxiom());
@@ -711,7 +708,7 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
                         owlAxioms.add(axiom);
                     }
                 }
-                OWLAxiomUtils.triggerRemovePressed(owlAxioms, getEntity(), _namespaces, _id, _sourceOwlModel, WizardConstants.ADD_DEPENDENT_MODE);
+                OWLAxiomUtils.triggerRemovePressed(owlAxioms, getEntity(), _namespaces, IRIUtils.ensureValidIRISyntax(_id), _sourceOwlModel, WizardConstants.ADD_DEPENDENT_MODE);
                 refresh();
             }
 
@@ -768,14 +765,12 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
             public void savePressed() {
                 // save modified entries
                 try {
-                    String value = OWLGUIUtilities.getValidURI(textWidget.getText(), _localOwlModel.getOntologyURI(), _project);
-                    String thisIndividual = OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(_id).toString();
-                    if (!value.equals(thisIndividual)) {
-                        List<LocatedAxiom> axioms = getAxioms();
+                    String sameIndividual = OWLGUIUtilities.getValidURI(textWidget.getText(), _localOwlModel.getOntologyURI(), _project);
+                    if (!sameIndividual.equals(_id)) {
                         for (LocatedAxiom oldAxiom: getAxioms()) {
                             String oldAxiomText = OWLUtilities.toString(oldAxiom.getAxiom());
                             if (oldAxiom.isLocal()) {//NICO is local: should that be removed?
-                                new EditEquivalentIndividuals(_project, _sourceOwlModel.getOntologyURI(), oldAxiomText, OWLUtilities.toString(getEntity()), OWLUtilities.toString(OWLUtilities.individual(IRIUtils.ensureValidIRISyntax(value)))).run();
+                                new EditEquivalentIndividuals(_project, _sourceOwlModel.getOntologyURI(), oldAxiomText, OWLUtilities.toString(getEntity()), OWLUtilities.toString(OWLUtilities.individual(IRIUtils.ensureValidIRISyntax(sameIndividual)))).run();
                             }
                         }
                     } else {

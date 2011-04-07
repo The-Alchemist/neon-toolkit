@@ -38,11 +38,11 @@ public class CreateIndividual extends OWLModuleChangeCommand {
         try {
             OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(getProjectName());
             IRI clazzIRI,individualIRI;
-//            try{
-//                clazzIRI = OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(getArgument(2).toString());
-//            }catch(OWLRuntimeException e){
+            try{
+                clazzIRI = OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(getArgument(2).toString());
+            }catch(OWLRuntimeException e){
                 clazzIRI = OWLUtilities.toIRI(IRIUtils.ensureValidIRISyntax(getArgument(2).toString()));
-//            }
+            }
 //            try{
 //                individualIRI = OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(getArgument(3).toString());   
 //            }catch(OWLRuntimeException e){

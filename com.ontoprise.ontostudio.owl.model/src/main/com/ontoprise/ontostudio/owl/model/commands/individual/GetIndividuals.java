@@ -33,7 +33,7 @@ public class GetIndividuals extends OWLOntologyRequestCommand {
     /**
      * @param project
      * @param module
-     * @param arguments
+     * @param clazzId - if clazzId == null it performs for not asserted individuals
      */
     public GetIndividuals(String project, String module, String clazzId) {
         super(project, module, clazzId);
@@ -44,7 +44,12 @@ public class GetIndividuals extends OWLOntologyRequestCommand {
         _results = new ArrayList<String>();
         Set<OWLIndividual> individuals = null;
         try {
-            individuals = getOwlModel().getIndividuals((String) getArgument(2));
+            String clazzId = (String) getArgument(2);
+            if(clazzId == null){
+                individuals = getOwlModel().getAllUnassertedIndividuals();
+            }else{
+                individuals = getOwlModel().getIndividuals(clazzId);
+            }
             if (individuals != null) {
                 for (OWLIndividual i: individuals) {
                     _results.add(OWLUtilities.toString(i));

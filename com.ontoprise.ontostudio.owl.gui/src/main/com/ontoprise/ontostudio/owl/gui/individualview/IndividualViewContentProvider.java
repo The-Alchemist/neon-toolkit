@@ -39,6 +39,7 @@ import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.vocab.OWLDataFactoryVocabulary;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
@@ -259,15 +260,20 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
         try {
             HashSet<String> individualsClasses = determineIndividualClasses(_selectedClazzTreeElement);
             HashMap<String,LinkedList<String>> newIndividualUrisList = new HashMap<String,LinkedList<String>>();
-//            HashSet<IIndividualTreeElement<OWLIndividual>> oldItems = new HashSet<IIndividualTreeElement<OWLIndividual>>();
-//            for(IIndividualTreeElement<OWLIndividual> oldInd : (IIndividualTreeElement[]) getElements(null)){
-//                oldItems.add(oldInd);
-//            }
+            
+            //adds not asserted Individuals iff owl:Thing is selected
+            if(_selectedClazzTreeElement.getEntity().equals(OWLDataFactoryVocabulary.OWLThing)){
+                for(String individual : new GetIndividuals(_projectId, _ontologyUri, null).getResults()){
+                    if(!newIndividualUrisList.containsKey(individual)){
+                        LinkedList<String> classes = new LinkedList<String>();
+                        newIndividualUrisList.put(individual, classes);
+                    }
+                }
+            }
             for(String individualClass : individualsClasses){
                 for(String individual : new GetIndividuals(_projectId, _ontologyUri, individualClass).getResults()){
                     if(newIndividualUrisList.containsKey(individual)){
                         newIndividualUrisList.get(individual).add(individualClass);
-                        
                     }else{
                         LinkedList<String> classes = new LinkedList<String>();
                         classes.add(individualClass);
@@ -280,15 +286,15 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
 
             int i = 0;
             for (String individualUri: newIndividualUrisList.keySet()) {
-                boolean newIndividuum = true;
+                boolean newIndividual = true;
                 int oldPos = 0;
                 for(oldPos = 0 ; oldPos < oldItems.length ; oldPos++){
                     if(oldItems[oldPos] != null && OWLUtilities.toString(oldItems[oldPos].getIndividual()).equals(i)){
-                        newIndividuum = false;
+                        newIndividual = false;
                         break;
                     }
                 }
-                if(newIndividuum){
+                if(newIndividual){
                     OWLIndividual individual = OWLUtilities.individual(individualUri);
                     LinkedList<String> clazzUris = newIndividualUrisList.get(individualUri);
                     _items[i++] = IndividualItem.createNewInstance(
