@@ -281,7 +281,6 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
             throw checkConnectionFailure(e);
         }
     }
-
     @Override
     public Set<OWLDatatype> getAllDatatypes() throws NeOnCoreException {
         try {
@@ -292,7 +291,16 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
             throw checkConnectionFailure(e);
         }
     }
-
+    @Override
+    public Set<OWLDatatype> getAllDatatypes(boolean includeImported) throws NeOnCoreException {
+        try {
+            return _model.getAllDatatypes(includeImported);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
     @Override
     public Set<OWLModel> getAllImportedOntologies() throws NeOnCoreException {
         try {
@@ -347,7 +355,16 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
             throw checkConnectionFailure(e);
         }
     }
-
+    @Override
+    public Set<OWLIndividual> getAllUnassertedIndividuals() throws NeOnCoreException {
+        try {
+            return _model.getAllUnassertedIndividuals();
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
     @Override
     public Set<OWLIndividual> getAllIndividuals(String classId) throws NeOnCoreException {
         try {

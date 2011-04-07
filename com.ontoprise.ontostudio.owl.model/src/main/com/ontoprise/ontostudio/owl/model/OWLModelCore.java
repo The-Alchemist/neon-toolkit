@@ -1626,7 +1626,10 @@ public class OWLModelCore implements OWLModel {
     public Set<OWLDatatype> getAllDatatypes() throws NeOnCoreException {
         return getEntities(OWLDatatype.class);
     }
-
+    @Override
+    public Set<OWLDatatype> getAllDatatypes(boolean includeImported) throws NeOnCoreException {
+        return getEntities(OWLDatatype.class, includeImported);
+    }
     @Override
     public Set<OWLClass> getAllClasses() throws NeOnCoreException {
         return getEntities(OWLClass.class);
@@ -1636,10 +1639,20 @@ public class OWLModelCore implements OWLModel {
     public Set<OWLClass> getAllClasses(boolean includeImported) throws NeOnCoreException {
         return getEntities(OWLClass.class, includeImported);
     }
-
+    @Override
+    public Set<OWLIndividual> getAllUnassertedIndividuals() throws NeOnCoreException{
+        Set<OWLIndividual> allIndividuals = getAllIndividuals();
+        Set<OWLIndividual> allUnassertedIndividuals = new HashSet<OWLIndividual>();
+        for(OWLIndividual individual : allIndividuals){
+            if(getClasses(individual.toStringID()).isEmpty()){
+                allUnassertedIndividuals.add(individual);
+            }
+        }
+        return allUnassertedIndividuals;
+    }
     @Override
     public Set<OWLIndividual> getAllIndividuals() throws NeOnCoreException {
-        return getEntities(OWLIndividual.class);
+        return Cast.cast(getEntities(OWLNamedIndividual.class));
     }
 
     @Override
@@ -2603,7 +2616,8 @@ public class OWLModelCore implements OWLModel {
         for (OWLModel model: getRelevantOntologies(includeImportedOntologies)) {
             OWLModelCore modelCore = getModelCore(model);
             modelCore.assertEntityCache();
-            Set<E> entitiesInModel = Cast.cast(modelCore._entities.get(type));
+            Set<? extends OWLEntity> x = modelCore._entities.get(type);
+            Set<E> entitiesInModel = Cast.cast(x);
             entities.addAll(entitiesInModel);
         }
         return entities;

@@ -234,6 +234,15 @@ public interface OWLModel {
     public Set<OWLDatatype> getAllDatatypes() throws NeOnCoreException;
 
     /**
+     * Get all <code>Datatype</code>s 'contained' in the ontology. Optionally includes imported axioms
+     * 
+     * @param includeImported
+     * @return
+     * @throws NeOnCoreException
+     */
+    public Set<OWLDatatype> getAllDatatypes(boolean includeImported) throws NeOnCoreException;
+
+    /**
      * Returns a list of named classes that do not have named super descriptions.
      * 
      * @return
@@ -273,6 +282,17 @@ public interface OWLModel {
      * 
      */
     public Set<OWLIndividual> getAllIndividuals(boolean includeImported) throws NeOnCoreException;
+    /**
+     * returns a list of all not asserted individuals
+     * 
+     */
+    public Set<OWLIndividual> getAllUnassertedIndividuals() throws NeOnCoreException;
+//
+//    /**
+//     * returns a list of all not asserted individuals. Optionally includes imported axioms
+//     * 
+//     */
+//    public Set<OWLIndividual> getAllUnassertedIndividuals(boolean includeImported) throws NeOnCoreException;
 
     /**
      * @param superClassId an OWLClass for which to return its subOWLClasses
