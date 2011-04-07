@@ -7,6 +7,11 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+
+import uk.ac.manchester.cs.owl.owlapi.OWLClassImpl;
 
 import com.ontoprise.ontostudio.owl.gui.history.OWLHistoryEntry;
 
@@ -16,15 +21,15 @@ import com.ontoprise.ontostudio.owl.gui.history.OWLHistoryEntry;
  * Created on: 08.03.2011
  */
 public class HistoryManagerTest {
-    
-    IOWLHistoryEntry test0 = new OWLHistoryEntry("test0", "onto1", "p1"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    IOWLHistoryEntry test1 = new OWLHistoryEntry("test1", "onto1", "p1"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    IOWLHistoryEntry test2 = new OWLHistoryEntry("test2", "onto1", "p1"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    IOWLHistoryEntry test3 = new OWLHistoryEntry("test3", "onto1", "p1"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    IOWLHistoryEntry test4 = new OWLHistoryEntry("test4", "onto1", "p1"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    IOWLHistoryEntry test5 = new OWLHistoryEntry("test5", "onto1", "p1"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    IOWLHistoryEntry test6 = new OWLHistoryEntry("test6", "onto1", "p1"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    IOWLHistoryEntry test7 = new OWLHistoryEntry("test7", "onto1", "p1"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    OWLDataFactory factory = OWLManager.getOWLDataFactory();
+    IOWLHistoryEntry test0 = new OWLHistoryEntry(new OWLClassImpl(factory, IRI.create("http://test.com#test0")), "http://test.com", "p1"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    IOWLHistoryEntry test1 = new OWLHistoryEntry(new OWLClassImpl(factory, IRI.create("http://test.com#test1")), "http://test.com", "p1"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    IOWLHistoryEntry test2 = new OWLHistoryEntry(new OWLClassImpl(factory, IRI.create("http://test.com#test2")), "http://test.com", "p1"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    IOWLHistoryEntry test3 = new OWLHistoryEntry(new OWLClassImpl(factory, IRI.create("http://test.com#test3")), "http://test.com", "p1"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    IOWLHistoryEntry test4 = new OWLHistoryEntry(new OWLClassImpl(factory, IRI.create("http://test.com#test4")), "http://test.com", "p1"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    IOWLHistoryEntry test5 = new OWLHistoryEntry(new OWLClassImpl(factory, IRI.create("http://test.com#test5")), "http://test.com", "p1"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    IOWLHistoryEntry test6 = new OWLHistoryEntry(new OWLClassImpl(factory, IRI.create("http://test.com#test6")), "http://test.com", "p1"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    IOWLHistoryEntry test7 = new OWLHistoryEntry(new OWLClassImpl(factory, IRI.create("http://test.com#test7")), "http://test.com", "p1"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     
     
     @Before
