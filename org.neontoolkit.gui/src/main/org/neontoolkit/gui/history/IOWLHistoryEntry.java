@@ -24,7 +24,7 @@ public interface IOWLHistoryEntry {
     /**
      * @return returns the URI of the represented Entity
      */
-    public String getEntity();
+    public String getEntityURI();
     /**
      * @return returns the ontology ID of the represented Entity
      */
@@ -46,5 +46,4 @@ public interface IOWLHistoryEntry {
      * @return true iff the value could be set
      */
     public boolean setEmpty(boolean empty);
-    
 }

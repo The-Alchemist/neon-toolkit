@@ -64,7 +64,7 @@ public class OWLNavigationHistoryAction extends NavigationHistoryAction
                 entries = OWLHistoryManager.getBackwardEntries();
             }
             for (int i = 0; i < entries.length; i++) {
-                String text = entries[i].getEntity();
+                String text = entries[i].toString();
                 if (text != null) {
                     MenuItem item = new MenuItem(historyMenu, SWT.NONE);
                     item.setData(entries[i]);
@@ -98,7 +98,7 @@ public class OWLNavigationHistoryAction extends NavigationHistoryAction
                 entries = OWLHistoryManager.getBackwardEntries();
             }
             for (int i = 0; i < entries.length; i++) {
-                String text = entries[i].getEntity();
+                String text = entries[i].toString();
                 if (text != null) {
                     MenuItem item = new MenuItem(historyMenu, SWT.NONE);
                     item.setData(entries[i]);
@@ -190,7 +190,7 @@ public class OWLNavigationHistoryAction extends NavigationHistoryAction
             entries = OWLHistoryManager.getForwardEntries();
             if (entries.length > 0) {
                 IOWLHistoryEntry entry = entries[0];
-                String text = NLS.bind(WorkbenchMessages.NavigationHistoryAction_forward_toolTipName, entry.getEntity());
+                String text = NLS.bind(WorkbenchMessages.NavigationHistoryAction_forward_toolTipName, entry.toString());
                 setToolTipText(text);
             } else {
                 setToolTipText(WorkbenchMessages.NavigationHistoryAction_forward_toolTip);
@@ -200,7 +200,7 @@ public class OWLNavigationHistoryAction extends NavigationHistoryAction
             entries = OWLHistoryManager.getBackwardEntries();
             if (entries.length > 0) {
                 IOWLHistoryEntry entry = entries[0];
-                String text = NLS.bind(WorkbenchMessages.NavigationHistoryAction_backward_toolTipName, entry.getEntity());
+                String text = NLS.bind(WorkbenchMessages.NavigationHistoryAction_backward_toolTipName, entry.toString());
                 setToolTipText(text);
             } else {
                 setToolTipText(WorkbenchMessages.NavigationHistoryAction_backward_toolTip);
