@@ -47,8 +47,8 @@ public class CreateObjectPropertyMember extends OWLModuleChangeCommand {
 
         try {
             OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(getProjectName());
-            OWLIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(individualUri));
-            OWLIndividual targetIndividual = factory.getOWLNamedIndividual(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(targetIndividualUri));
+            OWLIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.toIRI(individualUri));
+            OWLIndividual targetIndividual = factory.getOWLNamedIndividual(OWLUtilities.toIRI(targetIndividualUri));
             OWLObjectPropertyExpression objPropExpr = factory.getOWLObjectProperty(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(propertyUri));
             OWLObjectPropertyAssertionAxiom newAxiom = factory.getOWLObjectPropertyAssertionAxiom(objPropExpr, individual, targetIndividual);
 

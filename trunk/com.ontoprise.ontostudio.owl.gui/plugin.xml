@@ -110,6 +110,16 @@
 	</extension>
 
 
+   <extension point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement">
+            <action
+               class="com.ontoprise.ontostudio.owl.gui.navigator.ontology.AssertAllNotAssertedIndividualsHandler"
+               id="com.ontoprise.ontostudio.owl.gui.navigator.ontology.AssertAllNotAssertedIndividualsHandler"
+               label="%assertAllNotAssertedIndividuals_Text">
+         </action>
+      </objectContribution>
+   </extension>
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution

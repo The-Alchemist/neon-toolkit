@@ -43,6 +43,7 @@ import org.neontoolkit.gui.IHelpContextIds;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
@@ -54,6 +55,7 @@ import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
+import org.semanticweb.owlapi.vocab.OWLDataFactoryVocabulary;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
@@ -61,6 +63,7 @@ import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
 import com.ontoprise.ontostudio.owl.gui.properties.AbstractOWLMainIDPropertyPage;
 import com.ontoprise.ontostudio.owl.gui.properties.LocatedAxiom;
 import com.ontoprise.ontostudio.owl.gui.properties.ModifyPropertyListener;
+import com.ontoprise.ontostudio.owl.gui.util.CheckboxDesicionDialog;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.gui.util.UnknownDatatypeException;
 import com.ontoprise.ontostudio.owl.gui.util.forms.AbstractFormRow;
@@ -82,6 +85,7 @@ import com.ontoprise.ontostudio.owl.model.commands.OWLCommandUtils;
 import com.ontoprise.ontostudio.owl.model.commands.individual.CreateDataPropertyMember;
 import com.ontoprise.ontostudio.owl.model.commands.individual.CreateObjectPropertyMember;
 import com.ontoprise.ontostudio.owl.model.commands.individual.GetDataPropertyMemberHits;
+import com.ontoprise.ontostudio.owl.model.commands.individual.GetDescriptionHits;
 import com.ontoprise.ontostudio.owl.model.commands.individual.GetObjectPropertyMemberHits;
 
 /**
@@ -298,6 +302,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                     new CreateObjectPropertyMember(_project, _sourceOwlModel.getOntologyURI(), _id, 
                             OWLUtilities.toString(newProp), 
                             OWLUtilities.toString(targetIndividual)).run();
+                    createAssertionToOwlThing(OWLUtilities.toString(targetIndividual));
                 } catch (NeOnCoreException e1) {
                     handleException(e1, Messages.IndividualPropertyPage2_18, valueText.getShell());
                     propertyText.setFocus();
@@ -362,9 +367,10 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 try {
                     OWLObjectPropertyExpression newProp = _manager.parseObjectProperty(propertyText.getText(), _localOwlModel);
                     OWLIndividual targetIndividual = _manager.parseIndividual(valueText.getText(), _localOwlModel);
-                    new CreateObjectPropertyMember(_project, _sourceOwlModel.getOntologyURI(), _id, 
+                    new CreateObjectPropertyMember(_project, _sourceOwlModel.getOntologyURI(), IRIUtils.ensureValidIRISyntax(_id), 
                             OWLUtilities.toString(newProp), 
                             OWLUtilities.toString(targetIndividual)).run();
+                    createAssertionToOwlThing(OWLUtilities.toString(targetIndividual));
                 } catch (NeOnCoreException k2e) {
                     handleException(k2e, Messages.IndividualPropertyPage2_18, valueText.getShell());
                 } catch (CommandException k2e) {
@@ -373,6 +379,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                 refresh();
                 initObjectPropertyDescriptionsSection(true);
             }
+
 
             @Override
             public void ensureQName() {
@@ -951,5 +958,52 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         }
         sortedSet.addAll(unsortedSet);
         return sortedSet;
+    }
+
+    private void createAssertionToOwlThing(String targetIndividualID) throws CommandException, NeOnCoreException {
+
+        OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(_project);
+        OWLIndividual individual = factory.getOWLNamedIndividual(OWLUtilities.toIRI(targetIndividualID));
+        
+        String[] newAxioms = new String[0];
+
+        String  checkboxID = OWLModelPlugin.INSERT_EXPLICIT_CLASS_ASSERTION_AXIOM_TO_OWLTHING_OPEN_DIALOG;
+        String  decisionID = OWLModelPlugin.INSERT_EXPLICIT_CLASS_ASSERTION_AXIOM_TO_OWLTHING_YES_OR_NO;
+        String  dialogTitle = Messages.InsertClassAssertionAxiom_Title;
+        String  dialogText = 
+            Messages.InsertClassAssertionAxiom_AddIndividual_Text_0 + 
+            " " +  //$NON-NLS-1$
+            targetIndividualID + 
+            Messages.InsertClassAssertionAxiom_AddIndividual_Text_1;
+        
+        String[][] hits = new GetDescriptionHits(_project, _ontologyUri, targetIndividualID).getResults();
+        if(hits.length == 0){
+            boolean decision = false;
+            if(!OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(checkboxID)){ 
+                switch(new CheckboxDesicionDialog(null,dialogTitle, dialogText, checkboxID, decisionID, false).open()){
+                    case CheckboxDesicionDialog.YES:
+                        decision = true;
+                        break;
+                    case CheckboxDesicionDialog.NO:
+                        decision = false;
+                        break;
+                    case CheckboxDesicionDialog.CANCEL:
+                    default:
+                        return;
+                }
+                
+            }else{
+                decision = OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(checkboxID) && 
+                        OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(decisionID);
+            }
+            if(decision){ 
+                OWLAxiom newAxiom = factory.getOWLClassAssertionAxiom(OWLDataFactoryVocabulary.OWLThing, individual);
+                newAxioms = new String[] {OWLUtilities.toString(newAxiom)};
+            }
+        }
+        new ApplyChanges(_project, _owlModel.getOntologyURI(), 
+                newAxioms, 
+                new String[] {}).run();
+        
     }
 }

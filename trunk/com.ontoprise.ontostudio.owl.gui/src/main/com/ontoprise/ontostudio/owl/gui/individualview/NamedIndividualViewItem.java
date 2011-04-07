@@ -101,15 +101,21 @@ public class NamedIndividualViewItem extends AbstractOwlEntityTreeElement implem
         String string = super.toString();
         if(!isDirect()){
             string += " ["; //$NON-NLS-1$
-            for(String clazzUri : getClazzUris()){
-                try {
-                    string += OWLGUIUtilities.getEntityLabel(OWLUtilities.description(IRIUtils.ensureValidIRISyntax(clazzUri)), getOntologyUri(), getProjectName());
-                } catch (NeOnCoreException e) {
-                    string += clazzUri;
+            String[] clazzUris = getClazzUris();
+            if(clazzUris.length > 0){
+                for(String clazzUri : clazzUris){
+                    try {
+                        string += OWLGUIUtilities.getEntityLabel(OWLUtilities.description(IRIUtils.ensureValidIRISyntax(clazzUri)), getOntologyUri(), getProjectName());
+                    } catch (NeOnCoreException e) {
+                        string += clazzUri;
+                    }
+                    string += ", "; //$NON-NLS-1$
                 }
-                string += ", "; //$NON-NLS-1$
+                string = string.substring(0, string.length() - 2);
             }
-            string = string.substring(0, string.length() - 2);
+//            else{
+//                string += "is not asserted to any class"; //$NON-NLS-1$
+//            }
             string += "]"; //$NON-NLS-1$
         }
         return string;

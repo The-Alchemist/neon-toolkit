@@ -178,20 +178,15 @@ public class OWLAxiomUtils {
     public static OWLDifferentIndividualsAxiom createNewDifferent_FromAxiom(OWLAxiom oldAxiom, String idToRemove, String idToAdd, String ontologyURI, String projectId) {
         Set<OWLIndividual> individuals = ((OWLDifferentIndividualsAxiom) oldAxiom).getIndividuals();
         Set<OWLIndividual> clonedIndividuals = new HashSet<OWLIndividual>();
-        try {
-            for (OWLIndividual ind: individuals) {
-                if (!OWLUtilities.toString(ind).equals(idToRemove)) {
-                    clonedIndividuals.add(ind);
-                }
+        for (OWLIndividual ind: individuals) {
+            if (!OWLUtilities.toString(ind).equals(idToRemove)) {
+                clonedIndividuals.add(ind);
             }
-            OWLDataFactory factory = getFactory(projectId);
-            OWLNamedIndividual newIndividual = factory.getOWLNamedIndividual(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(idToAdd));
-            clonedIndividuals.add(newIndividual);
-            return factory.getOWLDifferentIndividualsAxiom(clonedIndividuals);
-        } catch (NeOnCoreException e) {
-            e.printStackTrace(); // OWLOntology(OWLModel) is needed to serialize
-            return (OWLDifferentIndividualsAxiom) oldAxiom; //NICO find a better solution: if it is not working it does return the oldAxiom
         }
+        OWLDataFactory factory = getFactory(projectId);
+        OWLNamedIndividual newIndividual = factory.getOWLNamedIndividual(OWLUtilities.toIRI(idToAdd));
+        clonedIndividuals.add(newIndividual);
+        return factory.getOWLDifferentIndividualsAxiom(clonedIndividuals);
     }
 
     public static OWLDifferentIndividualsAxiom createNewDifferent_FromAxiom(OWLAxiom oldAxiom, String idToRemove, String ontologyURI, String projectId) {
@@ -212,20 +207,15 @@ public class OWLAxiomUtils {
     public static OWLSameIndividualAxiom createNewSame_AsAxiom(OWLAxiom oldAxiom, String idToRemove, String idToAdd, String ontologyURI, String projectId) {
         Set<OWLIndividual> individuals = ((OWLSameIndividualAxiom) oldAxiom).getIndividuals();
         Set<OWLIndividual> clonedIndividuals = new HashSet<OWLIndividual>();
-        try {
-            for (OWLIndividual ind: individuals) {
-                if (!OWLUtilities.toString(ind).equals(idToRemove)) {
-                    clonedIndividuals.add(ind);
-                }
+        for (OWLIndividual ind: individuals) {
+            if (!OWLUtilities.toString(ind).equals(idToRemove)) {
+                clonedIndividuals.add(ind);
             }
-            OWLDataFactory factory = getFactory(projectId);
-            OWLNamedIndividual newIndividual = factory.getOWLNamedIndividual(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(idToAdd));
-            clonedIndividuals.add(newIndividual);
-            return factory.getOWLSameIndividualAxiom(clonedIndividuals);
-        } catch (NeOnCoreException e) {
-            e.printStackTrace(); // OWLOntology(OWLModel) is needed to serialize
-            return (OWLSameIndividualAxiom) oldAxiom; //NICO find a better solution: if it is not working it does return the oldAxiom
         }
+        OWLDataFactory factory = getFactory(projectId);
+        OWLNamedIndividual newIndividual = factory.getOWLNamedIndividual(OWLUtilities.toIRI(idToAdd));
+        clonedIndividuals.add(newIndividual);
+        return factory.getOWLSameIndividualAxiom(clonedIndividuals);
     }
 
     public static OWLSameIndividualAxiom createNewSame_AsAxiom(OWLAxiom oldAxiom, String idToRemove, String ontologyURI, String projectId) {

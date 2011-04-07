@@ -53,7 +53,7 @@ public class CreateDataPropertyMember extends OWLModuleChangeCommand {
 
         try {
             OWLDataFactory factory = OWLModelFactory.getOWLDataFactory(getProjectName());
-            OWLIndividual individual = OWLUtilities.individual(IRIUtils.ensureValidIRISyntax(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(individualUri).toString()));
+            OWLIndividual individual = OWLUtilities.individual(IRIUtils.ensureValidIRISyntax(individualUri));
             OWLLiteral c;
             if (type.equals(OWLConstants.RDF_PLAIN_LITERAL)) {
                 if (!language.equals(OWLCommandUtils.EMPTY_LANGUAGE) && !language.equals("")) { //$NON-NLS-1$
@@ -64,7 +64,7 @@ public class CreateDataPropertyMember extends OWLModuleChangeCommand {
             } else {
                 c = factory.getOWLLiteral(value, factory.getOWLDatatype(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(type)));
             }
-            OWLDataPropertyExpression prop = OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(OWLUtilities.owlFuntionalStyleSyntaxIRIToIRI(propertyUri).toString()));
+            OWLDataPropertyExpression prop = OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(propertyUri));
             OWLAxiom newAxiom = factory.getOWLDataPropertyAssertionAxiom(prop, individual, c);
 
             new ApplyChanges(getProjectName(), getOntology(), new String[] {OWLUtilities.toString(newAxiom)}, new String[0]).perform();
