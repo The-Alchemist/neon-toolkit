@@ -29,15 +29,6 @@ public class ClassesStatsProvider extends StatsProvider {
             return 0;
         }
     }
-    @Override
-    public Object getValue(OWLModel model) {
-        try {
-            return model.getAllClasses().size();
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-	
 	@Override
     public OWLClass[] getElements(OWLModel model) {
 		try {

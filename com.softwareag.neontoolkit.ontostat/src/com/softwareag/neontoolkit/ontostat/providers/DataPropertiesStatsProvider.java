@@ -29,15 +29,6 @@ public class DataPropertiesStatsProvider extends StatsProvider {
             return 0;
         }
     }
-    @Override
-    public Object getValue(OWLModel model) {
-        try {
-            return model.getAllDataProperties().size();
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-
 	@Override
 	public OWLDataProperty[] getElements(OWLModel model) {
 		try {
