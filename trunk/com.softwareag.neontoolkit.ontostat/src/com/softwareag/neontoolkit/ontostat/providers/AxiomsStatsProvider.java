@@ -2,6 +2,7 @@ package com.softwareag.neontoolkit.ontostat.providers;
 
 import org.eclipse.swt.graphics.Image;
 import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
@@ -16,7 +17,7 @@ public class AxiomsStatsProvider extends StatsProvider {
     @Override
     public Object getLocalValue(OWLModel model) {
         try {
-            return model.getOntology().getAxiomCount();//NICO TODO local
+            return model.getOntology().getAxiomCount();
         } catch (Exception e) {
             return 0;
         }
@@ -24,20 +25,16 @@ public class AxiomsStatsProvider extends StatsProvider {
     @Override
     public Object getGlobalValue(OWLModel model) {
         try {
-            return model.getOntology().getAxiomCount();//NICO TODO global
+            OWLOntology[] ontos = model.getOntology().getImportsClosure().toArray(new OWLOntology[0]);
+            int num =0;
+            for (OWLOntology owlOntology: ontos) {
+                num += owlOntology.getLogicalAxiomCount();
+            }
+            return num;
         } catch (Exception e) {
             return 0;
         }
     }
-    @Override
-    public Object getValue(OWLModel model) {
-        try {
-            return model.getOntology().getAxiomCount();
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-
     @Override
     public OWLAxiom[] getElements(OWLModel model) {
         try {

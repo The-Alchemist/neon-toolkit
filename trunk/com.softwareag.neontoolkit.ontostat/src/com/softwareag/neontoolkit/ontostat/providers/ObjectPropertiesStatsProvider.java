@@ -31,15 +31,6 @@ public class ObjectPropertiesStatsProvider extends StatsProvider {
         }
     }
     @Override
-    public Object getValue(OWLModel model) {
-        try {
-            return model.getAllObjectProperties().size();
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-
-    @Override
     public OWLAxiom[] getElements(OWLModel model) {
         try {
             return model.getAllObjectProperties().toArray(new OWLAxiom[0]);

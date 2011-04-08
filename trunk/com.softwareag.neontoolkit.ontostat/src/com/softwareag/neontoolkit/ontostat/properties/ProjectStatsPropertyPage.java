@@ -105,7 +105,7 @@ public class ProjectStatsPropertyPage extends AbstractOWLMainIDPropertyPage {
         	
             Text statText = new Text(_statsComp, SWT.SINGLE | SWT.BORDER);
         	GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-            gridData.widthHint=50;
+            gridData.widthHint=100;
             statText.setLayoutData(gridData);
             statText.setEditable(false);
             String value = "";

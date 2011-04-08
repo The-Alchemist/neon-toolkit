@@ -31,15 +31,6 @@ public class SubClassesStatsProvider extends StatsProvider {
             return 0;
         }
     }
-    @Override
-    public Object getValue(OWLModel model) {
-        try {
-            return model.getOntology().getAxiomCount(AxiomType.SUBCLASS_OF);
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-	
 	@Override
 	public OWLAxiom[] getElements(OWLModel model) {
 		try {

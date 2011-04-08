@@ -33,14 +33,6 @@ public class ImportedOntologiesStatsProvider extends StatsProvider {
         }
     }
     @Override
-    public Object getValue(OWLModel model) {
-        try {
-            return model.getImportedOntologiesURIs().size();
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-    @Override
     public OWLOntology[] getElements(OWLModel model) {
         try {
             return model.getOntology().getImports().toArray(new OWLOntology[0]);

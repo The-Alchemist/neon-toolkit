@@ -26,7 +26,6 @@ public abstract class StatsProvider {
 		iconImage=null;
 	}
 
-    public abstract Object getValue(OWLModel model);
     public abstract Object getLocalValue(OWLModel model);
     public abstract Object getGlobalValue(OWLModel model);
 	public abstract Class<?> getType();

@@ -30,15 +30,6 @@ public class AnnotationsStatsProvider extends StatsProvider {
         }
     }
     @Override
-    public Object getValue(OWLModel model) {
-        try {
-            return model.getAllAnnotationProperties().size();
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-
-    @Override
     public OWLAnnotationProperty[] getElements(OWLModel model) {
         try {
             return model.getAllAnnotationProperties().toArray(new OWLAnnotationProperty[0]);

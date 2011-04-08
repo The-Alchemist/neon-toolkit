@@ -30,15 +30,6 @@ public class IndividualsStatsProvider extends StatsProvider {
         }   
     }
     @Override
-    public Object getValue(OWLModel model) {
-        try {
-            return model.getOntology().getIndividualsInSignature().size();
-        } catch (Exception e) {
-            return 0;
-        }   
-    }
-    
-    @Override
     public OWLIndividual[] getElements(OWLModel model) {
         try {
             return model.getOntology().getIndividualsInSignature().toArray(new OWLIndividual[0]);

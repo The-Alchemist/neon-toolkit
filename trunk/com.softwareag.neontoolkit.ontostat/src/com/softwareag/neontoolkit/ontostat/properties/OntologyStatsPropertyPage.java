@@ -97,13 +97,11 @@ public class OntologyStatsPropertyPage extends AbstractOWLMainIDPropertyPage {
         (new Label(_statsComp, SWT.NONE)).setText("");
         (new Label(_statsComp, SWT.NONE)).setText("local");
         (new Label(_statsComp, SWT.NONE)).setText("incl. imports");
-        
     }
     private void initStatsSection() {
         clearComposite(_statsComp);
         createTitleRow();
         
-
        	Object otesel =getMainPage().getSelection().getFirstElement();
        	if (otesel instanceof OntologyTreeElement) {
        		_project=((OntologyTreeElement)otesel).getProjectName();
@@ -126,14 +124,14 @@ public class OntologyStatsPropertyPage extends AbstractOWLMainIDPropertyPage {
         	
             Text statLocalText = new Text(_statsComp, SWT.SINGLE | SWT.BORDER);
         	GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-            gridData.widthHint=50;
+            gridData.widthHint=100;
             statLocalText.setLayoutData(gridData);
             statLocalText.setEditable(false);
             statLocalText.setText(provider.getLocalValue(_owlModel).toString());
             
             Text statGlobalText = new Text(_statsComp, SWT.SINGLE | SWT.BORDER);
             GridData gridData2 = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-            gridData2.widthHint=50;
+            gridData2.widthHint=100;
             statGlobalText.setLayoutData(gridData);
             statGlobalText.setEditable(false);
             statGlobalText.setText(provider.getGlobalValue(_owlModel).toString());
@@ -151,7 +149,6 @@ public class OntologyStatsPropertyPage extends AbstractOWLMainIDPropertyPage {
                 statGlobalText.setToolTipText(provider.getGlobalTooltip());
             }
         }        
-
     }
 
 	@Override
