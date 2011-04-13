@@ -17,7 +17,7 @@ public class LogicalAxiomsStatsProvider extends StatsProvider {
     @Override
     public Object getLocalValue(OWLModel model) {
         try {
-            return model.getOntology().getLogicalAxiomCount();//NICO TODO local
+            return model.getOntology().getLogicalAxiomCount();
         } catch (Exception e) {
             return 0;
         }
