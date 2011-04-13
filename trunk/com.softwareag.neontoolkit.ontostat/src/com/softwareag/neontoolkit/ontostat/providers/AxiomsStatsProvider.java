@@ -28,7 +28,7 @@ public class AxiomsStatsProvider extends StatsProvider {
             OWLOntology[] ontos = model.getOntology().getImportsClosure().toArray(new OWLOntology[0]);
             int num =0;
             for (OWLOntology owlOntology: ontos) {
-                num += owlOntology.getLogicalAxiomCount();
+                num += owlOntology.getAxiomCount();
             }
             return num;
         } catch (Exception e) {
