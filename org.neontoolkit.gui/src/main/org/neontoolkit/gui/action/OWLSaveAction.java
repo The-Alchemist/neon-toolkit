@@ -28,7 +28,7 @@ import org.neontoolkit.gui.navigator.elements.IProjectElement;
 public class OWLSaveAction extends SaveAction implements ISelectionListener{
     
     private IWorkbenchPart currentSelectedPart;
-    private String currentSelection;
+    private IProjectElement currentSelection;
 
 
     /**
@@ -161,26 +161,62 @@ public class OWLSaveAction extends SaveAction implements ISelectionListener{
                         }
                     } 
                 else{
-                    for(ISaveablePart dirtyPart : dirtyParts){
-                        //use information of current Selection
-                        if(dirtyPart instanceof MTreeView){
-                            try{
-                                Hashtable<String,Boolean> dirtyTable = ((MTreeView)dirtyPart).getDirtytable();
-                                Boolean dirty = dirtyTable.get(currentSelection);
-                                if(dirty == null || dirty == false){
-                                    setEnabled(false);
-                                }else{
-                                    setEnabled(true);
-                                    break;
+                    if(currentSelection instanceof IOntologyElement){
+                        String projectName = currentSelection.getProjectName();
+                        String ontologyUri = ((IOntologyElement)currentSelection).getOntologyUri();
+                        String currentselectionString = projectName + ", " + ontologyUri; //$NON-NLS-1$
+                        for(ISaveablePart dirtyPart : dirtyParts){
+                            //use information of current Selection
+                            if(dirtyPart instanceof MTreeView){
+                                try{
+                                    Hashtable<String,Boolean> dirtyTable = ((MTreeView)dirtyPart).getDirtyTable();
+                                    Boolean dirty = dirtyTable.get(currentselectionString);
+                                    if(dirty == null || dirty == false){
+                                        setEnabled(false);
+                                    }else{
+                                        setEnabled(true);
+                                        break;
+                                    }
+                                }catch(NullPointerException e){
+                                    //nothing to do
                                 }
-                            }catch(NullPointerException e){
-                                //nothing to do
+                            }else{
+                                setEnabled(true);
+                                break;
                             }
-                        }else{
-                            setEnabled(true);
-                            break;
-                        }
-                    } 
+                        } 
+                    }else{
+                        //NICO TODO
+                        String projectName = currentSelection.getProjectName();
+                        String currentselectionString;
+                        
+                        outer:
+                        for(ISaveablePart dirtyPart : dirtyParts){
+                            //use information of current Selection
+                            if(dirtyPart instanceof MTreeView){
+                                try{
+                                    Hashtable<String,Boolean> dirtyTable = ((MTreeView)dirtyPart).getDirtyTable();
+                                    for(String key : dirtyTable.keySet()){
+                                        if(key.startsWith(projectName)){
+                                            currentselectionString = key;
+                                            Boolean dirty = dirtyTable.get(currentselectionString);
+                                            if(dirty == null || dirty == false){
+                                                setEnabled(false);
+                                            }else{
+                                                setEnabled(true);
+                                                break outer;
+                                            }
+                                        }
+                                    }
+                                }catch(NullPointerException e){
+                                    //nothing to do
+                                }
+                            }else{
+                                setEnabled(true);
+                                break;
+                            }
+                        } 
+                    }
                 }
             } else {
                 SaveablesList saveablesList = (SaveablesList) page
@@ -207,11 +243,15 @@ public class OWLSaveAction extends SaveAction implements ISelectionListener{
         this.currentSelectedPart = part;
         if(part instanceof MTreeView){
             if(selection instanceof TreeSelection){
-                if(((TreeSelection)selection).getFirstElement() instanceof IOntologyElement &&
-                        ((TreeSelection)selection).getFirstElement() instanceof IProjectElement){
-                    String projectName = ((IProjectElement)((TreeSelection)selection).getFirstElement()).getProjectName();
-                    String ontologyUri = ((IOntologyElement)((TreeSelection)selection).getFirstElement()).getOntologyUri();
-                    this.currentSelection = projectName + ", " + ontologyUri; //$NON-NLS-1$
+                if(((TreeSelection)selection).getFirstElement() instanceof IProjectElement){
+                    currentSelection = (IProjectElement)((TreeSelection)selection).getFirstElement();
+//                    if(((TreeSelection)selection).getFirstElement() instanceof IOntologyElement){
+//                        String projectName = ((IProjectElement)((TreeSelection)selection).getFirstElement()).getProjectName();
+//                        String ontologyUri = ((IOntologyElement)((TreeSelection)selection).getFirstElement()).getOntologyUri();
+//                        this.currentSelection = projectName + ", " + ontologyUri; //$NON-NLS-1$
+//                    }else{
+//                        //NICO TODO
+//                    }
                 }
             }
         }else{

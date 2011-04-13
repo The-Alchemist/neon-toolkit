@@ -111,7 +111,7 @@ public class MTreeView extends ViewPart implements ISetSelectionTarget, ISaveabl
 
     private Hashtable<String, Boolean> dirtytable = new Hashtable<String, Boolean>();
     
-    public Hashtable<String, Boolean> getDirtytable(){
+    public Hashtable<String, Boolean> getDirtyTable(){
         return dirtytable;
     }
 	/**
