@@ -254,11 +254,11 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
                                     }
                                 }
                                 if(_selection.getFirstElement() instanceof AbstractProjectTreeElement){
-                                    IOWLHistoryEntry currentSelectedEntity = OWLHistoryManager.getCurrentSelection();
+                                    IOWLHistoryEntry currentSelectedEntity = OWLHistoryManager.getInstance().getCurrentSelection();
                                     AbstractProjectTreeElement element = (AbstractProjectTreeElement) _selection.getFirstElement();
                                     IOWLHistoryEntry historyEntry = element.getOWLHistoryEntry();
                                     if(currentSelectedEntity == null || !historyEntry.equals(currentSelectedEntity) )
-                                        OWLHistoryManager.addHistoryElement(historyEntry);
+                                        OWLHistoryManager.getInstance().addHistoryElement(historyEntry);
                                 }
                                 return;
                             }

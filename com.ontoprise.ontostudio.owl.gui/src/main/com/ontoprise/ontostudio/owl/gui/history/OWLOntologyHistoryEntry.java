@@ -1,32 +1,25 @@
- /*****************************************************************************
- * written by the NeOn technologies Foundation Ltd.
- ******************************************************************************/
+/**
+ *
+ */
 package com.ontoprise.ontostudio.owl.gui.history;
 
 import org.neontoolkit.core.exception.NeOnCoreException;
-import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.neontoolkit.gui.history.IOWLHistoryEntry;
 import org.neontoolkit.gui.history.OWLHistoryManager;
-import org.semanticweb.owlapi.model.OWLEntity;
 
-import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
+import com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
-import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 
 /**
  * @author Nico Stieler
- * Created on: 10.03.2011
- * <code>OWLHistoryEntry</code> is the implementation of <code>IOWLHistoryEntry</code> for history entities
+ * Created on: 14.04.2011
  */
-public class OWLHistoryEntry implements IOWLHistoryEntry{
+public class OWLOntologyHistoryEntry implements IOWLHistoryEntry {
 
-    
     private int historyPosition;
-    private AbstractOwlEntityTreeElement treeElement;
-    private OWLEntity entity;
-    private String entityString;
+    private OntologyTreeElement treeElement;
     private String ontologyUri;
     private String projectName;
     private OWLModel model;
@@ -37,12 +30,10 @@ public class OWLHistoryEntry implements IOWLHistoryEntry{
      * @param ontologyUri
      * @param projectName
      */
-    public OWLHistoryEntry(final AbstractOwlEntityTreeElement treeElement, final String ontologyUri, final String projectName) {
+    public OWLOntologyHistoryEntry(final OntologyTreeElement treeElement) {
         this.treeElement = treeElement;
-        this.entity = treeElement.getEntity();
-        this.entityString = OWLUtilities.toString(this.entity);
-        this.ontologyUri = ontologyUri;
-        this.projectName = projectName;
+        this.ontologyUri = treeElement.getOntologyUri();
+        this.projectName = treeElement.getProjectName();
     }
     @Override
     public void restoreLocation() throws NeOnCoreException{
@@ -61,7 +52,7 @@ public class OWLHistoryEntry implements IOWLHistoryEntry{
     }
     @Override
     public String getEntityURI() {
-        return entityString;
+        return null;
     }
     @Override
     public String getOntologyUri() {
@@ -73,14 +64,14 @@ public class OWLHistoryEntry implements IOWLHistoryEntry{
     }
     @Override
     public boolean isEmpty() {
-        empty  = empty || (entityString == null || ontologyUri == null || projectName == null);
+        empty  = empty || (ontologyUri == null || projectName == null);
         return empty;
     }
     @Override
     public boolean equals(final Object obj) {
-        if(obj instanceof OWLHistoryEntry){
-            final OWLHistoryEntry other = (OWLHistoryEntry) obj;
-            if(other.projectName == projectName && other.ontologyUri == ontologyUri && other.entityString == entityString){
+        if(obj instanceof OWLOntologyHistoryEntry){
+            final OWLOntologyHistoryEntry other = (OWLOntologyHistoryEntry) obj;
+            if(other.projectName == projectName && other.ontologyUri == ontologyUri){
                 return true;
             }
         }
@@ -97,11 +88,6 @@ public class OWLHistoryEntry implements IOWLHistoryEntry{
     }
     @Override
     public String toString(){
-        try {
-            return OWLGUIUtilities.getEntityLabel(entity,ontologyUri,projectName);
-        } catch (NeOnCoreException e) {
-            new NeonToolkitExceptionHandler().handleException(e);
-            return ""; //$NON-NLS-1$
-        }
+        return ontologyUri;
     }
 }

@@ -59,9 +59,9 @@ public class OWLNavigationHistoryAction extends NavigationHistoryAction
             }
             IOWLHistoryEntry[] entries;
             if (forward) {
-                entries = OWLHistoryManager.getForwardEntries();
+                entries = OWLHistoryManager.getInstance().getForwardEntries();
             } else {
-                entries = OWLHistoryManager.getBackwardEntries();
+                entries = OWLHistoryManager.getInstance().getBackwardEntries();
             }
             for (int i = 0; i < entries.length; i++) {
                 String text = entries[i].toString();
@@ -93,9 +93,9 @@ public class OWLNavigationHistoryAction extends NavigationHistoryAction
             }
             IOWLHistoryEntry[] entries;
             if (forward) {
-                entries = OWLHistoryManager.getForwardEntries();
+                entries = OWLHistoryManager.getInstance().getForwardEntries();
             } else {
-                entries = OWLHistoryManager.getBackwardEntries();
+                entries = OWLHistoryManager.getInstance().getBackwardEntries();
             }
             for (int i = 0; i < entries.length; i++) {
                 String text = entries[i].toString();
@@ -128,7 +128,7 @@ public class OWLNavigationHistoryAction extends NavigationHistoryAction
         super(window, forward);
         ISharedImages sharedImages = window.getWorkbench().getSharedImages();
         if (forward) {
-            OWLHistoryManager.setForwardAction(this);
+            OWLHistoryManager.getInstance().setForwardAction(this);
             setText(WorkbenchMessages.NavigationHistoryAction_forward_text);
             setToolTipText(WorkbenchMessages.NavigationHistoryAction_forward_toolTip);
             window.getWorkbench().getHelpSystem().setHelp(this,IWorkbenchHelpContextIds.NAVIGATION_HISTORY_FORWARD);
@@ -136,7 +136,7 @@ public class OWLNavigationHistoryAction extends NavigationHistoryAction
             setDisabledImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_FORWARD_DISABLED));
             setActionDefinitionId("org.eclipse.ui.navigate.forwardHistory"); //$NON-NLS-1$
         } else {
-            OWLHistoryManager.setBackwardAction(this);
+            OWLHistoryManager.getInstance().setBackwardAction(this);
             setText(WorkbenchMessages.NavigationHistoryAction_backward_text);
             setToolTipText(WorkbenchMessages.NavigationHistoryAction_backward_toolTip);
             window.getWorkbench().getHelpSystem().setHelp(this,IWorkbenchHelpContextIds.NAVIGATION_HISTORY_BACKWARD);
@@ -171,11 +171,11 @@ public class OWLNavigationHistoryAction extends NavigationHistoryAction
     public void run() {
         try {
             if (forward) {
-                if(OWLHistoryManager.hasNext())
-                        OWLHistoryManager.getNext().restoreLocation();
+                if(OWLHistoryManager.getInstance().hasNext())
+                        OWLHistoryManager.getInstance().getNext().restoreLocation();
             } else {
-                if(OWLHistoryManager.hasPrevious())
-                    OWLHistoryManager.getPrevious().restoreLocation();
+                if(OWLHistoryManager.getInstance().hasPrevious())
+                    OWLHistoryManager.getInstance().getPrevious().restoreLocation();
             }
         } catch (NeOnCoreException e) {
             e.printStackTrace();
@@ -186,8 +186,8 @@ public class OWLNavigationHistoryAction extends NavigationHistoryAction
     public void update() {
         IOWLHistoryEntry[] entries;
         if (forward) {
-            setEnabled(OWLHistoryManager.hasNext());
-            entries = OWLHistoryManager.getForwardEntries();
+            setEnabled(OWLHistoryManager.getInstance().hasNext());
+            entries = OWLHistoryManager.getInstance().getForwardEntries();
             if (entries.length > 0) {
                 IOWLHistoryEntry entry = entries[0];
                 String text = NLS.bind(WorkbenchMessages.NavigationHistoryAction_forward_toolTipName, entry.toString());
@@ -196,8 +196,8 @@ public class OWLNavigationHistoryAction extends NavigationHistoryAction
                 setToolTipText(WorkbenchMessages.NavigationHistoryAction_forward_toolTip);
             }
         } else {
-            setEnabled(OWLHistoryManager.hasPrevious());
-            entries = OWLHistoryManager.getBackwardEntries();
+            setEnabled(OWLHistoryManager.getInstance().hasPrevious());
+            entries = OWLHistoryManager.getInstance().getBackwardEntries();
             if (entries.length > 0) {
                 IOWLHistoryEntry entry = entries[0];
                 String text = NLS.bind(WorkbenchMessages.NavigationHistoryAction_backward_toolTipName, entry.toString());
