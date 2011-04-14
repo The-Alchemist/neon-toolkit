@@ -136,7 +136,7 @@ public abstract class AbstractOwlEntityTreeElement extends AbstractOntologyEntit
     @Override
     public IOWLHistoryEntry getOWLHistoryEntry() {
         if(_historyEntry == null){
-            _historyEntry = new OWLHistoryEntry(_entity, getOntologyUri(), getProjectName());
+            _historyEntry = new OWLHistoryEntry(this, getOntologyUri(), getProjectName());
         }
         return _historyEntry;
     }

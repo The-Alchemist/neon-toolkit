@@ -77,6 +77,7 @@ import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.commands.CreateValidUri;
+import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.individualview.IndividualItem;
 import com.ontoprise.ontostudio.owl.gui.individualview.IndividualView;
 import com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewContentProvider;
@@ -579,7 +580,6 @@ public class OWLGUIUtilities {
                                 OWLIndividual individual = OWLUtilities.individual(uri);// factory.getOWLNamedIndividual(OWLUtilities.toIRI(uri));
                                 if (clazzes.size() > 0) {
                                     // FIXME if individual exists for multiple classes, a dialog to select one would be nice
-                                    // FIXME also consider individuals of OWL.Thing (displayed if class folder is selected)
                                     OWLClass firstClazz = clazzes.iterator().next();
                                     provider = TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class);
                                     ClazzTreeElement clazz1 = new ClazzTreeElement(firstClazz, ontologyURI, project, provider);
@@ -602,6 +602,62 @@ public class OWLGUIUtilities {
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+
+    public static void jumpToEntity(ITreeElement treeElement,  OWLModel owlModel) {
+        
+        PerspectiveChangeHandler.switchPerspective(OWLPerspective.ID);
+        
+        MTreeView navigator = (MTreeView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(MTreeView.ID);
+
+        // individuals
+        if(treeElement instanceof IIndividualTreeElement){
+            try {
+                ITreeDataProvider provider = null;
+                String ontologyURI;
+                String project;
+                try {
+                    ontologyURI = owlModel.getOntologyURI();
+                    project = owlModel.getProjectId();
+                } catch (NeOnCoreException e) {
+                    throw new RuntimeException(e);
+                }
+                provider = TreeProviderManager.getDefault().getProvider(MTreeView.ID, IndividualViewContentProvider.class);
+                @SuppressWarnings("rawtypes")
+                IIndividualTreeElement individualTreeElement = (IIndividualTreeElement) treeElement;
+                Set<OWLClass> clazzes = owlModel.getClasses(individualTreeElement.getIndividual().toStringID());
+                OWLIndividual individual = individualTreeElement.getIndividual();
+                if (clazzes.size() > 0) {
+                    OWLClass firstClazz = clazzes.iterator().next();
+                    provider = TreeProviderManager.getDefault().getProvider(MTreeView.ID, ClazzHierarchyProvider.class);
+                    ClazzTreeElement clazz1 = new ClazzTreeElement(firstClazz, ontologyURI, project, provider);
+                    doJumpToEntity(clazz1, navigator);
+                    MTreeView ontoNavigator = (MTreeView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(MTreeView.ID);
+
+                    treeElement = IndividualItem.createNewInstance(individual, firstClazz.getIRI().toString(), ontologyURI, project);
+                    IViewPart individualView = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(IndividualView.ID);
+                    if (individualView != null) {
+                        ((IndividualView) individualView).selectionChanged(ontoNavigator, new StructuredSelection(clazz1));
+                        ((IndividualView) individualView).getTreeViewer().setSelection(new StructuredSelection(treeElement));
+                    }
+                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(IndividualView.ID);
+                }
+            } catch (NeOnCoreException e) {
+                // nothing to do
+                e.printStackTrace();
+            } catch (PartInitException e) {
+                // nothing to do
+            }
+        }else{
+            boolean success = doJumpToEntity(treeElement, navigator);
+            if (success) {
+                try {
+                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(MTreeView.ID);
+                } catch (PartInitException e) {
+                    // nothing to do
                 }
             }
         }

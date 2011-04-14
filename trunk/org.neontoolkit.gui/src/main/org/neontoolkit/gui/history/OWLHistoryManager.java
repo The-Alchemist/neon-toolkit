@@ -14,22 +14,33 @@ import org.neontoolkit.gui.action.OWLNavigationHistoryAction;
  * 
  * The OWLHistoryManager manages the history mechanism:
  * - stores the history provides some functions to access it
+ * 
+ * *****************************************************************
+ * It is a GUI-TEST now, thats why it is not running anymore :(
+ * *****************************************************************
+ * 
  */
 public class OWLHistoryManager implements INavigationHistory{
 
-    private static IOWLHistoryEntry[] history;
-    private static int first;
-    private static int last;
-    private static int maxLength;
-    private static int currentPosition;
-    private static OWLNavigationHistoryAction backwardAction;
-    private static OWLNavigationHistoryAction forwardAction;
-   
-    static{
-        reset();
-    }
+    private IOWLHistoryEntry[] history;
+    private int first;
+    private int last;
+    private int maxLength;
+    private int currentPosition;
+    private OWLNavigationHistoryAction backwardAction;
+    private OWLNavigationHistoryAction forwardAction;
     
-    static void reset(){
+    private static OWLHistoryManager instance;
+    
+    public static OWLHistoryManager getInstance(){
+        if(instance == null){
+            instance = new OWLHistoryManager();
+        }
+        return instance;
+    }
+   
+    
+    public OWLHistoryManager(){
         maxLength = 100;
         history = new IOWLHistoryEntry[maxLength];
         first = -1;
@@ -37,7 +48,7 @@ public class OWLHistoryManager implements INavigationHistory{
         currentPosition = -1;
     }
     //should not be called while navigating in history
-    public static void addHistoryElement(IOWLHistoryEntry object){
+    public void addHistoryElement(IOWLHistoryEntry object){
         IOWLHistoryEntry lastNoneEmptyElement = getLastNoneEmptyElement();
         if(object.equals(lastNoneEmptyElement))
             object.setEmpty(true);
@@ -45,28 +56,28 @@ public class OWLHistoryManager implements INavigationHistory{
         last = currentPosition;
         history[currentPosition % maxLength] = object;
         object.setHistoryPosition(currentPosition);
-        first = Math.max(last - (OWLHistoryManager.maxLength - 1), first);
+        first = Math.max(last - (this.maxLength - 1), first);
         if(first == -1){
             first = 0;
         }
         updateActions();
     }
     
-    public static int changeMaxLength(int newMaxLength){
-        if(newMaxLength > 0 && newMaxLength != OWLHistoryManager.maxLength){
+    public int changeMaxLength(int newMaxLength){
+        if(newMaxLength > 0 && newMaxLength != this.maxLength){
             IOWLHistoryEntry[] oldHistory = history;
             history = new IOWLHistoryEntry[newMaxLength];
-            if(newMaxLength < OWLHistoryManager.maxLength){
+            if(newMaxLength < this.maxLength){
                 first = Math.max(last - (newMaxLength - 1), first);//change first if history is bigger when the new limit
             }
             for(int i = first; i <= last; i++){
-                history[i % newMaxLength] = oldHistory[i % OWLHistoryManager.maxLength];
+                history[i % newMaxLength] = oldHistory[i % this.maxLength];
             }
-            OWLHistoryManager.maxLength = newMaxLength;
+            this.maxLength = newMaxLength;
         }
-        return OWLHistoryManager.maxLength;
+        return this.maxLength;
     }
-    public static boolean hasNext(){
+    public boolean hasNext(){
         int pointer = currentPosition;
         while(pointer++ < last){
             if(!getHistoryElement(pointer % maxLength).isEmpty()){
@@ -75,7 +86,7 @@ public class OWLHistoryManager implements INavigationHistory{
         }
         return false;
     }
-    public static boolean hasPrevious(){
+    public boolean hasPrevious(){
         int pointer = currentPosition;
         while(pointer-- > first){
             if(!getHistoryElement(pointer % maxLength).isEmpty()){
@@ -84,7 +95,7 @@ public class OWLHistoryManager implements INavigationHistory{
         }
         return false;
     }
-    public static IOWLHistoryEntry getNext(){
+    public IOWLHistoryEntry getNext(){
         IOWLHistoryEntry value;
         while(true){
             value = getHistoryElement((++currentPosition) % maxLength);
@@ -94,7 +105,7 @@ public class OWLHistoryManager implements INavigationHistory{
         updateActions();
         return value;
     }
-    public static IOWLHistoryEntry getPrevious(){
+    public IOWLHistoryEntry getPrevious(){
         IOWLHistoryEntry value;
         while(true){
             value = getHistoryElement((--currentPosition) % maxLength);
@@ -104,7 +115,7 @@ public class OWLHistoryManager implements INavigationHistory{
         updateActions();
         return value;
     }
-    public static IOWLHistoryEntry[] getForwardEntries(){
+    public IOWLHistoryEntry[] getForwardEntries(){
         int length = Math.min(10, last - currentPosition);
         IOWLHistoryEntry[] entries = new IOWLHistoryEntry[length];
         int emptyCounter = 0;
@@ -126,7 +137,7 @@ public class OWLHistoryManager implements INavigationHistory{
         }
         return entries;
     }
-    public static IOWLHistoryEntry[] getBackwardEntries(){
+    public IOWLHistoryEntry[] getBackwardEntries(){
         int length = Math.min(10, currentPosition - first);
         IOWLHistoryEntry[] entries = new IOWLHistoryEntry[length];
         int emptyCounter = 0;
@@ -149,7 +160,7 @@ public class OWLHistoryManager implements INavigationHistory{
         return entries;
     }
     
-    static IOWLHistoryEntry getHistoryElement(int position){
+    IOWLHistoryEntry getHistoryElement(int position){
         return history[position % maxLength];
     }
     @Override
@@ -166,13 +177,13 @@ public class OWLHistoryManager implements INavigationHistory{
     public void markLocation(IEditorPart arg0) {
         // TODO Auto-generated method stub
     }   
-    public static void setForwardAction(OWLNavigationHistoryAction forwardAction){
-        OWLHistoryManager.forwardAction = forwardAction;
+    public void setForwardAction(OWLNavigationHistoryAction forwardAction){
+        this.forwardAction = forwardAction;
     } 
-    public static void setBackwardAction(OWLNavigationHistoryAction backwardAction){
-        OWLHistoryManager.backwardAction = backwardAction;
+    public void setBackwardAction(OWLNavigationHistoryAction backwardAction){
+        this.backwardAction = backwardAction;
     }
-    private static void updateActions(){
+    private void updateActions(){
         if(forwardAction != null)
             forwardAction.update();
         if(backwardAction != null)
@@ -181,14 +192,14 @@ public class OWLHistoryManager implements INavigationHistory{
     /**
      * @param owlHistoryEntry
      */
-    public static boolean hasValidJumpToPosition(IOWLHistoryEntry owlHistoryEntry) {
+    public boolean hasValidJumpToPosition(IOWLHistoryEntry owlHistoryEntry) {
         int position = owlHistoryEntry.getHistoryPosition();
         return (first <= position && position <= last && !getHistoryElement(position).isEmpty());
     }
     /**
      * @param owlHistoryEntry
      */
-    public static boolean entitySelected(IOWLHistoryEntry owlHistoryEntry) {
+    public boolean entitySelected(IOWLHistoryEntry owlHistoryEntry) {
         if(hasValidJumpToPosition(owlHistoryEntry)){
             currentPosition = owlHistoryEntry.getHistoryPosition();
             updateActions();
@@ -199,7 +210,7 @@ public class OWLHistoryManager implements INavigationHistory{
     /**
      * @return current selected Entity iff there exists one
      */
-    public static IOWLHistoryEntry getCurrentSelection(){
+    public IOWLHistoryEntry getCurrentSelection(){
         if(currentPosition != -1) 
             return getHistoryElement(currentPosition);
         return null;
@@ -207,7 +218,7 @@ public class OWLHistoryManager implements INavigationHistory{
     /**
      * @return the first none empty Element before the current selection iff there exists one
      */
-    private static IOWLHistoryEntry getLastNoneEmptyElement() {
+    private IOWLHistoryEntry getLastNoneEmptyElement() {
         int cP = currentPosition;
         while(true){
             if(cP != -1 && cP >= first) {

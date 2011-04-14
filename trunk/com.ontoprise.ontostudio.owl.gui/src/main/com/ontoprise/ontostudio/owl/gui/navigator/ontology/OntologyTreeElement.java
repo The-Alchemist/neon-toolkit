@@ -11,10 +11,13 @@
 package com.ontoprise.ontostudio.owl.gui.navigator.ontology;
 
 import org.neontoolkit.gui.NeOnUIPlugin;
+import org.neontoolkit.gui.history.IOWLHistoryEntry;
 import org.neontoolkit.gui.navigator.ITreeDataProvider;
 import org.neontoolkit.gui.navigator.elements.AbstractOntologyTreeElement;
 import org.neontoolkit.gui.navigator.ontology.IOntologyTreeElement;
 
+import com.ontoprise.ontostudio.owl.gui.history.OWLHistoryEntry;
+import com.ontoprise.ontostudio.owl.gui.history.OWLOntologyHistoryEntry;
 import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 
 /**
@@ -22,6 +25,7 @@ import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
  */
 public class OntologyTreeElement extends AbstractOntologyTreeElement implements IOntologyTreeElement {
 
+    private IOWLHistoryEntry _historyEntry;
     public OntologyTreeElement(String projectName, String ontologyURI, ITreeDataProvider provider) {
         super(projectName, ontologyURI, provider);
     }
@@ -81,5 +85,12 @@ public class OntologyTreeElement extends AbstractOntologyTreeElement implements 
     @Override
     public String getLocalName() {
         return getId();
+    }
+    @Override
+    public IOWLHistoryEntry getOWLHistoryEntry() {
+        if(_historyEntry == null){
+            _historyEntry = new OWLOntologyHistoryEntry(this);
+        }
+        return _historyEntry;
     }
 }
