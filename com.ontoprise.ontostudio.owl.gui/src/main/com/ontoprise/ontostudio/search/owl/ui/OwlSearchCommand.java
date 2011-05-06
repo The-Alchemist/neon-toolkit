@@ -111,8 +111,8 @@ public class OwlSearchCommand extends AbstractSearchCommand {
      * @param expression
      * @param caseSensitive
      */
-    public OwlSearchCommand(String project, String onotlogyId, String expression, boolean caseSensitive, SearchScope searchArea) {
-        super(project, expression, caseSensitive);
+    public OwlSearchCommand(String project, String onotlogyId, String expression, boolean caseSensitive, int IdDisplayStyleForQuery, SearchScope searchArea) {
+        super(project, expression, caseSensitive, IdDisplayStyleForQuery);
         this._searchScope = searchArea;
         this._ontologyId = onotlogyId;
     }
@@ -123,8 +123,8 @@ public class OwlSearchCommand extends AbstractSearchCommand {
      * @param flags
      * @param sensitive
      */
-    public OwlSearchCommand(String project, String onotlogyId, String expression, int searchFlags, boolean caseSensitive, SearchScope searchArea) {
-        super(project, expression, caseSensitive);
+    public OwlSearchCommand(String project, String onotlogyId, String expression, int searchFlags, boolean caseSensitive, int IdDisplayStyleForQuery, SearchScope searchArea) {
+        super(project, expression, caseSensitive, IdDisplayStyleForQuery);
         this._searchFlags = searchFlags;
         this._searchScope = searchArea;
         this._ontologyId = onotlogyId;
@@ -204,7 +204,7 @@ public class OwlSearchCommand extends AbstractSearchCommand {
         
         SearchResults results;
         try {
-            results = searchHelper.search(owlModel.getOntologyURI(), types, searchExpression, false, isCaseSensitive(), 0, 999);
+            results = searchHelper.search(owlModel.getOntologyURI(), types, searchExpression, false, isCaseSensitive(), getIdDisplayStyleForQuery(), 0, 999);
             for (SearchElement result: results.getResults()) {
                 addSearchMatches(owlModel.getProjectId(), result, matches);
             }

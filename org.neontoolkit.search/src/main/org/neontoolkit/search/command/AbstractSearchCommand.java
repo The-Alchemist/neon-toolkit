@@ -1,5 +1,4 @@
 /*****************************************************************************
- * Copyright (c) 2009 ontoprise GmbH.
  *
  * All rights reserved.
  *
@@ -24,12 +23,18 @@ import org.neontoolkit.core.command.LoggedCommand;
  * Function: 
  * Keywords: 
  */
+/**
+ * @author Nico Stieler
+ */
 public abstract class AbstractSearchCommand extends LoggedCommand {
 	protected Match[] _results;
-	
-	public AbstractSearchCommand(String project, String expression, boolean caseSensitive) {
-		super(project, expression, caseSensitive);
-	}
+
+    public AbstractSearchCommand(String project, String expression, boolean caseSensitive, int IDDisplayStyleForQuery) {
+        super(project, expression, caseSensitive, IDDisplayStyleForQuery);
+    }
+//    public AbstractSearchCommand(String project, String expression, boolean caseSensitive) {
+//        super(project, expression, caseSensitive);
+//    }
 
 	protected String getProject() {
 		return (String)getArgument(0);
@@ -39,9 +44,12 @@ public abstract class AbstractSearchCommand extends LoggedCommand {
 		return (String)getArgument(1);
 	}
 
-	protected boolean isCaseSensitive() {
-		return (Boolean)getArgument(2);
-	}
+    protected boolean isCaseSensitive() {
+        return (Boolean)getArgument(2);
+    }
+    protected int getIdDisplayStyleForQuery() {
+        return (Integer)getArgument(3);
+    }
 	
 	public Match[] getResults() throws CommandException {
 		if (_results == null) {

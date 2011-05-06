@@ -22,6 +22,7 @@ import com.ontoprise.ontostudio.search.owl.ui.OwlSearchCommand.SearchScope;
 public class OwlSearchQuery extends AbstractSearchQuery {
 
     private boolean _caseSensitive;
+    private int _IDDisplayStyleForQuery;
 
     /**
      * @param searchString
@@ -29,9 +30,10 @@ public class OwlSearchQuery extends AbstractSearchQuery {
      * @param searchFlags
      * @param scope
      */
-    public OwlSearchQuery(String searchString, boolean caseSensitive, int searchFlags, Scope scope) {
+    public OwlSearchQuery(String searchString, boolean caseSensitive, int searchFlags, int IDDisplayStyleForQuery, Scope scope) {
         super(searchString, searchFlags, scope.getProjects_ontologies());
         _caseSensitive = caseSensitive;
+        _IDDisplayStyleForQuery = IDDisplayStyleForQuery;
     }
 
     @Override
@@ -42,6 +44,6 @@ public class OwlSearchQuery extends AbstractSearchQuery {
         }else{
             searchArea = SearchScope.ONTOLOGY;
         }
-        return new OwlSearchCommand(project, ontology, _expression, _searchFlags, _caseSensitive,searchArea);
+        return new OwlSearchCommand(project, ontology, _expression, _searchFlags, _caseSensitive, _IDDisplayStyleForQuery, searchArea);
     }
 }

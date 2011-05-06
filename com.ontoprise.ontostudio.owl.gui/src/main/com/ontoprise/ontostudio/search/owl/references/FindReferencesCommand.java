@@ -65,7 +65,7 @@ public class FindReferencesCommand extends AbstractSearchCommand{
      * @param project
      */
     public FindReferencesCommand(OWLEntity entity, String project) {
-        super(project,  entity.getIRI().toString(), false);
+        super(project,  entity.getIRI().toString(), false, 0);
         _entity = entity;
     }
 
