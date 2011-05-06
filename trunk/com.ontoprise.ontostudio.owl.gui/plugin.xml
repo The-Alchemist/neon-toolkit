@@ -109,7 +109,6 @@
             name="%PropertyMembersView"/>
 	</extension>
 
-
    <extension point="org.eclipse.ui.popupMenus">
       <objectContribution
             objectClass="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement">
@@ -260,6 +259,15 @@
                style="push">
          </command>
          -->
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:org.neontoolkit.gui.views.navigator?after=navigator.refactor">
+         <command
+			   commandId="com.ontoprise.ontostudio.owl.navigator.searchFromPopupMenu"
+               icon="icons/csearch_obj.GIF"
+               label="%searchFromPopupMenu_Text"
+               style="push">
+         </command>
       </menuContribution>
       <menuContribution
             locationURI="toolbar:org.eclipse.ui.main.toolbar">
@@ -1238,6 +1246,15 @@
             class="com.ontoprise.ontostudio.owl.gui.individualview.ShowIndividualsOfAllSubclasses"
             commandId="com.ontoprise.ontostudio.owl.views.individualView.showIndividualsOfAllSubClassesCommand">
       </handler>
+      <handler
+            class="com.ontoprise.ontostudio.search.owl.ui.SearchFromPopupHandler"
+            commandId="com.ontoprise.ontostudio.owl.navigator.searchFromPopupMenu">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.nOntologiesOrProjetctSelected">
+            </reference>
+         </activeWhen>
+      </handler>
    </extension>
 <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
 <!--+++++++++++++++++++++++++++++ DEFINITIONS +++++++++++++++++++++++++++++-->
@@ -1630,6 +1647,11 @@
             description="%showIndividualsOfAllSubClasses"
 			id="com.ontoprise.ontostudio.owl.views.individualView.showIndividualsOfAllSubClassesCommand"
             name="%showIndividualsOfAllSubClasses">
+      </command>
+      <command
+            description="%searchFromPopupMenu_Text"
+            id="com.ontoprise.ontostudio.owl.navigator.searchFromPopupMenu"
+            name="%searchFromPopupMenu_Text">
       </command>
    </extension>
 <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
