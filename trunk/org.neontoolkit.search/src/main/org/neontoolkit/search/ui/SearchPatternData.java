@@ -25,6 +25,7 @@ import org.eclipse.ui.PlatformUI;
  */
 /**
  * @author Dirk Wenke
+ * @author Nico Stieler
  */
 
 public class SearchPatternData {
@@ -32,10 +33,18 @@ public class SearchPatternData {
 	 * 
 	 */
 	private static final String SETTINGS_SEARCHFLAGS = "searchFlags"; //$NON-NLS-1$
-	/**
-	 * 
-	 */
-	private static final String SETTINGS_IGNORECASE = "ignoreCase"; //$NON-NLS-1$
+    /**
+     * 
+     */
+    private static final String SETTINGS_IGNORECASE = "ignoreCase"; //$NON-NLS-1$
+    /**
+     * 
+     */
+    private static final String SETTINGS_ID_DISPLAY_STYLE_FOR_QUERY = "idDisplayStyleForQuery"; //$NON-NLS-1$
+    /**
+     * 
+     */
+    private static final String SETTINGS_ID_DISPLAY_STYLE_LANGUAGE_FOR_QUERY = "idDisplayStyleLanguageForQuery"; //$NON-NLS-1$
 	/**
 	 * 
 	 */
@@ -53,14 +62,18 @@ public class SearchPatternData {
 	 */
 	private static final String SETTINGS_TEXTPATTERN = "textPattern"; //$NON-NLS-1$
 	private String _textPattern;
-	private boolean _ignoreCase;
+    private boolean _ignoreCase;
+    private int _idDisplayStyleForQuery;
+    private String _idDisplayStyleLanguageForQuery;
 	private int _searchFlags;
 	private int _scope;
 	private String[] _projectNames;
 	private IWorkingSet[] _workingSets;
 	
-	public SearchPatternData(String textPattern, boolean ignoreCase, int searchFlags, int scope, String[] projectNames, IWorkingSet[] workingSets) {
+	public SearchPatternData(String textPattern, boolean ignoreCase, int IDDisplayStyleForQuery, String idDisplayStyleLanguageForQuery, int searchFlags, int scope, String[] projectNames, IWorkingSet[] workingSets) {
 		_ignoreCase= ignoreCase;
+        _idDisplayStyleForQuery= IDDisplayStyleForQuery;
+        _idDisplayStyleLanguageForQuery= idDisplayStyleLanguageForQuery;
 		_textPattern= textPattern;
 		_scope= scope;
 		_projectNames = projectNames; //can be null
@@ -70,7 +83,9 @@ public class SearchPatternData {
 	
 	public void store(IDialogSettings settings) {
 		settings.put(SETTINGS_IGNORECASE, _ignoreCase); 
-		settings.put(SETTINGS_TEXTPATTERN, _textPattern); 
+        settings.put(SETTINGS_ID_DISPLAY_STYLE_FOR_QUERY, _idDisplayStyleForQuery); 
+        settings.put(SETTINGS_ID_DISPLAY_STYLE_LANGUAGE_FOR_QUERY, _idDisplayStyleLanguageForQuery); 
+        settings.put(SETTINGS_TEXTPATTERN, _textPattern); 
 		settings.put(SETTINGS_SCOPE, _scope); 
 		settings.put(SETTINGS_SEARCHFLAGS, _searchFlags); 
 		if (_workingSets != null) {
@@ -114,9 +129,11 @@ public class SearchPatternData {
 		try {
 			int scope= settings.getInt(SETTINGS_SCOPE); 
 			boolean ignoreCase= settings.getBoolean(SETTINGS_IGNORECASE); 
-			int searchFlags= settings.getInt(SETTINGS_SEARCHFLAGS); 
+            int idDisplayStyleForQuery= settings.getInt(SETTINGS_ID_DISPLAY_STYLE_FOR_QUERY); 
+            String idDisplayStyleLanguageForQuery= idDisplayStyleForQuery == 4?settings.get(SETTINGS_ID_DISPLAY_STYLE_LANGUAGE_FOR_QUERY):null; 
+            int searchFlags= settings.getInt(SETTINGS_SEARCHFLAGS); 
 
-			return	new SearchPatternData(textPattern, ignoreCase, searchFlags, scope, projects, workingSets);
+			return	new SearchPatternData(textPattern, ignoreCase, idDisplayStyleForQuery, idDisplayStyleLanguageForQuery, searchFlags, scope, projects, workingSets);
 		} catch (NumberFormatException e) {
 			return null;
 		}
@@ -129,12 +146,19 @@ public class SearchPatternData {
 		return _ignoreCase;
 	}
 
-	/**
-	 * @return Returns the scope.
-	 */
-	public int getSearchFlags() {
-		return _searchFlags;
-	}
+    /**
+     * @return Returns the scope.
+     */
+    public int getSearchFlags() {
+        return _searchFlags;
+    }
+    
+    /**
+     * @return Returns the scope.
+     */
+    public int getIDDisplayStyle() {
+        return _idDisplayStyleForQuery;
+    }
 
 	/**
 	 * @return Returns the scope.

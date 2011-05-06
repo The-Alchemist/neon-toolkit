@@ -11,15 +11,20 @@
 package com.ontoprise.ontostudio.search.owl.ui;
 
 import org.eclipse.search.ui.ISearchQuery;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.neontoolkit.gui.IHelpContextIds;
+import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.search.ui.AbstractSearchPage;
 import org.neontoolkit.search.ui.Scope;
 import org.neontoolkit.search.ui.SearchPageOption;
 import org.neontoolkit.search.ui.SearchPatternData;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
+import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 
 /* 
  * Created on 04.04.2008
@@ -34,7 +39,7 @@ import com.ontoprise.ontostudio.owl.gui.Messages;
  * @author Nico Stieler
  */
 public class OwlSearchPage extends AbstractSearchPage {
-
+    
     /**
 	 * 
 	 */
@@ -57,35 +62,9 @@ public class OwlSearchPage extends AbstractSearchPage {
     @Override
     protected ISearchQuery getSearchQuery() {
         SearchPatternData patternData = getPatternData();
-        return new OwlSearchQuery(patternData.getPattern(), patternData.isIgnoreCase(), patternData.getSearchFlags(), getScope());
+        return new OwlSearchQuery(patternData.getPattern(), patternData.isIgnoreCase(), patternData.getSearchFlags(), patternData.getIDDisplayStyle(), getScope());//NICO change me
     }
     
-//    /*
-//     * (non-Javadoc)
-//     * 
-//     * @see com.ontoprise.ontostudio.search.ui.AbstractSearchPage#getProjectsInScope()
-//     */
-//    @Override
-//    protected String[] getProjectsInScope() {
-//        return super.getProjectsInScope();
-//        try {
-//            String[] projects = OWLPlugin.getDefault().getOntologyProjects();
-//            List<String> list = new ArrayList<String>();
-//            for (String projectName: projects) {
-//                IProject project = NeOnCorePlugin.getDefault().getProject(projectName);
-//                if (project.isOpen() && project.hasNature(OntologyProjectNature.ID)) {
-//                    list.add(projectName);
-//                }
-//            }
-//            return list.toArray(new String[0]);
-//        } catch (CoreException ce) {
-//            SearchPlugin.logError(Messages.OwlSearchPage_8, ce); 
-//        } catch (NeOnCoreException ce) {
-//            SearchPlugin.logError(Messages.OwlSearchPage_8, ce); 
-//        }
-//        return new String[0];
-//    }
-
     /*
      * (non-Javadoc)
      * 
@@ -126,4 +105,64 @@ public class OwlSearchPage extends AbstractSearchPage {
     protected String getOntologyLanguage() {
        return "OWL2"; //$NON-NLS-1$//NICO search is restricted on OWL2?
     }
+
+    @Override
+    protected void addDisplayStyleSelectionControl(Composite c) {        
+
+        String[] contents = new String[]{
+                Messages.OwlSearchPage_DisplayStyle_URI,
+                Messages.OwlSearchPage_DisplayStyle_Local,
+                Messages.OwlSearchPage_DisplayStyle_QName
+//                ,
+//                Messages.OwlSearchPage_DisplayStyle_Language
+        };
+        
+        GridData data = new GridData(SWT.RIGHT, SWT.CENTER, true, true, 2, 1);
+        data.widthHint = 111;
+        data.verticalAlignment = SWT.LEFT;
+        final CCombo combo1 = OWLGUIUtilities.createComboWidget(contents, c, data, SWT.BORDER | SWT.READ_ONLY, true);
+
+      String selection = Messages.OwlSearchPage_DisplayStyle_URI;   //      String selection = Messages.OwlSearchPage_DisplayStyle_Language; 
+        if(_IDDisplayStyle == NeOnUIPlugin.DISPLAY_LOCAL)
+            selection = Messages.OwlSearchPage_DisplayStyle_Local;
+        else if(_IDDisplayStyle == NeOnUIPlugin.DISPLAY_URI)
+            selection = Messages.OwlSearchPage_DisplayStyle_URI;
+        else if(_IDDisplayStyle == NeOnUIPlugin.DISPLAY_QNAME)
+            selection = Messages.OwlSearchPage_DisplayStyle_QName;
+        for(int index = 0; index < combo1.getItemCount(); index++)
+            if(combo1.getItem(index).equals(selection))
+                combo1.select(index);
+        
+
+//      data = new GridData();
+//      data.widthHint = 111;
+//      data.verticalAlignment = SWT.LEFT;
+//      final CCombo combo2 = OWLGUIUtilities.createComboWidget(NeOnUIPlugin.getDefault().getLanguages(), c, data, SWT.BORDER | SWT.READ_ONLY, false);
+//      combo2.setVisible(false);
+//      combo1.addModifyListener(new ModifyListener() {
+//        
+//        @Override
+//        public void modifyText(ModifyEvent e) {
+////            if(combo1.getText().equals(Messages.OwlSearchPage_DisplayStyle_Language)){
+////                combo2.setEnabled(true);
+////                combo2.setVisible(true);
+////            }else{
+////                combo2.setEnabled(false);
+////                combo2.setVisible(false);
+//                if(combo1.getText().equals(Messages.OwlSearchPage_DisplayStyle_Local)){
+//                    System.out.println(Messages.OwlSearchPage_DisplayStyle_Local);
+//                    _IDDisplayStyle = NeOnUIPlugin.DISPLAY_LOCAL;
+//                }else if(combo1.getText().equals(Messages.OwlSearchPage_DisplayStyle_URI)){
+//                    System.out.println(Messages.OwlSearchPage_DisplayStyle_URI);
+//                    _IDDisplayStyle = NeOnUIPlugin.DISPLAY_URI;
+//                }else if(combo1.getText().equals(Messages.OwlSearchPage_DisplayStyle_QName)){
+//                    System.out.println(Messages.OwlSearchPage_DisplayStyle_QName);
+//                    _IDDisplayStyle = NeOnUIPlugin.DISPLAY_QNAME;
+//                }
+////            }
+//        }
+//    });
+    
+    }
+    
 }

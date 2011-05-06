@@ -44,6 +44,7 @@ import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.core.project.OntologyProjectManager;
+import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.navigator.elements.IOntologyElement;
 import org.neontoolkit.gui.navigator.elements.IProjectElement;
 import org.neontoolkit.search.Messages;
@@ -54,10 +55,13 @@ import org.neontoolkit.search.SearchPlugin;
  * 
  * @author Nico Stieler
  * modified on: 15.09.2010
+ * modified on: 06.05.2011
  */
 public abstract class AbstractSearchPage extends DialogPage implements ISearchPage {
 	private static final int HISTORY_SIZE= 12;
-	private static final String STORE_CASE_SENSITIVE= "CASE_SENSITIVE"; //$NON-NLS-1$
+    private static final String STORE_CASE_SENSITIVE= "CASE_SENSITIVE"; //$NON-NLS-1$
+    private static final String STORE_ID_DISPLAY_STYLE= "ID_DISPLAY_STYLE"; //$NON-NLS-1$
+    private static final String STORE_ID_DISPLAY_STYLE_LANGUAGE= "ID_DISPLAY_STYLE_LANGUAGE"; //$NON-NLS-1$
 	private static final String STORE_SEARCH_FLAGS = "SEARCH_FLAGS"; //$NON-NLS-1$
 	private static final String STORE_HISTORY= "HISTORY"; //$NON-NLS-1$
 	private static final String STORE_HISTORY_SIZE= "HISTORY_SIZE"; //$NON-NLS-1$
@@ -73,6 +77,8 @@ public abstract class AbstractSearchPage extends DialogPage implements ISearchPa
 	private Button[] _searchTypes;
 	
 	private boolean _isCaseSensitive;
+    protected int _IDDisplayStyle;
+    protected String _IDDisplayStyleLanguage;
 
 	private List<SearchPatternData> _previousSearchPatterns = new ArrayList<SearchPatternData>(15);
 	
@@ -111,14 +117,15 @@ public abstract class AbstractSearchPage extends DialogPage implements ISearchPa
 		GridData data= new GridData(GridData.FILL, GridData.FILL, false, false, 2, 1);
 		data.heightHint= convertHeightInCharsToPixels(1) / 3;
 		separator.setLayoutData(data);
-		
-		addTypeSelectionControl(result);
+
+        addDisplayStyleSelectionControl(result);
+        addTypeSelectionControl(result);
 
 		setControl(result);
 		Dialog.applyDialogFont(result);
 	}
 	
-	@Override
+    @Override
     public void performHelp() {
 	    String helpContextId = getHelpContextId();
 	    if (helpContextId != null) {
@@ -177,7 +184,7 @@ public abstract class AbstractSearchPage extends DialogPage implements ISearchPa
         Group group = new Group(c, SWT.NONE);
         group.setLayout(new GridLayout());
 
-		Composite majorComp = new Composite(group, SWT.NONE);
+        Composite majorComp = new Composite(group, SWT.NONE);
         GridData data = new GridData();
         data.horizontalAlignment = GridData.FILL;
         data.grabExcessHorizontalSpace = true;
@@ -190,24 +197,24 @@ public abstract class AbstractSearchPage extends DialogPage implements ISearchPa
         majorComp.setLayout(layout);
 
         _searchTypes = new Button[_options.length];
-		for (int i=0; i<_options.length; i++) {
-			final int index = i; 
-			_searchTypes[i] = new Button(majorComp, SWT.CHECK);
-			data = new GridData();
-			data.horizontalAlignment = GridData.FILL;
-			data.grabExcessHorizontalSpace = true;
-			_searchTypes[i].setLayoutData(data);
-			_searchTypes[i].setText(_options[i].getName());  
-			_searchTypes[i].setSelection(isFlagSet(i));
-			_searchTypes[i].addSelectionListener(new SelectionAdapter() {
-				@Override
-	            public void widgetSelected(SelectionEvent e) {
-					setFlag(index,!isFlagSet(index));
-					updateOKStatus();
-				}
-			});
-			_searchTypes[i].setFont(group.getFont());
-		}
+        for (int i=0; i<_options.length; i++) {
+            final int index = i; 
+            _searchTypes[i] = new Button(majorComp, SWT.CHECK);
+            data = new GridData();
+            data.horizontalAlignment = GridData.FILL;
+            data.grabExcessHorizontalSpace = true;
+            _searchTypes[i].setLayoutData(data);
+            _searchTypes[i].setText(_options[i].getName());  
+            _searchTypes[i].setSelection(isFlagSet(i));
+            _searchTypes[i].addSelectionListener(new SelectionAdapter() {
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    setFlag(index,!isFlagSet(index));
+                    updateOKStatus();
+                }
+            });
+            _searchTypes[i].setFont(group.getFont());
+        }
 
         Composite buttonComp = new Composite(group, SWT.NONE);
         data = new GridData();
@@ -241,7 +248,8 @@ public abstract class AbstractSearchPage extends DialogPage implements ISearchPa
             }
         
         });
-	}
+    }
+    protected abstract void addDisplayStyleSelectionControl(Composite c);
 	
 	private boolean isFlagSet(int index) {
 		return (_selectedOptions & _options[index].getOptionBit()) > 0;
@@ -261,13 +269,20 @@ public abstract class AbstractSearchPage extends DialogPage implements ISearchPa
 	 */
 	private void readConfiguration() {
 		IDialogSettings s = getDialogSettings();
-		_isCaseSensitive= s.getBoolean(STORE_CASE_SENSITIVE);
-		
-		try {
-			_selectedOptions = s.getInt(STORE_SEARCH_FLAGS);
-		} catch (NumberFormatException e) {
-			// ignore
-		}
+        _isCaseSensitive= s.getBoolean(STORE_CASE_SENSITIVE);
+
+        try {
+            _IDDisplayStyle= s.getInt(STORE_ID_DISPLAY_STYLE);
+            _IDDisplayStyleLanguage= s.get(STORE_ID_DISPLAY_STYLE_LANGUAGE);
+        } catch (NumberFormatException e) {
+            // ignore
+        }
+
+        try {
+            _selectedOptions= s.getInt(STORE_SEARCH_FLAGS);
+        } catch (NumberFormatException e) {
+            // ignore
+        }
 		try {
 			int historySize= s.getInt(STORE_HISTORY_SIZE);
 			for (int i= 0; i < historySize; i++) {
@@ -293,7 +308,9 @@ public abstract class AbstractSearchPage extends DialogPage implements ISearchPa
         _dialogSettings= settings.getSection(getDialogSectionName());
 		if (_dialogSettings == null) {
 			_dialogSettings= settings.addNewSection(getDialogSectionName());
-			_dialogSettings.put(STORE_CASE_SENSITIVE, false);
+            _dialogSettings.put(STORE_CASE_SENSITIVE, false);
+            _dialogSettings.put(STORE_ID_DISPLAY_STYLE, NeOnUIPlugin.getDefault().getIdDisplayStyle());
+            _dialogSettings.put(STORE_ID_DISPLAY_STYLE_LANGUAGE, (String)null);
 			int flags = 0;
 			for (int i=0; i<_options.length; i++) {
 				flags |= _options[i].getOptionBit();
@@ -332,10 +349,17 @@ public abstract class AbstractSearchPage extends DialogPage implements ISearchPa
 	private String getPattern() {
 		return _pattern.getText();
 	}
-	
-	private boolean isIgnoreCase() {
-		return _ignoreCase.getSelection();
-	}
+
+    private boolean isIgnoreCase() {
+        return _ignoreCase.getSelection();
+    }
+
+    protected int getIDDisplayStyle(){
+        return _IDDisplayStyle;
+    }
+    protected String getIDDisplayStyleLanguage(){
+        return _IDDisplayStyleLanguage;
+    }
 	
 	private int getSearchFlags() {
 		return _selectedOptions;
@@ -354,6 +378,8 @@ public abstract class AbstractSearchPage extends DialogPage implements ISearchPa
 		match= new SearchPatternData(
 					getPattern(),
 					isIgnoreCase(),
+                    getIDDisplayStyle(),
+                    getIDDisplayStyleLanguage(),
 					getSearchFlags(),
 					getContainer().getSelectedScope(),
 					getContainer().getSelectedProjectNames(),
@@ -539,7 +565,9 @@ public abstract class AbstractSearchPage extends DialogPage implements ISearchPa
 	 */
 	private void writeConfiguration() {
 		IDialogSettings s= getDialogSettings();
-		s.put(STORE_CASE_SENSITIVE, _isCaseSensitive);
+        s.put(STORE_CASE_SENSITIVE, _isCaseSensitive);
+        s.put(STORE_ID_DISPLAY_STYLE, _IDDisplayStyle);
+        s.put(STORE_ID_DISPLAY_STYLE_LANGUAGE, _IDDisplayStyle);
 		s.put(STORE_SEARCH_FLAGS, getSearchFlags());
 		
 		int historySize= Math.min(_previousSearchPatterns.size(), HISTORY_SIZE);

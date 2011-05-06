@@ -37,6 +37,7 @@ import com.ontoprise.ontostudio.search.owl.ui.OwlSearchCommand.FieldTypes;
  * This is a simple IOwlSearchHelper, that checks the URIs of the selected 
  * element types if the search expression is part of it. 
  * @author janiko
+ * @author Nico Stieler
  *
  */
 public class SimpleOwlSearchHelper{
@@ -52,6 +53,10 @@ public class SimpleOwlSearchHelper{
     }
 
     public SearchResults search(String ontologyURI, Collection<FieldTypes> fields, String searchText, boolean includeAllImported, boolean caseSensitive, int start, int maxCount) throws NeOnCoreException {
+        return search(ontologyURI, fields, searchText, includeAllImported, caseSensitive, NeOnUIPlugin.DISPLAY_URI, start, maxCount);
+    }
+    
+    public SearchResults search(String ontologyURI, Collection<FieldTypes> fields, String searchText, boolean includeAllImported, boolean caseSensitive, int idDisplayStyle, int start, int maxCount) throws NeOnCoreException {
         if (fields == null || fields.size() == 0 || searchText == null || searchText.length() == 0) {
             throw new IllegalArgumentException("Search-types or search-text must not be empty"); //$NON-NLS-1$
         }
@@ -62,8 +67,10 @@ public class SimpleOwlSearchHelper{
         _caseSensitive = caseSensitive;
         _includeImported = includeAllImported;
         _searchExpression = searchText;
-        
-        _visitor =  OWLPlugin.getDefault().getSyntaxManager().getVisitor(_owlModel, NeOnUIPlugin.DISPLAY_URI);
+
+//        _visitor =  OWLPlugin.getDefault().getSyntaxManager().getVisitor(_owlModel, NeOnUIPlugin.DISPLAY_URI);
+//        _visitor =  OWLPlugin.getDefault().getSyntaxManager().getVisitor(_owlModel, NeOnUIPlugin.getDefault().getIdDisplayStyle());
+        _visitor =  OWLPlugin.getDefault().getSyntaxManager().getVisitor(_owlModel, idDisplayStyle);
 
         List<SearchElement> resultList = new LinkedList<SearchElement>();
         for(FieldTypes type : fields){
@@ -121,7 +128,7 @@ public class SimpleOwlSearchHelper{
         for (OWLEntity entity: entities) {
             String[] array = (String[]) entity.accept(_visitor); 
             if(containsSearchExpression(array[0])) {
-                result.add(new SearchElement(_owlModel.getOntologyURI(), null, type, array[0].replace("<", "").replace(">", ""), null)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+                result.add(new SearchElement(_owlModel.getOntologyURI(), null, type, entity.toStringID(), null));
             }
         }
         return result;
@@ -133,7 +140,7 @@ public class SimpleOwlSearchHelper{
         for (OWLIndividual individual: individuals) {
             String[] array = (String[]) individual.accept(_visitor); 
             if(containsSearchExpression(array[0])) {
-                result.add(new SearchElement(_owlModel.getOntologyURI(), null, FieldTypes.INDIVIDUALS, array[0].replace("<", "").replace(">", ""), null)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+                result.add(new SearchElement(_owlModel.getOntologyURI(), null, FieldTypes.INDIVIDUALS, individual.toStringID(), null)); 
             }
         }
         return result;

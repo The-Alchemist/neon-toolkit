@@ -394,7 +394,11 @@ public class Messages extends NLS {
 	public static String OwlSearchPage_5;
 	public static String OwlSearchPage_6;
 	public static String OwlSearchPage_7;
-	public static String OwlSearchPage_8;
+    public static String OwlSearchPage_8;
+    public static String OwlSearchPage_DisplayStyle_URI;
+    public static String OwlSearchPage_DisplayStyle_Local;
+    public static String OwlSearchPage_DisplayStyle_QName;
+    public static String OwlSearchPage_DisplayStyle_Language;
     public static String OwlSearchQuery_0;
     public static String OwlURIProposal_0;
     public static String OwlURIProposal_1;
