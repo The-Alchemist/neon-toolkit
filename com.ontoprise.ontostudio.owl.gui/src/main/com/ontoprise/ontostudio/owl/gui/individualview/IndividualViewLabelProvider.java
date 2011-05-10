@@ -11,8 +11,10 @@
 package com.ontoprise.ontostudio.owl.gui.individualview;
 
 import org.eclipse.jface.viewers.IColorProvider;
+import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
@@ -22,7 +24,7 @@ import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
  * 
  * @author Nico Stieler
  */
-public class IndividualViewLabelProvider extends LabelProvider implements IColorProvider {
+public class IndividualViewLabelProvider extends LabelProvider implements IColorProvider, IFontProvider{
 
     @Override
     @SuppressWarnings("rawtypes")
@@ -37,20 +39,27 @@ public class IndividualViewLabelProvider extends LabelProvider implements IColor
         }
         return null;
     }
-
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Font getFont(Object element) {
+        if (element instanceof IIndividualTreeElement) {
+            IIndividualTreeElement item = (IIndividualTreeElement) element;
+            if (!item.isDirect()) {
+                return OWLGUIUtilities.FONT_FOR_INHERITED_AXIOMS;
+            }
+        }
+        return null;
+    }
     @Override
     public Color getForeground(Object element) {
         return null;
     }
-
     @Override
     public String getText(Object obj) {
         return obj.toString();
     }
-
     @Override
     public Image getImage(Object obj) {
         return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.INDIVIDUAL);
     }
-
 }

@@ -45,7 +45,6 @@ import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzHierarchyProvider;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
-import com.ontoprise.ontostudio.owl.model.OWLConstants;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
