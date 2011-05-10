@@ -27,6 +27,8 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -115,6 +117,16 @@ public class OWLGUIUtilities {
     public static final Color COLOR_FOR_INHERITED_FACTS = new Color(null, 200, 200, 200);
     /** the background color for the Manchester syntax toolbar */
     public static final Color COLOR_FOR_TOOLBAR = new Color(null, 215, 250, 250);
+
+    /** font style for inherited Axioms */
+    public static final Font FONT_FOR_INHERITED_AXIOMS;
+    static{    
+        Display display = Display.getCurrent();
+        FontData fd = display.getSystemFont().getFontData()[0];
+        fd.setStyle(SWT.ITALIC);
+        FONT_FOR_INHERITED_AXIOMS = new Font(display, fd);
+
+    }
 
     public static final String BUTTON_LABEL_ADD = Messages.OWLGUIUtilities_0;
     public static final String BUTTON_LABEL_REMOVE = Messages.OWLGUIUtilities_1;

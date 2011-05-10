@@ -11,9 +11,11 @@
 package com.ontoprise.ontostudio.owl.gui.views.propertymember;
 
 import org.eclipse.jface.viewers.IColorProvider;
+import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
@@ -35,9 +37,10 @@ import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
  * It provides the text-labels, the icons, and also colors the background iff the axiom was imported.
  * 
  * @author Michael Erdmann
+ * @author Nico Stieler
  */
-public class PropertyMemberViewLabelProvider extends LabelProvider implements ITableLabelProvider, IColorProvider {
-
+public class PropertyMemberViewLabelProvider extends LabelProvider implements ITableLabelProvider, IColorProvider, IFontProvider{
+       
     @Override
     public Color getBackground(Object element) {
         if (element instanceof PropertyTreeElement) {
@@ -48,24 +51,40 @@ public class PropertyMemberViewLabelProvider extends LabelProvider implements IT
         }
         return null;
     }
-
+    @Override
+    public Font getFont(Object element) {
+        if (element instanceof PropertyMember) {
+            PropertyMember item = (PropertyMember) element;
+            if (!item.isDirect()) {
+                return OWLGUIUtilities.FONT_FOR_INHERITED_AXIOMS;
+            }
+        }
+        return null;
+    }
     @Override
     public Color getForeground(Object element) {
         return null;
     }
-
     @Override
     public String getColumnText(Object element, int column) {
         if (!(element instanceof PropertyMember)) {
             return null;
         }
-        
         PropertyMember row = (PropertyMember)element;
         Object o;
-        if(column==0) {
-            o = row.getSubject();
-        } else{
-            o = row.getValue();
+        switch(column){
+            case 0:
+                o = row.getSubject();
+                break;
+            case 1:
+                o = row.getProperty();
+                break;
+            case 2:
+                o = row.getValue();
+                break;
+            default:
+                o = row.getValue();
+                break;
         }
         if(o instanceof OWLEntity) {
             String[] idArray;
@@ -78,7 +97,6 @@ public class PropertyMemberViewLabelProvider extends LabelProvider implements IT
         }
         return o.toString();
     }
-
     @Override
     public Image getColumnImage(Object element, int column) {
         if (!(element instanceof PropertyMember)) {
@@ -87,10 +105,19 @@ public class PropertyMemberViewLabelProvider extends LabelProvider implements IT
         
         PropertyMember row = (PropertyMember)element;
         Object o;
-        if(column==0) {
-            o = row.getSubject();
-        } else{
-            o = row.getValue();
+        switch(column){
+            case 0:
+                o = row.getSubject();
+                break;
+            case 1:
+                o = row.getProperty();
+                break;
+            case 2:
+                o = row.getValue();
+                break;
+            default:
+                o = row.getValue();
+                break;
         }
         if(o instanceof OWLOntology) {
             return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.ONTOLOGY); 
@@ -110,5 +137,4 @@ public class PropertyMemberViewLabelProvider extends LabelProvider implements IT
             return null; // error case
         }
     }
-
 }

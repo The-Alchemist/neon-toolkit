@@ -10,6 +10,9 @@
 
 package com.ontoprise.ontostudio.owl.gui.views.propertymember;
 
+import java.util.HashSet;
+import java.util.LinkedList;
+
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -22,6 +25,8 @@ import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
+import org.neontoolkit.gui.navigator.ITreeDataProvider;
+import org.neontoolkit.gui.navigator.ITreeElement;
 import org.neontoolkit.gui.navigator.elements.IOntologyElement;
 import org.neontoolkit.gui.navigator.elements.IProjectElement;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
@@ -31,7 +36,6 @@ import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLNamedObject;
 import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
@@ -39,6 +43,12 @@ import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyTreeElement;
+import com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyHierarchyProvider;
+import com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement;
+import com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyHierarchyProvider;
+import com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement;
+import com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyHierarchyProvider;
+import com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
@@ -53,7 +63,9 @@ import com.ontoprise.ontostudio.owl.model.event.OWLChangeEvent;
  * @author Nico Stieler
  */
 public class PropertyMemberViewContentProvider implements IStructuredContentProvider {
-
+    public static final int ANNOTATION_PROPERTY=0;
+    public static final int DATA_PROPERTY=1;
+    public static final int OBJECT_PROPERTY=2;
     /**
      * The items to display;
      */
@@ -68,8 +80,10 @@ public class PropertyMemberViewContentProvider implements IStructuredContentProv
     private IPropertyChangeListener _guiListener;
     private IPreferenceStore _guiStore;
     private IPreferenceStore _owlStore;
+    
+    private boolean _isThirdColumnNedded;
 
-    OWLNamedObject _selectedProperty;
+    PropertyTreeElement _selectedProperty;
     String _ontologyUri;
     String _projectId;
     Text _textBox;
@@ -82,8 +96,10 @@ public class PropertyMemberViewContentProvider implements IStructuredContentProv
         if (_axiomListener == null) {
             _axiomListener = new OWLAxiomListener() {
 
+                @Override
                 public void modelChanged(OWLChangeEvent event) {
                     _table.getDisplay().syncExec(new Runnable() {
+                        @Override
                         public void run() {
                             forceUpdate();
                             _tableViewer.refresh();
@@ -104,14 +120,20 @@ public class PropertyMemberViewContentProvider implements IStructuredContentProv
         
         _guiListener = new IPropertyChangeListener() {
             // Listens to the events that change the namespace and update instance properties
+            @Override
             public void propertyChange(PropertyChangeEvent event) {
                 if (event.getProperty().equals(NeOnUIPlugin.ID_DISPLAY_PREFERENCE)) {
                     _table.getDisplay().syncExec(new Runnable() {
+                        @Override
                         public void run() {
                             _tableViewer.refresh();
                         }
                     });
                 }
+                if (event.getProperty().equals(OWLPlugin.SHOW_PROPERTY_MEMBERS_OF_ALL_SUBPROPERTIES_PREFERENCE)) {
+                    forceUpdate();
+                    _tableViewer.refresh();
+              }
             }
         };
         _guiStore.addPropertyChangeListener(_guiListener);
@@ -123,6 +145,7 @@ public class PropertyMemberViewContentProvider implements IStructuredContentProv
      * 
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      */
+    @Override
     public Object[] getElements(Object parent) {
         if (_items == null) {
             return new PropertyTreeElement[0];
@@ -130,11 +153,12 @@ public class PropertyMemberViewContentProvider implements IStructuredContentProv
         return _items;
     }
 
+    @Override
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
         if (newInput instanceof Object[]) {
             Object[] array = (Object[]) newInput;
-            if (array[0] instanceof OWLNamedObject) {
-                OWLNamedObject property = (OWLNamedObject) array[0];
+            if (array[0] instanceof PropertyTreeElement) {
+                PropertyTreeElement property = (PropertyTreeElement) array[0];
                 if (property.equals(_selectedProperty) && array[1].equals(_ontologyUri) && array[2].equals(_projectId)) {
                     return;
                 }
@@ -144,10 +168,73 @@ public class PropertyMemberViewContentProvider implements IStructuredContentProv
                 _textBox = (Text) array[3];
                 
                 updateItems();
+            }else if(array[0] instanceof PropertyMember){
+                //nothing to do
+            }else{
+                _items = null;
+                _textBox.setText(Messages.PropertyMemberView_0);
             }
         }
     }
 
+    /**
+     * @param element 
+     * @param type 
+     * @return
+     */
+    private HashSet<OWLEntity> determineAllProperties(PropertyTreeElement element, int type) {
+        HashSet<OWLEntity> set = new HashSet<OWLEntity>();
+        addSubpropertyToProperties(element, set, type);
+        return set;
+    }
+
+    /**
+     * @param element
+     */
+    private boolean addSubpropertyToProperties(PropertyTreeElement element, HashSet<OWLEntity> set, int type) {
+        if(!set.add(element.getEntity()))
+            return false;
+
+      if(NeOnUIPlugin.getDefault().getPreferenceStore().getBoolean(OWLPlugin.SHOW_PROPERTY_MEMBERS_OF_ALL_SUBPROPERTIES_PREFERENCE)){
+          boolean newSubclasses = false;        
+          ITreeDataProvider provider = element.getProvider();
+          switch (type) {
+              case ANNOTATION_PROPERTY:
+                  if(provider instanceof AnnotationPropertyHierarchyProvider){
+                      AnnotationPropertyHierarchyProvider propertyProvider = (AnnotationPropertyHierarchyProvider)provider;
+                      for(ITreeElement child : propertyProvider.getChildren(element, 0, 0)){
+                          if(child instanceof PropertyTreeElement){
+                              addSubpropertyToProperties((PropertyTreeElement)child, set, type);
+                          }
+                      }
+                  }
+                  break;
+              case DATA_PROPERTY:
+                  if(provider instanceof DataPropertyHierarchyProvider){
+                      DataPropertyHierarchyProvider propertyProvider = (DataPropertyHierarchyProvider)provider;
+                      for(ITreeElement child : propertyProvider.getChildren(element, 0, 0)){
+                          if(child instanceof PropertyTreeElement){
+                              addSubpropertyToProperties((PropertyTreeElement)child, set, type);
+                          }
+                      }
+                  }
+                  break;
+              case OBJECT_PROPERTY:
+                  if(provider instanceof ObjectPropertyHierarchyProvider){
+                      ObjectPropertyHierarchyProvider propertyProvider = (ObjectPropertyHierarchyProvider)provider;
+                      for(ITreeElement child : propertyProvider.getChildren(element, 0, 0)){
+                          if(child instanceof PropertyTreeElement){
+                              addSubpropertyToProperties((PropertyTreeElement)child, set, type);
+                          }
+                      }
+                  }
+                  break;
+        }
+          return newSubclasses;
+      }else{
+          return false;
+      } 
+    }
     private void updateItems() {
         int type = -1;
         
@@ -156,20 +243,39 @@ public class PropertyMemberViewContentProvider implements IStructuredContentProv
         }
 
         try {
-            String[][] results;
-            if (_selectedProperty instanceof OWLAnnotationProperty) {
-                type = 0;
-                results = new GetAnnotationHits(_projectId, _ontologyUri, (OWLAnnotationProperty) _selectedProperty).getResults();
-            } else  if (_selectedProperty instanceof OWLDataProperty) {
-                type = 1;
-                results = new GetDataPropertyMemberHitsForProperty(_projectId, _ontologyUri, (OWLDataProperty) _selectedProperty).getResults();
-            } else if (_selectedProperty instanceof OWLObjectProperty) {
-                type = 2;
-                results = new GetObjectPropertyMemberHitsForProperty(_projectId, _ontologyUri, (OWLObjectProperty) _selectedProperty).getResults();
+            LinkedList<String[][]> resultsList = null;
+            String[][] results = null;
+            
+            if (_selectedProperty instanceof AnnotationPropertyTreeElement && _selectedProperty.getEntity() instanceof OWLAnnotationProperty) {
+                type = ANNOTATION_PROPERTY;
+                resultsList = new LinkedList<String[][]>();
+                for(OWLEntity entity : determineAllProperties(_selectedProperty, type)){
+                    resultsList.add(new GetAnnotationHits(_projectId, _ontologyUri, (OWLAnnotationProperty) entity).getResults());
+                }
+            } else  if (_selectedProperty instanceof DataPropertyTreeElement && _selectedProperty.getEntity() instanceof OWLDataProperty) {
+                type = DATA_PROPERTY;
+                resultsList = new LinkedList<String[][]>();
+                for(OWLEntity entity : determineAllProperties(_selectedProperty, type)){
+                    resultsList.add(new GetDataPropertyMemberHitsForProperty(_projectId, _ontologyUri, (OWLDataProperty) entity).getResults());
+                }
+            } else if (_selectedProperty instanceof ObjectPropertyTreeElement && _selectedProperty.getEntity() instanceof OWLObjectProperty) {
+                type = OBJECT_PROPERTY;
+                resultsList = new LinkedList<String[][]>();
+                for(OWLEntity entity : determineAllProperties(_selectedProperty, type)){
+                    resultsList.add(new GetObjectPropertyMemberHitsForProperty(_projectId, _ontologyUri, (OWLObjectProperty) entity).getResults());
+                }
             } else {
                 results = null;
             }
-
+            if(resultsList != null){
+                LinkedList<String[]> list = new LinkedList<String[]>();
+                for(String[][] array : resultsList){
+                    for(String[] array2 : array){
+                        list.add(array2);
+                    }
+                }
+                results = list.toArray(new String[list.size()][]);
+            }
             if(results == null) {
                 //sth. is wrong
                 return;
@@ -179,7 +285,7 @@ public class PropertyMemberViewContentProvider implements IStructuredContentProv
             
             String[] idArray;
             try {
-                idArray = OWLGUIUtilities.getIdArray(_selectedProperty, _ontologyUri, _projectId);
+                idArray = OWLGUIUtilities.getIdArray(_selectedProperty.getEntity(), _ontologyUri, _projectId);
             } catch (NeOnCoreException e) {
                 idArray = new String[] {((OWLEntity)_selectedProperty).getIRI().toString()};
             }
@@ -191,25 +297,26 @@ public class PropertyMemberViewContentProvider implements IStructuredContentProv
                 String ontologyUri = hit[1];
 
                 OWLAxiom axiom = OWLUtilities.axiom(axiomText);
-                
+
                 OWLObject subject = null;
+                OWLObject property = null;
                 OWLObject value = null;
                 switch (type) {
-                    case 0:
-                        //annotation property
+                    case ANNOTATION_PROPERTY:
                         subject = ((OWLAnnotationAssertionAxiom)axiom).getSubject();
+                        property = ((OWLAnnotationAssertionAxiom)axiom).getProperty();
                         value = ((OWLAnnotationAssertionAxiom)axiom).getValue();
                         break;
 
-                    case 1:
-                        //data property
+                    case DATA_PROPERTY:
                         subject = ((OWLDataPropertyAssertionAxiom)axiom).getSubject();
+                        property = ((OWLDataPropertyAssertionAxiom)axiom).getProperty();
                         value = ((OWLDataPropertyAssertionAxiom)axiom).getObject();
                         break;
 
-                    case 2:
-                        //object property
+                    case OBJECT_PROPERTY:
                         subject = ((OWLObjectPropertyAssertionAxiom)axiom).getSubject();
+                        property = ((OWLObjectPropertyAssertionAxiom)axiom).getProperty();
                         value = ((OWLObjectPropertyAssertionAxiom)axiom).getObject();
                         break;
 
@@ -219,8 +326,21 @@ public class PropertyMemberViewContentProvider implements IStructuredContentProv
 
                 boolean isImported = !ontologyUri.equals(_ontologyUri);
                 
-                _items[i++] = new PropertyMember(subject, value, isImported, _ontologyUri, _projectId);
-                _textBox.setText(labelText + " (" + i + ")");  //$NON-NLS-1$ //$NON-NLS-2$
+                _items[i++] = new PropertyMember(subject, property,  _selectedProperty.getEntity(), value, isImported, _ontologyUri, _projectId);
+            }
+
+            _textBox.setText(labelText + " (" + _items.length + ")");  //$NON-NLS-1$ //$NON-NLS-2$
+            
+            if(NeOnUIPlugin.getDefault().getPreferenceStore().getBoolean(OWLPlugin.SHOW_PROPERTY_MEMBERS_OF_ALL_SUBPROPERTIES_PREFERENCE)){
+                int all = 0;
+                int direct = 0;
+                for(PropertyMember pM : _items){
+                    all++;
+                    if(pM.isDirect()){
+                        direct++;
+                    }
+                }
+                _textBox.setText(labelText + " " + direct + "|" + all + "");  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             }
             
             if(_items.length>0) {
@@ -269,6 +389,7 @@ public class PropertyMemberViewContentProvider implements IStructuredContentProv
      * 
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      */
+    @Override
     public void dispose() {
         _guiStore.removePropertyChangeListener(_guiListener);
         _owlStore.removePropertyChangeListener(_guiListener);
@@ -282,5 +403,12 @@ public class PropertyMemberViewContentProvider implements IStructuredContentProv
         } catch (NeOnCoreException e1) {
             new NeonToolkitExceptionHandler().handleException(e1);
         }
+    }
+
+    /**
+     * @return the isThirdColumnNedded
+     */
+    public boolean isThirdColumnNedded() {
+        return _isThirdColumnNedded;
     }
 }
