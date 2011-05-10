@@ -336,7 +336,19 @@
          </toolbar>
       </menuContribution>
    </extension>
-   
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="toolbar:com.ontoprise.ontostudio.owl.views.propertymemberview">
+         <command
+               commandId="com.ontoprise.ontostudio.owl.views.propertyMembersView.showPropertyMembersOfAllSubpropertiesCommand"
+               icon="icons/icon_TH_inher_co.gif"
+			   tooltip="%showPropertyMembersOfAllSubproperties"
+			   state="false"
+			   style="toogle">
+         </command>
+      </menuContribution>
+   </extension>
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
@@ -1247,6 +1259,11 @@
             commandId="com.ontoprise.ontostudio.owl.views.individualView.showIndividualsOfAllSubClassesCommand">
       </handler>
       <handler
+            class="com.ontoprise.ontostudio.owl.gui.views.propertymember.ShowPropertyMembersOfAllSubproperties"
+            commandId="com.ontoprise.ontostudio.owl.views.propertyMembersView.showPropertyMembersOfAllSubpropertiesCommand">
+      </handler>
+      
+      <handler
             class="com.ontoprise.ontostudio.search.owl.ui.SearchFromPopupHandler"
             commandId="com.ontoprise.ontostudio.owl.navigator.searchFromPopupMenu">
          <activeWhen>
@@ -1647,6 +1664,11 @@
             description="%showIndividualsOfAllSubClasses"
 			id="com.ontoprise.ontostudio.owl.views.individualView.showIndividualsOfAllSubClassesCommand"
             name="%showIndividualsOfAllSubClasses">
+      </command>
+      <command
+            description="%showPropertyMembersOfAllSubproperties"
+			id="com.ontoprise.ontostudio.owl.views.propertyMembersView.showPropertyMembersOfAllSubpropertiesCommand"
+            name="%showPropertyMembersOfAllSubproperties">
       </command>
       <command
             description="%searchFromPopupMenu_Text"

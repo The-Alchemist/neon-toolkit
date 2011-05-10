@@ -36,9 +36,10 @@ import com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.Object
 
 /**
  * A view that displays all property members of a selected property (data, object, or annotation)
- * in a 2-column tables.
+ * in a 3-column tables.
  * 
  * @author Michael Erdmann
+ * @author Nico Stieler
  */
 public class PropertyMemberView extends ViewPart implements ISelectionListener {
 
@@ -73,6 +74,7 @@ public class PropertyMemberView extends ViewPart implements ISelectionListener {
         _textBox = new Text(parent, SWT.LEFT);
         _textBox.setText(Messages.PropertyMemberView_0);
         _textBox.setVisible(true);
+        _textBox.setEditable(false);
 
         GridData gd = new GridData();
         gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -81,9 +83,9 @@ public class PropertyMemberView extends ViewPart implements ISelectionListener {
     }
 
     private void createViewer(Composite parent) {
-        final String[] titles = {Messages.PropertyMemberView_1, Messages.PropertyMemberView_2};
+        final String[] titles = {Messages.PropertyMemberView_1, Messages.PropertyMemberView_3, Messages.PropertyMemberView_2};
         
-        int w = Math.max((parent.getParent().getBounds().x-10)/2, 150);       
+        int w = Math.max((parent.getParent().getBounds().x-10)/3, 150);       
         _viewer = new TableViewer(parent, SWT.MULTI | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL);
         for (String title: titles) {
             TableViewerColumn column = new TableViewerColumn(_viewer, SWT.NONE);
@@ -144,7 +146,7 @@ public class PropertyMemberView extends ViewPart implements ISelectionListener {
                 projectId = ((IProjectElement) selectedProperty).getProjectName();
             }
 
-            _viewer.setInput(new Object[] {property, ontologyId, projectId, _textBox});
+            _viewer.setInput(new Object[] {selectedProperty, ontologyId, projectId, _textBox});
         }
     }
 
