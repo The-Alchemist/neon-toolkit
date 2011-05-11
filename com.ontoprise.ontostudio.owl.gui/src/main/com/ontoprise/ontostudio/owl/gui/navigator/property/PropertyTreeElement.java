@@ -24,5 +24,5 @@ public abstract class PropertyTreeElement extends AbstractOwlEntityTreeElement {
     public PropertyTreeElement(String uri, String ontologyUri, String projectId, ITreeDataProvider provider) {
         super(uri, ontologyUri, projectId, provider);
     }
-
+    
 }

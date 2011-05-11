@@ -23,6 +23,7 @@ import org.neontoolkit.core.util.IRIUtils;
 
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
+import com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyExtraDomaininfoTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement;
@@ -36,9 +37,9 @@ public class DomainViewLabelProvider extends LabelProvider implements IColorProv
 
     @Override
     public Color getBackground(Object element) {
-        if (element instanceof PropertyItem) {
-            PropertyItem item = (PropertyItem) element;
-            if (item.isImported()) {
+        if (element instanceof PropertyExtraDomaininfoTreeElement) {
+            PropertyExtraDomaininfoTreeElement treeElement = (PropertyExtraDomaininfoTreeElement) element;
+            if (treeElement.isImported()) {
                 return OWLGUIUtilities.COLOR_FOR_IMPORTED_AXIOMS;
             }
         }
@@ -47,9 +48,9 @@ public class DomainViewLabelProvider extends LabelProvider implements IColorProv
 
     @Override
     public Font getFont(Object element) {
-        if (element instanceof PropertyItem) {
-            PropertyItem item = (PropertyItem) element;
-            if (!item.isDirect()) {
+        if (element instanceof PropertyExtraDomaininfoTreeElement) {
+            PropertyExtraDomaininfoTreeElement treeElement = (PropertyExtraDomaininfoTreeElement) element;
+            if (!treeElement.isDirect()) {
                 return OWLGUIUtilities.FONT_FOR_INHERITED_AXIOMS;
             }
         }
@@ -62,18 +63,18 @@ public class DomainViewLabelProvider extends LabelProvider implements IColorProv
 
     @Override
     public String getText(Object element) {
-        if (element instanceof PropertyItem) {
-            PropertyItem item = (PropertyItem) element;
-            if (!item.isDirect()) {
-                String string = item.toString();
+        if (element instanceof PropertyExtraDomaininfoTreeElement) {
+            PropertyExtraDomaininfoTreeElement treeElement = (PropertyExtraDomaininfoTreeElement) element;
+            if (!treeElement.isDirect()) {
+                String string = treeElement.toString();
                 string += " ["; //$NON-NLS-1$
-                Set<String> clazzUris = item.getOWLClasses();
+                Set<String> clazzUris = treeElement.getOWLClasses();
                 if(clazzUris.size() > 0){
                     for(String clazzUri : clazzUris){
                         try {
                             string += OWLGUIUtilities.getEntityLabel(OWLUtilities.description(IRIUtils.ensureValidIRISyntax(clazzUri)), 
-                                    item.getOntologyUri(), 
-                                    item.getProjectName());
+                                    treeElement.getOntologyUri(), 
+                                    treeElement.getProjectName());
                         } catch (NeOnCoreException e) {
                             string += clazzUri;
                         }
@@ -91,13 +92,13 @@ public class DomainViewLabelProvider extends LabelProvider implements IColorProv
 
     @Override
     public Image getImage(Object element) {
-        if(element instanceof PropertyItem){
-            PropertyItem item = (PropertyItem) element;
-            if (item.getPropertyTreeElement() instanceof DataPropertyTreeElement) {
+        if(element instanceof PropertyExtraDomaininfoTreeElement){
+            PropertyExtraDomaininfoTreeElement treeElement = (PropertyExtraDomaininfoTreeElement) element;
+            if (treeElement instanceof DataPropertyTreeElement) {
                 return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.DATA_PROPERTY);
-            } else if (item.getPropertyTreeElement() instanceof ObjectPropertyTreeElement) {
+            } else if (treeElement instanceof ObjectPropertyTreeElement) {
                 return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.OBJECT_PROPERTY);
-            } else if (item.getPropertyTreeElement() instanceof AnnotationPropertyTreeElement) {
+            } else if (treeElement instanceof AnnotationPropertyTreeElement) {
                 return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.ANNOTATION_PROPERTY);
             }
         }
