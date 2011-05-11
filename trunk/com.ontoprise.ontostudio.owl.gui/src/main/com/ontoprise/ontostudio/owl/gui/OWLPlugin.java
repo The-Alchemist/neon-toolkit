@@ -78,7 +78,7 @@ public class OWLPlugin extends AbstractUIPlugin {
 
     public static final String SHOW_INSTANCES_OF_ALL_SUBCLASSES_PREFERENCE = OWLPlugin.class.getName() + ".showInstancesOfAllSubclasses"; //$NON-NLS-1$
     public static final String SHOW_PROPERTY_MEMBERS_OF_ALL_SUBPROPERTIES_PREFERENCE = OWLPlugin.class.getName() + ".showPropertyMembersOfAllSubproperties"; //$NON-NLS-1$
-//    public static final String SHOW_INSTANCES_OF_ALL_SUBCLASSES_PREFERENCE = OWLPlugin.class.getName() + ".showInstancesOfAllSubclasses"; //$NON-NLS-1$ DOMAIN
+    public static final String SHOW_PROPERTIES_OF_ALL_SUPERCLASSES_PREFERENCE = OWLPlugin.class.getName() + ".showPropertiesOfAllSuperclasses"; //$NON-NLS-1$ DOMAIN
 //    public static final String SHOW_INSTANCES_OF_ALL_SUBCLASSES_PREFERENCE = OWLPlugin.class.getName() + ".showInstancesOfAllSubclasses"; //$NON-NLS-1$ RANGE
 
     // The shared instance.

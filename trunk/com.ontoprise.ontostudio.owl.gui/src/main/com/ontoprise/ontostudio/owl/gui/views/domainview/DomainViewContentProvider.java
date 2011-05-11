@@ -10,6 +10,10 @@
 
 package com.ontoprise.ontostudio.owl.gui.views.domainview;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -22,8 +26,10 @@ import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.neontoolkit.gui.navigator.ITreeDataProvider;
+import org.neontoolkit.gui.navigator.ITreeElement;
 import org.neontoolkit.gui.navigator.elements.IOntologyElement;
 import org.neontoolkit.gui.navigator.elements.IProjectElement;
+import org.neontoolkit.gui.navigator.elements.TreeElementPath;
 import org.semanticweb.owlapi.model.OWLAnnotationPropertyDomainAxiom;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -35,10 +41,11 @@ import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyDomainAxiom;
 
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
+import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzHierarchyProvider;
+import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement;
-import com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.clazz.GetPropertiesForDomainHits;
@@ -55,8 +62,7 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
     /**
      * The items to display;
      */
-//    private AbstractOwlEntityTreeElement[] _items;
-    private PropertyTreeElement[] _items;
+    private PropertyItem[] _items;
 
     /**
      * The view displaying the properties for classes (an instance of DomainView)
@@ -67,7 +73,7 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
     private IPreferenceStore _guiStore;
     private IPreferenceStore _owlStore;
 
-    String _selectedClazz;
+    ClazzTreeElement _selectedClazzTreeElement;
     String _ontologyUri;
     String _projectId;
 
@@ -112,6 +118,10 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
                         }
                     });
                 }
+                if (event.getProperty().equals(OWLPlugin.SHOW_PROPERTIES_OF_ALL_SUPERCLASSES_PREFERENCE)) {
+                    forceUpdate();
+                    _propertyTree.refresh();
+              }
             }
 
         };
@@ -132,7 +142,6 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
             }
 
         };
-
         _guiStore.addPropertyChangeListener(_guiListener);
         _owlStore.addPropertyChangeListener(_owlListener);
     }
@@ -145,7 +154,7 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
     @Override
     public Object[] getElements(Object parent) {
         if (_items == null) {
-            return new PropertyTreeElement[0];
+            return new PropertyItem[0];
         }
         return _items;
     }
@@ -154,57 +163,111 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
         if (newInput instanceof Object[]) {
             Object[] array = (Object[]) newInput;
-            if (array[0] instanceof OWLClass) {
-                OWLClass elem = (OWLClass) array[0];
-                if (elem.getIRI().toString().equals(_selectedClazz) && array[1].equals(_ontologyUri) && array[2].equals(_projectId)) {
+            if (array[0] instanceof ClazzTreeElement) {
+                ClazzTreeElement elem = (ClazzTreeElement) array[0];
+                if (_selectedClazzTreeElement != null && elem.getId().equals(getSelectedClazz()) && array[1].equals(_ontologyUri) && array[2].equals(_projectId)) {
                     return;
                 }
-                _selectedClazz = elem.getIRI().toString();//OWLUTIL??
+                _selectedClazzTreeElement = elem;
                 _ontologyUri = (String) array[1];
                 _projectId = (String) array[2];
                 updateItems();
             }
         } else {
             _projectId = null;
-            _selectedClazz = ""; //$NON-NLS-1$
+            _selectedClazzTreeElement = null;
         }
     }
 
     public boolean update() {
         updateItems();
         return true;
+    } 
+    /**
+     * @param element 
+     * @return
+     */
+    private HashSet<String> determineClasses(ClazzTreeElement element) {
+        HashSet<String> set = new HashSet<String>();
+        set.add(element.getId());
+        
+        if(NeOnUIPlugin.getDefault().getPreferenceStore().getBoolean(OWLPlugin.SHOW_PROPERTIES_OF_ALL_SUPERCLASSES_PREFERENCE)){
+            ITreeDataProvider provider = element.getProvider();
+            if(provider instanceof ClazzHierarchyProvider){
+                ClazzHierarchyProvider clazzHierarchyProvider = (ClazzHierarchyProvider)provider;
+                TreeElementPath[] pathElem = clazzHierarchyProvider.getPathElements(element);
+        
+                for(TreeElementPath path : pathElem){
+                    for(ITreeElement parent : path.toArray()){
+                        if(parent instanceof ClazzTreeElement){
+                            set.add(((ClazzTreeElement)parent).getId());
+                        }
+                    }
+                }
+            }
+        }
+        return set;
     }
-
     private void updateItems() {
-        if (_selectedClazz == null || _ontologyUri == null) {
+        if (_selectedClazzTreeElement == null || getSelectedClazz() == null || _ontologyUri == null) {
             return;
         }
 
         try {
+            HashSet<String> domainClasses = determineClasses(_selectedClazzTreeElement);
+
+            LinkedList<String[]> resultsList = new LinkedList<String[]>();
+            String[][] _propertyHits = null;
             
-            String[][] _propertyHits = new GetPropertiesForDomainHits(_projectId, _ontologyUri, _selectedClazz).getResults();
-            _items = new PropertyTreeElement[_propertyHits.length];
+            for(String domainClass : domainClasses){
+                for(String[] array2 : new GetPropertiesForDomainHits(_projectId, _ontologyUri, domainClass).getResults()){
+                    String[] array = new String[array2.length + 1];
+                    for(int i = 0; i < array2.length; i++)
+                        array[i] = array2[i];
+                    array[array.length - 1] = domainClass;
+                    resultsList.add(array);
+                }
+            }
+            
+            if(resultsList != null){
+                _propertyHits = resultsList.toArray(new String[resultsList.size()][]);
+            }
+            HashMap<OWLEntity,PropertyItem> propertyItemList = new HashMap<OWLEntity,PropertyItem>();
             
             ITreeDataProvider treeDataProvider = null;
-            
-            int i = 0;
+
             for (String[] hit: _propertyHits) {
                 String axiomText = hit[0];
                 String ontologyUri = hit[1];
+                String domainClass = hit[hit.length - 1];
 
                 boolean isImported = !ontologyUri.equals(_ontologyUri);
                 OWLAxiom axiom = OWLUtilities.axiom(axiomText);
                 OWLEntity property;
                 if(axiom instanceof OWLAnnotationPropertyDomainAxiom) {
                     property = ((OWLAnnotationPropertyDomainAxiom)axiom).getProperty();
-                    _items[i] = new AnnotationPropertyTreeElement(property, _ontologyUri, _projectId, treeDataProvider);
-                    _items[i++].setIsImported(isImported);
+                    AnnotationPropertyTreeElement treeElement = new AnnotationPropertyTreeElement(property, _ontologyUri, _projectId, treeDataProvider);
+                    treeElement.setIsImported(isImported);
+                    PropertyItem propertyItem = propertyItemList.get(property);
+                    if(propertyItem == null){
+                        propertyItemList.put(property, new PropertyItem(treeElement, (OWLClass) _selectedClazzTreeElement.getEntity(), domainClass));
+                    }else{
+                        if(!propertyItem.add(treeElement, (OWLClass) _selectedClazzTreeElement.getEntity(), domainClass))
+                            System.out.println("hmm - that should not happen"); //$NON-NLS-1$
+                    }
                     
                 } else if(axiom instanceof OWLDataPropertyDomainAxiom) {
                     try {
                         property = (OWLDataProperty)((OWLDataPropertyDomainAxiom)axiom).getProperty();
-                        _items[i] = new DataPropertyTreeElement(property, _ontologyUri, _projectId, treeDataProvider);
-                        _items[i++].setIsImported(isImported);
+                        DataPropertyTreeElement treeElement = new DataPropertyTreeElement(property, _ontologyUri, _projectId, treeDataProvider);
+                        treeElement.setIsImported(isImported);
+                        PropertyItem propertyItem = propertyItemList.get(property);
+                        if(propertyItem == null){
+                            propertyItemList.put(property, new PropertyItem(treeElement, (OWLClass) _selectedClazzTreeElement.getEntity(), domainClass));
+                        }else{
+                            if(!propertyItem.add(treeElement, (OWLClass) _selectedClazzTreeElement.getEntity(), domainClass))
+                                System.out.println("hmm - that should not happen"); //$NON-NLS-1$
+                        }
                     } catch (ClassCastException e) {
                         // ignore, in case of DataPropertyExpression
                         continue;
@@ -213,8 +276,15 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
                 } else if(axiom instanceof OWLObjectPropertyDomainAxiom) {
                     try {
                         property = (OWLObjectProperty)((OWLObjectPropertyDomainAxiom)axiom).getProperty();
-                        _items[i] = new ObjectPropertyTreeElement(property, _ontologyUri, _projectId, treeDataProvider);
-                        _items[i++].setIsImported(isImported);
+                        DataPropertyTreeElement treeElement = new DataPropertyTreeElement(property, _ontologyUri, _projectId, treeDataProvider);
+                        treeElement.setIsImported(isImported);
+                        PropertyItem propertyItem = propertyItemList.get(property);
+                        if(propertyItem == null){
+                            propertyItemList.put(property, new PropertyItem(treeElement, (OWLClass) _selectedClazzTreeElement.getEntity(), domainClass));
+                        }else{
+                            if(!propertyItem.add(treeElement, (OWLClass) _selectedClazzTreeElement.getEntity(), domainClass))
+                                System.out.println("hmm - that should not happen"); //$NON-NLS-1$
+                        }
 
                     } catch (ClassCastException e) {
                         // ignore, in case of ObjectPropertyExpression
@@ -224,9 +294,12 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
                     //ignore
                     continue;
                 }
-                
-//                Arrays.sort(_items);
             }
+            _items = new PropertyItem[propertyItemList.size()];
+            int i = 0;
+            for(OWLEntity key : propertyItemList.keySet())
+                _items[i++] = propertyItemList.get(key);
+//          Arrays.sort(_items);
         } catch (CommandException e) {
             new NeonToolkitExceptionHandler().handleException(e);
         } catch (NeOnCoreException e) {
@@ -249,8 +322,8 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
 
     @Override
     public Object[] getChildren(Object parent) {
-        String projectId = ((IProjectElement) parent).getProjectName();
-        String ontologyId = ((IOntologyElement) parent).getOntologyUri();
+        String projectId = ((PropertyItem) parent).getProjectName();
+        String ontologyId = ((PropertyItem) parent).getOntologyUri();
 
         registerAxiomListener(projectId, ontologyId);
         return new Object[0];
@@ -258,8 +331,8 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
 
     @Override
     public boolean hasChildren(Object parent) {
-        String projectId = ((IProjectElement) parent).getProjectName();
-        String ontologyId = ((IOntologyElement) parent).getOntologyUri();
+        String projectId = ((PropertyItem) parent).getProjectName();
+        String ontologyId = ((PropertyItem) parent).getOntologyUri();
 
         registerAxiomListener(projectId, ontologyId);
         return false;
@@ -276,12 +349,20 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
         _owlStore.removePropertyChangeListener(_owlListener);
     }
 
+    /**
+     * Returns the current class the view is displaying the properties of.
+     */
+    public String getSelectedClazz() {
+        if(_selectedClazzTreeElement == null)
+            return ""; //$NON-NLS-1$
+        return _selectedClazzTreeElement.getId();
+    }
     public void setStyle(int style) {
         _style = style;
         updateItems();
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private void registerAxiomListener(String projectId, String ontologyId) {
         try {
             Class[] clazzes = new Class[] {OWLClassAssertionAxiom.class};
