@@ -13,7 +13,7 @@ import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 
 /**
  * @author Nico Stieler
- * Created on: 29.03.2011
+ * Created on: 09.05.2011
  */
 public class ShowPropertyMembersOfAllSubproperties extends AbstractHandler {
 

@@ -172,8 +172,10 @@ public class PropertyMemberViewContentProvider implements IStructuredContentProv
                 //nothing to do
             }else{
                 _items = null;
+                _selectedProperty = null;
                 _textBox.setText(Messages.PropertyMemberView_0);
             }
+        }else{
         }
     }
 
