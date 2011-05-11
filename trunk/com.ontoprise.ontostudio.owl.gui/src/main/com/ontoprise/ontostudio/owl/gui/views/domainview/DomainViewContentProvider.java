@@ -27,8 +27,6 @@ import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.neontoolkit.gui.navigator.ITreeDataProvider;
 import org.neontoolkit.gui.navigator.ITreeElement;
-import org.neontoolkit.gui.navigator.elements.IOntologyElement;
-import org.neontoolkit.gui.navigator.elements.IProjectElement;
 import org.neontoolkit.gui.navigator.elements.TreeElementPath;
 import org.semanticweb.owlapi.model.OWLAnnotationPropertyDomainAxiom;
 import org.semanticweb.owlapi.model.OWLAxiom;
@@ -43,9 +41,10 @@ import org.semanticweb.owlapi.model.OWLObjectPropertyDomainAxiom;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzHierarchyProvider;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
-import com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyTreeElement;
+import com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyExtraDomaininfoTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement;
+import com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.clazz.GetPropertiesForDomainHits;
@@ -62,7 +61,7 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
     /**
      * The items to display;
      */
-    private PropertyItem[] _items;
+    private PropertyExtraDomaininfoTreeElement[] _items;
 
     /**
      * The view displaying the properties for classes (an instance of DomainView)
@@ -154,7 +153,7 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
     @Override
     public Object[] getElements(Object parent) {
         if (_items == null) {
-            return new PropertyItem[0];
+            return new PropertyExtraDomaininfoTreeElement[0];
         }
         return _items;
     }
@@ -209,7 +208,7 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
         return set;
     }
     private void updateItems() {
-        if (_selectedClazzTreeElement == null || getSelectedClazz() == null || _ontologyUri == null) {
+        if (_selectedClazzTreeElement == null || _selectedClazzTreeElement.getEntity() == null || getSelectedClazz() == null || _ontologyUri == null) {
             return;
         }
 
@@ -232,7 +231,7 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
             if(resultsList != null){
                 _propertyHits = resultsList.toArray(new String[resultsList.size()][]);
             }
-            HashMap<OWLEntity,PropertyItem> propertyItemList = new HashMap<OWLEntity,PropertyItem>();
+            HashMap<OWLEntity,PropertyExtraDomaininfoTreeElement> propertyItemList = new HashMap<OWLEntity,PropertyExtraDomaininfoTreeElement>();
             
             ITreeDataProvider treeDataProvider = null;
 
@@ -243,59 +242,50 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
 
                 boolean isImported = !ontologyUri.equals(_ontologyUri);
                 OWLAxiom axiom = OWLUtilities.axiom(axiomText);
-                OWLEntity property;
-                if(axiom instanceof OWLAnnotationPropertyDomainAxiom) {
-                    property = ((OWLAnnotationPropertyDomainAxiom)axiom).getProperty();
-                    AnnotationPropertyTreeElement treeElement = new AnnotationPropertyTreeElement(property, _ontologyUri, _projectId, treeDataProvider);
-                    treeElement.setIsImported(isImported);
-                    PropertyItem propertyItem = propertyItemList.get(property);
-                    if(propertyItem == null){
-                        propertyItemList.put(property, new PropertyItem(treeElement, (OWLClass) _selectedClazzTreeElement.getEntity(), domainClass));
-                    }else{
-                        if(!propertyItem.add(treeElement, (OWLClass) _selectedClazzTreeElement.getEntity(), domainClass))
-                            System.out.println("hmm - that should not happen"); //$NON-NLS-1$
-                    }
-                    
-                } else if(axiom instanceof OWLDataPropertyDomainAxiom) {
-                    try {
-                        property = (OWLDataProperty)((OWLDataPropertyDomainAxiom)axiom).getProperty();
-                        DataPropertyTreeElement treeElement = new DataPropertyTreeElement(property, _ontologyUri, _projectId, treeDataProvider);
-                        treeElement.setIsImported(isImported);
-                        PropertyItem propertyItem = propertyItemList.get(property);
-                        if(propertyItem == null){
-                            propertyItemList.put(property, new PropertyItem(treeElement, (OWLClass) _selectedClazzTreeElement.getEntity(), domainClass));
-                        }else{
-                            if(!propertyItem.add(treeElement, (OWLClass) _selectedClazzTreeElement.getEntity(), domainClass))
-                                System.out.println("hmm - that should not happen"); //$NON-NLS-1$
-                        }
-                    } catch (ClassCastException e) {
-                        // ignore, in case of DataPropertyExpression
-                        continue;
-                    }
-                    
-                } else if(axiom instanceof OWLObjectPropertyDomainAxiom) {
-                    try {
-                        property = (OWLObjectProperty)((OWLObjectPropertyDomainAxiom)axiom).getProperty();
-                        DataPropertyTreeElement treeElement = new DataPropertyTreeElement(property, _ontologyUri, _projectId, treeDataProvider);
-                        treeElement.setIsImported(isImported);
-                        PropertyItem propertyItem = propertyItemList.get(property);
-                        if(propertyItem == null){
-                            propertyItemList.put(property, new PropertyItem(treeElement, (OWLClass) _selectedClazzTreeElement.getEntity(), domainClass));
-                        }else{
-                            if(!propertyItem.add(treeElement, (OWLClass) _selectedClazzTreeElement.getEntity(), domainClass))
-                                System.out.println("hmm - that should not happen"); //$NON-NLS-1$
-                        }
+                OWLEntity property = null;
+                PropertyExtraDomaininfoTreeElement treeElement = propertyItemList.get(property);
 
-                    } catch (ClassCastException e) {
-                        // ignore, in case of ObjectPropertyExpression
+                if(treeElement == null){
+                    if(axiom instanceof OWLAnnotationPropertyDomainAxiom) {
+                        property = ((OWLAnnotationPropertyDomainAxiom)axiom).getProperty();
+                        treeElement = new AnnotationPropertyTreeElement(property, _ontologyUri, _projectId, treeDataProvider, (OWLClass)_selectedClazzTreeElement.getEntity(), domainClass);
+                        
+                    } else if(axiom instanceof OWLDataPropertyDomainAxiom) {
+                        try {
+                            property = (OWLDataProperty)((OWLDataPropertyDomainAxiom)axiom).getProperty();
+                            treeElement = new DataPropertyTreeElement(property, _ontologyUri, _projectId, treeDataProvider, (OWLClass)_selectedClazzTreeElement.getEntity(), domainClass);
+                        } catch (ClassCastException e) {
+                            // ignore, in case of DataPropertyExpression
+                            continue;
+                        }
+                        
+                    } else if(axiom instanceof OWLObjectPropertyDomainAxiom) {
+                        try {
+                            property = (OWLObjectProperty)((OWLObjectPropertyDomainAxiom)axiom).getProperty();
+                            treeElement = new ObjectPropertyTreeElement(property, _ontologyUri, _projectId, treeDataProvider, (OWLClass)_selectedClazzTreeElement.getEntity(), domainClass);
+                        } catch (ClassCastException e) {
+                            // ignore, in case of ObjectPropertyExpression
+                            continue;
+                        }
+                    } else {
+                        //ignore
                         continue;
                     }
-                } else {
-                    //ignore
-                    continue;
+                }else{
+                    treeElement.add((OWLClass) _selectedClazzTreeElement.getEntity(), domainClass);
                 }
+
+                treeElement.setIsImported(isImported);
+                treeElement.resetIsDirect(
+                        (_selectedClazzTreeElement != null && 
+                         _selectedClazzTreeElement.getEntity() != null && 
+                         _selectedClazzTreeElement.getEntity() instanceof OWLClass)
+                         ? ((OWLClass) _selectedClazzTreeElement.getEntity()).toStringID().equals(domainClass)
+                         : false);
+                if(property != null)
+                    propertyItemList.put(property, treeElement);
             }
-            _items = new PropertyItem[propertyItemList.size()];
+            _items = new PropertyExtraDomaininfoTreeElement[propertyItemList.size()];
             int i = 0;
             for(OWLEntity key : propertyItemList.keySet())
                 _items[i++] = propertyItemList.get(key);
@@ -322,8 +312,8 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
 
     @Override
     public Object[] getChildren(Object parent) {
-        String projectId = ((PropertyItem) parent).getProjectName();
-        String ontologyId = ((PropertyItem) parent).getOntologyUri();
+        String projectId = ((PropertyExtraDomaininfoTreeElement) parent).getProjectName();
+        String ontologyId = ((PropertyExtraDomaininfoTreeElement) parent).getOntologyUri();
 
         registerAxiomListener(projectId, ontologyId);
         return new Object[0];
@@ -331,8 +321,8 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
 
     @Override
     public boolean hasChildren(Object parent) {
-        String projectId = ((PropertyItem) parent).getProjectName();
-        String ontologyId = ((PropertyItem) parent).getOntologyUri();
+        String projectId = ((PropertyExtraDomaininfoTreeElement) parent).getProjectName();
+        String ontologyId = ((PropertyExtraDomaininfoTreeElement) parent).getOntologyUri();
 
         registerAxiomListener(projectId, ontologyId);
         return false;
