@@ -85,7 +85,7 @@ public class PropertyMemberView extends ViewPart implements ISelectionListener {
     private void createViewer(Composite parent) {
         final String[] titles = {Messages.PropertyMemberView_1, Messages.PropertyMemberView_3, Messages.PropertyMemberView_2};
         
-        int w = Math.max((parent.getParent().getBounds().x-10)/3, 150);       
+        int w = Math.max((parent.getParent().getBounds().x-10)/3, 100);       
         _viewer = new TableViewer(parent, SWT.MULTI | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL);
         for (String title: titles) {
             TableViewerColumn column = new TableViewerColumn(_viewer, SWT.NONE);
@@ -123,21 +123,9 @@ public class PropertyMemberView extends ViewPart implements ISelectionListener {
             StructuredSelection sSelection = (StructuredSelection) selection;
             Object selectedProperty = sSelection.getFirstElement();
             
-            OWLNamedObject property = null;
             String projectId = null;
             String ontologyId = null;
             
-            if (selectedProperty instanceof ObjectPropertyTreeElement) {
-                property = ((ObjectPropertyTreeElement) selectedProperty).getEntity();
-            } else if (selectedProperty instanceof DataPropertyTreeElement) {
-                property = ((DataPropertyTreeElement) selectedProperty).getEntity();
-            } else if (selectedProperty instanceof AnnotationPropertyTreeElement) {
-                property = ((AnnotationPropertyTreeElement) selectedProperty).getEntity();
-            } 
-
-            if(property == null) {
-                return;
-            }
 
             if (selectedProperty instanceof IOntologyElement) {
                 ontologyId = ((IOntologyElement) selectedProperty).getOntologyUri();
