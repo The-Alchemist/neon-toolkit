@@ -339,6 +339,19 @@
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
+            locationURI="toolbar:com.ontoprise.ontostudio.owl.views.domainview">
+         <command
+               commandId="com.ontoprise.ontostudio.owl.views.domainView.showPropertiesOfAllSuperclassesCommand"
+               icon="icons/icon_TH_inher_co.gif"
+			   tooltip="%showPropertiesOfAllSuperclasses"
+			   state="false"
+			   style="toogle">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
             locationURI="toolbar:com.ontoprise.ontostudio.owl.views.propertymemberview">
          <command
                commandId="com.ontoprise.ontostudio.owl.views.propertyMembersView.showPropertyMembersOfAllSubpropertiesCommand"
@@ -1262,7 +1275,10 @@
             class="com.ontoprise.ontostudio.owl.gui.views.propertymember.ShowPropertyMembersOfAllSubproperties"
             commandId="com.ontoprise.ontostudio.owl.views.propertyMembersView.showPropertyMembersOfAllSubpropertiesCommand">
       </handler>
-      
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.views.domainview.ShowPropertiesOfAllSuperclasses"
+            commandId="com.ontoprise.ontostudio.owl.views.domainView.showPropertiesOfAllSuperclassesCommand">
+      </handler>
       <handler
             class="com.ontoprise.ontostudio.search.owl.ui.SearchFromPopupHandler"
             commandId="com.ontoprise.ontostudio.owl.navigator.searchFromPopupMenu">
@@ -1669,6 +1685,11 @@
             description="%showPropertyMembersOfAllSubproperties"
 			id="com.ontoprise.ontostudio.owl.views.propertyMembersView.showPropertyMembersOfAllSubpropertiesCommand"
             name="%showPropertyMembersOfAllSubproperties">
+      </command>
+      <command
+            description="%showPropertiesOfAllSuperclasses"
+			id="com.ontoprise.ontostudio.owl.views.domainView.showPropertiesOfAllSuperclassesCommand"
+            name="%showPropertiesOfAllSuperclasses">
       </command>
       <command
             description="%searchFromPopupMenu_Text"

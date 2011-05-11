@@ -21,19 +21,16 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
-import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.IHelpContextIds;
 import org.neontoolkit.gui.navigator.MTreeView;
 import org.neontoolkit.gui.navigator.elements.IOntologyElement;
 import org.neontoolkit.gui.navigator.elements.IProjectElement;
-import org.semanticweb.owlapi.model.OWLClass;
 
-import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzFolderTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
-import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 
 /**
  * @author Michael Erdmann
+ * @author Nico Stieler
  */
 public class DomainView extends ViewPart implements ISelectionListener {
 
@@ -44,7 +41,6 @@ public class DomainView extends ViewPart implements ISelectionListener {
 
     private String _projectId = null;
     private String _ontologyId;
-    private OWLClass _clazz;
 
     public DomainView() {
     }
@@ -89,21 +85,12 @@ public class DomainView extends ViewPart implements ISelectionListener {
             }
 
             if (o instanceof ClazzTreeElement) {
-                _clazz = (OWLClass)((ClazzTreeElement) o).getEntity();
-                _viewer.setInput(new Object[] {_clazz, _ontologyId, _projectId});
+                ClazzTreeElement treeElement = (ClazzTreeElement) o;
+                _viewer.setInput(new Object[] {treeElement, _ontologyId, _projectId});
                 
-            } else if (o instanceof ClazzFolderTreeElement) {
-                try {
-                    _clazz = OWLModelFactory.getOWLDataFactory(_projectId).getOWLThing();
-                    _viewer.setInput(new Object[] {_clazz, _ontologyId, _projectId});
-                } catch (NeOnCoreException e) {
-                    _viewer.setInput(null);
-                    _clazz = null;
-                }
-                
-            } else {
+            }
+            else {
                 _viewer.setInput(null);
-                _clazz = null;
             }
         }
     }
