@@ -23,7 +23,7 @@ import org.neontoolkit.core.util.IRIUtils;
 
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
-import com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyExtraDomaininfoTreeElement;
+import com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyExtraDomainRangeinfoTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement;
@@ -37,8 +37,8 @@ public class DomainViewLabelProvider extends LabelProvider implements IColorProv
 
     @Override
     public Color getBackground(Object element) {
-        if (element instanceof PropertyExtraDomaininfoTreeElement) {
-            PropertyExtraDomaininfoTreeElement treeElement = (PropertyExtraDomaininfoTreeElement) element;
+        if (element instanceof PropertyExtraDomainRangeinfoTreeElement) {
+            PropertyExtraDomainRangeinfoTreeElement treeElement = (PropertyExtraDomainRangeinfoTreeElement) element;
             if (treeElement.isImported()) {
                 return OWLGUIUtilities.COLOR_FOR_IMPORTED_AXIOMS;
             }
@@ -48,8 +48,8 @@ public class DomainViewLabelProvider extends LabelProvider implements IColorProv
 
     @Override
     public Font getFont(Object element) {
-        if (element instanceof PropertyExtraDomaininfoTreeElement) {
-            PropertyExtraDomaininfoTreeElement treeElement = (PropertyExtraDomaininfoTreeElement) element;
+        if (element instanceof PropertyExtraDomainRangeinfoTreeElement) {
+            PropertyExtraDomainRangeinfoTreeElement treeElement = (PropertyExtraDomainRangeinfoTreeElement) element;
             if (!treeElement.isDirect()) {
                 return OWLGUIUtilities.FONT_FOR_INHERITED_AXIOMS;
             }
@@ -63,20 +63,20 @@ public class DomainViewLabelProvider extends LabelProvider implements IColorProv
 
     @Override
     public String getText(Object element) {
-        if (element instanceof PropertyExtraDomaininfoTreeElement) {
-            PropertyExtraDomaininfoTreeElement treeElement = (PropertyExtraDomaininfoTreeElement) element;
+        if (element instanceof PropertyExtraDomainRangeinfoTreeElement) {
+            PropertyExtraDomainRangeinfoTreeElement treeElement = (PropertyExtraDomainRangeinfoTreeElement) element;
             if (!treeElement.isDirect()) {
                 String string = treeElement.toString();
                 string += " ["; //$NON-NLS-1$
-                Set<String> clazzUris = treeElement.getOWLClasses();
-                if(clazzUris.size() > 0){
-                    for(String clazzUri : clazzUris){
+                Set<String> entityUris = treeElement.getOWLEntities();
+                if(entityUris.size() > 0){
+                    for(String entityUri : entityUris){
                         try {
-                            string += OWLGUIUtilities.getEntityLabel(OWLUtilities.description(IRIUtils.ensureValidIRISyntax(clazzUri)), 
+                            string += OWLGUIUtilities.getEntityLabel(OWLUtilities.description(IRIUtils.ensureValidIRISyntax(entityUri)), 
                                     treeElement.getOntologyUri(), 
                                     treeElement.getProjectName());
                         } catch (NeOnCoreException e) {
-                            string += clazzUri;
+                            string += entityUri;
                         }
                         string += ", "; //$NON-NLS-1$
                     }
@@ -92,8 +92,8 @@ public class DomainViewLabelProvider extends LabelProvider implements IColorProv
 
     @Override
     public Image getImage(Object element) {
-        if(element instanceof PropertyExtraDomaininfoTreeElement){
-            PropertyExtraDomaininfoTreeElement treeElement = (PropertyExtraDomaininfoTreeElement) element;
+        if(element instanceof PropertyExtraDomainRangeinfoTreeElement){
+            PropertyExtraDomainRangeinfoTreeElement treeElement = (PropertyExtraDomainRangeinfoTreeElement) element;
             if (treeElement instanceof DataPropertyTreeElement) {
                 return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.DATA_PROPERTY);
             } else if (treeElement instanceof ObjectPropertyTreeElement) {

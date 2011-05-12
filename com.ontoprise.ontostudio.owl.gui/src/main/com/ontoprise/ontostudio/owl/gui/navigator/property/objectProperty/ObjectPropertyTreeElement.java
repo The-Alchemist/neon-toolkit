@@ -14,14 +14,14 @@ import org.neontoolkit.gui.navigator.ITreeDataProvider;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyExtraDomaininfoTreeElement;
+import com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyExtraDomainRangeinfoTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyTreeElement;
 
 /**
  * TreeElements used for object properties in the tree.
  */
 
-public class ObjectPropertyTreeElement extends PropertyExtraDomaininfoTreeElement {
+public class ObjectPropertyTreeElement extends PropertyExtraDomainRangeinfoTreeElement {
 
     /**
      * @param elementId
@@ -41,8 +41,8 @@ public class ObjectPropertyTreeElement extends PropertyExtraDomaininfoTreeElemen
     /**
      * should only be used for Domain and Range View
      */
-    public ObjectPropertyTreeElement(OWLEntity entity, String ontologyUri, String projectName, ITreeDataProvider provider, OWLClass selectedClass, String owlClass) {
-        super(entity, ontologyUri, projectName, provider, selectedClass, owlClass);
+    public ObjectPropertyTreeElement(OWLEntity entity, String ontologyUri, String projectName, ITreeDataProvider provider, OWLEntity selectedEntity, String owlEntity) {
+        super(entity, ontologyUri, projectName, provider, selectedEntity, owlEntity);
     }
 
     /*

@@ -41,7 +41,7 @@ import org.semanticweb.owlapi.model.OWLObjectPropertyDomainAxiom;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzHierarchyProvider;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
-import com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyExtraDomaininfoTreeElement;
+import com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyExtraDomainRangeinfoTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement;
@@ -61,7 +61,7 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
     /**
      * The items to display;
      */
-    private PropertyExtraDomaininfoTreeElement[] _items;
+    private PropertyExtraDomainRangeinfoTreeElement[] _items;
 
     /**
      * The view displaying the properties for classes (an instance of DomainView)
@@ -117,7 +117,7 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
                         }
                     });
                 }
-                if (event.getProperty().equals(OWLPlugin.SHOW_PROPERTIES_OF_ALL_SUPERCLASSES_PREFERENCE)) {
+                if (event.getProperty().equals(OWLPlugin.SHOW_PROPERTIES_OF_ALL_SUPERCLASSES_IN_DOMAIN_VIEW_PREFERENCE)) {
                     forceUpdate();
                     _propertyTree.refresh();
               }
@@ -153,7 +153,7 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
     @Override
     public Object[] getElements(Object parent) {
         if (_items == null) {
-            return new PropertyExtraDomaininfoTreeElement[0];
+            return new PropertyExtraDomainRangeinfoTreeElement[0];
         }
         return _items;
     }
@@ -190,7 +190,7 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
         HashSet<String> set = new HashSet<String>();
         set.add(element.getId());
         
-        if(NeOnUIPlugin.getDefault().getPreferenceStore().getBoolean(OWLPlugin.SHOW_PROPERTIES_OF_ALL_SUPERCLASSES_PREFERENCE)){
+        if(NeOnUIPlugin.getDefault().getPreferenceStore().getBoolean(OWLPlugin.SHOW_PROPERTIES_OF_ALL_SUPERCLASSES_IN_DOMAIN_VIEW_PREFERENCE)){
             ITreeDataProvider provider = element.getProvider();
             if(provider instanceof ClazzHierarchyProvider){
                 ClazzHierarchyProvider clazzHierarchyProvider = (ClazzHierarchyProvider)provider;
@@ -231,7 +231,7 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
             if(resultsList != null){
                 _propertyHits = resultsList.toArray(new String[resultsList.size()][]);
             }
-            HashMap<OWLEntity,PropertyExtraDomaininfoTreeElement> propertyItemList = new HashMap<OWLEntity,PropertyExtraDomaininfoTreeElement>();
+            HashMap<OWLEntity,PropertyExtraDomainRangeinfoTreeElement> propertyItemList = new HashMap<OWLEntity,PropertyExtraDomainRangeinfoTreeElement>();
             
             ITreeDataProvider treeDataProvider = null;
 
@@ -243,7 +243,7 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
                 boolean isImported = !ontologyUri.equals(_ontologyUri);
                 OWLAxiom axiom = OWLUtilities.axiom(axiomText);
                 OWLEntity property = null;
-                PropertyExtraDomaininfoTreeElement treeElement = propertyItemList.get(property);
+                PropertyExtraDomainRangeinfoTreeElement treeElement = propertyItemList.get(property);
 
                 if(treeElement == null){
                     if(axiom instanceof OWLAnnotationPropertyDomainAxiom) {
@@ -285,7 +285,7 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
                 if(property != null)
                     propertyItemList.put(property, treeElement);
             }
-            _items = new PropertyExtraDomaininfoTreeElement[propertyItemList.size()];
+            _items = new PropertyExtraDomainRangeinfoTreeElement[propertyItemList.size()];
             int i = 0;
             for(OWLEntity key : propertyItemList.keySet())
                 _items[i++] = propertyItemList.get(key);
@@ -312,8 +312,8 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
 
     @Override
     public Object[] getChildren(Object parent) {
-        String projectId = ((PropertyExtraDomaininfoTreeElement) parent).getProjectName();
-        String ontologyId = ((PropertyExtraDomaininfoTreeElement) parent).getOntologyUri();
+        String projectId = ((PropertyExtraDomainRangeinfoTreeElement) parent).getProjectName();
+        String ontologyId = ((PropertyExtraDomainRangeinfoTreeElement) parent).getOntologyUri();
 
         registerAxiomListener(projectId, ontologyId);
         return new Object[0];
@@ -321,8 +321,8 @@ public class DomainViewContentProvider implements IStructuredContentProvider, IT
 
     @Override
     public boolean hasChildren(Object parent) {
-        String projectId = ((PropertyExtraDomaininfoTreeElement) parent).getProjectName();
-        String ontologyId = ((PropertyExtraDomaininfoTreeElement) parent).getOntologyUri();
+        String projectId = ((PropertyExtraDomainRangeinfoTreeElement) parent).getProjectName();
+        String ontologyId = ((PropertyExtraDomainRangeinfoTreeElement) parent).getOntologyUri();
 
         registerAxiomListener(projectId, ontologyId);
         return false;

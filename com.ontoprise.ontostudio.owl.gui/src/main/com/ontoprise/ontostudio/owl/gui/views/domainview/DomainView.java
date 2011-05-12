@@ -90,7 +90,7 @@ public class DomainView extends ViewPart implements ISelectionListener {
                 
             }
             else {
-                _viewer.setInput(null);
+            	_viewer.setInput(null);
             }
         }
     }

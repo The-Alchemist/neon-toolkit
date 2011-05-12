@@ -4,6 +4,10 @@
  ******************************************************************************/
 package com.ontoprise.ontostudio.owl.gui.views.rangeView;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -16,20 +20,22 @@ import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.neontoolkit.gui.navigator.ITreeDataProvider;
-import org.neontoolkit.gui.navigator.elements.IOntologyElement;
-import org.neontoolkit.gui.navigator.elements.IProjectElement;
+import org.neontoolkit.gui.navigator.ITreeElement;
+import org.neontoolkit.gui.navigator.elements.TreeElementPath;
 import org.semanticweb.owlapi.model.OWLAnnotationPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLNamedObject;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyRangeAxiom;
 
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
-import com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyTreeElement;
+import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
+import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzHierarchyProvider;
+import com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyExtraDomainRangeinfoTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement;
@@ -51,10 +57,10 @@ public class RangeViewContentProvider implements IStructuredContentProvider, ITr
      * The items to display;
      */
 //    private AbstractOwlEntityTreeElement[] _items;
-    private PropertyTreeElement[] _items;
+    private PropertyExtraDomainRangeinfoTreeElement[] _items;
 
     /**
-     * The view displaying the properties for classes (an instance of RangeView)
+     * The view displaying the properties for classes data type (an instance of RangeView)
      */
     private TreeViewer _propertyTree;
     private IPropertyChangeListener _guiListener;
@@ -62,7 +68,7 @@ public class RangeViewContentProvider implements IStructuredContentProvider, ITr
     private IPreferenceStore _guiStore;
     private IPreferenceStore _owlStore;
 
-    String _selectedRange;
+    AbstractOwlEntityTreeElement _selectedTreeElement;
     String _ontologyUri;
     String _projectId;
 
@@ -106,6 +112,10 @@ public class RangeViewContentProvider implements IStructuredContentProvider, ITr
                         }
                     });
                 }
+                if (event.getProperty().equals(OWLPlugin.SHOW_PROPERTIES_OF_ALL_SUPERCLASSES_IN_RANGE_VIEW_PREFERENCE)) {
+                    forceUpdate();
+                    _propertyTree.refresh();
+              }
             }
 
         };
@@ -139,7 +149,7 @@ public class RangeViewContentProvider implements IStructuredContentProvider, ITr
     @Override
     public Object[] getElements(Object parent) {
         if (_items == null) {
-            return new PropertyTreeElement[0];
+            return new PropertyExtraDomainRangeinfoTreeElement[0];
         }
         return _items;
     }
@@ -148,19 +158,19 @@ public class RangeViewContentProvider implements IStructuredContentProvider, ITr
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
         if (newInput instanceof Object[]) {
             Object[] array = (Object[]) newInput;
-            if (array[0] instanceof OWLNamedObject) {
-                OWLNamedObject elem = (OWLNamedObject) array[0];
-                if (elem.getIRI().toString().equals(_selectedRange) && array[1].equals(_ontologyUri) && array[2].equals(_projectId)) {
+            if (array[0] instanceof AbstractOwlEntityTreeElement) {
+                AbstractOwlEntityTreeElement elem = (AbstractOwlEntityTreeElement) array[0];
+                if (_selectedTreeElement != null && elem.getId().equals(getSelectedClazz()) && array[1].equals(_ontologyUri) && array[2].equals(_projectId)) {
                     return;
                 }
-                _selectedRange = elem.getIRI().toString();
+                _selectedTreeElement = elem;
                 _ontologyUri = (String) array[1];
                 _projectId = (String) array[2];
                 updateItems();
             }
         } else {
             _projectId = null;
-            _selectedRange = ""; //$NON-NLS-1$
+            _selectedTreeElement = null;
         }
     }
 
@@ -168,66 +178,122 @@ public class RangeViewContentProvider implements IStructuredContentProvider, ITr
         updateItems();
         return true;
     }
+    /**
+     * @param element 
+     * @return
+     */
+    private HashSet<String> determineEntities(AbstractOwlEntityTreeElement element) {
+        HashSet<String> set = new HashSet<String>();
+        set.add(element.getId());
+        
+        if(NeOnUIPlugin.getDefault().getPreferenceStore().getBoolean(OWLPlugin.SHOW_PROPERTIES_OF_ALL_SUPERCLASSES_IN_RANGE_VIEW_PREFERENCE)){
+            ITreeDataProvider provider = element.getProvider();
+            if(provider instanceof ClazzHierarchyProvider){
+                ClazzHierarchyProvider clazzHierarchyProvider = (ClazzHierarchyProvider)provider;
+                TreeElementPath[] pathElem = clazzHierarchyProvider.getPathElements(element);
+        
+                for(TreeElementPath path : pathElem){
+                    for(ITreeElement parent : path.toArray()){
+                        if(parent instanceof AbstractOwlEntityTreeElement){
+                            set.add(((AbstractOwlEntityTreeElement)parent).getId());
+                        }
+                    }
+                }
+            }
+        }
+        return set;
+    }
 
     private void updateItems() {
-        if (_selectedRange == null || _ontologyUri == null) {
+        if (_selectedTreeElement == null || _selectedTreeElement.getEntity() == null || getSelectedClazz() == null || _ontologyUri == null) {
             return;
         }
 
         try {
-            String[][] _propertyHits = new GetPropertiesForRangeHits(_projectId, _ontologyUri, _selectedRange).getResults();
-             _items = new PropertyTreeElement[_propertyHits.length];
+            HashSet<String> rangeEntities = determineEntities(_selectedTreeElement);
+
+            LinkedList<String[]> resultsList = new LinkedList<String[]>();
+            String[][] _propertyHits = null;
+            
+            for(String rangeEntity : rangeEntities){
+                for(String[] array2 : new GetPropertiesForRangeHits(_projectId, _ontologyUri, rangeEntity).getResults()){
+                    String[] array = new String[array2.length + 1];
+                    for(int i = 0; i < array2.length; i++)
+                        array[i] = array2[i];
+                    array[array.length - 1] = rangeEntity;
+                    resultsList.add(array);
+                }
+            }
+            
+            if(resultsList != null){
+                _propertyHits = resultsList.toArray(new String[resultsList.size()][]);
+            }
+            HashMap<OWLEntity,PropertyExtraDomainRangeinfoTreeElement> propertyItemList = new HashMap<OWLEntity,PropertyExtraDomainRangeinfoTreeElement>();
             
             ITreeDataProvider treeDataProvider = null;
-            
-            int i = 0;
+
             for (String[] hit: _propertyHits) {
                 String axiomText = hit[0];
                 String ontologyUri = hit[1];
+                String rangeEntity = hit[hit.length - 1];
 
                 boolean isImported = !ontologyUri.equals(_ontologyUri);
-                OWLAxiom axiom = (OWLAxiom) OWLUtilities.axiom(axiomText);
-                
-                OWLEntity property;
-                if(axiom instanceof OWLAnnotationPropertyRangeAxiom) {
-                    property = ((OWLAnnotationPropertyRangeAxiom)axiom).getProperty();
-                    _items[i] = new AnnotationPropertyTreeElement(property, _ontologyUri, _projectId, treeDataProvider);
-                    _items[i++].setIsImported(isImported);
-                    
-                } else if(axiom instanceof OWLDataPropertyRangeAxiom) {
-                    try {
-                        property = (OWLDataProperty)((OWLDataPropertyRangeAxiom)axiom).getProperty();
-                        _items[i] = new DataPropertyTreeElement(property, _ontologyUri, _projectId, treeDataProvider);
-                        _items[i++].setIsImported(isImported);
-                    } catch (ClassCastException e) {
-                        // ignore, in case of DataPropertyExpression
-                        continue;
-                    }
-                    
-                } else if(axiom instanceof OWLObjectPropertyRangeAxiom) {
-                    try {
-                        property = (OWLObjectProperty)((OWLObjectPropertyRangeAxiom)axiom).getProperty();
-                        _items[i] = new ObjectPropertyTreeElement(property, _ontologyUri, _projectId, treeDataProvider);
-                        _items[i++].setIsImported(isImported);
+                OWLAxiom axiom = OWLUtilities.axiom(axiomText);
+                OWLEntity property = null;
+                PropertyExtraDomainRangeinfoTreeElement treeElement = propertyItemList.get(property);
 
-                    } catch (ClassCastException e) {
-                        // ignore, in case of ObjectPropertyExpression
+                if(treeElement == null){
+                    if(axiom instanceof OWLAnnotationPropertyRangeAxiom) {
+                        property = ((OWLAnnotationPropertyRangeAxiom)axiom).getProperty();
+                        treeElement = new AnnotationPropertyTreeElement(property, _ontologyUri, _projectId, treeDataProvider, _selectedTreeElement.getEntity(), rangeEntity);
+                        
+                    } else if(axiom instanceof OWLDataPropertyRangeAxiom) {
+                        try {
+                            property = (OWLDataProperty)((OWLDataPropertyRangeAxiom)axiom).getProperty();
+                            treeElement = new DataPropertyTreeElement(property, _ontologyUri, _projectId, treeDataProvider, _selectedTreeElement.getEntity(), rangeEntity);
+                        } catch (ClassCastException e) {
+                            // ignore, in case of DataPropertyExpression
+                            continue;
+                        }
+                        
+                    } else if(axiom instanceof OWLObjectPropertyRangeAxiom) {
+                        try {
+                            property = (OWLObjectProperty)((OWLObjectPropertyRangeAxiom)axiom).getProperty();
+                            treeElement = new ObjectPropertyTreeElement(property, _ontologyUri, _projectId, treeDataProvider, _selectedTreeElement.getEntity(), rangeEntity);
+                        } catch (ClassCastException e) {
+                            // ignore, in case of ObjectPropertyExpression
+                            continue;
+                        }
+                    } else {
+                        //ignore
                         continue;
                     }
-                } else {
-                    //ignore
-                    continue;
+                }else{
+                    treeElement.add((OWLEntity) _selectedTreeElement.getEntity(), rangeEntity);
                 }
+
+                treeElement.setIsImported(isImported);
                 
-//                Arrays.sort(_items);
+                treeElement.resetIsDirect(
+                        (_selectedTreeElement != null && 
+                         _selectedTreeElement.getEntity() != null && 
+                         _selectedTreeElement.getEntity() instanceof OWLEntity)
+                         ? ((OWLEntity) _selectedTreeElement.getEntity()).toStringID().equals(rangeEntity)
+                         : false);
+                if(property != null)
+                    propertyItemList.put(property, treeElement);
             }
+            _items = new PropertyExtraDomainRangeinfoTreeElement[propertyItemList.size()];
+            int i = 0;
+            for(OWLEntity key : propertyItemList.keySet())
+                _items[i++] = propertyItemList.get(key);
+//          Arrays.sort(_items);
         } catch (CommandException e) {
             new NeonToolkitExceptionHandler().handleException(e);
         } catch (NeOnCoreException e) {
             new NeonToolkitExceptionHandler().handleException(e);
         } 
     }
-    
 
     public void forceUpdate() {
         if (_projectId == null) {
@@ -240,11 +306,11 @@ public class RangeViewContentProvider implements IStructuredContentProvider, ITr
     public Object getParent(Object child) {
         return null;
     }
-
+    
     @Override
     public Object[] getChildren(Object parent) {
-        String projectId = ((IProjectElement) parent).getProjectName();
-        String ontologyId = ((IOntologyElement) parent).getOntologyUri();
+        String projectId = ((PropertyExtraDomainRangeinfoTreeElement) parent).getProjectName();
+        String ontologyId = ((PropertyExtraDomainRangeinfoTreeElement) parent).getOntologyUri();
 
         registerAxiomListener(projectId, ontologyId);
         return new Object[0];
@@ -252,8 +318,8 @@ public class RangeViewContentProvider implements IStructuredContentProvider, ITr
 
     @Override
     public boolean hasChildren(Object parent) {
-        String projectId = ((IProjectElement) parent).getProjectName();
-        String ontologyId = ((IOntologyElement) parent).getOntologyUri();
+        String projectId = ((PropertyExtraDomainRangeinfoTreeElement) parent).getProjectName();
+        String ontologyId = ((PropertyExtraDomainRangeinfoTreeElement) parent).getOntologyUri();
 
         registerAxiomListener(projectId, ontologyId);
         return false;
@@ -269,13 +335,20 @@ public class RangeViewContentProvider implements IStructuredContentProvider, ITr
         _guiStore.removePropertyChangeListener(_guiListener);
         _owlStore.removePropertyChangeListener(_owlListener);
     }
-
+    /**
+     * Returns the current class the view is displaying the properties of.
+     */
+    public String getSelectedClazz() {
+        if(_selectedTreeElement == null)
+            return ""; //$NON-NLS-1$
+        return _selectedTreeElement.getId();
+    }
     public void setStyle(int style) {
         _style = style;
         updateItems();
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private void registerAxiomListener(String projectId, String ontologyId) {
         try {
             Class[] clazzes = new Class[] {OWLClassAssertionAxiom.class};
