@@ -10,14 +10,18 @@
 
 package com.ontoprise.ontostudio.owl.gui.navigator.ontology;
 
+import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.history.IOWLHistoryEntry;
 import org.neontoolkit.gui.navigator.ITreeDataProvider;
 import org.neontoolkit.gui.navigator.elements.AbstractOntologyTreeElement;
 import org.neontoolkit.gui.navigator.ontology.IOntologyTreeElement;
 
+import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.history.OWLHistoryEntry;
 import com.ontoprise.ontostudio.owl.gui.history.OWLOntologyHistoryEntry;
+import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
+import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 
 /**
@@ -75,7 +79,16 @@ public class OntologyTreeElement extends AbstractOntologyTreeElement implements 
             if (result.length() == 0) {
                 result = getOntologyUri();
             }
+        }else if (idDisplayStyle == OWLPlugin.DISPLAY_LANGUAGE){
+            try {
+                String[] idArray = OWLGUIUtilities.getIdArray(OWLModelFactory.getOWLModel(getOntologyUri(), getProjectName()).getOntology(), getOntologyUri(), getProjectName());
+                if(idArray.length > 3)
+                    result = idArray[3];
+            } catch (NeOnCoreException e) {
+                // nothing to do
+            }
         }
+//        else if(idDisplayStyle == NeOnUIPlugin.)
         return result;
     }
     /*
