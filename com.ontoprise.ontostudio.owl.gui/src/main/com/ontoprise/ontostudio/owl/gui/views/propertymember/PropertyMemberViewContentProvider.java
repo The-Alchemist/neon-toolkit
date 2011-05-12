@@ -157,25 +157,28 @@ public class PropertyMemberViewContentProvider implements IStructuredContentProv
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
         if (newInput instanceof Object[]) {
             Object[] array = (Object[]) newInput;
-            if (array[0] instanceof PropertyTreeElement) {
-                PropertyTreeElement property = (PropertyTreeElement) array[0];
-                if (property.equals(_selectedProperty) && array[1].equals(_ontologyUri) && array[2].equals(_projectId)) {
-                    return;
-                }
-                _selectedProperty = property;
-                _ontologyUri = (String) array[1];
-                _projectId = (String) array[2];
-                _textBox = (Text) array[3];
-                
-                updateItems();
-            }else if(array[0] instanceof PropertyMember){
+            if(array[0] instanceof PropertyMember){
                 //nothing to do
             }else{
-                _items = null;
-                _selectedProperty = null;
-                _textBox.setText(Messages.PropertyMemberView_0);
+                if(array.length >= 4 && array[3] instanceof Text)
+                    _textBox = (Text) array[3];
+                if (array[0] instanceof PropertyTreeElement) {
+                    PropertyTreeElement property = (PropertyTreeElement) array[0];
+                    if (property.equals(_selectedProperty) && array[1].equals(_ontologyUri) && array[2].equals(_projectId)) {
+                        return;
+                    }
+                    _selectedProperty = property;
+                    _ontologyUri = (String) array[1];
+                    _projectId = (String) array[2];
+                    
+                    updateItems();
+                }else{
+                    _items = null;
+                    _selectedProperty = null;
+                    _textBox.setText(Messages.PropertyMemberView_0);
+                }
             }
-        }else{
+            
         }
     }
 

@@ -16,10 +16,13 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.core.util.IRIUtils;
 
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
+import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 /**
  * 
  * @author Nico Stieler
@@ -54,9 +57,31 @@ public class IndividualViewLabelProvider extends LabelProvider implements IColor
     public Color getForeground(Object element) {
         return null;
     }
+    @SuppressWarnings("rawtypes")
     @Override
-    public String getText(Object obj) {
-        return obj.toString();
+    public String getText(Object element) {
+        if (element instanceof IIndividualTreeElement) {
+            IIndividualTreeElement item = (IIndividualTreeElement) element;
+            if (!item.isDirect()) {
+                String string = item.toString();
+                string += " ["; //$NON-NLS-1$
+                String[] clazzUris = item.getClazzUris();
+                if(clazzUris.length > 0){
+                    for(String clazzUri : clazzUris){
+                        try {
+                            string += OWLGUIUtilities.getEntityLabel(OWLUtilities.description(IRIUtils.ensureValidIRISyntax(clazzUri)), item.getOntologyUri(), item.getProjectName());
+                        } catch (NeOnCoreException e) {
+                            string += clazzUri;
+                        }
+                        string += ", "; //$NON-NLS-1$
+                    }
+                    string = string.substring(0, string.length() - 2);
+                }
+                string += "]"; //$NON-NLS-1$
+                return string;
+            }
+        }
+        return element.toString();
     }
     @Override
     public Image getImage(Object obj) {
