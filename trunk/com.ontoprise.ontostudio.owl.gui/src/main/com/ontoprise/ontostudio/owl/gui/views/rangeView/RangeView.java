@@ -15,17 +15,13 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
-import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.IHelpContextIds;
 import org.neontoolkit.gui.navigator.MTreeView;
 import org.neontoolkit.gui.navigator.elements.IOntologyElement;
 import org.neontoolkit.gui.navigator.elements.IProjectElement;
-import org.semanticweb.owlapi.model.OWLClass;
 
-import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzFolderTreeElement;
-import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
-import com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeTreeElement;
-import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
+import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
+
 /**
  * 
  * @author Nico Stieler
@@ -41,7 +37,6 @@ public class RangeView extends ViewPart implements ISelectionListener {
 
     private String _projectId = null;
     private String _ontologyId;
-    private OWLClass _clazz;
 
     public RangeView() {
     }
@@ -86,27 +81,13 @@ public class RangeView extends ViewPart implements ISelectionListener {
                 _ontologyId = ((IOntologyElement) o).getOntologyUri();
             }
 
-            if (o instanceof ClazzTreeElement) {
-                _clazz = (OWLClass)((ClazzTreeElement) o).getEntity();
-                _viewer.setInput(new Object[] {_clazz, _ontologyId, _projectId});
+            if (o instanceof AbstractOwlEntityTreeElement) {
+                AbstractOwlEntityTreeElement treeElement = (AbstractOwlEntityTreeElement) o;
+                _viewer.setInput(new Object[] {treeElement, _ontologyId, _projectId});
                 
-            } else if (o instanceof ClazzFolderTreeElement) {
-                try {
-                    _clazz = OWLModelFactory.getOWLDataFactory(_projectId).getOWLThing();
-                    _viewer.setInput(new Object[] {_clazz, _ontologyId, _projectId});
-                } catch (NeOnCoreException e) {
-                    _viewer.setInput(null);
-                    _clazz = null;
-                }
-                
-            } else {
-                if(o instanceof DatatypeTreeElement){
-                    Object _entity = ((DatatypeTreeElement) o).getEntity();
-                    _viewer.setInput(new Object[] {_entity, _ontologyId, _projectId});
-                }else{
-                    _viewer.setInput(null);
-                    _clazz = null;
-                }
+            }
+            else {
+                _viewer.setInput(null);
             }
         }
     }

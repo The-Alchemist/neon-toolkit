@@ -341,9 +341,22 @@
       <menuContribution
             locationURI="toolbar:com.ontoprise.ontostudio.owl.views.domainview">
          <command
-               commandId="com.ontoprise.ontostudio.owl.views.domainView.showPropertiesOfAllSuperclassesCommand"
+               commandId="com.ontoprise.ontostudio.owl.views.domainView.showPropertiesOfAllSuperclassesInTheDomainViewCommand"
                icon="icons/icon_TH_inher_co.gif"
-			   tooltip="%showPropertiesOfAllSuperclasses"
+			   tooltip="%showPropertiesOfAllSuperclassesInTheDomainView"
+			   state="false"
+			   style="toogle">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="toolbar:com.ontoprise.ontostudio.owl.views.rangeview">
+         <command
+               commandId="com.ontoprise.ontostudio.owl.views.rangeView.showPropertiesOfAllSuperclassesInTheRangeViewCommand"
+               icon="icons/icon_TH_inher_co.gif"
+			   tooltip="%showPropertiesOfAllSuperclassesInTheRangeView"
 			   state="false"
 			   style="toogle">
          </command>
@@ -1276,8 +1289,12 @@
             commandId="com.ontoprise.ontostudio.owl.views.propertyMembersView.showPropertyMembersOfAllSubpropertiesCommand">
       </handler>
       <handler
-            class="com.ontoprise.ontostudio.owl.gui.views.domainview.ShowPropertiesOfAllSuperclasses"
-            commandId="com.ontoprise.ontostudio.owl.views.domainView.showPropertiesOfAllSuperclassesCommand">
+            class="com.ontoprise.ontostudio.owl.gui.views.domainview.ShowPropertiesOfAllSuperclassesInTheDomainView"
+            commandId="com.ontoprise.ontostudio.owl.views.domainView.showPropertiesOfAllSuperclassesInTheDomainViewCommand">
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.views.rangeView.ShowPropertiesOfAllSuperclassesInTheRangeView"
+            commandId="com.ontoprise.ontostudio.owl.views.rangeView.showPropertiesOfAllSuperclassesInTheRangeViewCommand">
       </handler>
       <handler
             class="com.ontoprise.ontostudio.search.owl.ui.SearchFromPopupHandler"
@@ -1687,9 +1704,14 @@
             name="%showPropertyMembersOfAllSubproperties">
       </command>
       <command
-            description="%showPropertiesOfAllSuperclasses"
-			id="com.ontoprise.ontostudio.owl.views.domainView.showPropertiesOfAllSuperclassesCommand"
-            name="%showPropertiesOfAllSuperclasses">
+            description="%showPropertiesOfAllSuperclassesInTheDomainView"
+			id="com.ontoprise.ontostudio.owl.views.domainView.showPropertiesOfAllSuperclassesInTheDomainViewCommand"
+            name="%showPropertiesOfAllSuperclassesInTheDomainView">
+      </command>
+      <command
+            description="%showPropertiesOfAllSuperclassesInTheRangeView"
+			id="com.ontoprise.ontostudio.owl.views.rangeView.showPropertiesOfAllSuperclassesInTheRangeViewCommand"
+            name="%showPropertiesOfAllSuperclassesInTheRangeView">
       </command>
       <command
             description="%searchFromPopupMenu_Text"
