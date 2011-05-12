@@ -180,6 +180,28 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
         }
     }
 
+    protected String getLabelForOntologies(String uri) {
+        String result = getQName(uri);
+
+        if (_owlModel == null || _language == null) {
+            return result;
+        }
+
+        try {
+            Set<Object> annotations = _owlModel.getOntologyAnnotations(RDFS_LABEL);
+            for(Object object : annotations){
+                if(object instanceof OWLLiteral){
+                    result = ((OWLLiteral)object).getLiteral();
+                }
+            }
+//            String label = getLocalizedLiteral(annotations);
+//            if(label != null) result = label;
+        } catch (NeOnCoreException e) {
+            // log.error()
+        }
+        return result;
+    }
+    
     protected String getLabel(String uri) {
         String result = getQName(uri);
 
@@ -242,6 +264,13 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
         return y.toString();
     }
 
+    protected String[] createStandardArrayForOntology(String uri) {
+        if (getLocalName(uri).length() == 0) {
+            return new String[] {getURI(uri), getQName(uri), getQName(uri), getLabelForOntologies(uri)};
+        } else {
+            return new String[] {getURI(uri), getLocalName(uri), getQName(uri), getLabelForOntologies(uri)};
+        }
+    }
     protected String[] createStandardArray(String uri) {
         if (getLocalName(uri).length() == 0) {
             return new String[] {getURI(uri), getQName(uri), getQName(uri), getLabel(uri)};
@@ -341,7 +370,7 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
     @Override
     public String[] visit(OWLOntology object) {
         String uri = OWLUtilities.toString(object.getOntologyID());
-        return createStandardArray(uri);
+        return createStandardArrayForOntology(uri);
     }
 
     @Override

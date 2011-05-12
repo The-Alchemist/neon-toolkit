@@ -32,7 +32,25 @@ public class ManchesterSyntaxVisitorIdType extends ManchesterSyntaxVisitor {
        super(owlModel, language);
        _idDisplayStyle = idDisplayStyle;
     }
-    
+
+    protected String[] createStandardArrayForOntologies(String uri) {
+        switch (_idDisplayStyle) {
+            case NeOnUIPlugin.DISPLAY_URI:
+                return new String[] {getURI(uri), getQName(uri)};
+            case NeOnUIPlugin.DISPLAY_QNAME:
+                return new String[] {getQName(uri), getQName(uri)};
+            case NeOnUIPlugin.DISPLAY_LOCAL:
+                if (getLocalName(uri).length() == 0) {
+                    return new String[] {getQName(uri), getQName(uri)};
+                } else {
+                    return new String[] {getLocalName(uri), getQName(uri)};
+                }
+            case OWLPlugin.DISPLAY_LANGUAGE:
+                return new String[] {getLabel(uri), getQName(uri)};
+            default:
+                return new String[] {getQName(uri), getQName(uri)};
+        }
+    }
     @Override
     protected String[] createStandardArray(String uri) {
         switch (_idDisplayStyle) {
