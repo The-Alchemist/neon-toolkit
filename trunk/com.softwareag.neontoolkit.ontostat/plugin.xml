@@ -15,16 +15,16 @@
             title="Classes">
       </StatsProvider>
       <StatsProvider
-            id="com.softwareag.neontoolkit.ontostat.DataPropertiesStatsProvider"
-            order="2"
-            providerClass="com.softwareag.neontoolkit.ontostat.providers.DataPropertiesStatsProvider"
-            title="Data Properties">
-      </StatsProvider>
-      <StatsProvider
             id="com.softwareag.neontoolkit.ontostat.ObjectPropertiesStatsProvider"
-            order="3"
+            order="2"
             providerClass="com.softwareag.neontoolkit.ontostat.providers.ObjectPropertiesStatsProvider"
             title="Object Properties">
+      </StatsProvider>
+      <StatsProvider
+            id="com.softwareag.neontoolkit.ontostat.DataPropertiesStatsProvider"
+            order="3"
+            providerClass="com.softwareag.neontoolkit.ontostat.providers.DataPropertiesStatsProvider"
+            title="Data Properties">
       </StatsProvider>
       <StatsProvider
             id="com.softwareag.neontoolkit.ontostat.AnnotationsStatsProvider"
