@@ -54,6 +54,7 @@ public class ComplexClazzHierarchyProvider extends DefaultTreeDataProvider {
      * 
      * @see com.ontoprise.ontostudio.gui.navigator.ITreeDataProvider#getChildren(com.ontoprise.ontostudio.gui.navigator.ITreeElement, int, int)
      */
+    @Override
     public ITreeElement[] getChildren(ITreeElement parentElement, int topIndex, int amount) {
         assert (parentElement instanceof IOntologyElement);
         assert (parentElement instanceof IProjectElement);
@@ -66,6 +67,7 @@ public class ComplexClazzHierarchyProvider extends DefaultTreeDataProvider {
      * 
      * @see com.ontoprise.ontostudio.gui.navigator.ITreeDataProvider#getChildCount(com.ontoprise.ontostudio.gui.navigator.ITreeElement)
      */
+    @Override
     public int getChildCount(ITreeElement parentElement) {
 //        long x = System.currentTimeMillis();
         assert (parentElement instanceof IOntologyElement);
@@ -92,6 +94,7 @@ public class ComplexClazzHierarchyProvider extends DefaultTreeDataProvider {
      * 
      * @see com.ontoprise.ontostudio.gui.navigator.ITreeDataProvider#getElements(com.ontoprise.ontostudio.gui.navigator.ITreeElement, int, int)
      */
+    @Override
     public ITreeElement[] getElements(ITreeElement parentElement, int topIndex, int amount) {
 //        _log.debug("###PERFORMANCE### - Entering ComplexClazzHierarchyProvider.getElements()..."); //$NON-NLS-1$ 
         assert (parentElement instanceof IOntologyElement);
@@ -159,6 +162,7 @@ public class ComplexClazzHierarchyProvider extends DefaultTreeDataProvider {
      * 
      * @see com.ontoprise.ontostudio.gui.navigator.ITreeDataProvider#isDragSupported()
      */
+    @Override
     public boolean isDragSupported() {
         return true;
     }
@@ -168,6 +172,7 @@ public class ComplexClazzHierarchyProvider extends DefaultTreeDataProvider {
      * 
      * @see com.ontoprise.ontostudio.gui.navigator.ITreeDataProvider#isDropSupported()
      */
+    @Override
     public boolean isDropSupported() {
         return true;
     }
@@ -177,6 +182,7 @@ public class ComplexClazzHierarchyProvider extends DefaultTreeDataProvider {
      * 
      * @see com.ontoprise.ontostudio.gui.navigator.ITreeDataProvider#getPathElements(com.ontoprise.ontostudio.gui.navigator.ITreeElement)
      */
+    @Override
     public TreeElementPath[] getPathElements(ITreeElement element) {
         return new TreeElementPath[0];
     }
