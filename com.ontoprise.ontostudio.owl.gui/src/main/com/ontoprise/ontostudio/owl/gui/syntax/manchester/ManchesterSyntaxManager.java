@@ -425,8 +425,10 @@ public class ManchesterSyntaxManager implements ISyntaxManager {
     @Override
     public OWLAnnotationProperty parseAnnotationProperty(String value, OWLModel owlModel) throws NeOnCoreException {
         try {
-            OWLDataFactory factory = owlModel.getOWLDataFactory();
-            return factory.getOWLAnnotationProperty(getManchesterOWLSyntaxEditorParser(owlModel, value).parseIRI());
+//            OWLDataFactory factory = owlModel.getOWLDataFactory();
+//            return factory.getOWLAnnotationProperty(getManchesterOWLSyntaxEditorParser(owlModel, value).parseIRI());
+
+            return getManchesterOWLSyntaxEditorParser(owlModel, value).parseAnnotationProperty();
         } catch (ParserException e) {
             throw new InternalNeOnException(e);
         } catch (IllegalArgumentException e) {

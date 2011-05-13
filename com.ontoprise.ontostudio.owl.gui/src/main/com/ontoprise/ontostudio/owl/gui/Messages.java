@@ -157,6 +157,7 @@ public class Messages extends NLS {
     public static String MoveClazzPage_0;
     public static String MoveDataPropertyPage_0;
     public static String MoveObjectPropertyPage_0;
+    public static String MoveAnnotationPropertyPage_0;
 	public static String MovePropertyWizard_0;
 	public static String ClazzMoveChange_0;
 	public static String ClazzMoveChange_1;
@@ -201,6 +202,14 @@ public class Messages extends NLS {
 	public static String AnnotationsPropertyPage2_Value;
 	public static String AnnotationsPropertyPage2_Type;
 	public static String AnnotationsPropertyPage2_ErrorRetrievingData;
+    public static String AnnotationPropertyPropertyPage_SubProperties;
+    public static String AnnotationPropertyPropertyPage_SuperProperties;
+    public static String AnnotationPropertyPropertyPage_EquivalentProperties;
+    public static String AnnotationPropertyPropertyPage2_2;
+    public static String AnnotationPropertyPropertyPage2_3;
+    public static String AnnotationPropertyPropertyPage2_47;
+    public static String AnnotationPropertyTaxonomyPropertyPage_0;
+    public static String AnnotationPropertyTaxonomyPropertyPage_1;
 	public static String ObjectPropertyDeleteChange_0;
 	public static String ObjectPropertyDeleteChange_2;
 	public static String DataPropertyDeleteChange_0;

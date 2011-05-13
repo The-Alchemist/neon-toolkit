@@ -1,16 +1,10 @@
 /*****************************************************************************
- * Copyright (c) 2009 ontoprise GmbH.
- *
- * All rights reserved.
- *
- * This program and the accompanying materials are made available under the
- * Eclipse Public License v1.0 which accompanies this distribution,
- * and is available at http://www.eclipse.org/legal/epl-v10.html
+ * written by the NeOn Technologies Foundation Ltd.
+ * based on the Class MoveAnnotationPropertyProcessor with ontoprise GmbH copyrights 
  ******************************************************************************/
 
 package com.ontoprise.ontostudio.owl.gui.refactor.move.property;
 
-import org.eclipse.ltk.core.refactoring.Refactoring;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -25,27 +19,21 @@ import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyProvider;
 import com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyTreeElement;
-import com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyFolderProvider;
+import com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyFolderProvider;
 
-/* 
- * Created on: 24.05.2006
- * Created by: Dirk Wenke
- *
- * Keywords: UI, Refactor
- */
 /**
  * This class extends the ConceptSelectionPage by the options that can be applied to a concept move refactoring.
  * 
  * @author Nico Stieler
  */
 
-public class MoveObjectPropertyPage extends PropertySelectionPage {
+public class MoveAnnotationPropertyPage extends PropertySelectionPage {
 
-    private static final String PROVIDER_ID = "com.ontoprise.ontostudio.refactor.move.owl.objectproperty"; //$NON-NLS-1$
+    private static final String PROVIDER_ID = "com.ontoprise.ontostudio.refactor.move.owl.annotationproperty"; //$NON-NLS-1$
 
-    private MoveObjectPropertyProcessor _processor;
+    private MoveAnnotationPropertyProcessor _processor;
 
-    public MoveObjectPropertyPage(MoveObjectPropertyProcessor processor) {
+    public MoveAnnotationPropertyPage(MoveAnnotationPropertyProcessor processor) {
         super("MovePropertyInputPage"); //$NON-NLS-1$
         _processor = processor;
     }
@@ -57,7 +45,7 @@ public class MoveObjectPropertyPage extends PropertySelectionPage {
     @Override
     protected void createHeader(Composite composite) {
         Label label = new Label(composite, SWT.NONE);
-        label.setText(Messages.MoveObjectPropertyPage_0);
+        label.setText(Messages.MoveAnnotationPropertyPage_0);
         label.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
     }
     
@@ -78,15 +66,11 @@ public class MoveObjectPropertyPage extends PropertySelectionPage {
      */
     @Override
     public boolean isDestinationSet() {
-        MoveObjectPropertyProcessor processor = getMoveProcessor();
-        return processor.hasDestinationSet();
-//        return getMoveProcessor().hasDestinationSet();
+        return getMoveProcessor().hasDestinationSet();
     }
 
-    private MoveObjectPropertyProcessor getMoveProcessor() {
-        Refactoring refactoring = getRefactoring();
-        return (MoveObjectPropertyProcessor) refactoring.getAdapter(MoveObjectPropertyProcessor.class);
-//        return (MoveObjectPropertyProcessor) getRefactoring().getAdapter(MoveObjectPropertyProcessor.class);
+    private MoveAnnotationPropertyProcessor getMoveProcessor() {
+        return (MoveAnnotationPropertyProcessor) getRefactoring().getAdapter(MoveAnnotationPropertyProcessor.class);
     }
 
     @Override
@@ -101,7 +85,7 @@ public class MoveObjectPropertyPage extends PropertySelectionPage {
      */
     @Override
     public OntologyTreeElement getOntology() {
-        PropertyTreeElement[] elems = (PropertyTreeElement[]) ((MoveObjectPropertyProcessor) getRefactoring().getAdapter(MoveObjectPropertyProcessor.class)).getElements();
+        PropertyTreeElement[] elems = (PropertyTreeElement[]) ((MoveAnnotationPropertyProcessor) getRefactoring().getAdapter(MoveAnnotationPropertyProcessor.class)).getElements();
         OntologyTreeElement ontology = new OntologyTreeElement(elems[0].getProjectName(), elems[0].getOntologyUri(), TreeProviderManager.getDefault().getProvider(PROVIDER_ID, OntologyProvider.class));
         return ontology;
     }
@@ -113,6 +97,6 @@ public class MoveObjectPropertyPage extends PropertySelectionPage {
 
     @Override
     protected ITreeDataProvider getRootProvider(ITreeExtensionHandler handler) {
-        return handler.getProvider(ObjectPropertyFolderProvider.class);
+        return handler.getProvider(AnnotationPropertyFolderProvider.class);
     }
 }

@@ -20,6 +20,7 @@ import org.neontoolkit.gui.navigator.actions.AbstractSelectionBasedHandler;
 import org.neontoolkit.refactor.GenericRefactoringExecutionStarter;
 
 import com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyTreeElement;
+import com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement;
 
@@ -31,6 +32,8 @@ import com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.Object
  */
 /**
  * Action for moving concepts
+ * 
+ * @author Nico Stieler
  */
 public class MovePropertyHandler extends AbstractSelectionBasedHandler {
 
@@ -62,6 +65,10 @@ public class MovePropertyHandler extends AbstractSelectionBasedHandler {
                             parents);
                 } else if (objects.length > 0 && objects[0] instanceof DataPropertyTreeElement) {
                     GenericRefactoringExecutionStarter.startRefactoring(view.getTreeViewer().getTree().getShell(), "com.ontoprise.ontostudio.owl.gui.refactor.moveDataProperty", //$NON-NLS-1$
+                            objects,
+                            parents);
+                } else if (objects.length > 0 && objects[0] instanceof AnnotationPropertyTreeElement) {
+                    GenericRefactoringExecutionStarter.startRefactoring(view.getTreeViewer().getTree().getShell(), "com.ontoprise.ontostudio.owl.gui.refactor.moveAnnotationProperty", //$NON-NLS-1$
                             objects,
                             parents);
                 }
