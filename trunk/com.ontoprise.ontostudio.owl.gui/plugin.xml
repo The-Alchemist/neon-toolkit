@@ -245,6 +245,17 @@
                </reference>
             </visibleWhen>
          </command>
+         <command
+               commandId="org.neontoolkit.gui.navigator.moveCommand"
+               label="%moveLabel"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <reference
+                     definitionId="com.ontoprise.ontostudio.owl.gui.navigator.nAnnotationPropertiesSelected">
+               </reference>
+            </visibleWhen>
+         </command>
       </menuContribution>
       <menuContribution
             locationURI="popup:org.neontoolkit.gui.views.navigator?after=navigator.refactor">
@@ -253,12 +264,6 @@
                label="%findReferencesLabel"
                style="push">
          </command>
-   <!--      <command
-			   commandId="com.ontoprise.ontostudio.owl.gui.navigator.findIn"
-               label="%findReferencesLabel2"
-               style="push">
-         </command>
-         -->
       </menuContribution>
       <menuContribution
             locationURI="popup:org.neontoolkit.gui.views.navigator?after=navigator.refactor">
@@ -510,25 +515,43 @@
             class="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyFolderProvider"
             id="com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyFolderProvider"
             subproviderOf="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyProvider">
-         <viewContribution id="com.ontoprise.ontostudio.refactor.move.owl.objectproperty"/>
+         <viewContribution 
+         		id="com.ontoprise.ontostudio.refactor.move.owl.objectproperty"/>
       </provider>
       <provider
             class="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyHierarchyProvider"
             id="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyHierarchyProvider"
             subproviderOf="com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyFolderProvider">
-         <viewContribution id="com.ontoprise.ontostudio.refactor.move.owl.objectproperty"/>
+         <viewContribution 
+         		id="com.ontoprise.ontostudio.refactor.move.owl.objectproperty"/>
       </provider>
       <provider
             class="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyFolderProvider"
             id="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyFolderProvider"
             subproviderOf="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyProvider">
-         <viewContribution id="com.ontoprise.ontostudio.refactor.move.owl.dataproperty"/>
+         <viewContribution 
+         		id="com.ontoprise.ontostudio.refactor.move.owl.dataproperty"/>
       </provider>
       <provider
             class="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyHierarchyProvider"
             id="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyHierarchyProvider"
             subproviderOf="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyFolderProvider">
-         <viewContribution id="com.ontoprise.ontostudio.refactor.move.owl.dataproperty"/>
+         <viewContribution 
+         		id="com.ontoprise.ontostudio.refactor.move.owl.dataproperty"/>
+      </provider>
+      <provider
+            class="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyFolderProvider"
+            id="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyFolderProvider"
+            subproviderOf="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyProvider">
+         <viewContribution 
+         		id="com.ontoprise.ontostudio.refactor.move.owl.annotationproperty"/>
+      </provider>
+      <provider
+            class="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyHierarchyProvider"
+            id="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyHierarchyProvider"
+            subproviderOf="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyFolderProvider">
+         <viewContribution 
+         		id="com.ontoprise.ontostudio.refactor.move.owl.annotationproperty"/>
       </provider>
    </extension>
    
@@ -821,6 +844,15 @@
       <!-- SubPropertyPages of AnnotationProperty PropertyPage -->
       <entityPropertyContributor
             activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.annotationProperty.AnnotationPropertyTaxonomyPropertyPage"
+            id="com.ontoprise.ontostudio.owl.gui.properties.annotationProperty.AnnotationPropertyTaxonomyPropertyPage"
+            name="%taxonomyPropertyPage">
+            <subContributorOf
+                superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorAnnotationProperty"
+                priority="950" />
+      </entityPropertyContributor>
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement"
             class="com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab"
             id="com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab"
             name="%TextViewTab">
@@ -953,6 +985,9 @@
             factoryClass="com.ontoprise.ontostudio.owl.gui.refactor.move.property.MovePropertyRefactoringFactory"
             id="com.ontoprise.ontostudio.owl.gui.refactor.moveDataProperty"/>
       <refactoring
+            factoryClass="com.ontoprise.ontostudio.owl.gui.refactor.move.property.MovePropertyRefactoringFactory"
+            id="com.ontoprise.ontostudio.owl.gui.refactor.moveAnnotationProperty"/>
+      <refactoring
             factoryClass="com.ontoprise.ontostudio.owl.gui.refactor.move.individual.MoveIndividualRefactoringFactory"
             id="com.ontoprise.ontostudio.owl.gui.refactor.moveIndividual"/>
    </extension>
@@ -972,7 +1007,6 @@
             dragClass="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement"
             dropClass="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzFolderTreeElement"
             class="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzDropHandler"/>
-      <!-- SubAnnotationProperties are not yet allowed, so drag'n drop makes no sense
       <dropHandler
             dragClass="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement"
             dropClass="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement"
@@ -980,8 +1014,7 @@
       <dropHandler
             dragClass="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement"
             dropClass="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyFolderTreeElement"
-            class="com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyDropHandler"/>
-      -->            
+            class="com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyDropHandler"/>        
       <dropHandler
             dragClass="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement"
             dropClass="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement"

@@ -51,6 +51,8 @@ import com.ontoprise.ontostudio.owl.model.commands.objectproperties.CreateObject
  */
 /**
  * Drop handler for drag and drop of concepts.
+ * 
+ * @author Nico Stieler
  */
 public class PropertyDropHandler implements DropTargetListener {
 
@@ -212,6 +214,11 @@ public class PropertyDropHandler implements DropTargetListener {
                         target);
             } else if (elems.length > 0 && elems[0] instanceof DataPropertyTreeElement) {
                 GenericRefactoringExecutionStarter.startRefactoring(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "com.ontoprise.ontostudio.owl.gui.refactor.moveDataProperty", //$NON-NLS-1$
+                        elems,
+                        parents,
+                        target);
+            }else if (elems.length > 0 && elems[0] instanceof AnnotationPropertyTreeElement) {
+                GenericRefactoringExecutionStarter.startRefactoring(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "com.ontoprise.ontostudio.owl.gui.refactor.moveAnnotationProperty", //$NON-NLS-1$
                         elems,
                         parents,
                         target);

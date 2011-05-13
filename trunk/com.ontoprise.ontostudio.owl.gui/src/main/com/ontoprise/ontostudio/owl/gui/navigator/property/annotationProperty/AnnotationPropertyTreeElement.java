@@ -11,12 +11,9 @@
 package com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty;
 
 import org.neontoolkit.gui.navigator.ITreeDataProvider;
-import org.semanticweb.owlapi.model.OWLAnnotationProperty;
-import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
 
 import com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyExtraDomainRangeinfoTreeElement;
-import com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyTreeElement;
 
 /**
  * TreeElements used for object properties in the tree.
@@ -27,8 +24,13 @@ public class AnnotationPropertyTreeElement extends PropertyExtraDomainRangeinfoT
     public AnnotationPropertyTreeElement(OWLEntity entity, String ontologyUri, String projectName, ITreeDataProvider provider) {
         super(entity, ontologyUri, projectName, provider);
     }
+    public AnnotationPropertyTreeElement(String uri, String ontologyUri, String projectId, ITreeDataProvider provider) {
+        super(uri, ontologyUri, projectId, provider);
+    }
     /**
      * should only be used for Domain and Range View
+ * 
+ * @author Nico Stieler
      */
     public AnnotationPropertyTreeElement(OWLEntity entity, String ontologyUri, String projectName, ITreeDataProvider provider, OWLEntity selectedClass, String owlClass) {
         super(entity, ontologyUri, projectName, provider, selectedClass, owlClass);
@@ -58,4 +60,5 @@ public class AnnotationPropertyTreeElement extends PropertyExtraDomainRangeinfoT
         // TODO Auto-generated method stub
         return null;
     }
+    
 }

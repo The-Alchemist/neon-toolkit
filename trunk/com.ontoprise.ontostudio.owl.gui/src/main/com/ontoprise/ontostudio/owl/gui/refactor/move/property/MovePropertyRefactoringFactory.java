@@ -18,11 +18,16 @@ import org.eclipse.ltk.ui.refactoring.RefactoringWizard;
 import org.neontoolkit.refactor.IRefactoringFactory;
 
 import com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyTreeElement;
+import com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class MovePropertyRefactoringFactory implements IRefactoringFactory {
 
+    @Override
     public ProcessorBasedRefactoring createRefactoring(Object... parameters) {
         MoveProcessor processor = null;
         if (parameters.length > 0 && parameters[0] instanceof PropertyTreeElement[] && ((PropertyTreeElement[])parameters[0]).length > 0) {
@@ -44,16 +49,28 @@ public class MovePropertyRefactoringFactory implements IRefactoringFactory {
                         ((MoveDataPropertyProcessor) processor).setDestination((PropertyTreeElement) parameters[2]);
                     }
                 }
+            } else if (((PropertyTreeElement[])parameters[0])[0] instanceof AnnotationPropertyTreeElement) {
+                processor = new MoveAnnotationPropertyProcessor((PropertyTreeElement[]) parameters[0], (PropertyTreeElement[]) parameters[1]);
+                if (parameters.length == 3) {
+                    if (parameters[2] == null) {
+                        ((MoveAnnotationPropertyProcessor) processor).setDestination(MoveAnnotationPropertyProcessor.ROOT);
+                    } else {
+                        ((MoveAnnotationPropertyProcessor) processor).setDestination((PropertyTreeElement) parameters[2]);
+                    }
+                }
             }
         }
         return processor != null ? new MoveRefactoring(processor) : null;
     }
 
+    @Override
     public RefactoringWizard createWizard(Refactoring refactoring) {
         if (refactoring.getName().equals("com.ontoprise.ontostudio.owl.gui.refactor.moveDataProperty")) { //$NON-NLS-1$
             return new MoveDataPropertyWizard(refactoring);
         } else if (refactoring.getName().equals("com.ontoprise.ontostudio.owl.gui.refactor.moveObjectProperty")) { //$NON-NLS-1$
             return new MoveObjectPropertyWizard(refactoring);
+        } else if (refactoring.getName().equals("com.ontoprise.ontostudio.owl.gui.refactor.moveAnnotationProperty")) { //$NON-NLS-1$
+            return new MoveAnnotationPropertyWizard(refactoring);
         }
         return new MoveObjectPropertyWizard(refactoring);
     }
