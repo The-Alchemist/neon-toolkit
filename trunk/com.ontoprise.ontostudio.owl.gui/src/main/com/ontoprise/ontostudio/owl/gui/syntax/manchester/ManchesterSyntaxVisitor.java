@@ -191,11 +191,14 @@ public class ManchesterSyntaxVisitor extends OWLKAON2VisitorAdapter {
             Set<Object> annotations = _owlModel.getOntologyAnnotations(RDFS_LABEL);
             for(Object object : annotations){
                 if(object instanceof OWLLiteral){
-                    result = ((OWLLiteral)object).getLiteral();
+                    OWLLiteral untypedConstant = ((OWLLiteral)object);
+                    String lang = untypedConstant.getLang();
+                    if (_language.equals(lang)) {
+                        result = untypedConstant.getLiteral();
+                        break;
+                    }
                 }
             }
-//            String label = getLocalizedLiteral(annotations);
-//            if(label != null) result = label;
         } catch (NeOnCoreException e) {
             // log.error()
         }
