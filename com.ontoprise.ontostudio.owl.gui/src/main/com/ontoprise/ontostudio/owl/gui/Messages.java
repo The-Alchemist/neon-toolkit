@@ -204,7 +204,6 @@ public class Messages extends NLS {
 	public static String AnnotationsPropertyPage2_ErrorRetrievingData;
     public static String AnnotationPropertyPropertyPage_SubProperties;
     public static String AnnotationPropertyPropertyPage_SuperProperties;
-    public static String AnnotationPropertyPropertyPage_EquivalentProperties;
     public static String AnnotationPropertyPropertyPage2_2;
     public static String AnnotationPropertyPropertyPage2_3;
     public static String AnnotationPropertyPropertyPage2_47;
