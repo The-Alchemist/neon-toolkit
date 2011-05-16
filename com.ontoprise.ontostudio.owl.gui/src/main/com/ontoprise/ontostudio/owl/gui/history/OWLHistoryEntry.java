@@ -3,12 +3,22 @@
  ******************************************************************************/
 package com.ontoprise.ontostudio.owl.gui.history;
 
+import org.eclipse.swt.graphics.Image;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.neontoolkit.gui.history.IOWLHistoryEntry;
 import org.neontoolkit.gui.history.OWLHistoryManager;
+import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLDataProperty;
+import org.semanticweb.owlapi.model.OWLDataRange;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLIndividual;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLOntology;
 
+import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
+import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
 import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
@@ -103,5 +113,25 @@ public class OWLHistoryEntry implements IOWLHistoryEntry{
             new NeonToolkitExceptionHandler().handleException(e);
             return ""; //$NON-NLS-1$
         }
+    }
+    @Override
+    public Image getImage() {
+        if(entity != null)
+            if(entity instanceof OWLOntology) {
+                return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.ONTOLOGY); 
+            } else if (entity instanceof OWLClass) {
+                return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.CLAZZ);
+            } else if (entity instanceof OWLIndividual) {
+                return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.INDIVIDUAL);
+            } else if (entity instanceof OWLDataProperty) {
+                return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.DATA_PROPERTY);
+            } else if (entity instanceof OWLObjectProperty) {
+                return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.OBJECT_PROPERTY);
+            } else if (entity instanceof OWLDataRange) {
+                return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.DATATYPE);
+            } else if (entity instanceof OWLAnnotationProperty) {
+                return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.ANNOTATION_PROPERTY);
+            } 
+        return null; // error case
     }
 }

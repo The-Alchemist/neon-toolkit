@@ -3,6 +3,7 @@
  ******************************************************************************/
 package org.neontoolkit.gui.history;
 
+import org.eclipse.swt.graphics.Image;
 import org.neontoolkit.core.exception.NeOnCoreException;
 
 /**
@@ -34,6 +35,10 @@ public interface IOWLHistoryEntry {
      */
     public String getProjectName();
     /**
+     * @return returns the corresponding image of the represented Entity
+     */
+    public Image getImage();
+    /**
      * @return returns the position of the represented Entity in the HistoryArray
      */
     public int getHistoryPosition();
@@ -46,4 +51,5 @@ public interface IOWLHistoryEntry {
      * @return true iff the value could be set
      */
     public boolean setEmpty(boolean empty);
+    
 }

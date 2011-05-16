@@ -9,6 +9,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -65,8 +66,10 @@ public class OWLNavigationHistoryAction extends NavigationHistoryAction
             }
             for (int i = 0; i < entries.length; i++) {
                 String text = entries[i].toString();
+                Image image = entries[i].getImage();
                 if (text != null) {
                     MenuItem item = new MenuItem(historyMenu, SWT.NONE);
+                    item.setImage(image);
                     item.setData(entries[i]);
                     item.setText(text);
                     item.addSelectionListener(new SelectionAdapter() {
@@ -99,9 +102,11 @@ public class OWLNavigationHistoryAction extends NavigationHistoryAction
             }
             for (int i = 0; i < entries.length; i++) {
                 String text = entries[i].toString();
+                Image image = entries[i].getImage();
                 if (text != null) {
                     MenuItem item = new MenuItem(historyMenu, SWT.NONE);
                     item.setData(entries[i]);
+                    item.setImage(image);
                     item.setText(text);
                     item.addSelectionListener(new SelectionAdapter() {
                         @Override

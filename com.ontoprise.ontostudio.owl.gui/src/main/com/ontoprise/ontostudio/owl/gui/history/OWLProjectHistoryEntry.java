@@ -3,11 +3,14 @@
  */
 package com.ontoprise.ontostudio.owl.gui.history;
 
+import org.eclipse.swt.graphics.Image;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.history.IOWLHistoryEntry;
 import org.neontoolkit.gui.history.OWLHistoryManager;
 import org.neontoolkit.gui.navigator.project.ProjectTreeElement;
 
+import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
+import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 
 /**
@@ -82,5 +85,9 @@ public class OWLProjectHistoryEntry implements IOWLHistoryEntry {
     @Override
     public String toString(){
         return projectName;
+    }
+    @Override
+    public Image getImage() {
+        return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.PROJECT);
     }
 }
