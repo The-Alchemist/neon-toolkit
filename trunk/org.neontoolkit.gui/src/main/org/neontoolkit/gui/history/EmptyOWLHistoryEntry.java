@@ -3,6 +3,7 @@
  ******************************************************************************/
 package org.neontoolkit.gui.history;
 
+import org.eclipse.swt.graphics.Image;
 import org.neontoolkit.core.exception.NeOnCoreException;
 
 /**
@@ -44,5 +45,9 @@ public class EmptyOWLHistoryEntry implements IOWLHistoryEntry {
     public boolean setEmpty(boolean empty) {
         //Nothing to do, is always empty
         return false;
+    }
+    @Override
+    public Image getImage() {
+        return null;
     }
 }

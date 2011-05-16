@@ -3,10 +3,13 @@
  */
 package com.ontoprise.ontostudio.owl.gui.history;
 
+import org.eclipse.swt.graphics.Image;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.history.IOWLHistoryEntry;
 import org.neontoolkit.gui.history.OWLHistoryManager;
 
+import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
+import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
 import com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
@@ -89,5 +92,9 @@ public class OWLOntologyHistoryEntry implements IOWLHistoryEntry {
     @Override
     public String toString(){
         return ontologyUri;
+    }
+    @Override
+    public Image getImage() {
+        return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.ONTOLOGY);
     }
 }
