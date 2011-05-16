@@ -74,8 +74,8 @@ public class OWLClassHandler implements EntityHierarchyUpdater.EntityHandler<OWL
             return true;
         } else if (axiom instanceof OWLEquivalentClassesAxiom) {
             return true;
-        } else if (axiom instanceof OWLClassAssertionAxiom) {
-            return true;
+//        } else if (axiom instanceof OWLClassAssertionAxiom) {
+//            return true;
         }
         return false;
     }
