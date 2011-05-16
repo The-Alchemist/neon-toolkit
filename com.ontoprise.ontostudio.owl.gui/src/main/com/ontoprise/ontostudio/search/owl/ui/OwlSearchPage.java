@@ -13,6 +13,8 @@ package com.ontoprise.ontostudio.search.owl.ui;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
@@ -139,29 +141,29 @@ public class OwlSearchPage extends AbstractSearchPage {
 //      data.verticalAlignment = SWT.LEFT;
 //      final CCombo combo2 = OWLGUIUtilities.createComboWidget(NeOnUIPlugin.getDefault().getLanguages(), c, data, SWT.BORDER | SWT.READ_ONLY, false);
 //      combo2.setVisible(false);
-//      combo1.addModifyListener(new ModifyListener() {
-//        
-//        @Override
-//        public void modifyText(ModifyEvent e) {
-////            if(combo1.getText().equals(Messages.OwlSearchPage_DisplayStyle_Language)){
-////                combo2.setEnabled(true);
-////                combo2.setVisible(true);
-////            }else{
-////                combo2.setEnabled(false);
-////                combo2.setVisible(false);
-//                if(combo1.getText().equals(Messages.OwlSearchPage_DisplayStyle_Local)){
-//                    System.out.println(Messages.OwlSearchPage_DisplayStyle_Local);
-//                    _IDDisplayStyle = NeOnUIPlugin.DISPLAY_LOCAL;
-//                }else if(combo1.getText().equals(Messages.OwlSearchPage_DisplayStyle_URI)){
-//                    System.out.println(Messages.OwlSearchPage_DisplayStyle_URI);
-//                    _IDDisplayStyle = NeOnUIPlugin.DISPLAY_URI;
-//                }else if(combo1.getText().equals(Messages.OwlSearchPage_DisplayStyle_QName)){
-//                    System.out.println(Messages.OwlSearchPage_DisplayStyle_QName);
-//                    _IDDisplayStyle = NeOnUIPlugin.DISPLAY_QNAME;
-//                }
-////            }
-//        }
-//    });
+      combo1.addModifyListener(new ModifyListener() {
+        
+        @Override
+        public void modifyText(ModifyEvent e) {
+//            if(combo1.getText().equals(Messages.OwlSearchPage_DisplayStyle_Language)){
+//                combo2.setEnabled(true);
+//                combo2.setVisible(true);
+//            }else{
+//                combo2.setEnabled(false);
+//                combo2.setVisible(false);
+                if(combo1.getText().equals(Messages.OwlSearchPage_DisplayStyle_Local)){
+                    System.out.println(Messages.OwlSearchPage_DisplayStyle_Local);
+                    _IDDisplayStyle = NeOnUIPlugin.DISPLAY_LOCAL;
+                }else if(combo1.getText().equals(Messages.OwlSearchPage_DisplayStyle_URI)){
+                    System.out.println(Messages.OwlSearchPage_DisplayStyle_URI);
+                    _IDDisplayStyle = NeOnUIPlugin.DISPLAY_URI;
+                }else if(combo1.getText().equals(Messages.OwlSearchPage_DisplayStyle_QName)){
+                    System.out.println(Messages.OwlSearchPage_DisplayStyle_QName);
+                    _IDDisplayStyle = NeOnUIPlugin.DISPLAY_QNAME;
+                }
+//            }
+        }
+    });
     
     }
     
