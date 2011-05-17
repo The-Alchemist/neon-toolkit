@@ -29,9 +29,9 @@ import org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant;
 import org.eclipse.ltk.core.refactoring.participants.SharableParticipants;
 import org.eclipse.swt.widgets.Shell;
 import org.neontoolkit.core.natures.OntologyProjectNature;
+import org.neontoolkit.gui.navigator.elements.IIndividualTreeElement;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
-import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 
 /* 

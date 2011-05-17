@@ -10,14 +10,11 @@
  ******************************************************************************/
 package com.ontoprise.ontostudio.owl.gui.individualview;
 
-import org.neontoolkit.core.exception.NeOnCoreException;
-import org.neontoolkit.core.util.IRIUtils;
+import org.neontoolkit.gui.navigator.elements.IIndividualTreeElement;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
 import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
-import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
-import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 
 /**
  * @author janiko
@@ -35,7 +32,7 @@ public class NamedIndividualViewItem extends AbstractOwlEntityTreeElement implem
      * @param projectName
      */
     public NamedIndividualViewItem(OWLNamedIndividual individual, String clazzUri, String ontologyUri, String projectName) {
-        this(individual, clazzUri, new String[]{clazzUri}, ontologyUri, projectName, true);
+        this(individual, clazzUri, new String[]{clazzUri}, ontologyUri, projectName, false, true);
     }
     /**
      * @param individual
@@ -45,9 +42,10 @@ public class NamedIndividualViewItem extends AbstractOwlEntityTreeElement implem
      * @param projectName
      * @param direct
      */
-    public NamedIndividualViewItem(OWLNamedIndividual individual, String currentClazzUri, String[] clazzUris, String ontologyUri, String projectName, boolean direct) {
+    public NamedIndividualViewItem(OWLNamedIndividual individual, String currentClazzUri, String[] clazzUris, String ontologyUri, String projectName, boolean isImported, boolean isDirect) {
         super((OWLEntity)individual, ontologyUri, projectName, null);
-        _individual = new IndividualItem<OWLNamedIndividual>(individual, currentClazzUri, clazzUris, ontologyUri, projectName, direct);
+        setIsImported(isImported);
+        _individual = new IndividualItem<OWLNamedIndividual>(individual, currentClazzUri, clazzUris, ontologyUri, projectName, isDirect);
     }
     /**
      * @return

@@ -43,8 +43,8 @@ public class PropertyMemberViewLabelProvider extends LabelProvider implements IT
        
     @Override
     public Color getBackground(Object element) {
-        if (element instanceof PropertyTreeElement) {
-            PropertyTreeElement item = (PropertyTreeElement) element;
+        if (element instanceof PropertyMember) {
+            PropertyMember item = (PropertyMember) element;
             if (item.isImported()) {
                 return OWLGUIUtilities.COLOR_FOR_IMPORTED_AXIOMS;
             }

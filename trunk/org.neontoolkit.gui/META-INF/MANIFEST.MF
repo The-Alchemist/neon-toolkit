@@ -34,3 +34,4 @@ Export-Package: org.neontoolkit.gui,
  org.neontoolkit.gui.util
 Bundle-ClassPath: neontoolkit-gui.jar
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.semanticweb.owlapi.model

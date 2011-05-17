@@ -12,6 +12,7 @@ package com.ontoprise.ontostudio.owl.gui.individualview;
 
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.navigator.elements.AbstractOntologyTreeElement;
+import org.neontoolkit.gui.navigator.elements.IIndividualTreeElement;
 import org.semanticweb.owlapi.model.OWLAnonymousIndividual;
 
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;

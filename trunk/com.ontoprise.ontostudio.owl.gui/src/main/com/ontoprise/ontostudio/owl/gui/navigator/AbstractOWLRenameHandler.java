@@ -20,9 +20,9 @@ import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.navigator.actions.AbstractRenameEntityDialog;
 import org.neontoolkit.gui.navigator.actions.AbstractRenameHandler;
 import org.neontoolkit.gui.navigator.elements.AbstractOntologyEntity;
+import org.neontoolkit.gui.navigator.elements.IIndividualTreeElement;
 import org.semanticweb.owlapi.model.OWLEntity;
 
-import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement;

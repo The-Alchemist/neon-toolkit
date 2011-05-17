@@ -11,6 +11,7 @@
 package com.ontoprise.ontostudio.owl.gui.individualview;
 
 import org.neontoolkit.core.util.IRIUtils;
+import org.neontoolkit.gui.navigator.elements.IIndividualTreeElement;
 import org.semanticweb.owlapi.model.OWLAnonymousIndividual;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
@@ -42,11 +43,11 @@ public class IndividualItem<T extends OWLIndividual>{
     }
 
     public static IIndividualTreeElement<?> createNewInstance(OWLIndividual individual, String clazzUri, String ontologyUri, String projectName){
-        return createNewInstance(individual, clazzUri, new String[]{clazzUri}, ontologyUri, projectName, true);
+        return createNewInstance(individual, clazzUri, new String[]{clazzUri}, ontologyUri, projectName, false, true);
     }
-    public static IIndividualTreeElement<?> createNewInstance(OWLIndividual individual, String currentClazzUri, String[] clazzUris, String ontologyUri, String projectName, boolean direct){
+    public static IIndividualTreeElement<?> createNewInstance(OWLIndividual individual, String currentClazzUri, String[] clazzUris, String ontologyUri, String projectName, boolean imported, boolean direct){
         if(individual instanceof OWLNamedIndividual) { 
-            return new NamedIndividualViewItem((OWLNamedIndividual)individual, currentClazzUri, clazzUris, ontologyUri, projectName, direct);
+            return new NamedIndividualViewItem((OWLNamedIndividual)individual, currentClazzUri, clazzUris, ontologyUri, projectName, imported, direct);
         } else { 
             return new AnonymousIndividualViewItem((OWLAnonymousIndividual)individual, currentClazzUri, clazzUris, ontologyUri, projectName, direct);
         }

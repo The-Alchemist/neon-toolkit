@@ -15,9 +15,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.neontoolkit.gui.navigator.TreeProviderManager;
+import org.neontoolkit.gui.navigator.elements.IIndividualTreeElement;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
-import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyProvider;
 import com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement;
