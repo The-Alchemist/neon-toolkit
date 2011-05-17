@@ -8,6 +8,7 @@ import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.neontoolkit.gui.history.IOWLHistoryEntry;
 import org.neontoolkit.gui.history.OWLHistoryManager;
+import org.neontoolkit.gui.navigator.elements.TreeElement;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataProperty;
@@ -59,6 +60,7 @@ public class OWLHistoryEntry implements IOWLHistoryEntry{
         OWLHistoryManager.getInstance().entitySelected(this);
         if( model == null)
             model = OWLModelFactory.getOWLModel(ontologyUri, projectName);
+        OWLHistoryManager.getInstance().waitFor(treeElement);
         OWLGUIUtilities.jumpToEntity(treeElement, model);
     }
     @Override
@@ -133,5 +135,9 @@ public class OWLHistoryEntry implements IOWLHistoryEntry{
                 return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.ANNOTATION_PROPERTY);
             } 
         return null; // error case
+    }
+    @Override
+    public TreeElement getTreeElement(){
+        return treeElement;
     }
 }

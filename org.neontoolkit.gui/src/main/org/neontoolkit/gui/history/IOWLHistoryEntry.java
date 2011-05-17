@@ -5,6 +5,7 @@ package org.neontoolkit.gui.history;
 
 import org.eclipse.swt.graphics.Image;
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.gui.navigator.elements.TreeElement;
 
 /**
  * @author Nico Stieler
@@ -14,6 +15,10 @@ import org.neontoolkit.core.exception.NeOnCoreException;
  */
 public interface IOWLHistoryEntry {
 
+    /**
+     * @return returns the tree element of the represented Entity
+     */
+    public TreeElement getTreeElement();
     /**
      * restores the this entity in the EPV
      */

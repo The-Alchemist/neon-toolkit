@@ -18,7 +18,6 @@ import org.neontoolkit.gui.navigator.elements.AbstractOntologyTreeElement;
 import org.neontoolkit.gui.navigator.ontology.IOntologyTreeElement;
 
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
-import com.ontoprise.ontostudio.owl.gui.history.OWLHistoryEntry;
 import com.ontoprise.ontostudio.owl.gui.history.OWLOntologyHistoryEntry;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
