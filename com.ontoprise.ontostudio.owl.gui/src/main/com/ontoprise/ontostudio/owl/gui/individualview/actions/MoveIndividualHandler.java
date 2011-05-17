@@ -14,9 +14,9 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
+import org.neontoolkit.gui.navigator.elements.IIndividualTreeElement;
 import org.neontoolkit.refactor.GenericRefactoringExecutionStarter;
 
-import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 import com.ontoprise.ontostudio.owl.gui.refactor.move.individual.MoveIndividualRefactoringFactory;
 

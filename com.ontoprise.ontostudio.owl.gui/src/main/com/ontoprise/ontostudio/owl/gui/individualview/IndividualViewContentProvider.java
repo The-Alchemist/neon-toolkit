@@ -33,9 +33,11 @@ import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.neontoolkit.gui.navigator.ITreeDataProvider;
 import org.neontoolkit.gui.navigator.ITreeElement;
+import org.neontoolkit.gui.navigator.elements.IIndividualTreeElement;
 import org.neontoolkit.gui.navigator.elements.IOntologyElement;
 import org.neontoolkit.gui.navigator.elements.IProjectElement;
 import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
@@ -296,6 +298,13 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
                 }
                 if(newIndividual){
                     OWLIndividual individual = OWLUtilities.individual(individualUri);
+                    boolean isImported = false;
+                    try {
+                        Set<OWLClassExpression> types = individual.getTypes(OWLModelFactory.getOWLModel(_ontologyUri, _projectId).getOntology());
+                        isImported = individual.getTypes(OWLModelFactory.getOWLModel(_ontologyUri, _projectId).getOntology()).size() == 0;
+                    } catch (NeOnCoreException e) {
+                        // nothing to do
+                    }
                     LinkedList<String> clazzUris = newIndividualUrisList.get(individualUri);
                     _items[i++] = IndividualItem.createNewInstance(
                             individual, 
@@ -303,7 +312,9 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
                             clazzUris.toArray(new String[clazzUris.size()]), 
                             _ontologyUri, 
                             _projectId, 
+                            isImported,
                             clazzUris.size() == 1 && clazzUris.contains(_selectedClazzTreeElement.getId()));
+                    
                 }else{
                     _items[i++] = oldItems[oldPos];
                     oldItems[oldPos] = null;

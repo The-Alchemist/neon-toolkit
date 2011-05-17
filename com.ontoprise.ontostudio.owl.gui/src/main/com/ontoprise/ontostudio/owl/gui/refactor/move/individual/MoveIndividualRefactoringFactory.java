@@ -14,9 +14,9 @@ import org.eclipse.ltk.core.refactoring.Refactoring;
 import org.eclipse.ltk.core.refactoring.participants.MoveRefactoring;
 import org.eclipse.ltk.core.refactoring.participants.ProcessorBasedRefactoring;
 import org.eclipse.ltk.ui.refactoring.RefactoringWizard;
+import org.neontoolkit.gui.navigator.elements.IIndividualTreeElement;
 import org.neontoolkit.refactor.IRefactoringFactory;
 
-import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 
 public class MoveIndividualRefactoringFactory implements IRefactoringFactory {

@@ -14,6 +14,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.neontoolkit.gui.navigator.elements.IIndividualTreeElement;
 import org.neontoolkit.gui.util.PerspectiveChangeHandler;
 import org.neontoolkit.search.Messages;
 import org.neontoolkit.search.SearchPlugin;
@@ -21,7 +22,6 @@ import org.neontoolkit.search.ui.NavigatorSearchMatch;
 
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
-import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.individualview.IndividualView;
 import com.ontoprise.ontostudio.owl.perspectives.OWLPerspective;
 

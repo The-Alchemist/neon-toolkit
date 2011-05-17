@@ -14,11 +14,11 @@ import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.navigator.ITreeElement;
 import org.neontoolkit.gui.navigator.ITreeElementPath;
 import org.neontoolkit.gui.navigator.elements.AbstractOntologyTreeElement;
+import org.neontoolkit.gui.navigator.elements.IIndividualTreeElement;
 import org.neontoolkit.gui.util.ItemSorter;
 import org.neontoolkit.gui.util.PerspectiveChangeHandler;
 import org.neontoolkit.search.ui.NavigatorSearchMatch;
 
-import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.AbstractOwlEntityTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;

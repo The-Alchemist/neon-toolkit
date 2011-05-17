@@ -7,13 +7,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.neontoolkit.gui.internal.properties.PropertyPageInfo;
 import org.neontoolkit.gui.navigator.ITreeElement;
+import org.neontoolkit.gui.navigator.elements.IIndividualTreeElement;
 import org.neontoolkit.gui.properties.EntityPropertiesView;
 import org.neontoolkit.gui.properties.IMainPropertyPage;
 import org.neontoolkit.gui.properties.IPropertyPage;
 import org.neontoolkit.gui.util.PerspectiveChangeHandler;
 import org.neontoolkit.search.ui.NavigatorSearchMatch;
 
-import com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement;
 import com.ontoprise.ontostudio.owl.gui.individualview.NamedIndividualViewItem;
 import com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement;
 import com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeTreeElement;

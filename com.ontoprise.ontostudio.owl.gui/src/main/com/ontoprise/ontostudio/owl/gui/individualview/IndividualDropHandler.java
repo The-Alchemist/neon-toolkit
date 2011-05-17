@@ -25,6 +25,7 @@ import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.navigator.MTreeView;
 import org.neontoolkit.gui.navigator.TreeProviderManager;
 import org.neontoolkit.gui.navigator.elements.AbstractOntologyTreeElement;
+import org.neontoolkit.gui.navigator.elements.IIndividualTreeElement;
 import org.neontoolkit.refactor.GenericRefactoringExecutionStarter;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataFactory;

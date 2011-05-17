@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.TreeItem;
 import org.neontoolkit.gui.navigator.SelectionTransfer;
 import org.neontoolkit.gui.navigator.elements.IEntityElement;
+import org.neontoolkit.gui.navigator.elements.IIndividualTreeElement;
 
 /* 
  * Created on: 03.03.2006

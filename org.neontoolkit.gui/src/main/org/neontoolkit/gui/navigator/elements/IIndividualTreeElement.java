@@ -8,12 +8,9 @@
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  *
  ******************************************************************************/
-package com.ontoprise.ontostudio.owl.gui.individualview;
+package org.neontoolkit.gui.navigator.elements;
 
 import org.neontoolkit.gui.navigator.ITreeElement;
-import org.neontoolkit.gui.navigator.elements.IOntologyElement;
-import org.neontoolkit.gui.navigator.elements.IProjectElement;
-import org.neontoolkit.gui.navigator.elements.IQualifiedIDElement;
 import org.semanticweb.owlapi.model.OWLIndividual;
 
 /**Interface for all OWL individuals. 
