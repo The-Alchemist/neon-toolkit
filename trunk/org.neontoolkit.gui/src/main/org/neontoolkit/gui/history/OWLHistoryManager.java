@@ -7,6 +7,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.INavigationHistory;
 import org.eclipse.ui.INavigationLocation;
 import org.neontoolkit.gui.action.OWLNavigationHistoryAction;
+import org.neontoolkit.gui.navigator.elements.TreeElement;
 
 /**
  * @author Nico Stieler
@@ -15,9 +16,6 @@ import org.neontoolkit.gui.action.OWLNavigationHistoryAction;
  * The OWLHistoryManager manages the history mechanism:
  * - stores the history provides some functions to access it
  * 
- * *****************************************************************
- * It is a GUI-TEST now, thats why it is not running anymore :(
- * *****************************************************************
  * 
  */
 public class OWLHistoryManager implements INavigationHistory{
@@ -29,6 +27,7 @@ public class OWLHistoryManager implements INavigationHistory{
     private int currentPosition;
     private OWLNavigationHistoryAction backwardAction;
     private OWLNavigationHistoryAction forwardAction;
+    private TreeElement waitForTreeElement;
     
     private static OWLHistoryManager instance;
     
@@ -49,9 +48,15 @@ public class OWLHistoryManager implements INavigationHistory{
     }
     //should not be called while navigating in history
     public void addHistoryElement(IOWLHistoryEntry object){
-        IOWLHistoryEntry lastNoneEmptyElement = getLastNoneEmptyElement();
-        if(object.equals(lastNoneEmptyElement))
-            object.setEmpty(true);
+        IOWLHistoryEntry lastNonEmptyElement = getLastNonEmptyElement();
+        if(object.equals(lastNonEmptyElement))
+            return;
+//            object.setEmpty(true);
+        if(waitForTreeElement != null){
+            if(object != null && object.getTreeElement().equals(waitForTreeElement))
+                waitFor(null);
+            return;
+        }
         currentPosition++;
         last = currentPosition;
         history[currentPosition % maxLength] = object;
@@ -62,7 +67,6 @@ public class OWLHistoryManager implements INavigationHistory{
         }
         updateActions();
     }
-    
     public int changeMaxLength(int newMaxLength){
         if(newMaxLength > 0 && newMaxLength != this.maxLength){
             IOWLHistoryEntry[] oldHistory = history;
@@ -216,13 +220,13 @@ public class OWLHistoryManager implements INavigationHistory{
         return null;
     }
     /**
-     * @return the first none empty Element before the current selection iff there exists one
+     * @return the first non empty Element before the current selection iff there exists one
      */
-    private IOWLHistoryEntry getLastNoneEmptyElement() {
+    private IOWLHistoryEntry getLastNonEmptyElement() {
         int cP = currentPosition;
         while(true){
             if(cP != -1 && cP >= first) {
-                IOWLHistoryEntry currentElement = getHistoryElement(currentPosition);
+                IOWLHistoryEntry currentElement = getHistoryElement(cP);
                 if(currentElement.isEmpty()){
                     cP--;
                     continue;
@@ -234,5 +238,13 @@ public class OWLHistoryManager implements INavigationHistory{
                 return null;
             }
         }
+    }
+
+
+    /**
+     * @param treeElement
+     */
+    public void waitFor(TreeElement treeElement) {
+        waitForTreeElement = treeElement;
     }
 }

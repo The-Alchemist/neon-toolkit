@@ -5,6 +5,7 @@ package org.neontoolkit.gui.history;
 
 import org.eclipse.swt.graphics.Image;
 import org.neontoolkit.core.exception.NeOnCoreException;
+import org.neontoolkit.gui.navigator.elements.TreeElement;
 
 /**
  * @author Nico Stieler
@@ -43,11 +44,14 @@ public class EmptyOWLHistoryEntry implements IOWLHistoryEntry {
     }
     @Override
     public boolean setEmpty(boolean empty) {
-        //Nothing to do, is always empty
         return false;
     }
     @Override
     public Image getImage() {
+        return null;
+    }
+    @Override
+    public TreeElement getTreeElement(){
         return null;
     }
 }

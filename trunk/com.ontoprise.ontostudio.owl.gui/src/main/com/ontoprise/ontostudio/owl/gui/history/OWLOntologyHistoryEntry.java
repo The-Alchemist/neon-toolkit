@@ -7,6 +7,7 @@ import org.eclipse.swt.graphics.Image;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.history.IOWLHistoryEntry;
 import org.neontoolkit.gui.history.OWLHistoryManager;
+import org.neontoolkit.gui.navigator.elements.TreeElement;
 
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
@@ -96,5 +97,9 @@ public class OWLOntologyHistoryEntry implements IOWLHistoryEntry {
     @Override
     public Image getImage() {
         return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.ONTOLOGY);
+    }
+    @Override
+    public TreeElement getTreeElement(){
+        return treeElement;
     }
 }
