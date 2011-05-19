@@ -4,9 +4,11 @@
 package com.ontoprise.ontostudio.owl.model.util;
 
 import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
 
 import org.coode.owlapi.functionalparser.OWLFunctionalSyntaxParser;
 import org.coode.owlapi.functionalparser.ParseException;
+import org.neontoolkit.core.exception.InternalNeOnException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.io.RDFXMLOntologyFormat;
@@ -79,9 +81,13 @@ public class InternalParserFunctionalSyntax {
      * @throws NeOnCoreException 
      */
     private void updateInput(String input) throws NeOnCoreException {
-        this.parser = 
-            new OWLFunctionalSyntaxParser(
-                    new ByteArrayInputStream(input.getBytes()));
+        try {
+            this.parser = 
+                new OWLFunctionalSyntaxParser(
+                        new ByteArrayInputStream(input.getBytes("UTF-8"))); //$NON-NLS-1$
+        } catch (UnsupportedEncodingException e) {
+            throw new InternalNeOnException("problems with parsing the given String: " + input, e); //$NON-NLS-1$
+        }
     }
     
 
