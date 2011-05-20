@@ -27,6 +27,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.events.ExpansionAdapter;
+import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ColumnLayoutData;
 import org.eclipse.ui.forms.widgets.Section;
 import org.neontoolkit.core.command.CommandException;
@@ -38,6 +40,7 @@ import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
+import org.semanticweb.owlapi.model.OWLDisjointDataPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLEquivalentDataPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLSubDataPropertyOfAxiom;
@@ -55,7 +58,9 @@ import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.dataproperties.CreateDataProperty;
+import com.ontoprise.ontostudio.owl.model.commands.dataproperties.CreateDisjointDataProperty;
 import com.ontoprise.ontostudio.owl.model.commands.dataproperties.CreateEquivalentDataProperty;
+import com.ontoprise.ontostudio.owl.model.commands.dataproperties.GetDisjointDataPropertyHits;
 import com.ontoprise.ontostudio.owl.model.commands.dataproperties.GetEquivalentDataPropertyHits;
 import com.ontoprise.ontostudio.owl.model.commands.dataproperties.GetSubDataPropertyHits;
 import com.ontoprise.ontostudio.owl.model.commands.dataproperties.GetSuperDataPropertyHits;
@@ -71,6 +76,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
     private static final int SUPER = 1;
     private static final int SUB = 2;
     private static final int EQUIV = 3;
+    private static final int DISJOINT = 4;
 
     /*
      * The number of columns for a row (including buttons)
@@ -83,14 +89,12 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
     private Section _equivPropertySection;
     private Section _superPropertySection;
     private Section _subPropertySection;
+    private Section _disjointPropertySection;
 
     private Composite _equivFormComposite;
     private Composite _superFormComposite;
     private Composite _subFormComposite;
-
-    /**
-     * TODO disjoint object properties are possible in OWL 1.1 October 2007: KAON2 does not support them for the moment
-     */
+    private Composite _disjointFormComposite;
 
     public DataPropertyTaxonomyPropertyPage() {
         super();
@@ -104,6 +108,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
         createSuperPropertyArea(body);
         createSubPropertyArea(body);
         createEquivPropertyArea(body);
+        createDisjointPropertyArea(body);
 
         layoutSections();
         _form.reflow(true);
@@ -140,9 +145,9 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                 createRow(new LocatedAxiom(axiom, isLocal), axiom.getSuperProperty(), ontologyUri, false, SUPER);
             }
         } catch (NeOnCoreException e1) {
-            handleException(e1, Messages.ClazzPropertyPage2_ErrorRetrievingData, _equivPropertySection.getShell());
+            handleException(e1, Messages.ClazzPropertyPage2_ErrorRetrievingData, _superPropertySection.getShell());
         } catch (CommandException e1) {
-            handleException(e1, Messages.ClazzPropertyPage2_ErrorRetrievingData, _equivPropertySection.getShell());
+            handleException(e1, Messages.ClazzPropertyPage2_ErrorRetrievingData, _superPropertySection.getShell());
         }
 
         Label createNewLabel = new Label(_superFormComposite, SWT.NONE);
@@ -183,9 +188,9 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                 createRow(new LocatedAxiom(axiom, isLocal), axiom.getSubProperty(), ontologyUri, false, SUB);
             }
         } catch (NeOnCoreException e1) {
-            handleException(e1, Messages.ClazzPropertyPage2_ErrorRetrievingData, _equivPropertySection.getShell());
+            handleException(e1, Messages.ClazzPropertyPage2_ErrorRetrievingData, _subPropertySection.getShell());
         } catch (CommandException e1) {
-            handleException(e1, Messages.ClazzPropertyPage2_ErrorRetrievingData, _equivPropertySection.getShell());
+            handleException(e1, Messages.ClazzPropertyPage2_ErrorRetrievingData, _subPropertySection.getShell());
         }
 
         Label createNewLabel = new Label(_subFormComposite, SWT.NONE);
@@ -253,12 +258,76 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
         }
     }
 
+    /**
+     * Create disjoint property area
+     */
+    private void createDisjointPropertyArea(Composite composite) {
+        _disjointPropertySection = _toolkit.createSection(composite, Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
+        _disjointPropertySection.setText(Messages.DataPropertyPropertyPage_DisjointProperties);
+        _disjointPropertySection.addExpansionListener(new ExpansionAdapter() {
+            @Override
+            public void expansionStateChanged(ExpansionEvent e) {
+                _form.reflow(true);
+            }
+        });
+        _disjointFormComposite = _toolkit.createComposite(_disjointPropertySection, SWT.NONE);
+        _disjointFormComposite.setLayout(new GridLayout());
+        _disjointFormComposite.setLayoutData(new ColumnLayoutData());
+
+        _toolkit.adapt(_disjointFormComposite);
+//        _toolkit.adapt(_equivPropertySection);
+        _disjointPropertySection.setClient(_disjointFormComposite);
+    }
+
+    private void initDisjointSection(boolean setFocus) {
+
+        clearComposite(_disjointFormComposite);
+
+        try {
+            String[][] results = new GetDisjointDataPropertyHits(_project, _ontologyUri, _id).getResults();
+            TreeSet<String[]> sortedSet = getSortedSet(results, DISJOINT);
+
+            String thisProperty = OWLUtilities.toString(OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(_id)));
+            List<String> sourceOntoList = new ArrayList<String>();
+            List<LocatedAxiom> axiomList = new ArrayList<LocatedAxiom>();
+            for (String[] result: sortedSet) {
+                String axiomText = result[0];
+                String ontologyUri = result[1];
+                boolean isLocal = ontologyUri.equals(_ontologyUri);
+
+                sourceOntoList.add(ontologyUri);
+                OWLDisjointDataPropertiesAxiom disjointObjProps = (OWLDisjointDataPropertiesAxiom) OWLUtilities.axiom(axiomText);
+                axiomList.add(new LocatedAxiom(disjointObjProps, isLocal));
+                Set<OWLDataPropertyExpression> DataProperties = disjointObjProps.getProperties();
+                for (OWLDataPropertyExpression prop: DataProperties) {
+                    if (!OWLUtilities.toString(prop).equals(thisProperty)) {
+                        createRow(axiomList, (OWLDataProperty) prop, false, ontologyUri, DISJOINT);
+                    }
+                }
+
+            }
+        } catch (NeOnCoreException e1) {
+            handleException(e1, Messages.ClazzPropertyPage2_ErrorRetrievingData, _disjointPropertySection.getShell());
+        } catch (CommandException e1) {
+            handleException(e1, Messages.ClazzPropertyPage2_ErrorRetrievingData, _disjointPropertySection.getShell());
+        }
+
+        Label createNewLabel = new Label(_disjointFormComposite, SWT.NONE);
+        createNewLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        createNewLabel.setText(Messages.DataPropertyPropertyPage2_2);
+        Composite activeComposite = createEmptyRow(true, DISJOINT);
+        if (setFocus) {
+            activeComposite.setFocus();
+        }
+    }
+
     @Override
     public void refresh() {
         super.refresh();
         initSuperSection(false);
         initSubSection(false);
         initEquivSection(false);
+        initDisjointSection(false);
 
         // closeToolBar();
         layoutSections();
@@ -271,6 +340,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
         sections.add(_superPropertySection);
         sections.add(_subPropertySection);
         sections.add(_equivPropertySection);
+        sections.add(_disjointPropertySection);
         return sections;
     }
 
@@ -281,8 +351,10 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
             parent = _superFormComposite;
         } else if (mode == SUB) {
             parent = _subFormComposite;
-        } else {
+        } else if (mode == EQUIV) {
             parent = _equivFormComposite;
+        } else { //DISJOINT
+            parent = _disjointFormComposite;
         }
 
         OWLModel sourceOwlModel =_owlModel;
@@ -320,9 +392,12 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                         new CreateDataProperty(_project, _sourceOwlModel.getOntologyURI(), dataProp.getIRI().toString(), _id).run();
                         initSuperSection(false);
                         initSubSection(true);
-                    } else {
+                    } else if (mode == EQUIV) {
                         new CreateEquivalentDataProperty(_project, _sourceOwlModel.getOntologyURI(), OWLUtilities.toString(dataProp), value);
                         initEquivSection(true);
+                    } else { //DISJOINT
+                        new CreateDisjointDataProperty(_project, _sourceOwlModel.getOntologyURI(), OWLUtilities.toString(dataProp), value);
+                        initDisjointSection(true);
                     }
                 } catch (NeOnCoreException k2e) {
                     handleException(k2e, Messages.ClazzPropertyPage2_ErrorRetrievingData, _equivPropertySection.getShell());
@@ -367,8 +442,10 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
             parent = _superFormComposite;
         } else if (mode == SUB) {
             parent = _subFormComposite;
-        } else { // EQUIV
+        } else if (mode == EQUIV) {
             parent = _equivFormComposite;
+        } else { //DISJOINT
+            parent = _disjointFormComposite;
         }
 
         OWLModel sourceOwlModel =_owlModel;
@@ -401,9 +478,12 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                     } else if (mode == SUB) {
                         new CreateDataProperty(_project, _sourceOwlModel.getOntologyURI(), dataProp.getIRI().toString(), _id).run();
                         initSubSection(true);
-                    } else {
-                        new CreateEquivalentDataProperty(_project, _sourceOwlModel.getOntologyURI(), OWLUtilities.toString(dataProp), value);
+                    } else if (mode == EQUIV) {
+                        new CreateEquivalentDataProperty(_project, _sourceOwlModel.getOntologyURI(), OWLUtilities.toString(dataProp), value).run();
                         initEquivSection(true);
+                    } else { //DISJOINT
+                        new CreateDisjointDataProperty(_project, _sourceOwlModel.getOntologyURI(), OWLUtilities.toString(dataProp), value).run();
+                        initDisjointSection(true);
                     }
 
                 } catch (NeOnCoreException k2e) {
@@ -465,8 +545,10 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
             parent = _superFormComposite;
         } else if (mode == SUB) {
             parent = _subFormComposite;
-        } else {
+        } else if (mode == EQUIV) {
             parent = _equivFormComposite;
+        } else { // DISJOINT
+            parent = _disjointFormComposite;
         }
         final EmptyFormRow row = new EmptyFormRow(_toolkit, parent, NUM_COLS);
         final StyledText text = new PropertyText(row.getParent(), _owlModel, _owlModel, PropertyText.DATA_PROPERTY).getStyledText();
@@ -486,6 +568,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                 try {
                     String value = text.getText();
                     OWLDataProperty dataProp = _manager.parseDataProperty(value, _localOwlModel);
+                    String thisEntity;
 
                     switch (mode) {
                         case SUPER:
@@ -499,13 +582,21 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                             initSubSection(true);
                             break;
                         case EQUIV:
-                            String thisEntity = OWLUtilities.toString(OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(_id)));
+                            thisEntity = OWLUtilities.toString(OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(_id)));
                             if (!OWLUtilities.toString(dataProp).equals(thisEntity)) {
                                 new CreateEquivalentDataProperty(_project, _sourceOwlModel.getOntologyURI(), thisEntity, OWLUtilities.toString(dataProp)).run();
                                 initEquivSection(true);
                             } else {
-                                String modeString = Messages.DataPropertyTaxonomyPropertyPage_0;
-                                MessageDialog.openWarning(_subFormComposite.getShell(), Messages.DataPropertyPropertyPage2_47, Messages.DataPropertyTaxonomyPropertyPage_1 + " " + modeString + Messages.DataPropertyTaxonomyPropertyPage_2); //$NON-NLS-1$
+                                MessageDialog.openWarning(_subFormComposite.getShell(), Messages.DataPropertyPropertyPage2_47, Messages.DataPropertyTaxonomyPropertyPage_1 + " " + Messages.DataPropertyTaxonomyPropertyPage_0 + Messages.DataPropertyTaxonomyPropertyPage_2); //$NON-NLS-1$
+                            }
+                            break;
+                        case DISJOINT:
+                            thisEntity = OWLUtilities.toString(OWLUtilities.dataProperty(IRIUtils.ensureValidIRISyntax(_id)));
+                            if (!OWLUtilities.toString(dataProp).equals(thisEntity)) {
+                                new CreateDisjointDataProperty(_project, _sourceOwlModel.getOntologyURI(), thisEntity, OWLUtilities.toString(dataProp)).run();
+                                initDisjointSection(true);
+                            } else {
+                                MessageDialog.openWarning(_subFormComposite.getShell(), Messages.DataPropertyPropertyPage2_47, Messages.DataPropertyTaxonomyPropertyPage_1 + " " + Messages.DataPropertyTaxonomyPropertyPage_3 + Messages.DataPropertyTaxonomyPropertyPage_2); //$NON-NLS-1$
                             }
                             break;
                     }
@@ -553,6 +644,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
         initSuperSection(false);
         initSubSection(false);
         initEquivSection(false);
+        initDisjointSection(false);
 
         layoutSections();
         _form.reflow(true);
@@ -614,6 +706,27 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                         OWLEquivalentDataPropertiesAxiom eop2 = (OWLEquivalentDataPropertiesAxiom) axiom2;
                         Set<OWLDataPropertyExpression> equivalentDataProps2 = eop2.getProperties();
                         for (OWLDataPropertyExpression expr: equivalentDataProps2) {
+                            if (expr instanceof OWLDataProperty) {
+                                if (!((OWLDataProperty)expr).getIRI().toString().equals(thisId)) {
+                                    uri2 = OWLGUIUtilities.getEntityLabel((OWLDataProperty)expr, ontologyUri1, _project);
+                                }
+                            }
+                        }
+                    } else if (mode == DISJOINT) {
+                        OWLDisjointDataPropertiesAxiom eop = (OWLDisjointDataPropertiesAxiom) axiom1;
+                        Set<OWLDataPropertyExpression> disjointDataProps = eop.getProperties();
+                        for (OWLDataPropertyExpression expr: disjointDataProps) {
+                            if (expr instanceof OWLDataProperty) {
+                                if (!((OWLDataProperty)expr).getIRI().toString().equals(thisId)) {
+                                    uri1 = OWLGUIUtilities.getEntityLabel((OWLDataProperty)expr, ontologyUri1, _project);
+                                }
+                            }
+                        }
+                        
+                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0]);
+                        OWLDisjointDataPropertiesAxiom eop2 = (OWLDisjointDataPropertiesAxiom) axiom2;
+                        Set<OWLDataPropertyExpression> disjointDataProps2 = eop2.getProperties();
+                        for (OWLDataPropertyExpression expr: disjointDataProps2) {
                             if (expr instanceof OWLDataProperty) {
                                 if (!((OWLDataProperty)expr).getIRI().toString().equals(thisId)) {
                                     uri2 = OWLGUIUtilities.getEntityLabel((OWLDataProperty)expr, ontologyUri1, _project);

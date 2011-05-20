@@ -29,7 +29,6 @@ import org.semanticweb.owlapi.model.OWLOntology;
 
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
-import com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 
 /**

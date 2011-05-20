@@ -41,7 +41,7 @@ import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
  * @author Nico Stieler
  */
 public class OwlSearchPage extends AbstractSearchPage {
-    
+    public static OwlSearchPage currentSearchPage;
     /**
 	 * 
 	 */
@@ -54,6 +54,7 @@ public class OwlSearchPage extends AbstractSearchPage {
                 new SearchPageOption(Messages.OwlSearchPage_2, OWLSearchFlags.OWL_DATA_PROPERTY_SEARCH_FLAG), 
                 new SearchPageOption(Messages.OwlSearchPage_5, OWLSearchFlags.OWL_DATA_PROPERTY_VALUES_SEARCH_FLAG), 
                 new SearchPageOption(Messages.OwlSearchPage_6, OWLSearchFlags.OWL_ANNOTATION_VALUES_SEARCH_FLAG),}); 
+        currentSearchPage = this;
     }
 
     /*
