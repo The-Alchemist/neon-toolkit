@@ -42,6 +42,8 @@ import org.semanticweb.owlapi.model.OWLDataRange;
 import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLDifferentIndividualsAxiom;
 import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
+import org.semanticweb.owlapi.model.OWLDisjointDataPropertiesAxiom;
+import org.semanticweb.owlapi.model.OWLDisjointObjectPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
 import org.semanticweb.owlapi.model.OWLEquivalentDataPropertiesAxiom;
@@ -643,7 +645,15 @@ public interface OWLModel {
      * @throws NeOnCoreException
      */
     public Set<OWLAnnotationProperty> getSuperAnnotationProperties(String propertyId) throws NeOnCoreException;
-    
+
+    /**
+     * returns a list of all disjoint objectpoperties of passed OWL object property
+     * 
+     * @param propertyId
+     * @return
+     * @throws NeOnCoreException
+     */
+    public Set<OWLObjectProperty> getDisjointObjectProperties(String propertyId) throws NeOnCoreException;
     /**
      * returns a list of all equivalent objectpoperties of passed OWL object property
      * 
@@ -661,6 +671,14 @@ public interface OWLModel {
      * @throws NeOnCoreException
      */
     public Set<OWLDataProperty> getEquivalentDataProperties(String propertyId) throws NeOnCoreException;
+    /**
+     * returns a list of all disjoint dataproperties of passed OWL dataproperty
+     * 
+     * @param propertyId
+     * @return
+     * @throws NeOnCoreException
+     */
+    public Set<OWLDataProperty> getDisjointDataProperties(String propertyId) throws NeOnCoreException;
 
     /**
      * returns a list of all inverse object poperties of passed OWL object property
@@ -968,6 +986,7 @@ public interface OWLModel {
     Set<ItemHits<OWLClassExpression,OWLClassAssertionAxiom>> getDescriptionHits(String individualUri) throws NeOnCoreException;
     Set<ItemHits<OWLIndividual,OWLDifferentIndividualsAxiom>> getDifferentIndividualHits(String individualUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLEquivalentDataPropertiesAxiom>> getEquivalentDataPropertyHits(String propertyUri) throws NeOnCoreException;
+    Set<ItemHits<OWLClassExpression,OWLDisjointDataPropertiesAxiom>> getDisjointDataPropertyHits(String propertyUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLEquivalentClassesAxiom>> getEquivalentRestrictionHits(String superClazzUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLEquivalentClassesAxiom>> getEquivalentDescriptionHitsWithoutRestrictionHits(String superClazzUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLInverseObjectPropertiesAxiom>> getInverseObjectPropertyHits(String propertyUri) throws NeOnCoreException;
@@ -980,6 +999,7 @@ public interface OWLModel {
     Set<ItemHits<OWLClassExpression,OWLObjectPropertyDomainAxiom>> getObjectPropertyDomainHits(String propertyUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLObjectPropertyRangeAxiom>> getObjectPropertyRangeHits(String propertyUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLEquivalentObjectPropertiesAxiom>> getEquivalentObjectPropertyHits(String propertyUri) throws NeOnCoreException;
+    Set<ItemHits<OWLClassExpression,OWLDisjointObjectPropertiesAxiom>> getDisjointObjectPropertyHits(String propertyUri) throws NeOnCoreException;
     Set<ItemHits<OWLDataPropertyExpression,OWLSubDataPropertyOfAxiom>> getSuperDataPropertyHits(String propertyUri) throws NeOnCoreException;
     boolean isRootObjectProperty(OWLObjectProperty prop) throws NeOnCoreException;
     Set<ItemHits<OWLIndividual,OWLSameIndividualAxiom>> getEquivalentIndividualHits(String individualUri) throws NeOnCoreException;

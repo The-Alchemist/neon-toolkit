@@ -43,6 +43,8 @@ import org.semanticweb.owlapi.model.OWLDataRange;
 import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLDifferentIndividualsAxiom;
 import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
+import org.semanticweb.owlapi.model.OWLDisjointDataPropertiesAxiom;
+import org.semanticweb.owlapi.model.OWLDisjointObjectPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
 import org.semanticweb.owlapi.model.OWLEquivalentDataPropertiesAxiom;
@@ -630,6 +632,48 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
         }
     }
 
+    @Override
+    public Set<OWLObjectProperty> getDisjointObjectProperties(String propertyId) throws NeOnCoreException {
+        try {
+            return _model.getDisjointObjectProperties(propertyId);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+
+    @Override
+    public Set<ItemHits<OWLClassExpression,OWLDisjointObjectPropertiesAxiom>> getDisjointObjectPropertyHits(String propertyUri) throws NeOnCoreException {
+        try {
+            return _model.getDisjointObjectPropertyHits(propertyUri);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+    @Override
+    public Set<OWLDataProperty> getDisjointDataProperties(String propertyId) throws NeOnCoreException {
+        try {
+            return _model.getDisjointDataProperties(propertyId);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
+
+    @Override
+    public Set<ItemHits<OWLClassExpression,OWLDisjointDataPropertiesAxiom>> getDisjointDataPropertyHits(String propertyUri) throws NeOnCoreException {
+        try {
+            return _model.getDisjointDataPropertyHits(propertyUri);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
     @Override
     public Set<ItemHits<OWLClassExpression,OWLDisjointClassesAxiom>> getDisjointDescriptionHits(String classId) throws NeOnCoreException {
         try {

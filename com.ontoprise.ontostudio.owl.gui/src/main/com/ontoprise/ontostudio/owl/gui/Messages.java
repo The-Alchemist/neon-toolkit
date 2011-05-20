@@ -118,6 +118,7 @@ public class Messages extends NLS {
     public static String ObjectPropertyPropertyPage_CheckBoxes_Symmetric;
     public static String ObjectPropertyPropertyPage_CheckBoxes_Asymmetric;
 	public static String ObjectPropertyPropertyPage_EquivalentProperties;
+    public static String ObjectPropertyPropertyPage_DisjointProperties;
 	public static String ObjectPropertyPropertyPage_SuperProperties;
     public static String ObjectPropertyPropertyPage_SubProperties;
     public static String ObjectPropertyPropertyPage_SubPropertyChains;
@@ -135,7 +136,8 @@ public class Messages extends NLS {
 	public static String DataPropertyPropertyPage_Domain;
 	public static String DataPropertyPropertyPage_Range;
 	public static String DataPropertyPropertyPage_CheckBoxes_Functional;
-	public static String DataPropertyPropertyPage_EquivalentProperties;
+    public static String DataPropertyPropertyPage_DisjointProperties;
+    public static String DataPropertyPropertyPage_EquivalentProperties;
 	public static String DataPropertyPropertyPage_SuperProperties;
 	public static String DataPropertyPropertyPage_SubProperties;
 	public static String ClazzDropHandler_0;
@@ -316,6 +318,7 @@ public class Messages extends NLS {
 	public static String ObjectPropertyTaxonomyPropertyPage_3;
 	public static String ObjectPropertyTaxonomyPropertyPage_4;
 	public static String ObjectPropertyTaxonomyPropertyPage_5;
+    public static String ObjectPropertyTaxonomyPropertyPage_6;
 	public static String IndividualDropHandler_0;
 	public static String IndividualDropHandler_1;
 	public static String IndividualDropHandler_2;
@@ -335,6 +338,7 @@ public class Messages extends NLS {
 	public static String DataPropertyTaxonomyPropertyPage_0;
 	public static String DataPropertyTaxonomyPropertyPage_1;
 	public static String DataPropertyTaxonomyPropertyPage_2;
+    public static String DataPropertyTaxonomyPropertyPage_3;
 	public static String DataPropertyValuesSearchMatch_0;
 	public static String DataPropertyValuesSearchMatch_1;
 	public static String AnnotationsPropertyPage2_Annotations;
