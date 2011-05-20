@@ -61,6 +61,8 @@ import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLDeclarationAxiom;
 import org.semanticweb.owlapi.model.OWLDifferentIndividualsAxiom;
 import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
+import org.semanticweb.owlapi.model.OWLDisjointDataPropertiesAxiom;
+import org.semanticweb.owlapi.model.OWLDisjointObjectPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
 import org.semanticweb.owlapi.model.OWLEquivalentDataPropertiesAxiom;
@@ -663,10 +665,22 @@ public class OWLModelCore implements OWLModel {
             return ontology.getEquivalentDataPropertiesAxioms((OWLDataProperty)parameters[0]);
         }
     };
+    private final AxiomRequest<OWLDisjointDataPropertiesAxiom> DisjointDataProperties_dataProperties_Request = new AxiomRequestCore<OWLDisjointDataPropertiesAxiom>(AxiomType.DISJOINT_DATA_PROPERTIES, "dataProperties") {
+        @Override
+        protected Iterable<OWLDisjointDataPropertiesAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
+            return ontology.getDisjointDataPropertiesAxioms((OWLDataProperty)parameters[0]);
+        }
+    };
     private final AxiomRequest<OWLEquivalentObjectPropertiesAxiom> EquivalentObjectProperties_objectProperties_Request = new AxiomRequestCore<OWLEquivalentObjectPropertiesAxiom>(AxiomType.EQUIVALENT_OBJECT_PROPERTIES, "objectProperties") {
         @Override
         protected Iterable<OWLEquivalentObjectPropertiesAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
             return ontology.getEquivalentObjectPropertiesAxioms((OWLObjectPropertyExpression)parameters[0]);
+        }
+    };
+    private final AxiomRequest<OWLDisjointObjectPropertiesAxiom> DisjointObjectProperties_objectProperties_Request = new AxiomRequestCore<OWLDisjointObjectPropertiesAxiom>(AxiomType.DISJOINT_OBJECT_PROPERTIES, "objectProperties") {
+        @Override
+        protected Iterable<OWLDisjointObjectPropertiesAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
+            return ontology.getDisjointObjectPropertiesAxioms((OWLObjectPropertyExpression)parameters[0]);
         }
     };
     private final AxiomRequest<OWLInverseObjectPropertiesAxiom> InverseObjectProperties_first_Request = new AxiomRequestCore<OWLInverseObjectPropertiesAxiom>(AxiomType.INVERSE_OBJECT_PROPERTIES, "first") {
@@ -1154,6 +1168,8 @@ public class OWLModelCore implements OWLModel {
     private final ItemCollector<OWLClassExpression,OWLEquivalentClassesAxiom> EquivalentClasses_descriptions_No_Restrictions_Collector = new ItemCollectorCore<OWLClassExpression,OWLEquivalentClassesAxiom>("descriptions", OWLClassExpression.class, COMPLEX_DESCRIPTION_AND_NO_RESTRICTION_FILTER);
     private final ItemCollector<OWLObjectPropertyExpression,OWLEquivalentObjectPropertiesAxiom> EquivalentObjectProperties_namedObjectProperties_Collector = new ItemCollectorCore<OWLObjectPropertyExpression,OWLEquivalentObjectPropertiesAxiom>("objectProperties", OWLObjectPropertyExpression.class, OBJECT_PROPERTY_FILTER);
     private final ItemCollector<OWLDataPropertyExpression,OWLEquivalentDataPropertiesAxiom> EquivalentDataProperties_namedDataProperties_Collector = new ItemCollectorCore<OWLDataPropertyExpression,OWLEquivalentDataPropertiesAxiom>("dataProperties", OWLDataPropertyExpression.class, DATA_PROPERTY_FILTER);
+    private final ItemCollector<OWLObjectPropertyExpression,OWLDisjointObjectPropertiesAxiom> DisjointObjectProperties_namedObjectProperties_Collector = new ItemCollectorCore<OWLObjectPropertyExpression,OWLDisjointObjectPropertiesAxiom>("objectProperties", OWLObjectPropertyExpression.class, OBJECT_PROPERTY_FILTER);
+    private final ItemCollector<OWLDataPropertyExpression,OWLDisjointDataPropertiesAxiom> DisjointDataProperties_namedDataProperties_Collector = new ItemCollectorCore<OWLDataPropertyExpression,OWLDisjointDataPropertiesAxiom>("dataProperties", OWLDataPropertyExpression.class, DATA_PROPERTY_FILTER);
     private final ItemCollector<OWLClassExpression,OWLDataPropertyDomainAxiom> DataPropertyDomain_domain_Collector = new ItemCollectorCore<OWLClassExpression,OWLDataPropertyDomainAxiom>("domain", OWLClassExpression.class);
     private final ItemCollector<OWLDataRange,OWLDataPropertyRangeAxiom> DataPropertyRange_range_Collector = new ItemCollectorCore<OWLDataRange,OWLDataPropertyRangeAxiom>("range", OWLDataRange.class);
 //    private final ItemCollector<OWLClassExpression,OWLDataPropertyRangeAxiom> DataPropertyRange_range_Collector = new ItemCollectorCore<OWLClassExpression,OWLDataPropertyRangeAxiom>("range", OWLClassExpression.class);
@@ -2018,10 +2034,18 @@ public class OWLModelCore implements OWLModel {
     public Set<OWLObjectProperty> getEquivalentObjectProperties(String propertyId) throws NeOnCoreException {
         return Cast.cast(EquivalentObjectProperties_namedObjectProperties_Collector.getItems(EquivalentObjectProperties_objectProperties_Request, autoBox(objectProperty(propertyId)), objectProperty(propertyId)));
     }
+    @Override
+    public Set<OWLObjectProperty> getDisjointObjectProperties(String propertyId) throws NeOnCoreException {
+        return Cast.cast(DisjointObjectProperties_namedObjectProperties_Collector.getItems(DisjointObjectProperties_objectProperties_Request, autoBox(objectProperty(propertyId)), objectProperty(propertyId)));
+    }
 
     @Override
     public Set<ItemHits<OWLClassExpression,OWLEquivalentObjectPropertiesAxiom>> getEquivalentObjectPropertyHits(String propertyId) throws NeOnCoreException {
         return Cast.cast(EquivalentObjectProperties_namedObjectProperties_Collector.getItemHits(EquivalentObjectProperties_objectProperties_Request, autoBox(objectProperty(propertyId)), objectProperty(propertyId)));
+    }
+    @Override
+    public Set<ItemHits<OWLClassExpression,OWLDisjointObjectPropertiesAxiom>> getDisjointObjectPropertyHits(String propertyId) throws NeOnCoreException {
+        return Cast.cast(DisjointObjectProperties_namedObjectProperties_Collector.getItemHits(DisjointObjectProperties_objectProperties_Request, autoBox(objectProperty(propertyId)), objectProperty(propertyId)));
     }
 
     @Override
@@ -2030,8 +2054,17 @@ public class OWLModelCore implements OWLModel {
     }
 
     @Override
+    public Set<OWLDataProperty> getDisjointDataProperties(String propertyId) throws NeOnCoreException {
+        return Cast.cast(DisjointDataProperties_namedDataProperties_Collector.getItems(DisjointDataProperties_dataProperties_Request, autoBox(dataProperty(propertyId)), dataProperty(propertyId)));
+    }
+
+    @Override
     public Set<ItemHits<OWLClassExpression,OWLEquivalentDataPropertiesAxiom>> getEquivalentDataPropertyHits(String propertyId) throws NeOnCoreException {
         return Cast.cast(EquivalentDataProperties_namedDataProperties_Collector.getItemHits(EquivalentDataProperties_dataProperties_Request, autoBox(dataProperty(propertyId)), dataProperty(propertyId)));
+    }
+    @Override
+    public Set<ItemHits<OWLClassExpression,OWLDisjointDataPropertiesAxiom>> getDisjointDataPropertyHits(String propertyId) throws NeOnCoreException {
+        return Cast.cast(DisjointDataProperties_namedDataProperties_Collector.getItemHits(DisjointDataProperties_dataProperties_Request, autoBox(dataProperty(propertyId)), dataProperty(propertyId)));
     }
 
     @Override
@@ -2718,7 +2751,10 @@ public class OWLModelCore implements OWLModel {
  
     @Override
     public Set<OWLAxiom> getReferencingAxioms(OWLEntity owlEntity, boolean includeImported) {
-        return _ontology.getReferencingAxioms(owlEntity, includeImported);
+        Set<OWLAxiom> referencingAxioms = new HashSet<OWLAxiom>();
+        referencingAxioms.addAll(getReferencingAnnotationAssertionAxioms(owlEntity.getIRI(), includeImported));
+        referencingAxioms.addAll(_ontology.getReferencingAxioms(owlEntity, includeImported));
+        return referencingAxioms;
     }
  
     @Override
@@ -2728,10 +2764,17 @@ public class OWLModelCore implements OWLModel {
 
     @Override
     public Set<OWLAxiom> getReferencingAxioms(OWLIndividual individual, boolean includeImported) throws NeOnCoreException {
+        Set<OWLAxiom> referencingAxioms = new HashSet<OWLAxiom>();
+        referencingAxioms.addAll(getReferencingAnnotationAssertionAxioms(IRI.create(individual.toStringID()), includeImported));
         if (individual instanceof OWLAnonymousIndividual) {
-            return _ontology.getReferencingAxioms((OWLAnonymousIndividual)individual);
+            referencingAxioms.addAll(_ontology.getReferencingAxioms((OWLAnonymousIndividual)individual));
+        }else{
+            referencingAxioms.addAll(_ontology.getReferencingAxioms((OWLEntity)individual, includeImported));
         }
-        return _ontology.getReferencingAxioms((OWLEntity)individual, includeImported);
+        return referencingAxioms;
+    }
+    public Set<OWLAnnotationAssertionAxiom> getReferencingAnnotationAssertionAxioms(OWLAnnotationSubject subject, boolean includeImported){
+        return _ontology.getAnnotationAssertionAxioms(subject);
     }
 
     @Override
