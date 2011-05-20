@@ -1498,7 +1498,7 @@
          <iterate
                ifEmpty="false">
             <instanceof
-                  value="com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement">
+                  value="org.neontoolkit.gui.navigator.elements.IIndividualTreeElement">
             </instanceof>
          </iterate>
       </definition>
