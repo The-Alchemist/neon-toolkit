@@ -20,6 +20,7 @@ import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLDataPropertyCharacteristicAxiom;
 import org.semanticweb.owlapi.model.OWLDataPropertyDomainAxiom;
 import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
+import org.semanticweb.owlapi.model.OWLDatatypeDefinitionAxiom;
 import org.semanticweb.owlapi.model.OWLDeclarationAxiom;
 import org.semanticweb.owlapi.model.OWLDifferentIndividualsAxiom;
 import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
@@ -350,6 +351,15 @@ public class GetMemberVisitor extends OWLKAON2VisitorAdapter {
             return object.getPropertyChain();
         } else if ("superObjectProperty".equals(_member)) { //$NON-NLS-1$
             return object.getSuperProperty();
+        }
+        return super.visit(object);
+    }
+    @Override
+    public Object visit(OWLDatatypeDefinitionAxiom object) {
+        if ("datatype".equals(_member)) { //$NON-NLS-1$
+            return object.getDatatype();
+        } else if ("dataRange".equals(_member)) { //$NON-NLS-1$
+            return object.getDataRange();
         }
         return super.visit(object);
     }

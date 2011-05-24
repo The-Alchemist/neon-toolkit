@@ -27,6 +27,8 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyFormat;
 import org.semanticweb.owlapi.model.OWLOntologyLoaderConfiguration;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.PrefixManager;
+import org.semanticweb.owlapi.util.DefaultPrefixManager;
 
 import uk.ac.manchester.cs.owl.owlapi.mansyntaxrenderer.ManchesterOWLSyntaxPrefixNameShortFormProvider;
 
@@ -74,7 +76,9 @@ public class InternalParserFunctionalSyntax {
         updateInput(input);
         OWLOntologyManager ontologyManager = ontology.getOWLOntologyManager();
         this.parser.setUp(ontologyManager, ontology, new OWLOntologyLoaderConfiguration());
-        this.parser.setPrefixes(new ManchesterOWLSyntaxPrefixNameShortFormProvider(ontologyFormat).getPrefixManager());
+        DefaultPrefixManager prefixes = new DefaultPrefixManager();
+        prefixes.clear();
+//        this.parser.Prefix()fix()setPrefixes(prefixes);
     }
     /**
      * @param axiomText

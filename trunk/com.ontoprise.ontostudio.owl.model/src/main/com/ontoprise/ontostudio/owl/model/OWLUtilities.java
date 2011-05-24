@@ -204,8 +204,12 @@ public class OWLUtilities {
     public static OWLDataRange dataRange(String dataRange) throws NeOnCoreException {
         try {
             return new InternalParserFunctionalSyntax().getDataRange(dataRange);
-        } catch (ParseException e) {
-            throw new InternalNeOnException(e);
+        } catch (ParseException firstException) {
+            try {
+                return new InternalParserFunctionalSyntax().getDataRange(IRIUtils.ensureValidIRISyntax(dataRange));
+            } catch (ParseException e1) {
+                throw new InternalNeOnException(firstException);
+            }
         }
     }
     /**

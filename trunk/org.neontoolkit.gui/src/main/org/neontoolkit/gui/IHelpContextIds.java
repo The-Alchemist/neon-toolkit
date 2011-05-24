@@ -61,6 +61,7 @@ public interface IHelpContextIds {
   public static final String OWL_CLASSES_VIEW = PREFIX_OWL + "OWL_CLASSES_VIEW";  //$NON-NLS-1$
   public static final String OWL_OBJECT_PROPERTIES_VIEW = PREFIX_OWL + "OWL_OBJECT_PROPERTIES_VIEW";  //$NON-NLS-1$
   public static final String OWL_DATA_PROPERTIES_VIEW = PREFIX_OWL + "OWL_DATA_PROPERTIES_VIEW";  //$NON-NLS-1$
+  public static final String OWL_DATATYPE_VIEW = PREFIX_OWL + "OWL_DATATYPE_VIEW";  //$NON-NLS-1$
   public static final String OWL_INDIVIDUAL_VIEW = PREFIX_OWL + "OWL_INDIVIDUAL_VIEW";  //$NON-NLS-1$
   public static final String OWL_ANNOTATION_PROPERTIES_VIEW = PREFIX_OWL + "OWL_ANNOTATION_PROPERTIES_VIEW";  //$NON-NLS-1$
   

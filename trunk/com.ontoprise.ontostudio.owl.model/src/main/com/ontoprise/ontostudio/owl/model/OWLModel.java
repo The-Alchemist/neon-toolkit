@@ -40,6 +40,7 @@ import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLDataRange;
 import org.semanticweb.owlapi.model.OWLDatatype;
+import org.semanticweb.owlapi.model.OWLDatatypeDefinitionAxiom;
 import org.semanticweb.owlapi.model.OWLDifferentIndividualsAxiom;
 import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
 import org.semanticweb.owlapi.model.OWLDisjointDataPropertiesAxiom;
@@ -999,6 +1000,7 @@ public interface OWLModel {
     Set<ItemHits<OWLClassExpression,OWLObjectPropertyDomainAxiom>> getObjectPropertyDomainHits(String propertyUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLObjectPropertyRangeAxiom>> getObjectPropertyRangeHits(String propertyUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLEquivalentObjectPropertiesAxiom>> getEquivalentObjectPropertyHits(String propertyUri) throws NeOnCoreException;
+    Set<ItemHits<OWLDatatype,OWLDatatypeDefinitionAxiom>> getEquivalentDatatypeHits(String DatatypeUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLDisjointObjectPropertiesAxiom>> getDisjointObjectPropertyHits(String propertyUri) throws NeOnCoreException;
     Set<ItemHits<OWLDataPropertyExpression,OWLSubDataPropertyOfAxiom>> getSuperDataPropertyHits(String propertyUri) throws NeOnCoreException;
     boolean isRootObjectProperty(OWLObjectProperty prop) throws NeOnCoreException;
