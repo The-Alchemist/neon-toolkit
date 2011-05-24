@@ -574,7 +574,13 @@ public class Messages extends NLS {
     public static String AnnotationPropertyPropertyPage_IntersectionOfRange;
     public static String AnnotationPropertyPropertyPage_IntersectionOfDomain;
     public static String ObjectPropertyPropertyPage_SubPropertyChains_tooltip;
-        
+    public static String DatatypeTaxonomyPropertyPage_Datatype;
+    public static String DatatypeTaxonomyPropertyPage_1;
+    public static String DatatypeTaxonomyPropertyPage_EquivalentDatatypes_0;
+    public static String DatatypeTaxonomyPropertyPage_EquivalentDatatypes_1;
+    public static String DatatypeTaxonomyPropertyPage_EquivalentDatatypes_2;
+    public static String DatatypeTaxonomyPropertyPage_EquivalentDatatypes_47;
+    
     static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

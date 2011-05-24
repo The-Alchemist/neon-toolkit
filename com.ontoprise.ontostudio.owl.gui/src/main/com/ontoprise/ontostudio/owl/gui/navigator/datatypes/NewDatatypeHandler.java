@@ -56,14 +56,14 @@ public class NewDatatypeHandler extends AbstractNewHandler {
     public Object createNewItem(Object parent) {
         try {
             OWLModel owlModel;
-            DatatypeHandler datatypeHandler = null;
+//            DatatypeHandler datatypeHandler = null;
             ITreeDataProvider provider;
             String newUri = ""; //$NON-NLS-1$
             if (parent instanceof DatatypeTreeElement) {
                 _parentDatatype = (DatatypeTreeElement) parent;
                 owlModel = OWLModelFactory.getOWLModel(_parentDatatype.getOntologyUri(), _parentDatatype.getProjectName());
                 provider = _parentDatatype.getProvider();
-                datatypeHandler = DatatypeManager.INSTANCE.getRegisteredDatatypeHandler(_parentDatatype.getId());
+//                datatypeHandler = DatatypeManager.INSTANCE.getRegisteredDatatypeHandler(_parentDatatype.getId());
             } else if (parent instanceof DatatypeFolderTreeElement) {
                 _parentDatatype = null;
                 DatatypeFolderTreeElement folder = (DatatypeFolderTreeElement) parent;
@@ -83,8 +83,8 @@ public class NewDatatypeHandler extends AbstractNewHandler {
             } catch (NeOnCoreException e) {
                 newUri = newId;
             }
-            if(datatypeHandler != null)
-                DatatypeManager.INSTANCE.registerDatatypeHandler(newUri, datatypeHandler);
+//            if(datatypeHandler != null)
+//                DatatypeManager.INSTANCE.registerDatatypeHandler(newUri, datatypeHandler);
             OWLDatatype datatype = OWLModelFactory.getOWLDataFactory(owlModel.getProjectId()).getOWLDatatype(OWLUtilities.toIRI(newUri));
             DatatypeTreeElement newElement = new DatatypeTreeElement(
                     datatype, owlModel.getOntologyURI(), owlModel.getProjectId(), provider);

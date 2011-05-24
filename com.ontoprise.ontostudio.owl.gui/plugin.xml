@@ -697,7 +697,7 @@
             activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeTreeElement"
             class="com.ontoprise.ontostudio.owl.gui.properties.datatypes.DatatypePropertyPage"
             id="com.ontoprise.ontostudio.owl.gui.propertyContributorDatatype"
-            name="%DatatypePropertyPage"/>
+            name="%DatatypeTaxonomyPage"/>
 
       <!-- Individual PropertyPage -->
       <!-- activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem" -->

@@ -924,7 +924,7 @@ public class OWLGUIUtilities {
     public static String verifyUserInput(String valueInput, String datatype, OWLModel owlModel) {
         
         if (!(datatype.equals("") || datatype.equals("<" + OWLAxiomUtils.OWL_INDIVIDUAL + ">")))  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-            return new ValueInputVerifier().verify(valueInput, new DatatypeVerifier(owlModel).verify(IRIUtils.ensureValidIdentifierSyntax(datatype)));
+            return new ValueInputVerifier(owlModel).verify(valueInput, new DatatypeVerifier(owlModel).verify(IRIUtils.ensureValidIdentifierSyntax(datatype)));
         else
             return valueInput;
     }

@@ -11,6 +11,7 @@
 package com.ontoprise.ontostudio.owl.gui.util;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
+import com.ontoprise.ontostudio.owl.model.OWLModel;
 
 /**
  * @author janiko
@@ -19,12 +20,20 @@ import com.ontoprise.ontostudio.owl.gui.Messages;
  */
 public class ValueInputVerifier extends InputVerifier{
 
+    private OWLModel _owlModel;
+
+    public ValueInputVerifier(OWLModel owlModel) {
+        _owlModel = owlModel;
+    }
+    public ValueInputVerifier() {
+        this(null);
+    }
     
     @Override
     public String verify(String... input) {
         if(input.length < 2 ||input[1] == null || input[1].length() <= 0) throw new IllegalArgumentException(Messages.InputVerifier_3);
         try{
-            return DatatypeManager.INSTANCE.parseObject(input[0], input[1] ).toString();
+            return DatatypeManager.INSTANCE.parseObject(input[0], input[1], _owlModel).toString();
         }catch (UnknownDatatypeException e){
 //            throw e;
             return null;

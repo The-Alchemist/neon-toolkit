@@ -14,7 +14,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.neontoolkit.core.exception.NeOnCoreException;
+import org.semanticweb.owlapi.model.OWLDatatype;
+import org.semanticweb.owlapi.model.OWLDatatypeDefinitionAxiom;
+
 import com.ontoprise.ontostudio.owl.gui.Messages;
+import com.ontoprise.ontostudio.owl.model.ItemHits;
+import com.ontoprise.ontostudio.owl.model.OWLModel;
+import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 
 /**
  * This is the registry of all datatypes. Applications with custom datatypes should register
@@ -51,7 +58,7 @@ public class DatatypeManager {
         m_handlersByDatatypeURI.remove(datatypeUri);
     }
     
-    public synchronized DatatypeHandler getRegisteredDatatypeHandler(String datatypeUri) {//NICO synchronized??
+    public synchronized DatatypeHandler getRegisteredDatatypeHandler(String datatypeUri) {
         return m_handlersByDatatypeURI.get(datatypeUri);
     }
     
@@ -60,9 +67,31 @@ public class DatatypeManager {
     }
 
     public synchronized Object parseObject(String objectValue,String datatypeURI) throws IllegalArgumentException, UnknownDatatypeException {
+        return parseObject(objectValue, datatypeURI, null);
+    }
+    public synchronized Object parseObject(String objectValue,String datatypeURI, OWLModel model) throws IllegalArgumentException, UnknownDatatypeException {
+        
         DatatypeHandler handler=m_handlersByDatatypeURI.get(datatypeURI);
-        if (handler==null)
-            throw new UnknownDatatypeException(Messages.InputVerifier_0+" "+datatypeURI); //$NON-NLS-1$
+        outer:
+        {
+            if (handler==null){
+                try {
+                    if(model != null){
+                        Set<ItemHits<OWLDatatype,OWLDatatypeDefinitionAxiom>> set = model.getEquivalentDatatypeHits(datatypeURI);
+                        if(set != null && set.size() > 0){
+                            for(ItemHits<OWLDatatype,OWLDatatypeDefinitionAxiom> item : set){
+                                handler = m_handlersByDatatypeURI.get(item.getItem().getIRI().toString());
+                                if(handler != null)
+                                    break outer;
+                            }
+                        }
+                    }
+                } catch (NeOnCoreException e) {
+                    // nothing to do
+                }
+                throw new UnknownDatatypeException(Messages.InputVerifier_0+" "+datatypeURI); //$NON-NLS-1$
+            }  
+        }
         return handler.parseObject(objectValue);
     }
 }

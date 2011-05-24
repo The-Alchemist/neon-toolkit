@@ -58,6 +58,7 @@ import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLDataRange;
 import org.semanticweb.owlapi.model.OWLDatatype;
+import org.semanticweb.owlapi.model.OWLDatatypeDefinitionAxiom;
 import org.semanticweb.owlapi.model.OWLDeclarationAxiom;
 import org.semanticweb.owlapi.model.OWLDifferentIndividualsAxiom;
 import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
@@ -284,6 +285,13 @@ public class OWLModelCore implements OWLModel {
         }
     };
 
+    /** A filter returning true iff a given <code>OWLDataRange</code> is of type <code>OWLDataRange</code>. */
+    private static final Filter<OWLDataRange> DATARANGE_FILTER = new Filter<OWLDataRange>() {//NICO is this FILTER needed?
+        @Override
+        public boolean matches(OWLDataRange item) {
+            return item instanceof OWLDataRange;
+        }
+    };
     /** A filter returning true iff a given <code>DataPropertyExpression</code> is of type <code>DataProperty</code>. */
     private static final Filter<OWLDataPropertyExpression> DATA_PROPERTY_FILTER = new Filter<OWLDataPropertyExpression>() {
         @Override
@@ -669,6 +677,26 @@ public class OWLModelCore implements OWLModel {
         @Override
         protected Iterable<OWLDisjointDataPropertiesAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
             return ontology.getDisjointDataPropertiesAxioms((OWLDataProperty)parameters[0]);
+        }
+    };
+    private final AxiomRequest<OWLDatatypeDefinitionAxiom> SubDatatype_Request = new AxiomRequestCore<OWLDatatypeDefinitionAxiom>(AxiomType.DATATYPE_DEFINITION, "datatype") {
+        @Override
+        protected Iterable<OWLDatatypeDefinitionAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
+            return ontology.getDatatypeDefinitions((OWLDatatype)parameters[0]);
+        }
+    };
+    private final AxiomRequest<OWLDatatypeDefinitionAxiom> SuperDatatype_Request = new AxiomRequestCore<OWLDatatypeDefinitionAxiom>(AxiomType.DATATYPE_DEFINITION, "datatype") {
+        @Override
+        protected Iterable<OWLDatatypeDefinitionAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
+            Set<OWLDatatypeDefinitionAxiom> axioms = new HashSet<OWLDatatypeDefinitionAxiom>();
+            Set<OWLDatatypeDefinitionAxiom> fittingAxioms = new HashSet<OWLDatatypeDefinitionAxiom>();
+            Set<OWLDatatype> datatypes = ontology.getDatatypesInSignature();
+            for(OWLDatatype type : datatypes)
+                axioms.addAll(ontology.getDatatypeDefinitions(type));
+            for(OWLDatatypeDefinitionAxiom axiom : axioms)
+                if(axiom.getDataRange().equals((OWLDatatype)parameters[0]))
+                    fittingAxioms.add(axiom);
+            return fittingAxioms;
         }
     };
     private final AxiomRequest<OWLEquivalentObjectPropertiesAxiom> EquivalentObjectProperties_objectProperties_Request = new AxiomRequestCore<OWLEquivalentObjectPropertiesAxiom>(AxiomType.EQUIVALENT_OBJECT_PROPERTIES, "objectProperties") {
@@ -1166,6 +1194,8 @@ public class OWLModelCore implements OWLModel {
     private final ItemCollector<OWLClassExpression,OWLEquivalentClassesAxiom> EquivalentClasses_descriptions_NamedDescriptionsOnly_Collector = new ItemCollectorCore<OWLClassExpression,OWLEquivalentClassesAxiom>("descriptions", OWLClassExpression.class, NAMED_DESCRIPTION_FILTER);
     private final ItemCollector<OWLClassExpression,OWLEquivalentClassesAxiom> EquivalentClasses_descriptions_RestrictionsOnly_Collector = new ItemCollectorCore<OWLClassExpression,OWLEquivalentClassesAxiom>("descriptions", OWLClassExpression.class, RESTRICTION_FILTER);
     private final ItemCollector<OWLClassExpression,OWLEquivalentClassesAxiom> EquivalentClasses_descriptions_No_Restrictions_Collector = new ItemCollectorCore<OWLClassExpression,OWLEquivalentClassesAxiom>("descriptions", OWLClassExpression.class, COMPLEX_DESCRIPTION_AND_NO_RESTRICTION_FILTER);
+    private final ItemCollector<OWLDataRange,OWLDatatypeDefinitionAxiom> SubDatatype_Collector = new ItemCollectorCore<OWLDataRange,OWLDatatypeDefinitionAxiom>("dataRange", OWLDataRange.class);
+    private final ItemCollector<OWLDataRange,OWLDatatypeDefinitionAxiom> SuperDatatype_Collector = new ItemCollectorCore<OWLDataRange,OWLDatatypeDefinitionAxiom>("datatype", OWLDataRange.class);//NICO TODO OWLDatatype.class/OWLRange.class/OWLDatatypeDefinition.class
     private final ItemCollector<OWLObjectPropertyExpression,OWLEquivalentObjectPropertiesAxiom> EquivalentObjectProperties_namedObjectProperties_Collector = new ItemCollectorCore<OWLObjectPropertyExpression,OWLEquivalentObjectPropertiesAxiom>("objectProperties", OWLObjectPropertyExpression.class, OBJECT_PROPERTY_FILTER);
     private final ItemCollector<OWLDataPropertyExpression,OWLEquivalentDataPropertiesAxiom> EquivalentDataProperties_namedDataProperties_Collector = new ItemCollectorCore<OWLDataPropertyExpression,OWLEquivalentDataPropertiesAxiom>("dataProperties", OWLDataPropertyExpression.class, DATA_PROPERTY_FILTER);
     private final ItemCollector<OWLObjectPropertyExpression,OWLDisjointObjectPropertiesAxiom> DisjointObjectProperties_namedObjectProperties_Collector = new ItemCollectorCore<OWLObjectPropertyExpression,OWLDisjointObjectPropertiesAxiom>("objectProperties", OWLObjectPropertyExpression.class, OBJECT_PROPERTY_FILTER);
@@ -2040,6 +2070,13 @@ public class OWLModelCore implements OWLModel {
     }
 
     @Override
+    public Set<ItemHits<OWLDatatype,OWLDatatypeDefinitionAxiom>> getEquivalentDatatypeHits(String DatatypeUri) throws NeOnCoreException {
+        Set<ItemHits<OWLDatatype,OWLDatatypeDefinitionAxiom>> set = new HashSet<ItemHits<OWLDatatype,OWLDatatypeDefinitionAxiom>>();
+        set.addAll((Collection<? extends ItemHits<OWLDatatype,OWLDatatypeDefinitionAxiom>>) Cast.cast(SubDatatype_Collector.getItemHits(SubDatatype_Request, autoBox(datatype(DatatypeUri)), datatype(DatatypeUri))));
+        set.addAll((Collection<? extends ItemHits<OWLDatatype,OWLDatatypeDefinitionAxiom>>) Cast.cast(SuperDatatype_Collector.getItemHits(SuperDatatype_Request, autoBox(datatype(DatatypeUri)), datatype(DatatypeUri))));
+        return set;
+    }
+    @Override
     public Set<ItemHits<OWLClassExpression,OWLEquivalentObjectPropertiesAxiom>> getEquivalentObjectPropertyHits(String propertyId) throws NeOnCoreException {
         return Cast.cast(EquivalentObjectProperties_namedObjectProperties_Collector.getItemHits(EquivalentObjectProperties_objectProperties_Request, autoBox(objectProperty(propertyId)), objectProperty(propertyId)));
     }
@@ -2588,6 +2625,9 @@ public class OWLModelCore implements OWLModel {
         return getOWLDataFactory().getOWLAnnotationProperty(OWLUtilities.toIRI(uri));
     }
 
+    private OWLDatatype datatype(String uri) throws NeOnCoreException {
+        return getOWLDataFactory().getOWLDatatype(OWLUtilities.toIRI(uri));
+    }
     private OWLObjectProperty objectProperty(String uri) throws NeOnCoreException {
         return getOWLDataFactory().getOWLObjectProperty(OWLUtilities.toIRI(uri));
     }

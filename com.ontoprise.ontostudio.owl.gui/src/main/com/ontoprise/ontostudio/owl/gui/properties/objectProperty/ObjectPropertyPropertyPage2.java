@@ -92,9 +92,6 @@ public class ObjectPropertyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
     private Composite _domainFormComposite;
     private Composite _rangeFormComposite;
 
-    /**
-     * TODO disjoint object properties are possible in OWL 1.1 October 2007: KAON2 does not support them for the moment
-     */
 
     private Button _functionalCheckBox;
     private Button _inverseFunctionalCheckBox;

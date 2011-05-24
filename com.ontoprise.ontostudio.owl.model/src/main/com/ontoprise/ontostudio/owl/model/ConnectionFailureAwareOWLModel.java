@@ -41,6 +41,7 @@ import org.semanticweb.owlapi.model.OWLDataPropertyExpression;
 import org.semanticweb.owlapi.model.OWLDataPropertyRangeAxiom;
 import org.semanticweb.owlapi.model.OWLDataRange;
 import org.semanticweb.owlapi.model.OWLDatatype;
+import org.semanticweb.owlapi.model.OWLDatatypeDefinitionAxiom;
 import org.semanticweb.owlapi.model.OWLDifferentIndividualsAxiom;
 import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
 import org.semanticweb.owlapi.model.OWLDisjointDataPropertiesAxiom;
@@ -839,6 +840,16 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
         }
     }
 
+    @Override
+    public Set<ItemHits<OWLDatatype,OWLDatatypeDefinitionAxiom>> getEquivalentDatatypeHits(String DatatypeUri) throws NeOnCoreException {
+        try {
+            return _model.getEquivalentDatatypeHits(DatatypeUri);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
     @Override
     public Set<ItemHits<OWLClassExpression,OWLEquivalentClassesAxiom>> getEquivalentRestrictionHits(String superClazzUri) throws NeOnCoreException {
         try {
@@ -2078,6 +2089,6 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
             throw checkConnectionFailure(e);
         } catch (RuntimeException e) {
             throw checkConnectionFailure(e);
-        }    }
-
+        }
+    }
 }

@@ -106,150 +106,195 @@ import org.semanticweb.owlapi.model.SWRLVariable;
  * @author Nico Stieler
  */
 public class OWLKAON2VisitorAdapter implements OWLObjectVisitorEx<Object> {
+    @Override
     public Object visit(OWLAnnotationProperty object) {
         return null;
     }
+    @Override
     public Object visit(OWLDataProperty object) {
         return null;
     }
+    @Override
     public Object visit(OWLObjectProperty object) {
         return null;
     }
+    @Override
     public Object visit(OWLDatatype object) {
         return null;
     }
+    @Override
     public Object visit(OWLClass object) {
         return null;
     }
+    @Override
     public Object visit(OWLObjectInverseOf object) {
         return null;
     }
+    @Override
     public Object visit(OWLLiteral object) {
         return null;
     }
+    @Override
     public Object visit(OWLDataComplementOf object) {
         return null;
     }
+    @Override
     public Object visit(OWLDataOneOf object) {
         return null;
     }
+    @Override
     public Object visit(OWLDataAllValuesFrom object) {
         return null;
     }
+    @Override
     public Object visit(OWLDataSomeValuesFrom object) {
         return null;
     }
+    @Override
     public Object visit(OWLDatatypeRestriction object) {
         return null;
     }
     public Object visit(OWLDataCardinalityRestriction object) {
         return null;
     }
+    @Override
     public Object visit(OWLDataHasValue object) {
         return null;
     }
+    @Override
     public Object visit(OWLObjectAllValuesFrom object) {
         return null;
     }
+    @Override
     public Object visit(OWLObjectSomeValuesFrom object) {
         return null;
     }
+    @Override
     public Object visit(OWLObjectHasSelf object) {
         return null;
     }
     public Object visit(OWLObjectCardinalityRestriction object) {
         return null;
     }
+    @Override
     public Object visit(OWLObjectOneOf object) {
         return null;
     }
+    @Override
     public Object visit(OWLObjectHasValue object) {
         return null;
     }
+    @Override
     public Object visit(OWLObjectComplementOf object) {
         return null;
     }
+    @Override
     public Object visit(OWLObjectUnionOf object) {
         return null;
     }
+    @Override
     public Object visit(OWLObjectIntersectionOf object) {
         return null;
     }
+    @Override
     public Object visit(OWLSubClassOfAxiom object) {
         return null;
     }
+    @Override
     public Object visit(OWLEquivalentClassesAxiom object) {
         return null;
     }
+    @Override
     public Object visit(OWLDisjointClassesAxiom object) {
         return null;
     }
+    @Override
     public Object visit(OWLDisjointUnionAxiom object) {
         return null;
     }
     public Object visit(OWLDataPropertyCharacteristicAxiom object) {
         return null;
     }
+    @Override
     public Object visit(OWLDataPropertyDomainAxiom object) {
         return null;
     }
+    @Override
     public Object visit(OWLDataPropertyRangeAxiom object) {
         return null;
     }
+    @Override
     public Object visit(OWLSubDataPropertyOfAxiom object) {
         return null;
     }
+    @Override
     public Object visit(OWLEquivalentDataPropertiesAxiom object) {
         return null;
     }
+    @Override
     public Object visit(OWLDisjointDataPropertiesAxiom object) {
         return null;
     }
     public Object visit(OWLObjectPropertyCharacteristicAxiom object) {
         return null;
     }
+    @Override
     public Object visit(OWLObjectPropertyDomainAxiom object) {
         return null;
     }
+    @Override
     public Object visit(OWLObjectPropertyRangeAxiom object) {
         return null;
     }
+    @Override
     public Object visit(OWLSubObjectPropertyOfAxiom object) {
         return null;
     }
+    @Override
     public Object visit(OWLEquivalentObjectPropertiesAxiom object) {
         return null;
     }
+    @Override
     public Object visit(OWLDisjointObjectPropertiesAxiom object) {
         return null;
     }
+    @Override
     public Object visit(OWLInverseObjectPropertiesAxiom object) {
         return null;
     }
+    @Override
     public Object visit(OWLSameIndividualAxiom object) {
         return null;
     }
+    @Override
     public Object visit(OWLDifferentIndividualsAxiom object) {
         return null;
     }
+    @Override
     public Object visit(OWLDataPropertyAssertionAxiom object) {
         return null;
     }
+    @Override
     public Object visit(OWLNegativeDataPropertyAssertionAxiom object) {
         return null;
     }
+    @Override
     public Object visit(OWLObjectPropertyAssertionAxiom object) {
         return null;
     }
+    @Override
     public Object visit(OWLNegativeObjectPropertyAssertionAxiom object) {
         return null;
     }
+    @Override
     public Object visit(OWLClassAssertionAxiom object) {
         return null;
     }
+    @Override
     public Object visit(OWLAnnotationAssertionAxiom object) {
         return null;
     }
+    @Override
     public Object visit(OWLDeclarationAxiom object) {
         return null;
     }
