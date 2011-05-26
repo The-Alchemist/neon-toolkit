@@ -30,13 +30,22 @@ import com.ontoprise.ontostudio.owl.gui.ontologyimportsgraph.OntologyImportsGrap
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 import com.ontoprise.ontostudio.owl.visualize.nodes.OntologyNode;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public class OntologyNodeContentProvider extends AbstractNodeContentProvider {
 
+    public static final int IMPORTED = 1;
+    public static final int IMPORTING = 2;
+    public static final int ALL = 3;
+    public static int SELECTED = 3;
+    
     public OntologyNodeContentProvider() {
         super("OWLOntologyImports"); //$NON-NLS-1$
     }
 
+    @Override
     public Object create() throws CoreException {
         return new OntologyNodeContentProvider();
     }
@@ -50,8 +59,11 @@ public class OntologyNodeContentProvider extends AbstractNodeContentProvider {
         if (element instanceof OntologyTreeElement) {
             String ontologyUri = ((OntologyTreeElement) element).getOntologyUri();
             LabelImageNode node = getNode(ontologyUri, ontologyUri, projectId, OntologyImportsGraphConfiguration.ONTOLOGY_TYPE, _ontologyLanguage);
-            Set<String> usedOntos = new HashSet<String>();
-            addImportedOntos(projectId, nodes, edges, node, usedOntos);
+            Set<String> usedImportedOntos = new HashSet<String>();
+            Set<String> usedImportingOntos = new HashSet<String>();
+            
+            if((SELECTED & 1) == 1)addImportedOntos(projectId, nodes, edges, node, usedImportedOntos);
+            if((SELECTED & 2) == 2)addImportingOntos(projectId, nodes, edges, node, usedImportingOntos);
 
             node.setIsRoot(true);
             node.setFixed(true);
@@ -68,8 +80,10 @@ public class OntologyNodeContentProvider extends AbstractNodeContentProvider {
         List<LabelImageNode> nodes = new ArrayList<LabelImageNode>();
         List<OntoStudioDefaultEdge> edges = new ArrayList<OntoStudioDefaultEdge>();
         if (node instanceof OntologyNode) {
-            Set<String> usedOntos = new HashSet<String>();
-            addImportedOntos(node.getProjectId(), nodes, edges, node, usedOntos);
+            Set<String> usedImportedOntos = new HashSet<String>();
+            Set<String> usedImportingOntos = new HashSet<String>();
+            addImportedOntos(node.getProjectId(), nodes, edges, node, usedImportedOntos);
+            addImportingOntos(node.getProjectId(), nodes, edges, node, usedImportingOntos);
 
             node.setIsRoot(true);
             node.setFixed(true);
@@ -93,6 +107,25 @@ public class OntologyNodeContentProvider extends AbstractNodeContentProvider {
                 addImportedOntos(projectName, nodes, edges, subNode, usedOntos);
                 addNode(subNode, nodes);
                 OntoStudioDefaultEdge edge = new OntoStudioDefaultEdge(node, subNode);
+                addEdge(edge, edges);
+            }
+        } catch (NeOnCoreException e) {
+            new NeonToolkitExceptionHandler().handleException(e.getMessage(), e, new Shell());
+        }
+    }
+    private void addImportingOntos(String projectName, List<LabelImageNode> nodes, List<OntoStudioDefaultEdge> edges, LabelImageNode node, Set<String> usedOntos) {
+        try {
+            Set<OWLModel> importingOntos = OWLModelFactory.getOWLModel(node.getOntologyId(), projectName).getImportingOntologies();
+            if (!usedOntos.contains(node.getOntologyId())) {
+                usedOntos.add(node.getOntologyId());
+            } else {
+                return;
+            }
+            for (OWLModel onto: importingOntos) {
+                LabelImageNode superNode = getNode(onto.getOntologyURI(), onto.getOntologyURI(), projectName, OntologyImportsGraphConfiguration.ONTOLOGY_TYPE, _ontologyLanguage);
+                addImportingOntos(projectName, nodes, edges, superNode, usedOntos);
+                addNode(superNode, nodes);
+                OntoStudioDefaultEdge edge = new OntoStudioDefaultEdge(superNode, node);
                 addEdge(edge, edges);
             }
         } catch (NeOnCoreException e) {

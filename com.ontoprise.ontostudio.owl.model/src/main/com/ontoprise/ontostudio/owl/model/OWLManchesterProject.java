@@ -79,6 +79,7 @@ import com.ontoprise.ontostudio.owl.model.util.file.UnknownOWLOntologyFormatExce
 
 /**
  * @author diwe
+ * @author Nico Stieler
  * 
  */
 public class OWLManchesterProject extends AbstractOntologyProject {
@@ -311,7 +312,7 @@ public class OWLManchesterProject extends AbstractOntologyProject {
     @Override
     public void init() {
         _ontologyManager = OWLManager.createOWLOntologyManager();
-        _ontologyManager.setSilentMissingImportsHandling(false);
+        _ontologyManager.setSilentMissingImportsHandling(false);//NICO false --> true
         _ontologyChangeVisitor = new OntologyChangeVisitor();
         _ontologyChangeListener = new OntologyChangeListener();
         _ontologyManager.addOntologyChangeListener(_ontologyChangeListener, new DefaultChangeBroadcastStrategy());
@@ -755,6 +756,17 @@ public class OWLManchesterProject extends AbstractOntologyProject {
         Set<String> result = new HashSet<String>();
         for (String o: getOntologies()) {
             if (getAllImportedOntologyURIs(o).contains(ontologyURI)) {
+                result.add(o);
+            }
+        }
+        return result;
+    }
+    
+    @Override
+    public Set<String> getImportingOntologyURIs(String ontologyURI) throws NeOnCoreException {
+        Set<String> result = new HashSet<String>();
+        for (String o: getOntologies()) {
+            if (getImportedOntologyURIs(o).contains(ontologyURI)) {
                 result.add(o);
             }
         }

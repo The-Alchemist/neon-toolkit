@@ -48,9 +48,13 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
@@ -72,6 +76,7 @@ import org.neontoolkit.ontovisualize.painters.OntoVisualizerGraphPane;
 import com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyProvider;
 import com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.ontologyimportsgraph.Messages;
+import com.ontoprise.ontostudio.owl.gui.ontologyimportsgraph.nodes.contentprovider.OntologyNodeContentProvider;
 import com.ontoprise.ontostudio.owl.gui.properties.AbstractOWLIdPropertyPage;
 import com.ontoprise.ontostudio.owl.visualize.nodes.OntologyNode;
 
@@ -83,6 +88,8 @@ import com.ontoprise.ontostudio.owl.visualize.nodes.OntologyNode;
  */
 /**
  * PropertyPage that displays the properties of ontologies in the EntityProperty view.
+ * 
+ * @author Nico Stieler
  */
 
 public class OntologyImportsGraphPropertyPage extends AbstractOWLIdPropertyPage {
@@ -99,6 +106,10 @@ public class OntologyImportsGraphPropertyPage extends AbstractOWLIdPropertyPage 
     private CursorLens _cursorLens;
     private ZoomLens _zoomLens;
     private boolean _handCursorOn;
+//    private Composite _frameComp;
+    private Button _importingButton;
+    private Button _importedButton;
+    private Button _allButton;
 
     @Override
     public Composite createContents(Composite theParent) {
@@ -115,8 +126,10 @@ public class OntologyImportsGraphPropertyPage extends AbstractOWLIdPropertyPage 
         });
         comp.setLayout(new GridLayout());
         
+        
         Composite parent = _toolkit.createComposite(section, SWT.NONE);
-        FillLayout layout = new FillLayout();
+        RowLayout layout = new RowLayout();//NICO continue here
+        layout.fill = true;
         layout.type = SWT.VERTICAL;
         parent.setLayout(layout);
         GridData data = new GridData();
@@ -128,6 +141,33 @@ public class OntologyImportsGraphPropertyPage extends AbstractOWLIdPropertyPage 
         section.setClient(parent);
 
         Display display = parent.getDisplay();
+
+        Listener listener = new Listener() {
+            @Override
+            public void handleEvent(Event event) {
+                initContents();
+            }
+        };
+        Composite radioBar = new Group(parent, SWT.NULL);
+        radioBar.setLayout(new FillLayout(SWT.HORIZONTAL));
+
+        Label label = new Label(radioBar, SWT.NULL);
+        label.setText(Messages.OntologyImportsGraphPropertyPage_radio_title);
+
+        _importedButton = new Button(radioBar, SWT.RADIO);
+        _importedButton.setText(Messages.OntologyImportsGraphPropertyPage_radio_imported);
+        _importedButton.setSelection(OntologyNodeContentProvider.SELECTED == OntologyNodeContentProvider.IMPORTED);
+        _importedButton.addListener(SWT.Selection, listener);
+        
+        _importingButton = new Button(radioBar, SWT.RADIO);
+        _importingButton.setText(Messages.OntologyImportsGraphPropertyPage_radio_importing);
+        _importingButton.setSelection(OntologyNodeContentProvider.SELECTED == OntologyNodeContentProvider.IMPORTING);
+        _importingButton.addListener(SWT.Selection, listener);
+        
+        _allButton = new Button(radioBar, SWT.RADIO);
+        _allButton.setText(Messages.OntologyImportsGraphPropertyPage_radio_all);
+        _allButton.setSelection(OntologyNodeContentProvider.SELECTED == OntologyNodeContentProvider.ALL);
+        _allButton.addListener(SWT.Selection, listener);
 
         _graph = new DefaultGraph();
         _graphPane = new OntoVisualizerGraphPane(parent, _graph, null);
@@ -182,6 +222,7 @@ public class OntologyImportsGraphPropertyPage extends AbstractOWLIdPropertyPage 
         _listener = new IPropertyChangeListener() {
 
             // Listens to the events that change the namespace and update visualizer
+            @Override
             public void propertyChange(PropertyChangeEvent event) {
                 if (event.getProperty().equals(NeOnUIPlugin.ID_DISPLAY_PREFERENCE)) {
                     if (!_graphPane.isDisposed()) {
@@ -245,6 +286,7 @@ public class OntologyImportsGraphPropertyPage extends AbstractOWLIdPropertyPage 
          * MouseWheel Listener, needed for Zoom in/out if Ctrl is pressed.
          */
         _graphPane.addListener(SWT.MouseWheel, new Listener() {
+            @Override
             public void handleEvent(Event event) {
                 if (event.stateMask == SWT.CTRL) {
                     int c = event.count;
@@ -267,6 +309,7 @@ public class OntologyImportsGraphPropertyPage extends AbstractOWLIdPropertyPage 
          */
         _graphPane.addListener(SWT.MouseMove, new Listener() {
 
+            @Override
             public void handleEvent(Event e) {
                 Point p = new Point(e.x, e.y);
                 LabelImageNode rootNode = (LabelImageNode) ((OntoVisualizerGraphPane) e.widget).getNodeAtPoint(p);
@@ -383,5 +426,41 @@ public class OntologyImportsGraphPropertyPage extends AbstractOWLIdPropertyPage 
     protected List<Section> getSections() {
         return null;
     }
+    private void initContents() {
+        try {
+            boolean valueHasChanged = false;
+            if(getMainPage().getSelection().getFirstElement() instanceof OntologyTreeElement){
+                if(_importedButton.getSelection()) {
+                   if(OntologyNodeContentProvider.SELECTED != OntologyNodeContentProvider.IMPORTED){
+                        valueHasChanged =true;
+                        OntologyNodeContentProvider.SELECTED = OntologyNodeContentProvider.IMPORTED;
+                    }
+                } else if(_importingButton.getSelection()) {
+                    if(OntologyNodeContentProvider.SELECTED != OntologyNodeContentProvider.IMPORTING){
+                        valueHasChanged =true;
+                        OntologyNodeContentProvider.SELECTED = OntologyNodeContentProvider.IMPORTING;
+                    }
+                } else if(_allButton.getSelection()) {
+                    if(OntologyNodeContentProvider.SELECTED != OntologyNodeContentProvider.ALL){
+                        valueHasChanged =true;
+                        OntologyNodeContentProvider.SELECTED = OntologyNodeContentProvider.ALL;
+                    }
+                }
+                if(valueHasChanged)
+                    refresh();
+                
+//                frameText = renderOntology(type);
+//    
+//            } else {
+//                frameText = new StringWriter();
+//                frameText.append(Messages.OntologySourceViewTab_6); 
+            }
 
+//            _frameText.getStyledText().setText(frameText.toString());
+
+        } catch (Exception e) {
+            // ignore
+            // at start-up time, the _owlModel is always null
+        }
+    }
 }
