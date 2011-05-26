@@ -27,6 +27,7 @@ import org.neontoolkit.core.natures.OntologyProjectNature;
 /**
  * 
  * @author Mika Maier-Collin
+ * @author Nico Stieler
  */
 public interface IOntologyProject {
     
@@ -391,7 +392,7 @@ public interface IOntologyProject {
      * @return                                  The URIs of the ontologies imported by <code>ontologyURI</code>.
      */
     Set<String> getAllImportedOntologyURIs(String ontologyURI) throws NeOnCoreException;
-    
+
     /**
      * Get the URIs of all ontologies (in-)directly importing a given ontology.
      * 
@@ -399,6 +400,14 @@ public interface IOntologyProject {
      * @return                                  The URIs of the ontologies importing <code>ontologyURI</code>.
      */
     Set<String> getAllImportingOntologyURIs(String ontologyURI) throws NeOnCoreException;
+    
+    /**
+     * Get the URIs of all ontologies directly importing a given ontology.
+     * 
+     * @param ontologyURI                       URI of the ontology which is imported.
+     * @return                                  The URIs of the ontologies importing <code>ontologyURI</code>.
+     */
+    Set<String> getImportingOntologyURIs(String ontologyURI) throws NeOnCoreException;
     
     /**
      * Set the default namespace for an ontology.

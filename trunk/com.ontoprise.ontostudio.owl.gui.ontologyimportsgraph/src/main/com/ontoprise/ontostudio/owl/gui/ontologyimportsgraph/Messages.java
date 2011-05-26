@@ -20,6 +20,10 @@ public class Messages extends NLS {
     private static final String BUNDLE_NAME = "com.ontoprise.ontostudio.owl.gui.ontologyimportsgraph.messages"; //$NON-NLS-1$
     public static String OntologyImportsGraphPropertyPage_0;
     public static String OntologyImportsGraphPropertyPage_1;
+    public static String OntologyImportsGraphPropertyPage_radio_title;
+    public static String OntologyImportsGraphPropertyPage_radio_imported;
+    public static String OntologyImportsGraphPropertyPage_radio_importing;
+    public static String OntologyImportsGraphPropertyPage_radio_all;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

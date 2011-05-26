@@ -1523,6 +1523,10 @@ public class OWLModelCore implements OWLModel {
     public Set<OWLModel> getAllImportingOntologies() throws NeOnCoreException {
         return getOWLModels(getOntologyProject().getAllImportingOntologyURIs(getOntologyURI()));
     }
+    @Override
+    public Set<OWLModel> getImportingOntologies() throws NeOnCoreException {
+        return getOWLModels(getOntologyProject().getImportingOntologyURIs(getOntologyURI()));
+    }
     
     private Set<OWLModel> getOWLModels(Set<String> ontologyURIs) throws NeOnCoreException {
         Set<OWLModel> result = new LinkedHashSet<OWLModel>();

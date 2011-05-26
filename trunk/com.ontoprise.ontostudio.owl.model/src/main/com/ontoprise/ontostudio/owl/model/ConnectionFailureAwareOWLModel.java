@@ -336,6 +336,17 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
             throw checkConnectionFailure(e);
         }
     }
+    
+    @Override
+    public Set<OWLModel> getImportingOntologies() throws NeOnCoreException {
+        try {
+            return _model.getImportingOntologies();
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
 
     @Override
     public Set<OWLIndividual> getAllIndividuals() throws NeOnCoreException {

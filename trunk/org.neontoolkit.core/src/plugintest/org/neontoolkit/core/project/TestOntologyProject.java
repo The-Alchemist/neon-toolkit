@@ -140,6 +140,11 @@ public class TestOntologyProject extends AbstractOntologyProject {
     public Set<String> getAllImportingOntologyURIs(String ontologyURI) throws NeOnCoreException {
         return null;
     }
+    
+    @Override
+    public Set<String> getImportingOntologyURIs(String ontologyURI) throws NeOnCoreException {
+        return null;
+    }
 
     @Override
     public Set<String> getImportedOntologyURIs(String ontologyURI) throws NeOnCoreException {

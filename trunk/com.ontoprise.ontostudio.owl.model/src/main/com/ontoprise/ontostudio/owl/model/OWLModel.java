@@ -973,6 +973,13 @@ public interface OWLModel {
      * @throws NeOnCoreException
      */
     public Set<OWLModel> getAllImportingOntologies() throws NeOnCoreException;
+    /**
+     * Get all ontologies importing the ontology directly of this model.
+     * 
+     * @return
+     * @throws NeOnCoreException
+     */
+    public Set<OWLModel> getImportingOntologies() throws NeOnCoreException;
 
     public Set<LocatedItem<OWLAnnotationAssertionAxiom>> getAnnotationHits(String owlEntityId) throws NeOnCoreException;
     public Set<LocatedItem<OWLAnnotationAssertionAxiom>> getAnnotationHits(OWLAnnotationSubject annotationSubject) throws NeOnCoreException;
