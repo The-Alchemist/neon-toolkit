@@ -48,7 +48,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -106,7 +105,6 @@ public class OntologyImportsGraphPropertyPage extends AbstractOWLIdPropertyPage 
     private CursorLens _cursorLens;
     private ZoomLens _zoomLens;
     private boolean _handCursorOn;
-//    private Composite _frameComp;
     private Button _importingButton;
     private Button _importedButton;
     private Button _allButton;
@@ -128,8 +126,7 @@ public class OntologyImportsGraphPropertyPage extends AbstractOWLIdPropertyPage 
         
         
         Composite parent = _toolkit.createComposite(section, SWT.NONE);
-        RowLayout layout = new RowLayout();//NICO continue here
-        layout.fill = true;
+        FillLayout layout = new FillLayout();
         layout.type = SWT.VERTICAL;
         parent.setLayout(layout);
         GridData data = new GridData();
@@ -148,26 +145,7 @@ public class OntologyImportsGraphPropertyPage extends AbstractOWLIdPropertyPage 
                 initContents();
             }
         };
-        Composite radioBar = new Group(parent, SWT.NULL);
-        radioBar.setLayout(new FillLayout(SWT.HORIZONTAL));
-
-        Label label = new Label(radioBar, SWT.NULL);
-        label.setText(Messages.OntologyImportsGraphPropertyPage_radio_title);
-
-        _importedButton = new Button(radioBar, SWT.RADIO);
-        _importedButton.setText(Messages.OntologyImportsGraphPropertyPage_radio_imported);
-        _importedButton.setSelection(OntologyNodeContentProvider.SELECTED == OntologyNodeContentProvider.IMPORTED);
-        _importedButton.addListener(SWT.Selection, listener);
         
-        _importingButton = new Button(radioBar, SWT.RADIO);
-        _importingButton.setText(Messages.OntologyImportsGraphPropertyPage_radio_importing);
-        _importingButton.setSelection(OntologyNodeContentProvider.SELECTED == OntologyNodeContentProvider.IMPORTING);
-        _importingButton.addListener(SWT.Selection, listener);
-        
-        _allButton = new Button(radioBar, SWT.RADIO);
-        _allButton.setText(Messages.OntologyImportsGraphPropertyPage_radio_all);
-        _allButton.setSelection(OntologyNodeContentProvider.SELECTED == OntologyNodeContentProvider.ALL);
-        _allButton.addListener(SWT.Selection, listener);
 
         _graph = new DefaultGraph();
         _graphPane = new OntoVisualizerGraphPane(parent, _graph, null);
@@ -215,6 +193,27 @@ public class OntologyImportsGraphPropertyPage extends AbstractOWLIdPropertyPage 
         OntovisualizePlugin.getDefault().getVisualizerConfigurator(ONTOLOGY_LANGUAGE_DUMMY).setNodePainters(_graphPane);
         addListeners();
         _layouter.start();
+        
+        Composite radioBar = new Group(comp, SWT.NULL);
+        radioBar.setLayout(new FillLayout(SWT.HORIZONTAL));
+        
+        Label label = new Label(radioBar, SWT.NULL);
+        label.setText(Messages.OntologyImportsGraphPropertyPage_radio_title);
+
+        _importedButton = new Button(radioBar, SWT.RADIO);
+        _importedButton.setText(Messages.OntologyImportsGraphPropertyPage_radio_imported);
+        _importedButton.setSelection(OntologyNodeContentProvider.SELECTED == OntologyNodeContentProvider.IMPORTED);
+        _importedButton.addListener(SWT.Selection, listener);
+        
+        _importingButton = new Button(radioBar, SWT.RADIO);
+        _importingButton.setText(Messages.OntologyImportsGraphPropertyPage_radio_importing);
+        _importingButton.setSelection(OntologyNodeContentProvider.SELECTED == OntologyNodeContentProvider.IMPORTING);
+        _importingButton.addListener(SWT.Selection, listener);
+        
+        _allButton = new Button(radioBar, SWT.RADIO);
+        _allButton.setText(Messages.OntologyImportsGraphPropertyPage_radio_all);
+        _allButton.setSelection(OntologyNodeContentProvider.SELECTED == OntologyNodeContentProvider.ALL);
+        _allButton.addListener(SWT.Selection, listener);
         return parent;
     }
 
