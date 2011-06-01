@@ -1035,7 +1035,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
      * @throws NeOnCoreException
      */
     private void createDisjointUnionRow(Composite parent, final Set<OWLClassExpression> descriptions, final List<LocatedAxiom> axioms, boolean imported, boolean enabled, String sourceOnto) throws NeOnCoreException {
-        FormRow row = new FormRow(_toolkit, parent, 2, imported, sourceOnto,_owlModel.getProjectId(),_id);
+        final FormRow row = new FormRow(_toolkit, parent, 2, imported, sourceOnto,_owlModel.getProjectId(),_id);
         OWLModel sourceOwlModel =_owlModel;
         if(imported){
             sourceOwlModel = OWLModelFactory.getOWLModel(sourceOnto, _project);
@@ -1125,6 +1125,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
                 texts.add(descriptionText);
                 addComplexText(descriptionText);
                 descriptionText.getStyledText().setFocus();
+                addModifyListenerForDisjointUnionRow(descriptionText, comp, texts, row);
             }
 
         };
