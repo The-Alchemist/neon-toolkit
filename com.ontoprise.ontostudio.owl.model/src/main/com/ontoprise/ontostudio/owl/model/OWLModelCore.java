@@ -64,6 +64,7 @@ import org.semanticweb.owlapi.model.OWLDifferentIndividualsAxiom;
 import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
 import org.semanticweb.owlapi.model.OWLDisjointDataPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLDisjointObjectPropertiesAxiom;
+import org.semanticweb.owlapi.model.OWLDisjointUnionAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
 import org.semanticweb.owlapi.model.OWLEquivalentDataPropertiesAxiom;
@@ -589,6 +590,12 @@ public class OWLModelCore implements OWLModel {
         @Override
         protected Iterable<OWLDisjointClassesAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
             return ontology.getDisjointClassesAxioms((OWLClass)parameters[0]);
+        }
+    };
+    private final AxiomRequest<OWLDisjointUnionAxiom> DisjointUnions_Request = new AxiomRequestCore<OWLDisjointUnionAxiom>(AxiomType.DISJOINT_UNION, "descriptions") {//NICO "descriptions"
+        @Override
+        protected Iterable<OWLDisjointUnionAxiom> getAxioms(OWLOntology ontology, Object[] parameters) throws NeOnCoreException {
+            return ontology.getDisjointUnionAxioms((OWLClass)parameters[0]);
         }
     };
     private static Set<OWLAnnotationAssertionAxiom> getAnnotationAssertionAxioms(final OWLOntology ontology, final OWLAnnotationSubject subject) {
@@ -1195,7 +1202,7 @@ public class OWLModelCore implements OWLModel {
     private final ItemCollector<OWLClassExpression,OWLEquivalentClassesAxiom> EquivalentClasses_descriptions_RestrictionsOnly_Collector = new ItemCollectorCore<OWLClassExpression,OWLEquivalentClassesAxiom>("descriptions", OWLClassExpression.class, RESTRICTION_FILTER);
     private final ItemCollector<OWLClassExpression,OWLEquivalentClassesAxiom> EquivalentClasses_descriptions_No_Restrictions_Collector = new ItemCollectorCore<OWLClassExpression,OWLEquivalentClassesAxiom>("descriptions", OWLClassExpression.class, COMPLEX_DESCRIPTION_AND_NO_RESTRICTION_FILTER);
     private final ItemCollector<OWLDataRange,OWLDatatypeDefinitionAxiom> SubDatatype_Collector = new ItemCollectorCore<OWLDataRange,OWLDatatypeDefinitionAxiom>("dataRange", OWLDataRange.class);
-    private final ItemCollector<OWLDataRange,OWLDatatypeDefinitionAxiom> SuperDatatype_Collector = new ItemCollectorCore<OWLDataRange,OWLDatatypeDefinitionAxiom>("datatype", OWLDataRange.class);//NICO TODO OWLDatatype.class/OWLRange.class/OWLDatatypeDefinition.class
+    private final ItemCollector<OWLDataRange,OWLDatatypeDefinitionAxiom> SuperDatatype_Collector = new ItemCollectorCore<OWLDataRange,OWLDatatypeDefinitionAxiom>("datatype", OWLDataRange.class);
     private final ItemCollector<OWLObjectPropertyExpression,OWLEquivalentObjectPropertiesAxiom> EquivalentObjectProperties_namedObjectProperties_Collector = new ItemCollectorCore<OWLObjectPropertyExpression,OWLEquivalentObjectPropertiesAxiom>("objectProperties", OWLObjectPropertyExpression.class, OBJECT_PROPERTY_FILTER);
     private final ItemCollector<OWLDataPropertyExpression,OWLEquivalentDataPropertiesAxiom> EquivalentDataProperties_namedDataProperties_Collector = new ItemCollectorCore<OWLDataPropertyExpression,OWLEquivalentDataPropertiesAxiom>("dataProperties", OWLDataPropertyExpression.class, DATA_PROPERTY_FILTER);
     private final ItemCollector<OWLObjectPropertyExpression,OWLDisjointObjectPropertiesAxiom> DisjointObjectProperties_namedObjectProperties_Collector = new ItemCollectorCore<OWLObjectPropertyExpression,OWLDisjointObjectPropertiesAxiom>("objectProperties", OWLObjectPropertyExpression.class, OBJECT_PROPERTY_FILTER);
@@ -1205,6 +1212,7 @@ public class OWLModelCore implements OWLModel {
 //    private final ItemCollector<OWLClassExpression,OWLDataPropertyRangeAxiom> DataPropertyRange_range_Collector = new ItemCollectorCore<OWLClassExpression,OWLDataPropertyRangeAxiom>("range", OWLClassExpression.class);
     private final ItemCollector<OWLIndividual,OWLDifferentIndividualsAxiom> DifferentIndividuals_individuals_Collector = new ItemCollectorCore<OWLIndividual,OWLDifferentIndividualsAxiom>("individuals", OWLIndividual.class);
     private final ItemCollector<OWLClassExpression,OWLDisjointClassesAxiom> DisjointClasses_descriptions_Collector = new ItemCollectorCore<OWLClassExpression,OWLDisjointClassesAxiom>("descriptions", OWLClassExpression.class);
+    private final ItemCollector<OWLClassExpression,OWLDisjointUnionAxiom> DisjointUnions_Collector = new ItemCollectorCore<OWLClassExpression,OWLDisjointUnionAxiom>("descriptions", OWLClassExpression.class);//NICO: "descriptions", OWLClassExpression.class
     private final ItemCollector<OWLObjectPropertyExpression,OWLInverseObjectPropertiesAxiom> InverseObjectProperties_namedFirst_Collector = new ItemCollectorCore<OWLObjectPropertyExpression,OWLInverseObjectPropertiesAxiom>("first", OWLObjectPropertyExpression.class, OBJECT_PROPERTY_FILTER);
     private final ItemCollector<OWLObjectPropertyExpression,OWLInverseObjectPropertiesAxiom> InverseObjectProperties_namedSecond_Collector = new ItemCollectorCore<OWLObjectPropertyExpression,OWLInverseObjectPropertiesAxiom>("second", OWLObjectPropertyExpression.class, OBJECT_PROPERTY_FILTER);
     private final ItemCollector<OWLClassExpression,OWLObjectPropertyDomainAxiom> ObjectPropertyDomain_domain_Collector = new ItemCollectorCore<OWLClassExpression,OWLObjectPropertyDomainAxiom>("domain", OWLClassExpression.class);
@@ -1860,17 +1868,25 @@ public class OWLModelCore implements OWLModel {
         return EquivalentClasses_descriptions_No_Restrictions_Collector.getItemHits(EquivalentClasses_descriptions_Request, autoBox(owlClass(classId)), owlClass(classId));
     }
 
-
     @Override
     public Set<OWLClassExpression> getDisjointDescriptions(String classId) throws NeOnCoreException {
         return DisjointClasses_descriptions_Collector.getItems(DisjointClasses_descriptions_Request, autoBox(owlClass(classId)), owlClass(classId));
     }
-
+    
     @Override
     public Set<ItemHits<OWLClassExpression,OWLDisjointClassesAxiom>> getDisjointDescriptionHits(String classId) throws NeOnCoreException {
         return DisjointClasses_descriptions_Collector.getItemHits(DisjointClasses_descriptions_Request, autoBox(owlClass(classId)), owlClass(classId));
     }
 
+//    @Override
+//    public Set<OWLClassExpression> getDisjointUnionAxioms(String classId) throws NeOnCoreException {
+//        return DisjointClasses_descriptions_Collector.getItems(DisjointClasses_descriptions_Request, autoBox(owlClass(classId)), owlClass(classId));
+//    }
+
+    @Override
+    public Set<ItemHits<OWLClassExpression,OWLDisjointUnionAxiom>> getDisjointUnionHits(String classId) throws NeOnCoreException{
+        return DisjointUnions_Collector.getItemHits(DisjointUnions_Request, autoBox(owlClass(classId)), owlClass(classId));
+    }
     @Override
     public Set<OWLIndividual> getIndividuals(String classId) throws NeOnCoreException {
         return ClassMember_individual_Collector.getItems(ClassMember_description_Request, autoBox(owlClass(classId)));

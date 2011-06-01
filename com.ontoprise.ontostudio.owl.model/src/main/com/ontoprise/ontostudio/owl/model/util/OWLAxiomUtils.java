@@ -291,6 +291,18 @@ public class OWLAxiomUtils {
         }
     }
 
+    public static void triggerRemovePressed(List<OWLAxiom> axioms, String[] descriptions, OWLNamespaces namespaces, String id, OWLModel owlModel) throws NeOnCoreException {
+        try {
+            GenericRefactoringExecutionStarter.startRefactoring(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "com.ontoprise.ontostudio.owl.gui.refactor.deleteAxiom", //$NON-NLS-1$
+                    axioms,
+                    descriptions,
+                    namespaces,
+                    id,
+                    owlModel); 
+        } catch (CoreException e) {
+            throw new InternalNeOnException(e);
+        }
+    }
     public static void triggerRemovePressed(List<OWLAxiom> axioms, OWLEntity entity, OWLNamespaces namespaces, String id, OWLModel owlModel, int mode) throws NeOnCoreException {
         try {
             GenericRefactoringExecutionStarter.startRefactoring(

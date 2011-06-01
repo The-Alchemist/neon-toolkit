@@ -45,6 +45,7 @@ import org.semanticweb.owlapi.model.OWLDifferentIndividualsAxiom;
 import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
 import org.semanticweb.owlapi.model.OWLDisjointDataPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLDisjointObjectPropertiesAxiom;
+import org.semanticweb.owlapi.model.OWLDisjointUnionAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
 import org.semanticweb.owlapi.model.OWLEquivalentDataPropertiesAxiom;
@@ -985,6 +986,7 @@ public interface OWLModel {
     public Set<LocatedItem<OWLAnnotationAssertionAxiom>> getAnnotationHits(OWLAnnotationSubject annotationSubject) throws NeOnCoreException;
     public Set<LocatedItem<OWLAnnotationAssertionAxiom>> getAnnotationHitsForAnnotationProperty(OWLAnnotationProperty annotationProperty) throws NeOnCoreException;
     public Set<ItemHits<OWLClassExpression,OWLDisjointClassesAxiom>> getDisjointDescriptionHits(String classId) throws NeOnCoreException;
+    Set<ItemHits<OWLClassExpression,OWLDisjointUnionAxiom>> getDisjointUnionHits(String clazzUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLEquivalentClassesAxiom>> getEquivalentDescriptionHits(String clazzUri) throws NeOnCoreException;
     Set<ItemHits<OWLClassExpression,OWLClassAssertionAxiom>> getClassHits(String individualUri) throws NeOnCoreException;
     Set<ItemHits<OWLDataRange,OWLDataPropertyRangeAxiom>> getDataPropertyDataRangeHits(String propertyUri) throws NeOnCoreException;
