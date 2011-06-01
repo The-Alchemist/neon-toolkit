@@ -172,8 +172,12 @@ public class OWLUtilities {
     public static OWLAxiom axiom(String axiomText) throws NeOnCoreException {
         try {
             return new InternalParserFunctionalSyntax().getAxiom(axiomText);
-        } catch (ParseException e) {
-            throw new InternalNeOnException(e);
+        } catch (ParseException firstException) {
+            try {
+                return new InternalParserFunctionalSyntax().getAxiom(IRIUtils.ensureValidIRISyntax(axiomText));
+            } catch (ParseException e1) {
+                throw new InternalNeOnException(firstException);
+            }
         }
     }
     /**
@@ -188,8 +192,12 @@ public class OWLUtilities {
     public static OWLClassExpression description(String description) throws NeOnCoreException {
         try {
             return new InternalParserFunctionalSyntax().getDescription(description);
-        } catch (ParseException e) {
-            throw new InternalNeOnException(e);
+        } catch (ParseException firstException) {
+            try {
+                return new InternalParserFunctionalSyntax().getDescription(IRIUtils.ensureValidIRISyntax(description));
+            } catch (ParseException e1) {
+                throw new InternalNeOnException(firstException);
+            }
         }
     }
     /**
@@ -244,8 +252,12 @@ public class OWLUtilities {
     public static OWLObjectProperty objectProperty(String objectProperty) throws NeOnCoreException {
         try {
             return new InternalParserFunctionalSyntax().getObjectProperty(objectProperty);
-        } catch (ParseException e) {
-            throw new InternalNeOnException(e);
+        } catch (ParseException firstException) {
+            try {
+                return new InternalParserFunctionalSyntax().getObjectProperty(IRIUtils.ensureValidIRISyntax(objectProperty));
+            } catch (ParseException e1) {
+                throw new InternalNeOnException(firstException);
+            }
         }
     }
     /**
@@ -260,8 +272,12 @@ public class OWLUtilities {
     public static OWLAnnotationProperty annotationProperty(String annotationProperty) throws NeOnCoreException {
         try {
             return new InternalParserFunctionalSyntax().getAnnotationProperty(annotationProperty);
-        } catch (ParseException e) {
-            throw new InternalNeOnException(e);
+        } catch (ParseException firstException) {
+            try {
+                return new InternalParserFunctionalSyntax().getAnnotationProperty(IRIUtils.ensureValidIRISyntax(annotationProperty));
+            } catch (ParseException e1) {
+                throw new InternalNeOnException(firstException);
+            }
         }
     }
     /**
@@ -276,15 +292,19 @@ public class OWLUtilities {
     public static OWLDataProperty dataProperty(String dataProperty) throws NeOnCoreException {
         try {
             return new InternalParserFunctionalSyntax().getDataProperty(dataProperty);
-        } catch (ParseException e) {
-            throw new InternalNeOnException(e);
+        } catch (ParseException firstException) {
+            try {
+                return new InternalParserFunctionalSyntax().getDataProperty(IRIUtils.ensureValidIRISyntax(dataProperty));
+            } catch (ParseException e1) {
+                throw new InternalNeOnException(firstException);
+            }
         }
     }
     public static String toString(OWLOntologyID id) {
         if(id.getDefaultDocumentIRI() == null ) return null;
         return id.getDefaultDocumentIRI().toURI().toString();
     }
-    public static List<String> toString(List<OWLObjectPropertyExpression> chain) {//NICO TODO check usage
+    public static List<String> toString(List<OWLObjectPropertyExpression> chain) {
         List<String> result = new ArrayList<String>();
         for (OWLObjectPropertyExpression e: chain) {
             result.add(toString(e));

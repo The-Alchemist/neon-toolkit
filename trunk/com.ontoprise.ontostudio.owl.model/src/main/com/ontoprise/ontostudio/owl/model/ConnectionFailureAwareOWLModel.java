@@ -46,6 +46,7 @@ import org.semanticweb.owlapi.model.OWLDifferentIndividualsAxiom;
 import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
 import org.semanticweb.owlapi.model.OWLDisjointDataPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLDisjointObjectPropertiesAxiom;
+import org.semanticweb.owlapi.model.OWLDisjointUnionAxiom;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
 import org.semanticweb.owlapi.model.OWLEquivalentDataPropertiesAxiom;
@@ -708,6 +709,16 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
         }
     }
 
+    @Override
+    public Set<ItemHits<OWLClassExpression,OWLDisjointUnionAxiom>> getDisjointUnionHits(String classId) throws NeOnCoreException {
+        try {
+            return _model.getDisjointUnionHits(classId);
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
     @Override
     public Set<OWLClassExpression> getDomainDescriptions(String propertyId) throws NeOnCoreException {
         try {
