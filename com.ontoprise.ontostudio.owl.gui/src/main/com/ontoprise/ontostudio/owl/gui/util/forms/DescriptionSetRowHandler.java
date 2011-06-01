@@ -1,16 +1,11 @@
 /*****************************************************************************
- * Copyright (c) 2009 ontoprise GmbH.
- *
- * All rights reserved.
- *
- * This program and the accompanying materials are made available under the
- * Eclipse Public License v1.0 which accompanies this distribution,
- * and is available at http://www.eclipse.org/legal/epl-v10.html
+ * written by the NeOn Technologies Foundation Ltd.
  ******************************************************************************/
 
 package com.ontoprise.ontostudio.owl.gui.util.forms;
 
 import java.util.List;
+import java.util.Set;
 
 import org.neontoolkit.core.exception.NeOnCoreException;
 
@@ -21,14 +16,14 @@ import com.ontoprise.ontostudio.owl.model.OWLModel;
 /**
  * @author Nico Stieler
  */
-public abstract class DescriptionRowHandler extends AbstractRowHandler {
+public abstract class DescriptionSetRowHandler extends AbstractRowHandler {
 
-    private String[] _descriptionArray;
+    private Set<String[]> _descriptionArrays;
     private List<LocatedAxiom> _axioms;
 
-    public DescriptionRowHandler(IOWLPropertyPage page, OWLModel localOwlModel, OWLModel sourceOwlModel, String[] descriptionArray, List<LocatedAxiom> axioms) {
+    public DescriptionSetRowHandler(IOWLPropertyPage page, OWLModel localOwlModel, OWLModel sourceOwlModel, Set<String[]> descriptionArrays, List<LocatedAxiom> axioms) {
         super(page, localOwlModel, sourceOwlModel);
-        _descriptionArray = descriptionArray;
+        _descriptionArrays = descriptionArrays;
         _axioms = axioms;
     }
     
@@ -47,11 +42,7 @@ public abstract class DescriptionRowHandler extends AbstractRowHandler {
         return _axioms;
     }
 
-    public String[] getDescriptionArray() {
-        return _descriptionArray;
-    }
-    @Override
-    public void editPressed() {
-        // empty implementation
+    public Set<String[]> getDescriptionArrays() {
+        return _descriptionArrays;
     }
 }

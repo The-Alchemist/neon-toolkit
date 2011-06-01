@@ -48,6 +48,8 @@ public abstract class AbstractRowHandler {
 
     public abstract void addPressed();
 
+    public abstract void editPressed();
+    
     public abstract void savePressed();
 
     public abstract void removePressed() throws NeOnCoreException, CommandException;

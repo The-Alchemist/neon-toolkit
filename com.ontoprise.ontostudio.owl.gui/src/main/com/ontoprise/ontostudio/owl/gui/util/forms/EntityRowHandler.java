@@ -52,5 +52,9 @@ public abstract class EntityRowHandler extends AbstractRowHandler {
     public OWLEntity getEntity() {
         return _entity;
     }
+    @Override
+    public void editPressed() {
+        // empty implementation
+    }
 
 }
