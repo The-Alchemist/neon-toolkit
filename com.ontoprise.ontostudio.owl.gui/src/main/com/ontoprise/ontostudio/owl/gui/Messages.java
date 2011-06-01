@@ -57,6 +57,8 @@ public class Messages extends NLS {
 	public static String ClazzTaxonomyPropertyPage2_3;
     public static String ClazzTaxonomyPropertyPage2_4;
 	public static String ClazzTaxonomyPropertyPage2_ApplyChanges;
+    public static String ClazzTaxonomyPropertyPage2_DisjointClasses;
+    public static String ClazzTaxonomyPropertyPage2_DisjointUnion;
 	public static String ClazzPropertyPage_Uri;
 	public static String ClazzPropertyPage_SuperRestrictions;
 	public static String ClazzPropertyPage_EquivalentRestrictions;
@@ -74,7 +76,6 @@ public class Messages extends NLS {
     public static String ClazzPropertyPage_EquivalentClazzes_Without_Restriction_0;
     public static String ClazzPropertyPage_EquivalentClazzes_Without_Restriction_1;
     public static String ClazzPropertyPage_EquivalentClazz_Without_Restriction_1;
-	public static String ClazzPropertyPage_DisjointClasses;
 	public static String IndividualPropertyPage_Property;
 	public static String IndividualPropertyPage_Value;
 	public static String IndividualPropertyPage_Type;

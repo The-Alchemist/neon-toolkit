@@ -13,6 +13,7 @@ package com.ontoprise.ontostudio.owl.gui.properties.clazz;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -24,6 +25,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
@@ -38,9 +40,11 @@ import org.neontoolkit.gui.IHelpContextIds;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDisjointClassesAxiom;
+import org.semanticweb.owlapi.model.OWLDisjointUnionAxiom;
 import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 
@@ -48,8 +52,10 @@ import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.properties.AbstractOWLIdPropertyPage;
 import com.ontoprise.ontostudio.owl.gui.properties.LocatedAxiom;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
+import com.ontoprise.ontostudio.owl.gui.util.forms.AbstractFormRow;
 import com.ontoprise.ontostudio.owl.gui.util.forms.AxiomRowHandler;
 import com.ontoprise.ontostudio.owl.gui.util.forms.DescriptionRowHandler;
+import com.ontoprise.ontostudio.owl.gui.util.forms.DescriptionSetRowHandler;
 import com.ontoprise.ontostudio.owl.gui.util.forms.EmptyFormRow;
 import com.ontoprise.ontostudio.owl.gui.util.forms.FormRow;
 import com.ontoprise.ontostudio.owl.gui.util.textfields.DescriptionText;
@@ -59,6 +65,7 @@ import com.ontoprise.ontostudio.owl.model.OWLModelPlugin;
 import com.ontoprise.ontostudio.owl.model.OWLUtilities;
 import com.ontoprise.ontostudio.owl.model.commands.ApplyChanges;
 import com.ontoprise.ontostudio.owl.model.commands.clazz.GetDisjointClazzHits;
+import com.ontoprise.ontostudio.owl.model.commands.clazz.GetDisjointUnionHits;
 import com.ontoprise.ontostudio.owl.model.commands.clazz.GetEquivalentClazzHits;
 import com.ontoprise.ontostudio.owl.model.commands.clazz.GetEquivalentClazzHitsWithoutRestrictionHits;
 import com.ontoprise.ontostudio.owl.model.commands.clazz.GetEquivalentRestrictionHits;
@@ -82,6 +89,11 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
      * The number of columns for a row (including buttons)
      */
     private static final int NUM_COLS = 3;
+    
+    /*
+     * The number of columns for the first column of a row in case of sets, e.g. for DisjointUnion
+     */
+    private static final int NUM_COLS_SET = 4;
 
     /*
      * JFace Forms variables
@@ -90,11 +102,13 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
     private Section _subClazzesSection;
     private Section _equivClazzesSection;
     private Section _disjointClazzesSection;
+    private Section _disjointClazzUnionSection;
 
     private Composite _superClazzesComp;
     private Composite _subClazzesComp;
     private Composite _equivClazzesComp;
     private Composite _disjointClazzesComp;
+    private Composite _disjointClazzUnionComp;
 
     public ClazzTaxonomyPropertyPage2() {
         super();
@@ -109,6 +123,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
         createSubDescriptionsArea(body);
         createEquivalentDescriptionsArea(body);
         createDisjointClassesArea(body);
+        createDisjointClassUnionArea(body);
         _form.reflow(true);
         return body;
     }
@@ -120,6 +135,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
         initSubDescriptionsSection(false);
         initEquivalentDescriptionsSection(false);
         initDisjointDescriptionsSection(false);
+        initDisjointUnionDescriptionsSection(false);
 
         layoutSections();
         _form.reflow(true);
@@ -132,6 +148,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
         initSubDescriptionsSection(false);
         initEquivalentDescriptionsSection(false);
         initDisjointDescriptionsSection(false);
+        initDisjointUnionDescriptionsSection(false);
 
         layoutSections();
         _form.reflow(true);
@@ -389,13 +406,16 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
     protected String[][] getDisjointDescriptionHits() throws CommandException {
         return new GetDisjointClazzHits(_project, _ontologyUri, _id).getResults();
     }
+    protected String[][] getDisjointUnionOfClassExcpressionHits() throws CommandException {
+        return new GetDisjointUnionHits(_project, _ontologyUri, _id).getResults();
+    }
 
     /**
      * Create disjoint classes area
      */
     private void createDisjointClassesArea(Composite composite) {
         _disjointClazzesSection = _toolkit.createSection(composite, Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
-        _disjointClazzesSection.setText(Messages.ClazzPropertyPage_DisjointClasses);
+        _disjointClazzesSection.setText(Messages.ClazzTaxonomyPropertyPage2_DisjointClasses);
         _disjointClazzesSection.addExpansionListener(new ExpansionAdapter() {
             @Override
             public void expansionStateChanged(ExpansionEvent e) {
@@ -452,6 +472,217 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
         if (setFocus) {
             activeComposite.setFocus();
         }
+    }
+
+    private void initDisjointUnionDescriptionsSection(boolean setFocus) {
+        closeAllToolbars();
+        clearComposite(_disjointClazzUnionComp);
+
+        try {
+            String[][] disjointUnionHitsArray = getDisjointUnionOfClassExcpressionHits();
+            TreeSet<String[]> sortedSet = getSortedSet(disjointUnionHitsArray);
+
+            for (String[] hit: sortedSet) {
+                List<String> sourceOntoList = new ArrayList<String>();
+                List<LocatedAxiom> axiomList = new ArrayList<LocatedAxiom>();
+                String axiomText = hit[0];
+                String ontologyUri = hit[1];
+                boolean isLocal = ontologyUri.equals(_ontologyUri);
+
+                sourceOntoList.add(ontologyUri);
+                OWLDisjointUnionAxiom disjointUnion = 
+                    (OWLDisjointUnionAxiom) OWLUtilities.axiom(axiomText);
+                axiomList.add(new LocatedAxiom(disjointUnion, isLocal));
+                Set<OWLClassExpression> descriptions = disjointUnion.getClassExpressions();
+                
+                createDisjointUnionRow(_disjointClazzUnionComp, descriptions, axiomList, !isLocal, false, ontologyUri);
+            }
+        } catch (CommandException e) {
+            handleException(e, Messages.ClazzPropertyPage2_ErrorRetrievingData, _superClazzesComp.getShell());
+        } catch (NeOnCoreException e) {
+            handleException(e, Messages.ClazzPropertyPage2_ErrorRetrievingData, _superClazzesComp.getShell());
+        }
+
+        Label createNewLabel = new Label(_disjointClazzUnionComp, SWT.NONE);
+        createNewLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        createNewLabel.setText(Messages.DisjointClazzesPropertyPage2_1);
+        Composite activeComposite = createEmptyDisjointUnionRow(_disjointClazzUnionComp);
+        if (setFocus) {
+            activeComposite.setFocus();
+        }
+    }
+    /**
+     * Create disjoint union of classes area
+     */
+    private void createDisjointClassUnionArea(Composite composite) {
+        _disjointClazzUnionSection = _toolkit.createSection(composite, Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
+        _disjointClazzUnionSection.setText(Messages.ClazzTaxonomyPropertyPage2_DisjointUnion);
+        _disjointClazzUnionSection.addExpansionListener(new ExpansionAdapter() {
+            @Override
+            public void expansionStateChanged(ExpansionEvent e) {
+                _form.reflow(true);
+            }
+        });
+        _disjointClazzUnionComp = _toolkit.createComposite(_disjointClazzUnionSection, SWT.NONE);
+        GridLayout gridLayout = new GridLayout();
+        _disjointClazzUnionComp.setLayout(gridLayout);
+        ColumnLayoutData data = new ColumnLayoutData();
+        _disjointClazzUnionComp.setLayoutData(data);
+
+        _toolkit.adapt(_disjointClazzUnionComp);
+        _disjointClazzUnionSection.setClient(_disjointClazzUnionComp);
+    } 
+    private Composite createEmptyDisjointUnionRow(Composite parent) {
+        final EmptyFormRow formRow = new EmptyFormRow(_toolkit, parent, NUM_COLS);
+
+//        final Composite comp = formRow.getParent();
+        final Composite comp = new Composite(formRow.getParent(), SWT.FILL_WINDING);
+//        final Composite comp2 = new Composite(formRow.getParent(), SWT.MAX);
+//        comp2.setLayout(new GridLayout(6, false));
+//        for( int i = 0; i <= 6; i++)
+//            new DescriptionText(comp2, _owlModel, _owlModel, false, _toolkit);
+            
+        GridLayout layout = new GridLayout(NUM_COLS_SET, true);
+        comp.setLayout(layout);
+        comp.setLayoutData(new GridData(SWT.MAX));
+
+        final LinkedList<DescriptionText> texts = new LinkedList<DescriptionText>();
+        
+        DescriptionText descriptionText1 = new DescriptionText(comp, _owlModel, _owlModel, false, _toolkit);
+        texts.add(descriptionText1);
+        addComplexText(descriptionText1);
+        DescriptionText descriptionText2 = new DescriptionText(comp, _owlModel, _owlModel, false, _toolkit);
+        texts.add(descriptionText2);
+        addComplexText(descriptionText2);
+        formRow.addWidget(comp);
+
+        AxiomRowHandler rowHandler = new AxiomRowHandler(this, _owlModel, _owlModel, null) {
+
+            @Override
+            public void savePressed() {
+                // nothing to do
+            }
+
+            @Override
+            public void addPressed() {
+                try {
+                    OWLDataFactory factory = _sourceOwlModel.getOWLDataFactory();
+                    OWLAxiom newAxiom = null;
+                    Set<OWLClassExpression> classExpressions = new HashSet<OWLClassExpression>();
+                    for (DescriptionText descriptionText: texts) {
+                        String text = descriptionText.getStyledText().getText();
+                        if(text.trim().length() > 0 ){
+                            classExpressions.add(_manager.parseDescription(text, _localOwlModel));
+                        }
+                    }
+                    OWLClassExpression thisClazzDesc = getClazzDescription();
+                    newAxiom = factory.getOWLDisjointUnionAxiom((OWLClass)thisClazzDesc, classExpressions);
+                    if (newAxiom != null) {
+                        new ApplyChanges(_project, _ontologyUri, new String[] {OWLUtilities.toString(newAxiom)}, new String[0]).run();
+                    } else {
+                        String modeString = Messages.ClazzTaxonomyPropertyPage2_DisjointUnion;
+                        MessageDialog.openWarning(_disjointClazzesComp.getShell(), Messages.ClazzTaxonomyPropertyPage2_ApplyChanges, Messages.ClazzTaxonomyPropertyPage2_2 + " " + modeString + Messages.ClazzTaxonomyPropertyPage2_3); //$NON-NLS-1$ 
+                    }
+                    OWLGUIUtilities.enable(comp, false);
+
+                    initDisjointUnionDescriptionsSection(true);
+                } catch (NeOnCoreException k2e) {
+                    handleException(k2e, Messages.ClazzPropertyPage2_52, comp.getShell());
+                    comp.setFocus();
+                } catch (CommandException e) {
+                    handleException(e, Messages.ClazzPropertyPage2_52, comp.getShell());
+                    comp.setFocus();
+                }
+            }
+
+            @Override
+            public void ensureQName() {
+                System.out.println("ensure QName"); //$NON-NLS-1$
+//                int mode = OWLGUIUtilities.getEntityLabelMode();
+//                if (mode == NeOnUIPlugin.DISPLAY_URI || mode == NeOnUIPlugin.DISPLAY_QNAME) {
+//                    return;
+//                }
+//                OWLClassExpression desc = null;
+//                try {
+//                    desc = OWLUtilities.description(clazzText.getText());
+//                } catch (NeOnCoreException e) {
+//                }
+//                if (desc != null) {
+//                    String[] array = getArrayFromDescription(desc);
+//                    clazzText.setText(array[2]);
+//                }
+            }
+
+        };
+        formRow.init(rowHandler);
+        for(final DescriptionText text : texts){
+            addModifyListenerForDisjointUnionRow(text, comp, texts, formRow);
+        }
+        return comp;
+    }
+    /**
+     * @param text
+     * @param comp
+     * @param texts
+     * @param formRow 
+     */
+    private void addModifyListenerForDisjointUnionRow(DescriptionText text, final Composite comp, final LinkedList<DescriptionText> texts, final AbstractFormRow formRow) {
+
+        text.getStyledText().addModifyListener(new ModifyListener() {
+            @Override
+            public void modifyText(ModifyEvent e) {
+                int countNotEmpty = 0;
+                int countEmpty = 0;
+                LinkedList<DescriptionText> removeText = new LinkedList<DescriptionText>();
+                for(DescriptionText text : texts){
+                    if(text.getStyledText().getText().trim().length() != 0) {
+                        countNotEmpty++;
+                    }else{
+                        countEmpty++;
+                        removeText.add(text);
+                    }
+                }
+                
+                Button button = null;
+                if(formRow instanceof EmptyFormRow)
+                    button  = ((EmptyFormRow)formRow).getAddButton();
+                else if(formRow instanceof FormRow)
+                    button = ((FormRow)formRow).getSubmitButton();
+                if(button != null){
+                    if (countNotEmpty < 2) {
+                        button.setEnabled(false);
+                    } else {
+                        button.setEnabled(true);
+                    }
+                }
+                switch (countEmpty) {
+                    case 1:
+                        //nothing to do
+                        break;
+                    case 0:
+                        //add a new TextField
+                        DescriptionText descriptionText = new DescriptionText(comp, _owlModel, _owlModel, false, _toolkit);
+                        texts.add(descriptionText);
+                        addComplexText(descriptionText);
+                        addModifyListenerForDisjointUnionRow(descriptionText, comp, texts, formRow);
+                        descriptionText.getStyledText().setVisible(true);
+                        break;
+                    default:
+                        //remove all except of one empty TextField
+                        removeText.remove(0);
+                        for(DescriptionText text : removeText){
+                            if(texts.size() > 2){
+                                texts.remove(text);
+                                text.getStyledText().dispose();
+                            }
+                           
+                            
+                        }
+                        break;
+                }
+            }
+        });
+        
     }
 
     private Composite createEmptyRow(Composite parent, final int mode) {
@@ -791,6 +1022,117 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
         };
         row.init(rowHandler);
     }
+    /**
+     * Is called from within
+     * <ul>
+     * <li>disjoint union section</li>
+     * </ul>
+     * 
+     * @param parent
+     * @param restriction
+     * @param oldAxiom
+     * @param enabled
+     * @throws NeOnCoreException
+     */
+    private void createDisjointUnionRow(Composite parent, final Set<OWLClassExpression> descriptions, final List<LocatedAxiom> axioms, boolean imported, boolean enabled, String sourceOnto) throws NeOnCoreException {
+        FormRow row = new FormRow(_toolkit, parent, 2, imported, sourceOnto,_owlModel.getProjectId(),_id);
+        OWLModel sourceOwlModel =_owlModel;
+        if(imported){
+            sourceOwlModel = OWLModelFactory.getOWLModel(sourceOnto, _project);
+        }
+
+        final Composite comp = new Composite(row.getParent(), SWT.MAX);
+        comp.setLayout(new GridLayout(NUM_COLS_SET, true));
+
+        final LinkedList<DescriptionText> texts = new LinkedList<DescriptionText>();
+        Set<String[]> descriptionArrays = new HashSet<String[]>();
+        for(OWLClassExpression description : descriptions){
+            final String[] descriptionArray = getArrayFromDescription(description);
+            descriptionArrays.add(descriptionArray);
+            String id = OWLGUIUtilities.getEntityLabel(descriptionArray);
+            DescriptionText descriptionText = new DescriptionText(comp, _owlModel, sourceOwlModel, imported, _toolkit);
+            final StyledText clazzText = descriptionText.getStyledText();
+            addComplexText(descriptionText);
+            texts.add(descriptionText);
+
+            clazzText.setText(id);
+            clazzText.setData(description);
+            clazzText.setData(OWLGUIUtilities.TEXT_WIDGET_DATA_ID, descriptionText);
+            OWLGUIUtilities.enable(clazzText, false);
+            row.addWidget(clazzText);
+        }
+        DescriptionSetRowHandler rowHandler = new DescriptionSetRowHandler(this, _owlModel, sourceOwlModel, descriptionArrays, axioms) {
+            
+            @Override
+            public void savePressed() {
+
+                try {
+                    OWLDataFactory factory = _sourceOwlModel.getOWLDataFactory();
+                    OWLAxiom axiomToAdd = null;
+                    Set<OWLClassExpression> classExpressions = new HashSet<OWLClassExpression>();
+                    for (DescriptionText descriptionText: texts) {
+                        String text = descriptionText.getStyledText().getText();
+                        if(text.trim().length() > 0 ){
+                            classExpressions.add(_manager.parseDescription(text, _localOwlModel));
+                        }
+                    }
+                    OWLClassExpression thisClazzDesc = getClazzDescription();
+                    axiomToAdd = factory.getOWLDisjointUnionAxiom((OWLClass)thisClazzDesc, classExpressions);
+                    for (LocatedAxiom axiom: getAxioms()) {
+                        if (axiom != null) {
+                            OWLAxiom axiomToRemove = axiom.getAxiom();
+                            new ApplyChanges(_project, _sourceOwlModel.getOntologyURI(), new String[] {OWLUtilities.toString(axiomToAdd)}, new String[] {OWLUtilities.toString(axiomToRemove)}).run();
+                        } else {
+                            String modeString = Messages.ClazzTaxonomyPropertyPage2_DisjointUnion;
+                            MessageDialog.openWarning(_disjointClazzesComp.getShell(), Messages.ClazzTaxonomyPropertyPage2_ApplyChanges, Messages.ClazzTaxonomyPropertyPage2_2 + " " + modeString + Messages.ClazzTaxonomyPropertyPage2_3); //$NON-NLS-1$ 
+                        }
+                    }
+                } catch (NeOnCoreException k2e) {
+                    handleException(k2e, Messages.ClazzPropertyPage2_45, comp.getShell());
+                } catch (CommandException e) {
+                    handleException(e, Messages.ClazzPropertyPage2_45, comp.getShell());
+                }
+                refresh();
+            }
+
+            @Override
+            public void removePressed() throws NeOnCoreException {
+                try {
+                    List<LocatedAxiom> locatedAxioms = getAxioms();
+                    String[] axiomsToRemove = new String[locatedAxioms.size()];
+                    int index = 0;
+                    for (LocatedAxiom a: locatedAxioms) {
+                        axiomsToRemove[index++] = OWLUtilities.toString(a.getAxiom());
+                    }
+                    new ApplyChanges(_project, _sourceOwlModel.getOntologyURI(), new String[] {}, axiomsToRemove).run();
+                    refresh();
+                } catch (CommandException e) {
+                    handleException(e, Messages.ClazzPropertyPage2_45, comp.getShell());
+                }
+            }
+
+            @Override
+            public void addPressed() {
+                // nothing to do
+            }
+
+            @Override
+            public void ensureQName() {
+            }
+            @Override
+            public void editPressed() {
+                DescriptionText descriptionText = new DescriptionText(comp, _owlModel, _owlModel, false, _toolkit);
+                texts.add(descriptionText);
+                addComplexText(descriptionText);
+                descriptionText.getStyledText().setFocus();
+            }
+
+        };
+        row.init(rowHandler);
+        for(final DescriptionText text : texts){
+            addModifyListenerForDisjointUnionRow(text, comp, texts, row);
+        }
+    }
 
     @Override
     protected List<Section> getSections() {
@@ -799,6 +1141,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
         sections.add(_subClazzesSection);
         sections.add(_equivClazzesSection);
         sections.add(_disjointClazzesSection);
+        sections.add(_disjointClazzUnionSection);
         return sections;
     }
 
@@ -882,6 +1225,16 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
                                 }
                             }
                         }
+                    }else if (axiom1 instanceof OWLDisjointUnionAxiom) {
+                        OWLAxiom axiom2 = (OWLAxiom) OWLUtilities.axiom(o2[0]);
+                        if(axiom2 instanceof OWLDisjointUnionAxiom){
+                            Set<OWLClassExpression> ces1 = ((OWLDisjointUnionAxiom)axiom1).getClassExpressions();
+                            Set<OWLClassExpression> ces2 = ((OWLDisjointUnionAxiom)axiom2).getClassExpressions();
+                            if(ces1.containsAll(ces2) && ces2.containsAll(ces1))
+                                return 0;
+                        }
+                        propertyUri1 = axiom1.toString();
+                        propertyUri2 = axiom2.toString();
                     }
 
                     int localResult = propertyUri1.compareToIgnoreCase(propertyUri2);
