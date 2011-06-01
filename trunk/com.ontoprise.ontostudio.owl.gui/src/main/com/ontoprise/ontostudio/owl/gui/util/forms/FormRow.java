@@ -104,6 +104,7 @@ public class FormRow extends AbstractFormRow {
             public void widgetSelected(SelectionEvent e) {
                 if (_editButton.getText().equals(OWLGUIUtilities.BUTTON_LABEL_EDIT)) {
                     maximizeAllWidgets(getWidgets());
+                    _handler.editPressed();
                     _handler.ensureQName();
                     // enable widgets, so the user can change them
                     editPressed(_editButton, _removeButton);
@@ -116,6 +117,7 @@ public class FormRow extends AbstractFormRow {
                         if(OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(checkboxID) || new CheckboxDialog(null,title, text, checkboxID).open() == Dialog.OK){ 
 //                        if(MessageDialog.openQuestion(null, Messages.EditImportedTitle, Messages.EditImportedText_0 + _sourceOnto  + " " + Messages.EditImportedText_1 )){ //$NON-NLS-1$
                             maximizeAllWidgets(getWidgets());
+                            _handler.editPressed();
                             _handler.ensureQName();
                             // enable widgets, so the user can change them
                             editStarPressed(_editButton, _removeButton);

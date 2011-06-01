@@ -78,4 +78,8 @@ public abstract class AxiomRowHandler extends AbstractRowHandler {
     public void addPressed() {
         // empty implementation
     }
+    @Override
+    public void editPressed() {
+        // empty implementation
+    }
 }

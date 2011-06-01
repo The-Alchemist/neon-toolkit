@@ -48,5 +48,9 @@ public abstract class DataRangeRowHandler extends AbstractRowHandler {
     public OWLDataRange getEntity() {
         return _dataRange;
     }
+    @Override
+    public void editPressed() {
+        // empty implementation
+    }
 
 }
