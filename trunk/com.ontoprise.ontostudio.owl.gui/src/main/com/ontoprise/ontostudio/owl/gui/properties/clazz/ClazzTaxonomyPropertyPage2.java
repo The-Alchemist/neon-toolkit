@@ -21,13 +21,17 @@ import java.util.TreeSet;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
@@ -110,6 +114,82 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
     private Composite _disjointClazzesComp;
     private Composite _disjointClazzUnionComp;
 
+    private class TextChangeListener implements ModifyListener, KeyListener{
+        private Composite _comp;
+        private LinkedList<DescriptionText> _texts;
+        private AbstractFormRow _formRow;
+        private DescriptionText _text;
+        public TextChangeListener(DescriptionText text, final Composite comp, final LinkedList<DescriptionText> texts, final AbstractFormRow formRow){
+            super();
+            _text = text;
+            _comp = comp;
+           _texts = texts;
+           _formRow = formRow;
+        }
+        @Override
+        public void keyPressed(KeyEvent e) {
+            rearrangeTextfields();
+        }
+        @Override
+        public void keyReleased(KeyEvent e) {
+            //nothing to Do
+        }
+        @Override
+        public void modifyText(ModifyEvent e) {
+            rearrangeTextfields();
+        }
+        private void rearrangeTextfields(){
+            int countNotEmpty = 0;
+            int countEmpty = 0;
+            LinkedList<DescriptionText> removeText = new LinkedList<DescriptionText>();
+            for(DescriptionText text : _texts){
+                if(text.getStyledText().getText().trim().length() != 0) {
+                    countNotEmpty++;
+                }else{
+                    countEmpty++;
+                    removeText.add(text);
+                }
+            }
+            Button button = null;
+            if(_formRow instanceof EmptyFormRow)
+                button  = ((EmptyFormRow)_formRow).getAddButton();
+            else if(_formRow instanceof FormRow)
+                button = ((FormRow)_formRow).getSubmitButton();
+            if(button != null){
+                if (countNotEmpty < 2) {
+                    button.setEnabled(false);
+                } else {
+                    button.setEnabled(true);
+                }
+            }
+            switch (countEmpty) {
+                case 1:
+                    //nothing to do
+                    break;
+                case 0:
+                    //add a new TextField
+                    DescriptionText descriptionText = new DescriptionText(_comp, _owlModel, _owlModel, false, _toolkit);
+                    _texts.add(descriptionText);
+                    addComplexText(descriptionText);
+                    addModifyListenerForDisjointUnionRow(descriptionText, _comp, _texts, _formRow);
+                    descriptionText.getStyledText().setVisible(true);
+                    descriptionText.getStyledText().setFocus();
+                    _text.getStyledText().setFocus();
+                    break;
+                default:
+                    //remove all except of one empty TextField
+                    removeText.remove(0);
+                    for(DescriptionText text : removeText){
+                        if(_texts.size() > 2){
+                            _texts.remove(text);
+                            text.getStyledText().dispose();
+                        }
+                    }
+                    break;
+            }
+        }
+    }
+    
     public ClazzTaxonomyPropertyPage2() {
         super();
     }
@@ -627,62 +707,9 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
      * @param formRow 
      */
     private void addModifyListenerForDisjointUnionRow(DescriptionText text, final Composite comp, final LinkedList<DescriptionText> texts, final AbstractFormRow formRow) {
-
-        text.getStyledText().addModifyListener(new ModifyListener() {
-            @Override
-            public void modifyText(ModifyEvent e) {
-                int countNotEmpty = 0;
-                int countEmpty = 0;
-                LinkedList<DescriptionText> removeText = new LinkedList<DescriptionText>();
-                for(DescriptionText text : texts){
-                    if(text.getStyledText().getText().trim().length() != 0) {
-                        countNotEmpty++;
-                    }else{
-                        countEmpty++;
-                        removeText.add(text);
-                    }
-                }
-                
-                Button button = null;
-                if(formRow instanceof EmptyFormRow)
-                    button  = ((EmptyFormRow)formRow).getAddButton();
-                else if(formRow instanceof FormRow)
-                    button = ((FormRow)formRow).getSubmitButton();
-                if(button != null){
-                    if (countNotEmpty < 2) {
-                        button.setEnabled(false);
-                    } else {
-                        button.setEnabled(true);
-                    }
-                }
-                switch (countEmpty) {
-                    case 1:
-                        //nothing to do
-                        break;
-                    case 0:
-                        //add a new TextField
-                        DescriptionText descriptionText = new DescriptionText(comp, _owlModel, _owlModel, false, _toolkit);
-                        texts.add(descriptionText);
-                        addComplexText(descriptionText);
-                        addModifyListenerForDisjointUnionRow(descriptionText, comp, texts, formRow);
-                        descriptionText.getStyledText().setVisible(true);
-                        break;
-                    default:
-                        //remove all except of one empty TextField
-                        removeText.remove(0);
-                        for(DescriptionText text : removeText){
-                            if(texts.size() > 2){
-                                texts.remove(text);
-                                text.getStyledText().dispose();
-                            }
-                           
-                            
-                        }
-                        break;
-                }
-            }
-        });
-        
+        TextChangeListener textChangeListener = new TextChangeListener(text, comp, texts, formRow);
+        text.getStyledText().addKeyListener(textChangeListener);
+        text.getStyledText().addModifyListener(textChangeListener);
     }
 
     private Composite createEmptyRow(Composite parent, final int mode) {
@@ -1087,12 +1114,12 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
                             MessageDialog.openWarning(_disjointClazzesComp.getShell(), Messages.ClazzTaxonomyPropertyPage2_ApplyChanges, Messages.ClazzTaxonomyPropertyPage2_2 + " " + modeString + Messages.ClazzTaxonomyPropertyPage2_3); //$NON-NLS-1$ 
                         }
                     }
+                    refresh();
                 } catch (NeOnCoreException k2e) {
                     handleException(k2e, Messages.ClazzPropertyPage2_45, comp.getShell());
                 } catch (CommandException e) {
                     handleException(e, Messages.ClazzPropertyPage2_45, comp.getShell());
                 }
-                refresh();
             }
 
             @Override
