@@ -552,6 +552,7 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                         case DISJOINT:
                             new CreateDisjointObjectProperty(_project, _sourceOwlModel.getOntologyURI(), _id, OWLUtilities.toString(objectProp)).run();
                             initDisjointSection(false);
+                            break;
                         case EQUIV:
                         default:
                             new CreateEquivalentObjectProperty(_project, _sourceOwlModel.getOntologyURI(), _id, OWLUtilities.toString(objectProp)).run();
@@ -589,7 +590,6 @@ public class ObjectPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPag
                         owlAxioms.add(a.getAxiom());//NICO think about that
                     }
                 }
-                OWLOntology ontology = _localOwlModel.getOntology();
                 OWLObjectProperty thisObjectProperty = OWLUtilities.objectProperty(IRIUtils.ensureValidIRISyntax(_id));
                 OWLAxiomUtils.triggerRemovePressed(owlAxioms, getEntity(), _namespaces, OWLUtilities.toString(thisObjectProperty), _sourceOwlModel, WizardConstants.ADD_DEPENDENT_MODE);
             }

@@ -393,10 +393,10 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                         initSuperSection(false);
                         initSubSection(true);
                     } else if (mode == EQUIV) {
-                        new CreateEquivalentDataProperty(_project, _sourceOwlModel.getOntologyURI(), OWLUtilities.toString(dataProp), value);
+                        new CreateEquivalentDataProperty(_project, _sourceOwlModel.getOntologyURI(), OWLUtilities.toString(dataProp), _id);
                         initEquivSection(true);
                     } else { //DISJOINT
-                        new CreateDisjointDataProperty(_project, _sourceOwlModel.getOntologyURI(), OWLUtilities.toString(dataProp), value);
+                        new CreateDisjointDataProperty(_project, _sourceOwlModel.getOntologyURI(), OWLUtilities.toString(dataProp), _id);
                         initDisjointSection(true);
                     }
                 } catch (NeOnCoreException k2e) {
@@ -472,17 +472,20 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                 String value = text.getText();
                 try {
                     OWLDataProperty dataProp = _manager.parseDataProperty(value, _localOwlModel);
+                    remove();
                     if (mode == SUPER) {
                         new CreateDataProperty(_project, _sourceOwlModel.getOntologyURI(), _id, dataProp.getIRI().toString()).run();
                         initSuperSection(true);
+                        initSubSection(false);
                     } else if (mode == SUB) {
                         new CreateDataProperty(_project, _sourceOwlModel.getOntologyURI(), dataProp.getIRI().toString(), _id).run();
                         initSubSection(true);
+                        initSuperSection(false);
                     } else if (mode == EQUIV) {
-                        new CreateEquivalentDataProperty(_project, _sourceOwlModel.getOntologyURI(), OWLUtilities.toString(dataProp), value).run();
+                        new CreateEquivalentDataProperty(_project, _sourceOwlModel.getOntologyURI(), OWLUtilities.toString(dataProp), _id).run();//NICO have a look here as well
                         initEquivSection(true);
                     } else { //DISJOINT
-                        new CreateDisjointDataProperty(_project, _sourceOwlModel.getOntologyURI(), OWLUtilities.toString(dataProp), value).run();
+                        new CreateDisjointDataProperty(_project, _sourceOwlModel.getOntologyURI(), OWLUtilities.toString(dataProp), _id).run();
                         initDisjointSection(true);
                     }
 
@@ -501,21 +504,24 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
 
             @Override
             public void removePressed() throws NeOnCoreException {
+                remove();
+                refresh();
+            }
+
+            public void remove() throws NeOnCoreException {
                 List<LocatedAxiom> locatedAxioms = getAxioms();
                 List<OWLAxiom> owlAxioms = new ArrayList<OWLAxiom>();
                 for (LocatedAxiom a: locatedAxioms) {
                     if (a.isLocal()) {
                         owlAxioms.add(a.getAxiom());
                     }else{
-                        owlAxioms.add(a.getAxiom());//NICO think about that
+                        owlAxioms.add(a.getAxiom());
                     }
                 }
                 OWLObjectProperty thisObjectProperty = OWLUtilities.objectProperty(IRIUtils.ensureValidIRISyntax(_id));
                 
                 OWLAxiomUtils.triggerRemovePressed(owlAxioms, getEntity(), _namespaces, OWLUtilities.toString(thisObjectProperty), _sourceOwlModel, WizardConstants.ADD_DEPENDENT_MODE);
-                refresh();
             }
-
             @Override
             public void addPressed() {
                 // nothing to do
@@ -534,6 +540,7 @@ public class DataPropertyTaxonomyPropertyPage extends AbstractOWLIdPropertyPage 
                     text.setText(array[0]);
                 }
             }
+            
 
         };
         row.init(rowHandler);
