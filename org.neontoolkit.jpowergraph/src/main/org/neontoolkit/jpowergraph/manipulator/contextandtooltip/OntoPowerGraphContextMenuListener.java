@@ -50,10 +50,11 @@ public class OntoPowerGraphContextMenuListener extends DefaultContextMenuListene
         MenuItem startLayouter = new MenuItem(theMenu, SWT.CASCADE);
         startLayouter.setText(Messages.OntoPowerGraphContextMenuListener_0);
         startLayouter.addSelectionListener(new SelectionListener() {
+            @Override
             public void widgetSelected(SelectionEvent arg0) {
                 _layouter.start();
             }
-
+            @Override
             public void widgetDefaultSelected(SelectionEvent arg0) {
                 _layouter.start();
             }
@@ -63,10 +64,11 @@ public class OntoPowerGraphContextMenuListener extends DefaultContextMenuListene
         MenuItem stopLayouter = new MenuItem(theMenu, SWT.CASCADE);
         stopLayouter.setText(Messages.OntoPowerGraphContextMenuListener_1);
         stopLayouter.addSelectionListener(new SelectionListener() {
+            @Override
             public void widgetSelected(SelectionEvent arg0) {
                 _layouter.stop();
             }
-
+            @Override
             public void widgetDefaultSelected(SelectionEvent arg0) {
                 _layouter.stop();
             }

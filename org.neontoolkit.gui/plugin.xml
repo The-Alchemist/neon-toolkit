@@ -202,15 +202,6 @@
    
    <extension
          point="org.eclipse.ui.commands">
-      <command
-            description="Save All 3"
-            id="org.neontoolkit.gui.navigator.ontology.SaveAllOntologyAction"
-            name="Save All 4">
-      </command>
-   </extension>
-   
-   <extension
-         point="org.eclipse.ui.commands">
       <category
             id="org.neontoolkit.gui.navigatorCategory"
             name="Navigator Category">

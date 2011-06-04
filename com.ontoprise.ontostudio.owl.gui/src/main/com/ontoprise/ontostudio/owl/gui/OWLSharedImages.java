@@ -39,6 +39,7 @@ public final class OWLSharedImages {
     public static final String PROJECT_ERROR = "ontoprj_obj_error"; //$NON-NLS-1$
     public static final String FOLDER = "folder"; //$NON-NLS-1$
     public static final String EMPTY = "empty"; //$NON-NLS-1$
+    public static final String CHECK = "check"; //$NON-NLS-1$
 
     /*
      * Icons for Complex Class Editor
@@ -67,6 +68,7 @@ public final class OWLSharedImages {
         registry.put(FOLDER, create("onto", "folder.gif")); //$NON-NLS-1$ //$NON-NLS-2$
         registry.put(DATATYPE, create("onto", "datatype.gif")); //$NON-NLS-1$ //$NON-NLS-2$
         registry.put(EMPTY, create("common", "empty.gif")); //$NON-NLS-1$ //$NON-NLS-2$
+        registry.put(CHECK, create("common", "check.gif")); //$NON-NLS-1$ //$NON-NLS-2$
 
         registry.put(INTERSECTION_OF, create("complexclass", "intersection_of.gif")); //$NON-NLS-1$ //$NON-NLS-2$
         registry.put(UNION_OF, create("complexclass", "union_of.gif")); //$NON-NLS-1$ //$NON-NLS-2$

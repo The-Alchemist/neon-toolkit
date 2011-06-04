@@ -45,22 +45,26 @@ public class ShowNamespaceAction extends SelectionAdapter implements
 	private MenuItem _uriItem;
 	private MenuItem _qNameItem;
 
-	public void run(IAction action) {
+	@Override
+    public void run(IAction action) {
 		if (_menu != null) {
 			_menu.setVisible(true);
 		}
 	}
 
-	public void selectionChanged(IAction action, ISelection selection) {
+	@Override
+    public void selectionChanged(IAction action, ISelection selection) {
 	}
 
-	public void dispose() {
+	@Override
+    public void dispose() {
 		if (_menu != null) {
 			_menu.dispose(); // jops 2008.12.05: fix npe
 		}
 	}
 
-	public void init(IWorkbenchWindow window) {
+	@Override
+    public void init(IWorkbenchWindow window) {
 	}
 
 	/*
@@ -70,7 +74,8 @@ public class ShowNamespaceAction extends SelectionAdapter implements
 	 * org.eclipse.ui.IWorkbenchWindowPulldownDelegate#getMenu(org.eclipse.swt
 	 * .widgets.Control)
 	 */
-	public Menu getMenu(Control parent) {
+	@Override
+    public Menu getMenu(Control parent) {
 		if (_menu == null) {
 			_menu = new Menu(parent);
 			_localItem = new MenuItem(_menu, SWT.CHECK);
@@ -141,7 +146,8 @@ public class ShowNamespaceAction extends SelectionAdapter implements
 					 * 
 					 * @see java.lang.Runnable#run()
 					 */
-					@SuppressWarnings("deprecation")
+					@Override
+                    @SuppressWarnings("deprecation")
 					public void run() {
 						IPreferenceStore store = NeOnUIPlugin.getDefault()
 								.getPreferenceStore();

@@ -25,6 +25,8 @@ public class Messages extends NLS {
 
     public static String OntoPowerGraphContextMenuListener_0;
     public static String OntoPowerGraphContextMenuListener_1;
+    public static String ImportingGraphContextMenuListener_Imported;
+    public static String ImportingGraphContextMenuListener_Importing;
     public static String NavigationHistoryPainter_0;
     public static String NavigationHistoryControlPanel_0;
     public static String NavigationHistoryControlPanel_1;
