@@ -48,12 +48,9 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
@@ -65,7 +62,6 @@ import org.neontoolkit.gui.navigator.MTreeView;
 import org.neontoolkit.gui.navigator.TreeProviderManager;
 import org.neontoolkit.gui.navigator.elements.AbstractOntologyTreeElement;
 import org.neontoolkit.jpowergraph.history.NavigationHistory;
-import org.neontoolkit.jpowergraph.manipulator.contextandtooltip.OntoPowerGraphContextMenuListener;
 import org.neontoolkit.ontovisualize.DefaultNodeContentProvider;
 import org.neontoolkit.ontovisualize.OntovisualizePlugin;
 import org.neontoolkit.ontovisualize.edges.OntoStudioDefaultEdge;
@@ -75,6 +71,7 @@ import org.neontoolkit.ontovisualize.painters.OntoVisualizerGraphPane;
 import com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyProvider;
 import com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.ontologyimportsgraph.Messages;
+import com.ontoprise.ontostudio.owl.gui.ontologyimportsgraph.contextandtooltip.ImportingGraphContextMenuListener;
 import com.ontoprise.ontostudio.owl.gui.ontologyimportsgraph.nodes.contentprovider.OntologyNodeContentProvider;
 import com.ontoprise.ontostudio.owl.gui.properties.AbstractOWLIdPropertyPage;
 import com.ontoprise.ontostudio.owl.visualize.nodes.OntologyNode;
@@ -94,6 +91,7 @@ import com.ontoprise.ontostudio.owl.visualize.nodes.OntologyNode;
 public class OntologyImportsGraphPropertyPage extends AbstractOWLIdPropertyPage {
 
     private static final String ONTOLOGY_LANGUAGE_DUMMY = "OWLOntologyImports"; //$NON-NLS-1$
+    private static OntologyImportsGraphPropertyPage INSTANCE;
     private DefaultGraph _graph;
     private OntoVisualizerGraphPane _graphPane;
     private Layouter _layouter;
@@ -105,10 +103,11 @@ public class OntologyImportsGraphPropertyPage extends AbstractOWLIdPropertyPage 
     private CursorLens _cursorLens;
     private ZoomLens _zoomLens;
     private boolean _handCursorOn;
-    private Button _importingButton;
-    private Button _importedButton;
-    private Button _allButton;
-
+    public OntologyImportsGraphPropertyPage() {
+        super();
+        INSTANCE = this;
+        
+    }
     @Override
     public Composite createContents(Composite theParent) {
         Composite comp = prepareForm(theParent);
@@ -138,14 +137,6 @@ public class OntologyImportsGraphPropertyPage extends AbstractOWLIdPropertyPage 
         section.setClient(parent);
 
         Display display = parent.getDisplay();
-
-        Listener listener = new Listener() {
-            @Override
-            public void handleEvent(Event event) {
-                initContents();
-            }
-        };
-        
 
         _graph = new DefaultGraph();
         _graphPane = new OntoVisualizerGraphPane(parent, _graph, null);
@@ -183,7 +174,7 @@ public class OntologyImportsGraphPropertyPage extends AbstractOWLIdPropertyPage 
         _graphPane.setDefaultEdgePainter(new LineEdgePainter(gray, gray, gray));
         _graphPane.setAntialias(true);
         _graphPane.addManipulator(new ContextMenuAndToolTipManipulator(_graphPane,
-                new OntoPowerGraphContextMenuListener(_layouter, _graph, m_legendLens, _zoomLens, ZoomControlPanel.DEFAULT_ZOOM_LEVELS, m_rotateLens, RotateControlPanel.DEFAULT_ROTATE_ANGLES),
+                new ImportingGraphContextMenuListener(_layouter, _graph, m_legendLens, _zoomLens, ZoomControlPanel.DEFAULT_ZOOM_LEVELS, m_rotateLens, RotateControlPanel.DEFAULT_ROTATE_ANGLES),
                 new DefaultToolTipListener(),
                 m_tooltipLens));
 
@@ -193,27 +184,6 @@ public class OntologyImportsGraphPropertyPage extends AbstractOWLIdPropertyPage 
         OntovisualizePlugin.getDefault().getVisualizerConfigurator(ONTOLOGY_LANGUAGE_DUMMY).setNodePainters(_graphPane);
         addListeners();
         _layouter.start();
-        
-        Composite radioBar = new Group(comp, SWT.NULL);
-        radioBar.setLayout(new FillLayout(SWT.HORIZONTAL));
-        
-        Label label = new Label(radioBar, SWT.NULL);
-        label.setText(Messages.OntologyImportsGraphPropertyPage_radio_title);
-
-        _importedButton = new Button(radioBar, SWT.RADIO);
-        _importedButton.setText(Messages.OntologyImportsGraphPropertyPage_radio_imported);
-        _importedButton.setSelection(OntologyNodeContentProvider.SELECTED == OntologyNodeContentProvider.IMPORTED);
-        _importedButton.addListener(SWT.Selection, listener);
-        
-        _importingButton = new Button(radioBar, SWT.RADIO);
-        _importingButton.setText(Messages.OntologyImportsGraphPropertyPage_radio_importing);
-        _importingButton.setSelection(OntologyNodeContentProvider.SELECTED == OntologyNodeContentProvider.IMPORTING);
-        _importingButton.addListener(SWT.Selection, listener);
-        
-        _allButton = new Button(radioBar, SWT.RADIO);
-        _allButton.setText(Messages.OntologyImportsGraphPropertyPage_radio_all);
-        _allButton.setSelection(OntologyNodeContentProvider.SELECTED == OntologyNodeContentProvider.ALL);
-        _allButton.addListener(SWT.Selection, listener);
         return parent;
     }
 
@@ -337,6 +307,7 @@ public class OntologyImportsGraphPropertyPage extends AbstractOWLIdPropertyPage 
         if (_ontologyUri != null) {
             goTo(_ontologyUri);
         }
+        
     }
 
     private void goTo(String moduleId) {
@@ -425,41 +396,26 @@ public class OntologyImportsGraphPropertyPage extends AbstractOWLIdPropertyPage 
     protected List<Section> getSections() {
         return null;
     }
-    private void initContents() {
-        try {
-            boolean valueHasChanged = false;
-            if(getMainPage().getSelection().getFirstElement() instanceof OntologyTreeElement){
-                if(_importedButton.getSelection()) {
-                   if(OntologyNodeContentProvider.SELECTED != OntologyNodeContentProvider.IMPORTED){
-                        valueHasChanged =true;
-                        OntologyNodeContentProvider.SELECTED = OntologyNodeContentProvider.IMPORTED;
-                    }
-                } else if(_importingButton.getSelection()) {
-                    if(OntologyNodeContentProvider.SELECTED != OntologyNodeContentProvider.IMPORTING){
-                        valueHasChanged =true;
-                        OntologyNodeContentProvider.SELECTED = OntologyNodeContentProvider.IMPORTING;
-                    }
-                } else if(_allButton.getSelection()) {
-                    if(OntologyNodeContentProvider.SELECTED != OntologyNodeContentProvider.ALL){
-                        valueHasChanged =true;
-                        OntologyNodeContentProvider.SELECTED = OntologyNodeContentProvider.ALL;
-                    }
-                }
-                if(valueHasChanged)
-                    refresh();
-                
-//                frameText = renderOntology(type);
-//    
-//            } else {
-//                frameText = new StringWriter();
-//                frameText.append(Messages.OntologySourceViewTab_6); 
-            }
-
-//            _frameText.getStyledText().setText(frameText.toString());
-
-        } catch (Exception e) {
-            // ignore
-            // at start-up time, the _owlModel is always null
+    /**
+     * 
+     */
+    public static boolean updateImported() {
+        if(INSTANCE != null){
+            OntologyNodeContentProvider.SHOWIMPORTED = !OntologyNodeContentProvider.SHOWIMPORTED;
+            INSTANCE.refresh();
         }
+        return OntologyNodeContentProvider.SHOWIMPORTED;
+    }
+
+    /**
+     * 
+     */
+    public static boolean updateImporting() {
+        if(INSTANCE != null){
+            OntologyNodeContentProvider.SHOWIMPORTING = !OntologyNodeContentProvider.SHOWIMPORTING;
+            INSTANCE.refresh();
+        }
+        return OntologyNodeContentProvider.SHOWIMPORTING;
+        
     }
 }

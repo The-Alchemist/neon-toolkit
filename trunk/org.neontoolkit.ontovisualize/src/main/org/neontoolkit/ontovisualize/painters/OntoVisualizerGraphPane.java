@@ -46,7 +46,7 @@ public class OntoVisualizerGraphPane extends JGraphPane {
     private NavigationHistory _navigationHistory;
     private ArrayList<Manipulator> _manipulators;
     private Map<String,Manipulator> _manipulatorsByName;
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     private ArrayList<Class> _hiddenNodeTypes = new ArrayList<Class>();
     private OntoVisualizerLegendPainter _legendPainter;
     private static int _gdeEnabled = -1;
@@ -67,7 +67,7 @@ public class OntoVisualizerGraphPane extends JGraphPane {
         _legendPainter.setOntologyLanguage(ontologyLanguage);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     @Override
     public void addFilteredNode(Class clazz) {
         _hiddenNodeTypes.add(clazz);

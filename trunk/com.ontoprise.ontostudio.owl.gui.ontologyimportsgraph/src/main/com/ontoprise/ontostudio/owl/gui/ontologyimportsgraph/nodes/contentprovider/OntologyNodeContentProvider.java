@@ -36,10 +36,8 @@ import com.ontoprise.ontostudio.owl.visualize.nodes.OntologyNode;
  */
 public class OntologyNodeContentProvider extends AbstractNodeContentProvider {
 
-    public static final int IMPORTED = 1;
-    public static final int IMPORTING = 2;
-    public static final int ALL = 3;
-    public static int SELECTED = 3;
+    public static boolean SHOWIMPORTED = true;
+    public static boolean SHOWIMPORTING = true;
     
     public OntologyNodeContentProvider() {
         super("OWLOntologyImports"); //$NON-NLS-1$
@@ -61,9 +59,9 @@ public class OntologyNodeContentProvider extends AbstractNodeContentProvider {
             LabelImageNode node = getNode(ontologyUri, ontologyUri, projectId, OntologyImportsGraphConfiguration.ONTOLOGY_TYPE, _ontologyLanguage);
             Set<String> usedImportedOntos = new HashSet<String>();
             Set<String> usedImportingOntos = new HashSet<String>();
-            
-            if((SELECTED & 1) == 1)addImportedOntos(projectId, nodes, edges, node, usedImportedOntos);
-            if((SELECTED & 2) == 2)addImportingOntos(projectId, nodes, edges, node, usedImportingOntos);
+
+            if(SHOWIMPORTED)addImportedOntos(projectId, nodes, edges, node, usedImportedOntos);
+            if(SHOWIMPORTING)addImportingOntos(projectId, nodes, edges, node, usedImportingOntos);
 
             node.setIsRoot(true);
             node.setFixed(true);
@@ -82,8 +80,9 @@ public class OntologyNodeContentProvider extends AbstractNodeContentProvider {
         if (node instanceof OntologyNode) {
             Set<String> usedImportedOntos = new HashSet<String>();
             Set<String> usedImportingOntos = new HashSet<String>();
-            addImportedOntos(node.getProjectId(), nodes, edges, node, usedImportedOntos);
-            addImportingOntos(node.getProjectId(), nodes, edges, node, usedImportingOntos);
+
+            if(SHOWIMPORTED)addImportedOntos(node.getProjectId(), nodes, edges, node, usedImportedOntos);
+            if(SHOWIMPORTING)addImportingOntos(node.getProjectId(), nodes, edges, node, usedImportingOntos);
 
             node.setIsRoot(true);
             node.setFixed(true);
