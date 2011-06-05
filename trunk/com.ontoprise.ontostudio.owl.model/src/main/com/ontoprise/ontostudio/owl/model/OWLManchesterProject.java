@@ -331,6 +331,8 @@ public class OWLManchesterProject extends AbstractOntologyProject {
         Set<String> ontologies = getAllImportingOntologyURIs(ontologyUri);
         ontologies.add(ontologyUri);
         for (String uri: ontologies) {
+            if(uri == null)
+                continue;
             OWLOntology ontology = manager.getOntology(IRI.create(uri));
             // ontology can be null here if the ontology was already removed (e.g. because it appeared in the imported list)
             if (ontology != null) {
@@ -534,7 +536,6 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                                         }else{
 //                                            MessageDialog.openWarning(null, Messages.OWLManchasterProject_OntologyCantBeSet, Messages.OWLManchasterProject_OntologyCantBeSet_NewOID); 
                                             exception.set(new OWLOntologyCreationException(Messages.OWLManchasterProject_OntologyCantBeSet_NewOID));
-                                            
                                         }
                                     }else{
                                         if(newID == null){
