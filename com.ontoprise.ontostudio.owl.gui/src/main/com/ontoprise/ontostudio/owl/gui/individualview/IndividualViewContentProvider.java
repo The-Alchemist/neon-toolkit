@@ -41,7 +41,8 @@ import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
-import org.semanticweb.owlapi.vocab.OWLDataFactoryVocabulary;
+
+import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
@@ -253,7 +254,7 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
         return true;
     }
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({"rawtypes", "unused"})
     private void updateItems() {
         if (_selectedClazzTreeElement == null || getSelectedClazz() == null || _ontologyUri == null) {
             return;
@@ -264,7 +265,7 @@ public class IndividualViewContentProvider implements IStructuredContentProvider
             HashMap<String,LinkedList<String>> newIndividualUrisList = new HashMap<String,LinkedList<String>>();
             
             //adds not asserted Individuals iff owl:Thing is selected
-            if(_selectedClazzTreeElement.getEntity().equals(OWLDataFactoryVocabulary.OWLThing)){
+            if(_selectedClazzTreeElement.getEntity().equals(OWLDataFactoryImpl.getInstance().getOWLThing())){
                 for(String individual : new GetIndividuals(_projectId, _ontologyUri, null).getResults()){
                     if(!newIndividualUrisList.containsKey(individual)){
                         LinkedList<String> classes = new LinkedList<String>();

@@ -5,8 +5,6 @@ package com.ontoprise.ontostudio.owl.gui.navigator.ontology;
 
 import java.util.LinkedList;
 
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeSelection;
@@ -15,11 +13,10 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
-import org.neontoolkit.gui.navigator.elements.IProjectElement;
-import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLIndividual;
-import org.semanticweb.owlapi.vocab.OWLDataFactoryVocabulary;
+
+import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
@@ -37,7 +34,6 @@ public class AssertAllNotAssertedIndividualsHandler implements IObjectActionDele
     @Override
     public void run(IAction action) {
         try {
-            System.out.println("somebody pushed me"); //$NON-NLS-1$
             LinkedList<String> newAxiomsList = new LinkedList<String>();
             if(this.selection != null && 
                     selection instanceof TreeSelection && 
@@ -53,7 +49,7 @@ public class AssertAllNotAssertedIndividualsHandler implements IObjectActionDele
                     newAxiomsList.add(
                             OWLUtilities.toString(
                                     factory.getOWLClassAssertionAxiom(
-                                            OWLDataFactoryVocabulary.OWLThing, individual)));
+                                            OWLDataFactoryImpl.getInstance().getOWLThing(), individual)));
                 }
                 String[] newAxioms = newAxiomsList.toArray(new String[newAxiomsList.size()]);
                 new ApplyChanges(project, ontologyUri, newAxioms, new String[0]).run();
