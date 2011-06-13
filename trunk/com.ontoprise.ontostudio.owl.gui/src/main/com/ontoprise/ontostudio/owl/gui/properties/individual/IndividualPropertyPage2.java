@@ -43,7 +43,6 @@ import org.neontoolkit.gui.IHelpContextIds;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
 import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLClassAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyAssertionAxiom;
@@ -55,7 +54,8 @@ import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLObjectPropertyExpression;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
-import org.semanticweb.owlapi.vocab.OWLDataFactoryVocabulary;
+
+import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
@@ -997,7 +997,7 @@ public class IndividualPropertyPage2 extends AbstractOWLMainIDPropertyPage {
                         OWLModelPlugin.getDefault().getPreferenceStore().getBoolean(decisionID);
             }
             if(decision){ 
-                OWLAxiom newAxiom = factory.getOWLClassAssertionAxiom(OWLDataFactoryVocabulary.OWLThing, individual);
+                OWLAxiom newAxiom = factory.getOWLClassAssertionAxiom(OWLDataFactoryImpl.getInstance().getOWLThing(), individual);
                 newAxioms = new String[] {OWLUtilities.toString(newAxiom)};
             }
         }
