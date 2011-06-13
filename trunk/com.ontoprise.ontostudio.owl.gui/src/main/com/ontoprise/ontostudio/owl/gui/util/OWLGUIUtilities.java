@@ -122,7 +122,11 @@ public class OWLGUIUtilities {
     public static final Font FONT_FOR_INHERITED_AXIOMS;
     static{    
         Display display = Display.getCurrent();
-        FontData fd = display.getSystemFont().getFontData()[0];
+        FontData fd;
+        if(display != null)
+            fd = display.getSystemFont().getFontData()[0];
+        else
+            fd = new FontData();
         fd.setStyle(SWT.ITALIC);
         FONT_FOR_INHERITED_AXIOMS = new Font(display, fd);
 
