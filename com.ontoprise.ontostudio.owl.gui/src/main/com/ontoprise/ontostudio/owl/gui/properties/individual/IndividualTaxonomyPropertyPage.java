@@ -50,9 +50,9 @@ import org.semanticweb.owlapi.model.OWLEntity;
 import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLObject;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
-import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLSameIndividualAxiom;
-import org.semanticweb.owlapi.vocab.OWLDataFactoryVocabulary;
+
+import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.properties.AbstractOWLIdPropertyPage;
@@ -596,7 +596,7 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
                     if(hits.length == 1){
                         boolean decision = false;
                         OWLClassAssertionAxiom axiom = (OWLClassAssertionAxiom) OWLUtilities.axiom(hits[0][0]);
-                        if(axiom.getClassExpression().equals(OWLDataFactoryVocabulary.OWLThing)){
+                        if(axiom.getClassExpression().equals(OWLDataFactoryImpl.getInstance().getOWLThing())){
                             dialogText = Messages.InsertClassAssertionAxiom_RemoveLastClass_Text_OWLTHING;
                             switch(new CheckboxDesicionDialog(null,dialogTitle, dialogText, checkboxID, decisionID, true).open()){
                                 case CheckboxDesicionDialog.NO:
@@ -627,7 +627,7 @@ public class IndividualTaxonomyPropertyPage extends AbstractOWLIdPropertyPage {
                             }
                         }
                         if(decision){ 
-                            OWLAxiom newAxiom = factory.getOWLClassAssertionAxiom(OWLDataFactoryVocabulary.OWLThing, individual);
+                            OWLAxiom newAxiom = factory.getOWLClassAssertionAxiom(OWLDataFactoryImpl.getInstance().getOWLThing(), individual);
                             newAxioms = new String[] {OWLUtilities.toString(newAxiom)};
                         }
                     }
