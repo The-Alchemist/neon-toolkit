@@ -25,6 +25,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -52,6 +53,7 @@ import org.neontoolkit.gui.properties.CollabUserGroup;
 import com.ontoprise.ontostudio.owl.gui.Messages;
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
+import com.ontoprise.ontostudio.owl.gui.navigator.ontology.LoadUnloadedOntologyHandler;
 import com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.properties.AbstractOWLMainIDPropertyPage;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
@@ -172,6 +174,7 @@ public class OntologyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
     private void initImportsSection() {
         clearComposite(_importsComp);
         Set<String> ontologies = new TreeSet<String>(new Comparator<String>() {
+            @Override
             public int compare(String o1, String o2) {
                 return o1.compareTo(o2);
             }
@@ -195,8 +198,8 @@ public class OntologyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
         }
     }
 
-    private void createImportsRow(Composite parent, String ontologyUri, boolean enabled) throws NeOnCoreException,CommandException {
-        Composite rowComp = _toolkit.createComposite(parent);
+    private void createImportsRow(Composite parent, final String ontologyUri, boolean enabled) throws NeOnCoreException,CommandException {
+        final Composite rowComp = _toolkit.createComposite(parent);
         GridLayout layout = new GridLayout(2, false);
         layout.marginHeight = 1;
         rowComp.setLayout(layout);
@@ -211,12 +214,32 @@ public class OntologyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 
         if (ontologyUri != null) {
             final StyledText ontologyText = new UriText(rowComp, _owlModel, _owlModel).getStyledText();
-
-            ontologyText.setToolTipText(Messages.OntologyPropertyPage2_10);
+            ontologyText.setToolTipText(""); //$NON-NLS-1$
             ontologyText.setText(ontologyUri);
             OWLGUIUtilities.enable(ontologyText, false);
 
-            widgets.add(ontologyText);
+            boolean loaded = false;
+            for(OWLModel model : _owlModel.getImportedOntologies())
+                if(model.getOntologyURI().equals(ontologyUri))
+                    loaded = true;
+            if(loaded){
+                widgets.add(ontologyText);
+            }else{
+                
+                layout.numColumns = 3;
+                ontologyText.setForeground(new Color(null, 255, 0, 0));
+                ontologyText.setToolTipText(Messages.OntologyPropertyPage2_ImportedOntologyCanNotBeFound);
+                widgets.add(ontologyText);
+                
+                final Button addButton = createAddButton(rowComp, true);
+                addButton.addSelectionListener(new SelectionAdapter() {
+                    @Override
+                    public void widgetSelected(SelectionEvent e) {
+                        new LoadUnloadedOntologyHandler().run(ontologyUri, _selection);
+                        refresh();
+                    }
+                });
+            }
 
             final Button removeButton = createRemoveButton(rowComp, true);
 
@@ -285,6 +308,7 @@ public class OntologyPropertyPage2 extends AbstractOWLMainIDPropertyPage {
 
             _ontologyCombo.addModifyListener(new ModifyListener() {
 
+                @Override
                 public void modifyText(ModifyEvent e) {
                     if (_ontologyCombo.getText().equals(Messages.OntologyPropertyPage2_31)) {
                         addButton.setEnabled(false);

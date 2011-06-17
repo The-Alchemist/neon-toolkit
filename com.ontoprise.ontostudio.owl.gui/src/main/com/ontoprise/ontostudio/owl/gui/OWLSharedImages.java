@@ -24,11 +24,14 @@ import org.osgi.framework.Bundle;
  */
 /**
  * The keys for the shared images of this plugin
+ * 
+ * @author Nico Stieler
  */
 public final class OWLSharedImages {
 
     public static final String DELETE_INDIVIDUAL = "delete_individual"; //$NON-NLS-1$
     public static final String ONTOLOGY = "ontology"; //$NON-NLS-1$
+    public static final String UNLOADED_ONTOLOGY = "unloaded_ontology"; //$NON-NLS-1$
     public static final String CLAZZ = "clazz"; //$NON-NLS-1$
     public static final String OBJECT_PROPERTY = "object_property"; //$NON-NLS-1$
     public static final String DATA_PROPERTY = "data_property"; //$NON-NLS-1$
@@ -59,6 +62,7 @@ public final class OWLSharedImages {
         registry.put(INDIVIDUAL, create("onto", "individual.gif")); //$NON-NLS-1$ //$NON-NLS-2$
         registry.put(DELETE_INDIVIDUAL, create("onto", "delete_individual.gif")); //$NON-NLS-1$ //$NON-NLS-2$
         registry.put(ONTOLOGY, create("onto", "ontology.gif")); //$NON-NLS-1$ //$NON-NLS-2$
+        registry.put(UNLOADED_ONTOLOGY, create("onto", "unloaded_ontology.gif")); //$NON-NLS-1$ //$NON-NLS-2$
         registry.put(CLAZZ, create("onto", "clazz.gif")); //$NON-NLS-1$ //$NON-NLS-2$
         registry.put(OBJECT_PROPERTY, create("onto", "object_property.gif")); //$NON-NLS-1$ //$NON-NLS-2$
         registry.put(ANNOTATION_PROPERTY, create("onto", "annotation_property.gif")); //$NON-NLS-1$ //$NON-NLS-2$

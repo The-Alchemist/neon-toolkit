@@ -25,6 +25,7 @@ import com.ontoprise.ontostudio.owl.model.OWLNamespaces;
 
 /**
  * TreeElement used for modules shown in the OntologyNavigator
+ * @author Nico Stieler
  */
 public class OntologyTreeElement extends AbstractOntologyTreeElement implements IOntologyTreeElement {
 
@@ -45,7 +46,7 @@ public class OntologyTreeElement extends AbstractOntologyTreeElement implements 
             OntologyTreeElement that = (OntologyTreeElement) arg0;
             res = _dataProvider == that._dataProvider && equal(getOntologyUri(), that.getOntologyUri()) && equal(getProjectName(), that.getProjectName());
         } else {
-            if(arg0.getClass() == getClass()){ //needed for jump from search result to ntology 
+            if(arg0.getClass() == getClass()){ //needed for jump from search result to ontology 
                 OntologyTreeElement that = (OntologyTreeElement) arg0;
                 res = equal(getOntologyUri(), that.getOntologyUri()) && equal(getProjectName(), that.getProjectName());
             }else{
@@ -68,7 +69,6 @@ public class OntologyTreeElement extends AbstractOntologyTreeElement implements 
     public String getId() {
         return getOntologyUri();
     }
-
     @Override
     public String toString() {
         int idDisplayStyle = NeOnUIPlugin.getDefault().getIdDisplayStyle();

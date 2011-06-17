@@ -11,10 +11,14 @@
 package com.ontoprise.ontostudio.owl.gui.io;
 
 import java.net.URI;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.project.IOntologyProject;
 import org.neontoolkit.io.command.AbstractOntologyImportCommand;
@@ -27,7 +31,9 @@ import com.ontoprise.ontostudio.owl.model.util.file.OWLOntologyInfo;
 
 public class OntologyFileSystemImport extends AbstractOntologyImportCommand {
     
-	public OntologyFileSystemImport(String project, String[] physicalUris) {
+	protected static boolean answerDiaolog;
+
+    public OntologyFileSystemImport(String project, String[] physicalUris) {
 		super(project, physicalUris);
 	}
 
@@ -93,15 +99,45 @@ public class OntologyFileSystemImport extends AbstractOntologyImportCommand {
                 for (URI uri: physicalURIsToImport) {
                     physicalUrisToImport.add(uri.toString());
                 }
-	           if(removeFilesCopiedToWorkspace(physicalUrisToImport, getProjectName())) {
-//    	                removeLogicalUrisCopiedToWorkspace(physicalUrisToImport, getProjectName());
-	            }
-	            if(e.getCause() != null && e.getCause() instanceof Exception && e.getCause().getMessage() != null) {
-	                if(e.getCause().getMessage().contains("java.lang.InterruptedException")) { //$NON-NLS-1$
-	                    throw new InterruptedException();
-	                }
-	            }
-	            throw e;
+                block:
+                {
+    	            if(e.getCause() != null && e.getCause() instanceof Exception && e.getCause().getMessage() != null) {
+                        if(e.getCause().getMessage().contains("java.lang.InterruptedException")) { //$NON-NLS-1$
+                            if(removeFilesCopiedToWorkspace(physicalUrisToImport, getProjectName())) {
+//                                removeLogicalUrisCopiedToWorkspace(physicalUrisToImport, getProjectName());
+                             }
+                            throw new InterruptedException();
+                        }
+                        if(e.getCause() instanceof UnknownHostException) {
+                            e.printStackTrace();
+                            OntologyFileSystemImport.answerDiaolog = true;
+                            try{
+                                //NICO shell can not be created
+//                              final IWorkbench workbench = PlatformUI.getWorkbench();
+//                              final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+//                              final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+                                final Shell shell = new Shell(new Display());
+                                final String title = "Problem while loading an ontology"; //$NON-NLS-1$
+                                final String message =  e.getCause().getMessage() + "\n\n Do you want to continue?"; //$NON-NLS-1$
+                                shell.getDisplay().syncExec(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        OntologyFileSystemImport.answerDiaolog =  MessageDialog.openQuestion(shell, title, message);
+                                    }
+                                });
+                            } catch (RuntimeException e1) {
+                                break block;  
+                            } finally {
+                                if(OntologyFileSystemImport.answerDiaolog)
+                                    break block;  
+                            }
+                        }
+    	            }
+	               if(removeFilesCopiedToWorkspace(physicalUrisToImport, getProjectName())) {
+//	                   removeLogicalUrisCopiedToWorkspace(physicalUrisToImport, getProjectName());
+                   }
+    	            throw e;
+                }
     	    }     		
     	}
         	

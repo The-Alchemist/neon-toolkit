@@ -238,7 +238,7 @@ public class MainTreeDataProvider extends LabelProvider implements ITreeContentP
         boolean hasChildren = (provider.getChildCount(elem) > 0);
         if (!hasChildren) {
             // TODO check the subproviders for children. Might be that there are still no children.
-            ITreeDataProvider[] sub = _extensionHandler.getSubProviders(elem.getProvider().getId());
+            ITreeDataProvider[] sub = _extensionHandler.getSubProviders(provider.getId());
             if (sub != null && sub.length > 0) {
                 for (int i = 0; i < sub.length && !hasChildren; i++) {
                     hasChildren = sub[i].getChildCount(elem) > 0;
@@ -255,7 +255,6 @@ public class MainTreeDataProvider extends LabelProvider implements ITreeContentP
      */
     @Override
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-        // TODO Auto-generated method stub
     }
 
     public void setTopIndex(int index) {

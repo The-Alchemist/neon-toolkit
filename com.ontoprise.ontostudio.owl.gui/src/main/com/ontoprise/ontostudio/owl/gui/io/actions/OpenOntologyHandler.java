@@ -12,7 +12,7 @@ package com.ontoprise.ontostudio.owl.gui.io.actions;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
@@ -23,22 +23,30 @@ import com.ontoprise.ontostudio.owl.gui.io.FileSystemImportWizard;
 /**
  * Created on: 14.09.2009
  * Created by: janiko
- *
+ * @author Nico Stieler
  */
-public class OpenOntologyHandler extends AbstractHandler{
-
+public class OpenOntologyHandler extends AbstractHandler implements ILoadOntologyHandler{
     
+    private boolean _fixed;
+    private IStructuredSelection _selection;
+    private String _selectionString;
+
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         // Grab the selection out of the tree and convert it to a
         // StructuredSelection for use by the wizard.
-        StructuredSelection currentSelection = null;
+        IStructuredSelection currentSelection = null;
+        if(_fixed){
+            currentSelection =_selection;
+            _selectionString = _selection.toString();
+        }
         
         // get the wizard from the child class.
         IWorkbenchWizard wizard = constructWizard();
 
         // Get the workbench and initialize, the wizard.
         IWorkbench workbench = PlatformUI.getWorkbench();
+        
         wizard.init(workbench, currentSelection);
 
 
@@ -51,8 +59,12 @@ public class OpenOntologyHandler extends AbstractHandler{
     }
 
     private IWorkbenchWizard constructWizard() {
-        return new FileSystemImportWizard();
+        return new FileSystemImportWizard(_fixed, _selectionString);
     }
 
-
+    @Override
+    public void fixedProject(IStructuredSelection selection, String ontologyURI) {
+        _fixed = true;
+        _selection = selection;
+    }
 }

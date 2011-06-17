@@ -30,20 +30,32 @@ import com.ontoprise.ontostudio.owl.model.util.file.UnknownOWLOntologyFormatExce
 
 /**
  * This class provides a wizard for the creation of new ontologies.
+ * @author Nico Stieler
  */
 public class WebImportOntologyWizard extends FileSystemImportWizard {
 
     public static final String ID = "com.ontoprise.ontostudio.owl.gui.io.ImportOntologyWizard"; //$NON-NLS-1$
     private WebImportOntologyWizardPage _pageSelection;
+    private boolean _fixed;
+    private String _fixedProjectSelection;
 
+    public WebImportOntologyWizard(boolean fixed, String fixedProjectSelection) {
+        this();
+        _fixed = fixed;
+        _fixedProjectSelection = fixedProjectSelection;
+        
+    }
     public WebImportOntologyWizard() {
         super();
         setWindowTitle("Import Ontology from the Web"); //$NON-NLS-1$
+        _fixed = false;
     }
 
     @Override
     public AbstractImportSelectionPage getImportSelectionPage() {
     	_pageSelection = new WebImportOntologyWizardPage(getFileFilter());    	
+        if(_fixed)
+            _pageSelection.setFixed(_fixedProjectSelection);
     	return _pageSelection;
     }
 

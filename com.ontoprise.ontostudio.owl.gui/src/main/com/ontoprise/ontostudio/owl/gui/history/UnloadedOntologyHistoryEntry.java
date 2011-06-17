@@ -5,13 +5,12 @@ package com.ontoprise.ontostudio.owl.gui.history;
 
 import org.eclipse.swt.graphics.Image;
 import org.neontoolkit.core.exception.NeOnCoreException;
-import org.neontoolkit.gui.history.IOWLHistoryEntry;
 import org.neontoolkit.gui.history.OWLHistoryManager;
 import org.neontoolkit.gui.navigator.elements.TreeElement;
 
 import com.ontoprise.ontostudio.owl.gui.OWLPlugin;
 import com.ontoprise.ontostudio.owl.gui.OWLSharedImages;
-import com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement;
+import com.ontoprise.ontostudio.owl.gui.navigator.ontology.UnloadedOntologyTreeElement;
 import com.ontoprise.ontostudio.owl.gui.util.OWLGUIUtilities;
 import com.ontoprise.ontostudio.owl.model.OWLModel;
 import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
@@ -20,7 +19,7 @@ import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
  * @author Nico Stieler
  * Created on: 14.04.2011
  */
-public class OWLOntologyHistoryEntry implements IOWLHistoryEntry {
+public class UnloadedOntologyHistoryEntry extends OWLOntologyHistoryEntry {
 
     private int historyPosition;
     private TreeElement treeElement;
@@ -34,18 +33,11 @@ public class OWLOntologyHistoryEntry implements IOWLHistoryEntry {
      * @param ontologyUri
      * @param projectName
      */
-    protected OWLOntologyHistoryEntry(String ontologyUri, String projectName) {
-        this.ontologyUri = ontologyUri;
-        this.projectName = projectName;
-    }
-    /**
-     * @param string
-     * @param ontologyUri
-     * @param projectName
-     */
-    public OWLOntologyHistoryEntry(OntologyTreeElement treeElement) {
-        this(treeElement.getOntologyUri(), treeElement.getProjectName());
+    public UnloadedOntologyHistoryEntry(final UnloadedOntologyTreeElement treeElement) {
+        super(treeElement.getOntologyUri(), treeElement.getProjectName());
         this.treeElement = treeElement;
+        this.ontologyUri = treeElement.getOntologyUri();
+        this.projectName = treeElement.getProjectName();
     }
     @Override
     public void restoreLocation() throws NeOnCoreException{
@@ -81,8 +73,8 @@ public class OWLOntologyHistoryEntry implements IOWLHistoryEntry {
     }
     @Override
     public boolean equals(final Object obj) {
-        if(obj instanceof OWLOntologyHistoryEntry){
-            final OWLOntologyHistoryEntry other = (OWLOntologyHistoryEntry) obj;
+        if(obj instanceof UnloadedOntologyHistoryEntry){
+            final UnloadedOntologyHistoryEntry other = (UnloadedOntologyHistoryEntry) obj;
             if(other.projectName == projectName && other.ontologyUri == ontologyUri){
                 return true;
             }
@@ -104,7 +96,7 @@ public class OWLOntologyHistoryEntry implements IOWLHistoryEntry {
     }
     @Override
     public Image getImage() {
-        return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.ONTOLOGY);
+        return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.UNLOADED_ONTOLOGY);
     }
     @Override
     public TreeElement getTreeElement(){

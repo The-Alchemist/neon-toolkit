@@ -22,6 +22,7 @@ import org.neontoolkit.gui.navigator.MTreeView;
 
 /**
  * @author diwe
+ * @author Nico Stieler
  * 
  */
 public abstract class AbstractDeleteHandler extends AbstractSelectionBasedHandler {
@@ -50,6 +51,7 @@ public abstract class AbstractDeleteHandler extends AbstractSelectionBasedHandle
                  * 
                  * @see java.lang.Runnable#run()
                  */
+                @Override
                 public void run() {
                     TreeItem[] selectedItems = treeViewer.getTree().getSelection();
                     final Object[] items = new Object[selectedItems.length];
@@ -59,13 +61,16 @@ public abstract class AbstractDeleteHandler extends AbstractSelectionBasedHandle
                         parentItems[i] = selectedItems[i].getParentItem() == null ? null : selectedItems[i].getParentItem().getData();
                     }
                     BusyIndicator.showWhile(_shell.getDisplay(), new Runnable() {
+                        @Override
                         public void run() {
                             boolean deleted = doDelete(items, parentItems);
                             if (deleted && parentItems != null && parentItems.length > 0) {
                                 final StructuredSelection newSelection = parentItems[0] != null ? new StructuredSelection(parentItems[0]) : new StructuredSelection();
                                 treeViewer.getTree().getDisplay().syncExec(new Runnable() {
+                                    @Override
                                     public void run() {
                                         treeViewer.setSelection(newSelection);
+                                        treeViewer.refresh();
                                     }
                                 });
                             }

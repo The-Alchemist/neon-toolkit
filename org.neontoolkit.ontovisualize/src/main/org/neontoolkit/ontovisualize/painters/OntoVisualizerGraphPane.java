@@ -39,6 +39,9 @@ import org.neontoolkit.jpowergraph.viewcontrols.INavigationListener;
 /*
  * Created by Werner Hihn
  */
+/**
+ * @author Nico Stieler
+ */
 
 public class OntoVisualizerGraphPane extends JGraphPane {
 

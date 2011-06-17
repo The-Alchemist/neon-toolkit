@@ -52,6 +52,7 @@ import com.ontoprise.ontostudio.owl.gui.Messages;
 /**
  * Page for FileSystemImportWizard to specify from where to load an ontology.
  * Selection of projectname and file
+ * @author Nico Stieler
  */
 public class FileSystemImportSelectionPage extends AbstractImportSelectionPage {
 
@@ -339,6 +340,14 @@ public class FileSystemImportSelectionPage extends AbstractImportSelectionPage {
         	updateStatus(status);
         }
         setPageComplete(pageComplete);
+    }
+
+    /**
+     * @param projectName
+     */
+    public void setFixed(String projectName) {
+        setSelectedFile(projectName);
+        _projectComboEnabled = false;
     }
 
 }

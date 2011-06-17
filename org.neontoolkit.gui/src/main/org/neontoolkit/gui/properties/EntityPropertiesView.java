@@ -59,6 +59,7 @@ import org.neontoolkit.gui.navigator.elements.AbstractProjectTreeElement;
 import org.neontoolkit.gui.navigator.elements.IFolderElement;
 import org.neontoolkit.gui.navigator.elements.IOntologyElement;
 import org.neontoolkit.gui.navigator.elements.IProjectElement;
+import org.neontoolkit.gui.navigator.ontology.IUnloadedOntologyTreeElement;
 
 
 /* 
@@ -271,7 +272,8 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
                     showEmptyPage();
                 if (sel instanceof TreeSelection) {
                     TreeSelection treeSelection = (TreeSelection) sel;
-                    if(treeSelection.getFirstElement() instanceof IFolderElement)
+                    if(treeSelection.getFirstElement() instanceof IFolderElement ||
+                            treeSelection.getFirstElement() instanceof IUnloadedOntologyTreeElement)
                         showEmptyPage();
                 }
             }
@@ -360,7 +362,7 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
         return true;
     }
 
-    private void showEmptyPage() {// NICO Has to be redone: Bug 19(WORD)
+    private void showEmptyPage() {
      if (!_noSelectionPage.getControl().isDisposed()) {
      if (_oldMainPage != null && !_oldMainPage.isDisposed()) {
      _oldMainPage.resetSelection();
@@ -469,6 +471,7 @@ public class EntityPropertiesView extends ViewPart implements ISelectionListener
      * 
      * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
      */
+    @SuppressWarnings("rawtypes")
     @Override
     public Object getAdapter(Class adapter) {
         if (_container != null && _container.getSelection() != null && _container.getSelection().getData() instanceof IAdaptable) {

@@ -31,11 +31,15 @@ import org.neontoolkit.core.project.IOntologyProjectFilter;
 import org.neontoolkit.core.project.OntologyProjectManager;
 import org.neontoolkit.core.util.OntologyProjectFilter;
 import org.neontoolkit.io.IOPlugin;
-
+/**
+ * 
+ * @author Nico Stieler
+ */
 public abstract class ImportWizardPage extends WizardPage {
 
     protected String[] _projectsNames;
     protected Combo _projectsCombo;
+    protected boolean _projectComboEnabled = true;
     private String _project;
     protected Button _createButton;
     protected Text _ontologyUri;
@@ -51,6 +55,7 @@ public abstract class ImportWizardPage extends WizardPage {
         _filter = filter;
     }  
 
+    @Override
     public void createControl(Composite parent) {
         Composite composite = new Composite(parent, SWT.NONE);        
 
@@ -185,7 +190,8 @@ public abstract class ImportWizardPage extends WizardPage {
                 if(projectIndex == -1) {
                     projectIndex = 0;
                 }
-            }            
+            }
+            _projectsCombo.setEnabled(_projectComboEnabled);
         } catch (Exception e) {
             e.printStackTrace();
             IOPlugin.getDefault().logError("", e); //$NON-NLS-1$
@@ -203,6 +209,7 @@ public abstract class ImportWizardPage extends WizardPage {
         public ProjectComboSelectionListener() {
         }
 
+        @Override
         public void widgetSelected(SelectionEvent e) {
             //refresh namespace and modules combo
 //            Combo pCombo = (Combo) e.getSource();
@@ -226,6 +233,7 @@ public abstract class ImportWizardPage extends WizardPage {
 //
 //        }
 
+        @Override
         public void widgetDefaultSelected(SelectionEvent e) {
         }
     }
