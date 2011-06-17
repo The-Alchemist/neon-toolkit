@@ -44,6 +44,7 @@ import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
 
 /**
  * Provider for owl ontologies in the OntologyNavigator.
+ * @author Nico Stieler
  */
 public class OntologyProvider extends DefaultTreeDataProvider {
     
@@ -54,11 +55,13 @@ public class OntologyProvider extends DefaultTreeDataProvider {
      * operation.
      */
     private class OntologyProjectListener implements IOntologyProjectListener {
+        @Override
         public void ontologyModified(final String projectName, String ontology, boolean dirty) {            
             final ITreeElement elem = getOntologyTreeElement(ontology, projectName);
             // PluginTest: java.lang.IllegalStateException: Workbench has not been created yet.
             if (PlatformUI.isWorkbenchRunning() && !PlatformUI.getWorkbench().isClosing()) {
                 getViewer().getControl().getDisplay().asyncExec(new Runnable() {
+                    @Override
                     public void run() {
                         Widget[] treeItems = getViewer().findTreeItems(elem);
                         boolean aOk = true;
@@ -92,6 +95,7 @@ public class OntologyProvider extends DefaultTreeDataProvider {
             // PluginTest: java.lang.IllegalStateException: Workbench has not been created yet.
             if (PlatformUI.isWorkbenchRunning() && !PlatformUI.getWorkbench().isClosing()) {
                 getViewer().getControl().getDisplay().asyncExec(new Runnable() {
+                    @Override
                     public void run() {
                         Widget[] treeItems = getViewer().findTreeItems(elem);
                         boolean aOk = true;
@@ -123,6 +127,7 @@ public class OntologyProvider extends DefaultTreeDataProvider {
         public void projectAdded(String projectName) {
             
         }
+        @Override
         public void projectRemoved(String projectName) {
         }       
         @Override
@@ -235,6 +240,7 @@ public class OntologyProvider extends DefaultTreeDataProvider {
                 }
                 
                 Collections.sort(ontoNodes, new Comparator<OntologyTreeElement>() {
+                    @Override
                     public int compare(OntologyTreeElement o1, OntologyTreeElement o2) {
                         return o1.toString().compareToIgnoreCase(o2.toString());
                     }
@@ -266,7 +272,8 @@ public class OntologyProvider extends DefaultTreeDataProvider {
      */
     @Override
     public TreeElementPath[] getPathElements(ITreeElement element) {
-        if (element instanceof OntologyTreeElement) {
+        if (element instanceof OntologyTreeElement || 
+                element instanceof UnloadedOntologyTreeElement) {
             TreeElementPath path = new TreeElementPath();
             path.append(element);
             return new TreeElementPath[] {path};
@@ -307,5 +314,4 @@ public class OntologyProvider extends DefaultTreeDataProvider {
         OWLProjectTreeElement el = new OWLProjectTreeElement(projectName, prov);
         return el;
      }
-
 }

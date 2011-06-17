@@ -41,11 +41,15 @@ import com.ontoprise.ontostudio.owl.model.commands.ontology.CreateOntology;
  */
 /**
  * This class provides a wizard for the creation of new ontologies.
+ * @author Nico Stieler
  */
 public class NewOntologyWizard extends Wizard implements INewWizard {
 
     protected IStructuredSelection _selectedElement;
     protected NewOntologyWizardPage _page;
+    private boolean _fixed;
+    private String _fixedProjectSelection;
+    private String _fixedOntologyName;
 
     public NewOntologyWizard() {
         setDefaultPageImageDescriptor(NeOnUIPlugin.getDefault().getImageRegistry().getDescriptor(SharedImages.ONTOLOGY));
@@ -65,6 +69,8 @@ public class NewOntologyWizard extends Wizard implements INewWizard {
     @Override
 	public void addPages() {
         _page = new NewOntologyWizardPage(_selectedElement);
+        if(_fixed)
+            _page.setFixed(_fixedProjectSelection, _fixedOntologyName);
         addPage(_page);
     }
 
@@ -95,6 +101,7 @@ public class NewOntologyWizard extends Wizard implements INewWizard {
      * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
      *      org.eclipse.jface.viewers.IStructuredSelection)
      */
+    @Override
     public void init(IWorkbench workbench, IStructuredSelection selection) {
     	_selectedElement = (IStructuredSelection)workbench.getActiveWorkbenchWindow().getSelectionService().getSelection(NeOnUIPlugin.ID_ONTOLOGY_NAVIGATOR);
     }
@@ -158,6 +165,16 @@ public class NewOntologyWizard extends Wizard implements INewWizard {
         IFile file = resource.getFile(fileName);
         URI uri = file.getLocationURI();
         return uri;
+    }
+
+    /**
+     * @param fixed
+     * @param selectionString
+     */
+    public void setFixed(boolean fixed, String fixedProjectSelection, String fixedOntologyName) {
+        _fixed = fixed;
+        _fixedProjectSelection = fixedProjectSelection;
+        _fixedOntologyName = fixedOntologyName;
     }
     
 }

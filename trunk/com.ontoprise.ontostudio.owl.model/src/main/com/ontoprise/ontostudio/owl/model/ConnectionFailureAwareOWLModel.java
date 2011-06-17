@@ -326,7 +326,16 @@ public class ConnectionFailureAwareOWLModel implements OWLModel {
             throw checkConnectionFailure(e);
         }
     }
-
+    @Override
+    public Set<String> getNotExistingImportedOntologiesURIs() throws NeOnCoreException {
+        try {
+            return _model.getNotExistingImportedOntologiesURIs();
+        } catch (NeOnCoreException e) {
+            throw checkConnectionFailure(e);
+        } catch (RuntimeException e) {
+            throw checkConnectionFailure(e);
+        }
+    }
     @Override
     public Set<OWLModel> getAllImportingOntologies() throws NeOnCoreException {
         try {

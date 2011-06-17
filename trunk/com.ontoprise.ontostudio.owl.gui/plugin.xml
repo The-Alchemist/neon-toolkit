@@ -118,6 +118,15 @@
                label="%assertAllNotAssertedIndividuals_Text">
          </action>
       </objectContribution>
+      <objectContribution
+            objectClass="com.ontoprise.ontostudio.owl.gui.navigator.ontology.UnloadedOntologyTreeElement">
+            <action
+               class="com.ontoprise.ontostudio.owl.gui.navigator.ontology.LoadUnloadedOntologyHandler"
+               id="com.ontoprise.ontostudio.owl.gui.navigator.ontology.LoadUnloadedOntologyHandler"
+               icon="icons/onto/fix_ontology.gif"
+               label="%loadUnloadedOntology">
+         </action>
+      </objectContribution>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -362,7 +371,7 @@
                commandId="com.ontoprise.ontostudio.owl.views.rangeView.showPropertiesOfAllSuperclassesInTheRangeViewCommand"
                icon="icons/icon_TH_inher_co.gif"
 			   tooltip="%showPropertiesOfAllSuperclassesInTheRangeView"
-			   state="false"
+			   state="true"
 			   style="toogle">
          </command>
       </menuContribution>
@@ -564,6 +573,11 @@
       <provider
             class="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyProvider"
             id="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyProvider"
+            subproviderOf="com.ontoprise.ontostudio.owl.gui.navigator.project.OWLOntologyProjectProvider">
+      </provider>
+      <provider
+            class="com.ontoprise.ontostudio.owl.gui.navigator.ontology.UnloadedOntologyProvider"
+            id="com.ontoprise.ontostudio.owl.gui.navigator.ontology.UnloadedOntologyProvider"
             subproviderOf="com.ontoprise.ontostudio.owl.gui.navigator.project.OWLOntologyProjectProvider">
       </provider>
       <provider

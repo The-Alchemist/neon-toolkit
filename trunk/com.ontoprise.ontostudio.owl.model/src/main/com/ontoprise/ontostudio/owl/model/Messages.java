@@ -26,6 +26,8 @@ public class Messages  extends NLS {
     public static String OWLManchasterProject_OntologyCantBeSet_NewOID;
     public static String OWLManchasterProject_OntologyCantBeSet_Onto;
     public static String OWLManchasterProject_OntologyCantBeSet_NewOID_Onto;
+    public static String OWLStoreMissingImports_title;
+    public static String OWLStoreMissingImports_message;
 
     
     private Messages() {

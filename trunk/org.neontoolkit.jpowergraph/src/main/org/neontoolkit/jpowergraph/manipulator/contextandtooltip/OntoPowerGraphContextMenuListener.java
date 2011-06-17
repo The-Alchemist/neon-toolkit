@@ -30,6 +30,9 @@ import org.neontoolkit.jpowergraph.Messages;
 /*
  * Created by Werner Hihn
  */
+/**
+ * @author Nico Stieler
+ */
 
 public class OntoPowerGraphContextMenuListener extends DefaultContextMenuListener {
 

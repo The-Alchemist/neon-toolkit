@@ -50,16 +50,26 @@ import com.ontoprise.ontostudio.owl.model.commands.ontology.RemoveOntology;
 
 /**
  * Import Wizard to select an (ontology-)file from the file system
+ * @author Nico Stieler
  */
 public class FileSystemImportWizard extends AbstractImportWizard {
 
     public String _ontoUri;
+    private boolean _fixed;
+    private String _fixedProjectSelection;
 
+    public FileSystemImportWizard(boolean fixed, String fixedProjectSelection) {
+        this();
+        _fixed = fixed;
+        _fixedProjectSelection = fixedProjectSelection;
+        
+    }
     public FileSystemImportWizard() {
         super();
         super.setFileFilter(new AnyOWL2OntologyFileFilter());
         super.setSupportedProjectOntologyLanguage(new OntologyProjectFilter(null, OWLManchesterProjectFactory.FACTORY_ID));
         setWindowTitle(Messages.FileSystemImportWizard_0);
+        _fixed = false;
     }
 
     /*
@@ -89,7 +99,10 @@ public class FileSystemImportWizard extends AbstractImportWizard {
      */
     @Override
     public AbstractImportSelectionPage getImportSelectionPage() {
-        return new FileSystemImportSelectionPage(getFileFilter());
+        FileSystemImportSelectionPage page = new FileSystemImportSelectionPage(getFileFilter());
+        if(_fixed)
+            page.setFixed(_fixedProjectSelection);
+        return page;
     }
     
     @Override

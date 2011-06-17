@@ -51,7 +51,8 @@ public abstract class TreeElement extends PlatformObject implements ITreeElement
 	 *  (non-Javadoc)
 	 * @see com.ontoprise.ontostudio.gui.navigator.ITreeElement#getProvider()
 	 */
-	public ITreeDataProvider getProvider() {
+	@Override
+    public ITreeDataProvider getProvider() {
 		return _dataProvider;
 	}
 
@@ -101,7 +102,8 @@ public abstract class TreeElement extends PlatformObject implements ITreeElement
 		return _dataProvider != null ? _dataProvider.hashCode() : 0;
 	}
 
-	public boolean testAttribute(Object target, String name, String value) {
+	@Override
+    public boolean testAttribute(Object target, String name, String value) {
 		try {
 			Method field1 = target.getClass().getMethod(name, new Class[0]);
 			Object returnVal = field1.invoke(target, new Object[0]);

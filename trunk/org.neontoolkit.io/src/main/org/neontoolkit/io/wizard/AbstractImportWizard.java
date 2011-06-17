@@ -51,6 +51,8 @@ import org.neontoolkit.io.filter.FileFilter;
 
 /**
  * Abstract Import Wizard for different types and formats
+ * 
+ * @author Nico Stieler
  */
 public abstract class AbstractImportWizard extends Wizard implements IImportWizard {
 
@@ -92,6 +94,7 @@ public abstract class AbstractImportWizard extends Wizard implements IImportWiza
             return _value;
         }
 
+        @Override
         public void run() {
 //            Shell parent =  getContainer().getShell();
             Shell parent =  Display.getCurrent().getActiveShell();
@@ -122,15 +125,20 @@ public abstract class AbstractImportWizard extends Wizard implements IImportWiza
      * @see org.eclipse.ui.IWorkbenchWizard#init(IWorkbench,
      *      IStructuredSelection)
      */
-    public void init(IWorkbench arg0, IStructuredSelection arg1) {
+    @Override
+    public void init(IWorkbench arg0, IStructuredSelection selection) {
         IViewReference[] refs = arg0.getActiveWorkbenchWindow().getActivePage().getViewReferences();
-        for (int i = 0; i < refs.length; i++) {
-            IViewPart view = refs[i].getView(false);
-            if (view instanceof MTreeView) {
-                _fView = (MTreeView) view;
-                arg1 = (IStructuredSelection) _fView.getTreeViewer().getSelection();
-                if (arg1 instanceof StructuredSelection) {
-                    _selection = ((StructuredSelection) arg1).getFirstElement();
+        if(selection != null && selection instanceof StructuredSelection){
+            _selection = ((StructuredSelection) selection).getFirstElement();
+        }else{
+            for (int i = 0; i < refs.length; i++) {
+                IViewPart view = refs[i].getView(false);
+                if (view instanceof MTreeView) {
+                    _fView = (MTreeView) view;
+                    selection = (IStructuredSelection) _fView.getTreeViewer().getSelection();
+                    if (selection instanceof StructuredSelection) {
+                        _selection = ((StructuredSelection) selection).getFirstElement();
+                    }
                 }
             }
         }

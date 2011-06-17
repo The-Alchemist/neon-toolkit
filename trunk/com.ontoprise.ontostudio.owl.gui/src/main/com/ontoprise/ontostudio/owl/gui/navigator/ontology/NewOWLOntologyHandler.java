@@ -28,8 +28,10 @@ import org.neontoolkit.core.NeOnCorePlugin;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.NeOnUIPlugin;
 import org.neontoolkit.gui.navigator.MTreeView;
+import org.neontoolkit.gui.navigator.elements.IProjectElement;
 
 import com.ontoprise.ontostudio.owl.gui.Messages;
+import com.ontoprise.ontostudio.owl.gui.io.actions.ILoadOntologyHandler;
 import com.ontoprise.ontostudio.owl.gui.navigator.project.OWLProjectTreeElement;
 import com.ontoprise.ontostudio.owl.gui.wizard.NewOntologyWizard;
 import com.ontoprise.ontostudio.owl.model.OWLManchesterProjectFactory;
@@ -42,16 +44,26 @@ import com.ontoprise.ontostudio.owl.model.OWLManchesterProjectFactory;
  */
 /**
  * Action to create a new module in the tree
+ * @author Nico Stieler
  */
 
-public class NewOWLOntologyHandler extends AbstractHandler {
+public class NewOWLOntologyHandler extends AbstractHandler implements ILoadOntologyHandler{
+
+    private boolean _fixed;
+    private String _selectionProjectString;
+    private String _neededOntologyString;
+    private MTreeView _mTreeView;
 
     /* (non-Javadoc)
      * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
      */
     @Override
     public Object execute(ExecutionEvent arg0) throws ExecutionException {
-        MTreeView view = HandlerUtil.getActivePart(arg0) instanceof MTreeView ? 
+        MTreeView view;
+        if(_mTreeView != null)
+            view = _mTreeView;
+        else
+            view = HandlerUtil.getActivePart(arg0) instanceof MTreeView ? 
                 (MTreeView)HandlerUtil.getActivePart(arg0) : null;
 
         NewOntologyWizard wizard = null;
@@ -75,6 +87,8 @@ public class NewOWLOntologyHandler extends AbstractHandler {
                     IConfigurationElement confElement = confElements[i];
                     if ("wizard".equals(confElement.getName()) && getId().equals(confElement.getAttribute("id"))) { //$NON-NLS-1$ //$NON-NLS-2$             
                         wizard = (NewOntologyWizard) confElement.createExecutableExtension("class"); //$NON-NLS-1$
+                        if(_fixed)
+                            wizard.setFixed(_fixed, _selectionProjectString, _neededOntologyString);
                         WizardDialog wizardDialog = new WizardDialog(shell, wizard);
                         if (selection != null && (selection instanceof IStructuredSelection)) {
                             Object element = ((IStructuredSelection) selection).getFirstElement();
@@ -120,5 +134,21 @@ public class NewOWLOntologyHandler extends AbstractHandler {
 		}
 		return true;
 	}
+    /**
+     * @param _selection
+     */
+    @Override
+    public void fixedProject(IStructuredSelection selection, String ontologyUri) {
+        _fixed = true;
+        if (selection != null) {
+            Object sel = selection.getFirstElement();
+            if (sel instanceof IProjectElement) {
+                _selectionProjectString = ((IProjectElement) sel).getProjectName();
+            }
+        }
+        _neededOntologyString = ontologyUri;
+        _mTreeView = (MTreeView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(MTreeView.ID);
+    }
+	
 
 }

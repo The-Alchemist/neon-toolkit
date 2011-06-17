@@ -1,5 +1,5 @@
 /**
- *
+ * written by the Neon Technologies Foundation Ltd.
  */
 package com.ontoprise.ontostudio.owl.gui.ontologyimportsgraph.contextandtooltip;
 

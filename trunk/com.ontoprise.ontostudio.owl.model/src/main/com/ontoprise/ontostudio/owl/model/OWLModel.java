@@ -160,7 +160,11 @@ public interface OWLModel {
      * @return URIs of directly imported ontologies
      */
     public Set<String> getImportedOntologiesURIs() throws NeOnCoreException;
-
+    /**
+     * @return URIs of directly imported ontologies, which doesn't exist
+     */
+    public Set<String> getNotExistingImportedOntologiesURIs() throws NeOnCoreException;
+    
     /**
      * @return URIs of (also indirectly) imported ontologies
      */

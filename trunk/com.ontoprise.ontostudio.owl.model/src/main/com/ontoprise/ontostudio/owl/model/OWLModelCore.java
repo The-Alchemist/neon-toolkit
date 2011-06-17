@@ -1526,7 +1526,24 @@ public class OWLModelCore implements OWLModel {
     public Set<String> getAllImportedOntologiesURIs() throws NeOnCoreException {
         return getOntologyProject().getAllImportedOntologyURIs(getOntologyURI());
     }
-
+    @Override
+    public Set<String> getNotExistingImportedOntologiesURIs() throws NeOnCoreException {
+        Set<String> result = new LinkedHashSet<String>();
+        for (String ontology: getImportedOntologiesURIs()) {
+            try {
+                if(OWLModelFactory.getOWLModel(ontology, getProjectId()) == null) {
+                    result.add(ontology);
+                }
+            } catch (RuntimeException e) {
+                if(e.getMessage().equals(Messages.getString("OWLModelCore.NullOwlModelError"))) {
+                    result.add(ontology);
+                } else {
+                    throw e;
+                }
+            }
+        }
+        return result;
+    }
     @Override
     public Set<OWLModel> getAllImportingOntologies() throws NeOnCoreException {
         return getOWLModels(getOntologyProject().getAllImportingOntologyURIs(getOntologyURI()));

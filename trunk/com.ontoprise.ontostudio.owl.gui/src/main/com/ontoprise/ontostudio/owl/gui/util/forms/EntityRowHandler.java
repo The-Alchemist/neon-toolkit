@@ -38,7 +38,6 @@ public abstract class EntityRowHandler extends AbstractRowHandler {
     public void addPressed() {
         // empty implementation
     }
-
     @Override
     public abstract void savePressed();
 

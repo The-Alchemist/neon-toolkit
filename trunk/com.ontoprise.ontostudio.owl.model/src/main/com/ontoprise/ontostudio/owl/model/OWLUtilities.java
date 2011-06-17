@@ -173,11 +173,7 @@ public class OWLUtilities {
         try {
             return new InternalParserFunctionalSyntax().getAxiom(axiomText);
         } catch (ParseException firstException) {
-            try {
-                return new InternalParserFunctionalSyntax().getAxiom(IRIUtils.ensureValidIRISyntax(axiomText));
-            } catch (ParseException e1) {
-                throw new InternalNeOnException(firstException);
-            }
+            throw new InternalNeOnException(firstException);
         }
     }
     /**
@@ -513,7 +509,7 @@ public class OWLUtilities {
             return null;
         }
     }
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public static <E extends OWLEntity> Set<E> getReferencedEntities(OWLOntology ontology, Class<E> entityType) {
         if (OWLEntity.class.equals(entityType)) {
             Set<E> result = new LinkedHashSet<E>();

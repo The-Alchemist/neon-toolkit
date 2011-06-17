@@ -49,16 +49,21 @@ import com.ontoprise.ontostudio.owl.gui.Messages;
  */
 /**
  * This class provides the wizard page that is displayed in the NewOntologyWizard.
+ * @author Nico Stieler
  */
 public class NewOntologyWizardPage extends WizardPage {
 
     private IStructuredSelection _selection;
     private Composite _container;
     private Combo _projectCombo;
+    protected boolean _projectComboFixed = false;
     private Button _createButton;
     private Text _ontologyText;
     private Text _namespaceText;
     protected IInputValidator _uriValidator = getInputValidator();
+    private String _ontologyURI;
+    private String _projectName;
+    private boolean _initDone;
 
     public NewOntologyWizardPage(IStructuredSelection selection) {
         super("NewOntologyWizardPage"); //$NON-NLS-1$
@@ -91,7 +96,8 @@ public class NewOntologyWizardPage extends WizardPage {
         _ontologyText.addModifyListener(new ModifyListener() {
             @Override
             public void modifyText(ModifyEvent e) {
-                updateStatus();
+                if(_initDone)
+                    updateStatus();
             }
         });
 
@@ -110,7 +116,8 @@ public class NewOntologyWizardPage extends WizardPage {
         _namespaceText.addModifyListener(new ModifyListener() {
             @Override
             public void modifyText(ModifyEvent e) {
-                updateStatus();
+                if(_initDone)
+                    updateStatus();
             }
         });
 
@@ -129,7 +136,8 @@ public class NewOntologyWizardPage extends WizardPage {
         _projectCombo.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                updateStatus();
+                if(_initDone)
+                    updateStatus();
             }
             @Override
             public void widgetDefaultSelected(SelectionEvent e) {
@@ -181,27 +189,40 @@ public class NewOntologyWizardPage extends WizardPage {
             } else if (projects.length == 1) {
                 _projectCombo.select(_projectCombo.indexOf(projects[0]));
             }
-
-            //set the current selected item
-            if (_selection != null) {
-                Object selection = _selection.getFirstElement();
-                if (selection instanceof IProjectElement) {
-                    _projectCombo.select(_projectCombo.indexOf(((IProjectElement) selection).getProjectName()));
+            //set the initial values for the id and namespace
+            if(_projectComboFixed){
+                _ontologyText.setText(_ontologyURI);
+                _ontologyText.setEnabled(false);
+                _namespaceText.setText(_ontologyURI+"#"); //$NON-NLS-1$
+                //set the current selected item
+                if(_projectName != null && !_projectName.equals("")) //$NON-NLS-1$
+                    _projectCombo.select(_projectCombo.indexOf(_projectName));
+            }else{
+                //set the current selected item
+                if (_selection != null) {
+                    Object selection = _selection.getFirstElement();
+                    if (selection instanceof IProjectElement) {
+                        _projectCombo.select(_projectCombo.indexOf(((IProjectElement) selection).getProjectName()));
+                    }
+                }
+                String newId = new CreateUniqueOntologyUri(getProjectName()).getOntologyUri();
+                _ontologyText.setText(newId);
+                if (newId.equals("")) { //$NON-NLS-1$
+                    _namespaceText.setText(""); //$NON-NLS-1$
+                } else {
+                    _namespaceText.setText(newId+"#"); //$NON-NLS-1$
                 }
             }
-            //set the initial values for the id and namespace
-            String newId = new CreateUniqueOntologyUri(getProjectName()).getOntologyUri();
-            _ontologyText.setText(newId);
-            if (newId.equals("")) { //$NON-NLS-1$
-                _namespaceText.setText(""); //$NON-NLS-1$
-            } else {
-            	_namespaceText.setText(newId+"#"); //$NON-NLS-1$
-            }
+            //set the current selected item
+            if(_projectName != null && !_projectName.equals("")) //$NON-NLS-1$
+                _projectCombo.select(_projectCombo.indexOf(_projectName));
+            _projectCombo.setEnabled(!_projectComboFixed);
             _container.layout(true);
         } catch (Exception e) {
         	e.printStackTrace();
             NeOnUIPlugin.getDefault().logError("", e); //$NON-NLS-1$
         }
+        _initDone = true;
     }
 
     private void updateStatus() {
@@ -285,5 +306,13 @@ public class NewOntologyWizardPage extends WizardPage {
     public void performHelp() {
         String helpContextId = org.neontoolkit.gui.IHelpContextIds.OWL_CREATE_ONTOLOGY;
         PlatformUI.getWorkbench().getHelpSystem().displayHelp(helpContextId);
+    }
+    /**
+     * @param projectName
+     */
+    public void setFixed(String projectName, String ontologyURI) {
+        _projectName = projectName;
+        _ontologyURI = ontologyURI;
+        _projectComboFixed = true;
     }
 }

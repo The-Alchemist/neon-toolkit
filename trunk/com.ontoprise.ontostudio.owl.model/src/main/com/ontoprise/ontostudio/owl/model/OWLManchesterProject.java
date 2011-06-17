@@ -32,7 +32,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.neontoolkit.core.command.CommandException;
 import org.neontoolkit.core.exception.InternalNeOnException;
@@ -73,6 +72,7 @@ import com.ontoprise.ontostudio.owl.model.commands.ontology.CreateOntology;
 import com.ontoprise.ontostudio.owl.model.commands.project.RestoreProject;
 import com.ontoprise.ontostudio.owl.model.commands.project.SaveOntology;
 import com.ontoprise.ontostudio.owl.model.util.Cast;
+import com.ontoprise.ontostudio.owl.model.util.OWLStoreMissingImports;
 import com.ontoprise.ontostudio.owl.model.util.file.OWLFileUtilities;
 import com.ontoprise.ontostudio.owl.model.util.file.OWLOntologyInfo;
 import com.ontoprise.ontostudio.owl.model.util.file.UnknownOWLOntologyFormatException;
@@ -153,6 +153,7 @@ public class OWLManchesterProject extends AbstractOntologyProject {
     }
     private class OWLModelOntologyUpdateListener implements OWLOntologyChangeListener {
         
+        @Override
         public void ontologiesChanged(List<? extends OWLOntologyChange> changes) {
             Set<OWLOntology> ontologiesToCleanCachesFor = new LinkedHashSet<OWLOntology>();
             Map<OWLOntology,List<OWLAxiomChange>> changesByOntology = new LinkedHashMap<OWLOntology,List<OWLAxiomChange>>();
@@ -312,10 +313,11 @@ public class OWLManchesterProject extends AbstractOntologyProject {
     @Override
     public void init() {
         _ontologyManager = OWLManager.createOWLOntologyManager();
-        _ontologyManager.setSilentMissingImportsHandling(false);//NICO false --> true
+        _ontologyManager.setSilentMissingImportsHandling(true);//NICO false --> true
         _ontologyChangeVisitor = new OntologyChangeVisitor();
         _ontologyChangeListener = new OntologyChangeListener();
         _ontologyManager.addOntologyChangeListener(_ontologyChangeListener, new DefaultChangeBroadcastStrategy());
+        _ontologyManager.addMissingImportListener(OWLStoreMissingImports.getListener());
         _owlModelOntologyUpdateListener = new OWLModelOntologyUpdateListener();
     }
 
@@ -326,7 +328,7 @@ public class OWLManchesterProject extends AbstractOntologyProject {
 
     @Override
     public void removeOntology(String ontologyUri, boolean removeContent) throws NeOnCoreException {
-        Logger.getLogger(getClass()).debug(String.format("Trying to remove ontology %1$s...", ontologyUri));
+        Logger.getLogger(getClass()).debug(String.format("Trying to remove ontology %1$s...", ontologyUri)); //$NON-NLS-1$
         OWLOntologyManager manager = getAdapter(OWLOntologyManager.class);
         Set<String> ontologies = getAllImportingOntologyURIs(ontologyUri);
         ontologies.add(ontologyUri);
@@ -342,7 +344,7 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                         URI physicalURI = new URI(physicalURIForOntology);
                         removeOntologyFile(physicalURI);
                     } else {
-                        Logger.getLogger(getClass()).warn(String.format("No physical URI for ontology %1$s. Assuming ontology has not been saved yet.", physicalURIForOntology));
+                        Logger.getLogger(getClass()).warn(String.format("No physical URI for ontology %1$s. Assuming ontology has not been saved yet.", physicalURIForOntology)); //$NON-NLS-1$
                     }
                     manager.removeOntology(ontology);
                     setOntologyDirty(ontologyUri, false);
@@ -358,7 +360,7 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                 setOntologyDirty(ontologyUri, false);
             }
         }
-        Logger.getLogger(getClass()).debug(String.format("Finished removing [%1$s]", ontologyUri));
+        Logger.getLogger(getClass()).debug(String.format("Finished removing [%1$s]", ontologyUri)); //$NON-NLS-1$
 
         // fire events late
         for (String uri: ontologies) {
@@ -374,9 +376,9 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                 IFile file = getResource().getFile(fileName);
 
                 if (file.exists()) {
-                    Logger.getLogger(getClass()).debug(String.format("Removing dependent ontology %1$s...", fileName));
+                    Logger.getLogger(getClass()).debug(String.format("Removing dependent ontology %1$s...", fileName)); //$NON-NLS-1$
                     file.delete(true, null);
-                    Logger.getLogger(getClass()).debug(String.format("Done. [%1$s]", fileName));
+                    Logger.getLogger(getClass()).debug(String.format("Done. [%1$s]", fileName)); //$NON-NLS-1$
                 }
             }
         }
@@ -413,6 +415,7 @@ public class OWLManchesterProject extends AbstractOntologyProject {
         }
     }
     
+    @SuppressWarnings("serial")
     @Override
     public void saveOntology(String ontologyUri) throws NeOnCoreException {
         try {
@@ -420,9 +423,10 @@ public class OWLManchesterProject extends AbstractOntologyProject {
             IProject project = this.getResource();
             URI projURI = project.getLocationURI();
             if (!physicalURI.toString().startsWith(projURI.toString())){
-                throw new NeOnCoreException("Ontology not stored in workspace") {
+                throw new NeOnCoreException("Ontology not stored in workspace") { //$NON-NLS-1$
+                    @Override
                     public String getErrorCode() {
-                        return "SavingRemoteOntology";}};
+                        return "SavingRemoteOntology";}}; //$NON-NLS-1$
             }
             else new SaveOntology(getName(), ontologyUri).run();
         } catch(NeOnCoreException e1){
@@ -462,12 +466,12 @@ public class OWLManchesterProject extends AbstractOntologyProject {
 
     @Override
     public String getDefaultOntologyFileFormatExtension() {
-        return ".owl";
+        return ".owl"; //$NON-NLS-1$
     }
 
     @Override
     public String retrieveOntologyUri(String physicalUri) throws NeOnCoreException {
-        return "http://OWLManchesterProject/defaultOntologyUri";
+        return "http://OWLManchesterProject/defaultOntologyUri"; //$NON-NLS-1$
     }
 
     @Override
@@ -521,6 +525,7 @@ public class OWLManchesterProject extends AbstractOntologyProject {
 
                 final AtomicReference<OWLOntologyCreationException> exception = new AtomicReference<OWLOntologyCreationException>();
                 OWLOntologyLoaderListener owlOntologyLoaderListener = new OWLOntologyLoaderListener() {
+                    @SuppressWarnings("unused")
                     @Override
                     public void finishedLoadingOntology(LoadingFinishedEvent event) {
                         if (event.getException() == null) {
@@ -589,12 +594,11 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                                 if (exception.get() != null) {
                                     throw exception.get();
                                 }
-
                             } catch (OWLOntologyCreationException e) {
                                 Logger.getLogger(OWLManchesterProject.class).error(e);
                                 exception.set(null);
                                 if(e.getCause()!=null) {
-                                    unknownHosts.add(e.getCause().getLocalizedMessage());
+                                    unknownHosts.add(e.getCause().getLocalizedMessage() + "(" + ontologyIRI + ")"); //$NON-NLS-1$ //$NON-NLS-2$
                                 } else {
                                     unknownHosts.add(e.getLocalizedMessage());
                                 }
@@ -616,8 +620,6 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                             }
                         }
                     }
-                    
-                    
                     Set<String> registeredOntologies = new LinkedHashSet<String>();
                     try {
                         for (OWLOntologyID ontologyUri: owlOntologyUris.keySet()) {
@@ -704,6 +706,7 @@ public class OWLManchesterProject extends AbstractOntologyProject {
         return lowerCase.endsWith(".owl") || lowerCase.endsWith(".owl2"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
+    @Override
     public boolean existsPhysicalUri(String fileName) {
         try {
             String physicalOntologyUri = getResource().getFile(fileName).getLocationURI().toString();
@@ -829,14 +832,14 @@ public class OWLManchesterProject extends AbstractOntologyProject {
         if (prefix == null) {
             return null;
         }
-        if (prefix.endsWith(":")) {
+        if (prefix.endsWith(":")) { //$NON-NLS-1$
             return prefix.substring(0, prefix.length() - 1);
         }
         return prefix;
     }
 
     private String ntkToManchesterPrefix(String prefix) {
-        return prefix + ":";
+        return prefix + ":"; //$NON-NLS-1$
     }
 
     private PrefixOWLOntologyFormat getPrefixOWLOntologyFormat(String ontologyURI) {

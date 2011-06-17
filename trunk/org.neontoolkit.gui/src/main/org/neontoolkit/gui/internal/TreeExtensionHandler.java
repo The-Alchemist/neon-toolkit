@@ -109,7 +109,8 @@ public class TreeExtensionHandler implements ITreeExtensionHandler {
 	 * @param id
 	 * @return
 	 */
-	public ITreeDataProvider getProvider(String id) {
+	@Override
+    public ITreeDataProvider getProvider(String id) {
 		ITreeDataProvider prov = _providers.get(id);
 		if (prov == null) {
 			//prov is not defined or not yet instantiated
