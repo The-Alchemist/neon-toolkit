@@ -65,7 +65,7 @@ public class OwlSearchPage extends AbstractSearchPage {
     @Override
     protected ISearchQuery getSearchQuery() {
         SearchPatternData patternData = getPatternData();
-        return new OwlSearchQuery(patternData.getPattern(), patternData.isIgnoreCase(), patternData.getSearchFlags(), patternData.getIDDisplayStyle(), getScope());//NICO change me
+        return new OwlSearchQuery(patternData.getPattern(), patternData.isIgnoreCase(), patternData.getSearchFlags(), patternData.getIDDisplayStyle(), getScope());
     }
     
     /*

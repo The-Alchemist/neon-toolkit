@@ -65,7 +65,18 @@ public abstract class AbstractSearchPage extends DialogPage implements ISearchPa
 	private static final String STORE_SEARCH_FLAGS = "SEARCH_FLAGS"; //$NON-NLS-1$
 	private static final String STORE_HISTORY= "HISTORY"; //$NON-NLS-1$
 	private static final String STORE_HISTORY_SIZE= "HISTORY_SIZE"; //$NON-NLS-1$
+
+    protected static boolean _isPresetScopeValue;
+    protected static Integer _presetScopeValue;
 	
+    public static void setPresetScopeValue(int presetScopeValue){
+        _presetScopeValue = presetScopeValue;
+        activatePresetScope(true);
+    }
+    public static void activatePresetScope(boolean activate){
+        _isPresetScopeValue = activate;
+    }
+    
 	private ISearchPageContainer _container;
 	private IDialogSettings _dialogSettings;
 	
@@ -334,10 +345,15 @@ public abstract class AbstractSearchPage extends DialogPage implements ISearchPa
 			_searchTypes[i].setSelection((searchFlags & _options[i].getOptionBit()) != 0);
 		}
 		_pattern.setText(patternData.getPattern());
-		if (patternData.getWorkingSets() != null)
-			getContainer().setSelectedWorkingSets(patternData.getWorkingSets());
-		else
-			getContainer().setSelectedScope(patternData.getScope());
+
+        if(_isPresetScopeValue && _presetScopeValue != null){
+            _container.setSelectedScope(_presetScopeValue); 
+        }else{
+            if (patternData.getWorkingSets() != null)
+                getContainer().setSelectedWorkingSets(patternData.getWorkingSets());
+            else
+                getContainer().setSelectedScope(patternData.getScope());
+        }
 	}
 
 	private void updateOKStatus() {
