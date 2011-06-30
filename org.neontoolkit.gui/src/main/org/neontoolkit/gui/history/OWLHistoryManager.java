@@ -40,24 +40,30 @@ public class OWLHistoryManager implements INavigationHistory{
    
     
     public OWLHistoryManager(){
-        maxLength = 100;
+        maxLength = 200;
         history = new IOWLHistoryEntry[maxLength];
         first = -1;
         last = -1;
         currentPosition = -1;
     }
-    //should not be called while navigating in history
+
     public void addHistoryElement(IOWLHistoryEntry object){
-        IOWLHistoryEntry lastNonEmptyElement = getLastNonEmptyElement();
-        if(object.equals(lastNonEmptyElement))
-            return;
-//            object.setEmpty(true);
         if(waitForTreeElement != null){
             if(object != null && object.getTreeElement().equals(waitForTreeElement))
                 waitFor(null);
             return;
         }
+        IOWLHistoryEntry lastNonEmptyElement = getLastNonEmptyElement();
+        if(object.equals(lastNonEmptyElement))
+            return;
         currentPosition++;
+        for(int position = last; position > currentPosition; position--){
+            IOWLHistoryEntry element = getHistoryElement(position);
+            if(element instanceof AbstractHistroryEntry){
+                AbstractHistroryEntry historyElement = (AbstractHistroryEntry)element;
+                historyElement.remove(position);
+            }
+        }
         last = currentPosition;
         history[currentPosition % maxLength] = object;
         object.setHistoryPosition(currentPosition);
@@ -84,7 +90,7 @@ public class OWLHistoryManager implements INavigationHistory{
     public boolean hasNext(){
         int pointer = currentPosition;
         while(pointer++ < last){
-            if(!getHistoryElement(pointer % maxLength).isEmpty()){
+            if(!getHistoryElement(pointer % maxLength).isEmpty(pointer % maxLength)){
                 return true;
             }
         }
@@ -93,7 +99,7 @@ public class OWLHistoryManager implements INavigationHistory{
     public boolean hasPrevious(){
         int pointer = currentPosition;
         while(pointer-- > first){
-            if(!getHistoryElement(pointer % maxLength).isEmpty()){
+            if(!getHistoryElement(pointer % maxLength).isEmpty(pointer % maxLength)){
                 return true;
             }
         }
@@ -103,7 +109,7 @@ public class OWLHistoryManager implements INavigationHistory{
         IOWLHistoryEntry value;
         while(true){
             value = getHistoryElement((++currentPosition) % maxLength);
-            if(!value.isEmpty())
+            if(!value.isEmpty(currentPosition % maxLength))
                 break;
         }
         updateActions();
@@ -113,7 +119,7 @@ public class OWLHistoryManager implements INavigationHistory{
         IOWLHistoryEntry value;
         while(true){
             value = getHistoryElement((--currentPosition) % maxLength);
-            if(!value.isEmpty())
+            if(!value.isEmpty(currentPosition % maxLength))
                 break;
         }
         updateActions();
@@ -134,7 +140,7 @@ public class OWLHistoryManager implements INavigationHistory{
                 break;
             }
             entries[i-1] = (getHistoryElement(nextPosition));
-            if(entries[i-1] == null || entries[i-1].isEmpty()){
+            if(entries[i-1] == null || entries[i-1].isEmpty(nextPosition)){
                 emptyCounter++;
                 i--;
             }
@@ -156,7 +162,7 @@ public class OWLHistoryManager implements INavigationHistory{
                 break;
             }
             entries[i-1] = (getHistoryElement(nextPosition));
-            if(entries[i-1] == null || entries[i-1].isEmpty()){
+            if(entries[i-1] == null || entries[i-1].isEmpty(nextPosition)){
                 emptyCounter++;
                 i--;
             }
@@ -227,7 +233,7 @@ public class OWLHistoryManager implements INavigationHistory{
         while(true){
             if(cP != -1 && cP >= first) {
                 IOWLHistoryEntry currentElement = getHistoryElement(cP);
-                if(currentElement.isEmpty()){
+                if(currentElement.isEmpty(cP)){
                     cP--;
                     continue;
                 }else{
