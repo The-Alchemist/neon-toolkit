@@ -1,12 +1,12 @@
  /*****************************************************************************
- * written by the NeOn technologies Foundation Ltd.
+ * written by the NeOn Technologies Foundation Ltd.
  ******************************************************************************/
 package com.ontoprise.ontostudio.owl.gui.history;
 
 import org.eclipse.swt.graphics.Image;
 import org.neontoolkit.core.exception.NeOnCoreException;
 import org.neontoolkit.gui.exception.NeonToolkitExceptionHandler;
-import org.neontoolkit.gui.history.IOWLHistoryEntry;
+import org.neontoolkit.gui.history.AbstractHistroryEntry;
 import org.neontoolkit.gui.history.OWLHistoryManager;
 import org.neontoolkit.gui.navigator.elements.TreeElement;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
@@ -31,10 +31,8 @@ import com.ontoprise.ontostudio.owl.model.OWLUtilities;
  * Created on: 10.03.2011
  * <code>OWLHistoryEntry</code> is the implementation of <code>IOWLHistoryEntry</code> for history entities
  */
-public class OWLHistoryEntry implements IOWLHistoryEntry{
-
+public class OWLHistoryEntry  extends AbstractHistroryEntry {
     
-    private int historyPosition;
     private AbstractOwlEntityTreeElement treeElement;
     private OWLEntity entity;
     private String entityString;
@@ -62,14 +60,6 @@ public class OWLHistoryEntry implements IOWLHistoryEntry{
             model = OWLModelFactory.getOWLModel(ontologyUri, projectName);
         OWLHistoryManager.getInstance().waitFor(treeElement);
         OWLGUIUtilities.jumpToEntity(treeElement, model);
-    }
-    @Override
-    public void setHistoryPosition(final int historyPosition) {
-        this.historyPosition = historyPosition;
-    }
-    @Override
-    public int getHistoryPosition() {
-        return this.historyPosition;
     }
     @Override
     public String getEntityURI() {

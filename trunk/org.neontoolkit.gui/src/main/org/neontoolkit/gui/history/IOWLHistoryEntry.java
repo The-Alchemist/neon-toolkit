@@ -1,5 +1,5 @@
  /*****************************************************************************
- * written by the NeOn technologies Foundation Ltd.
+ * written by the NeOn Technologies Foundation Ltd.
  ******************************************************************************/
 package org.neontoolkit.gui.history;
 
@@ -51,6 +51,10 @@ public interface IOWLHistoryEntry {
      * @return returns if this entry is Empty: If it should not be handles by the history, we call it an empty entry
      */
     public boolean isEmpty();
+    /**
+     * @return returns if this entry is Empty: If it should not be handles by the history, we call it an empty entry
+     */
+    public boolean isEmpty(int position);
     /**
      * sets the EMPTY status in this entry
      * @return true iff the value could be set

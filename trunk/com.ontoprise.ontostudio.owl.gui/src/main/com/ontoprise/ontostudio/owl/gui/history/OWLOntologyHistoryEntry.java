@@ -5,7 +5,7 @@ package com.ontoprise.ontostudio.owl.gui.history;
 
 import org.eclipse.swt.graphics.Image;
 import org.neontoolkit.core.exception.NeOnCoreException;
-import org.neontoolkit.gui.history.IOWLHistoryEntry;
+import org.neontoolkit.gui.history.AbstractHistroryEntry;
 import org.neontoolkit.gui.history.OWLHistoryManager;
 import org.neontoolkit.gui.navigator.elements.TreeElement;
 
@@ -20,14 +20,13 @@ import com.ontoprise.ontostudio.owl.model.OWLModelFactory;
  * @author Nico Stieler
  * Created on: 14.04.2011
  */
-public class OWLOntologyHistoryEntry implements IOWLHistoryEntry {
+public class OWLOntologyHistoryEntry extends AbstractHistroryEntry {
 
-    private int historyPosition;
-    private TreeElement treeElement;
-    private String ontologyUri;
-    private String projectName;
-    private OWLModel model;
-    private boolean empty = false;
+    protected TreeElement treeElement;
+    protected String ontologyUri;
+    protected String projectName;
+    protected OWLModel model;
+    protected boolean empty = false;
 
     /**
      * @param string
@@ -55,14 +54,6 @@ public class OWLOntologyHistoryEntry implements IOWLHistoryEntry {
         OWLGUIUtilities.jumpToEntity(treeElement, model);
     }
     @Override
-    public void setHistoryPosition(final int historyPosition) {
-        this.historyPosition = historyPosition;
-    }
-    @Override
-    public int getHistoryPosition() {
-        return this.historyPosition;
-    }
-    @Override
     public String getEntityURI() {
         return null;
     }
@@ -88,10 +79,6 @@ public class OWLOntologyHistoryEntry implements IOWLHistoryEntry {
             }
         }
         return false;
-    }
-    @Override
-    public int hashCode() {
-        return super.hashCode();
     }
     @Override
     public boolean setEmpty(boolean empty) {
