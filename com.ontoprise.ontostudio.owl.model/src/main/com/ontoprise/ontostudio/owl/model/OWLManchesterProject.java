@@ -17,6 +17,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -56,6 +57,7 @@ import org.semanticweb.owlapi.model.OWLOntologyChangeException;
 import org.semanticweb.owlapi.model.OWLOntologyChangeListener;
 import org.semanticweb.owlapi.model.OWLOntologyChangeVisitor;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyFactory;
 import org.semanticweb.owlapi.model.OWLOntologyFormat;
 import org.semanticweb.owlapi.model.OWLOntologyID;
 import org.semanticweb.owlapi.model.OWLOntologyLoaderListener;
@@ -274,6 +276,7 @@ public class OWLManchesterProject extends AbstractOntologyProject {
     private OWLOntologyChangeVisitor _ontologyChangeVisitor;
     private OWLOntologyChangeListener _ontologyChangeListener;
     private OWLModelOntologyUpdateListener _owlModelOntologyUpdateListener;
+    private List<OWLOntologyFactory> thirdPartyFactories;
 
     public OWLManchesterProject(String name) {
         super(name);
@@ -319,6 +322,7 @@ public class OWLManchesterProject extends AbstractOntologyProject {
         _ontologyManager.addOntologyChangeListener(_ontologyChangeListener, new DefaultChangeBroadcastStrategy());
         _ontologyManager.addMissingImportListener(OWLStoreMissingImports.getListener());
         _owlModelOntologyUpdateListener = new OWLModelOntologyUpdateListener();
+        initThirdPartyFactories();
     }
 
     @Override
@@ -508,11 +512,18 @@ public class OWLManchesterProject extends AbstractOntologyProject {
                     int count=0;
                     for (URI physicalURI: physicalURIs) {
                         monitor.subTask("Checking ontology: "+physicalURI+"  ("+(++count)+"/"+ physicalURIs.length+")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-                        
-                        OWLOntologyInfo ontologyInfo = OWLFileUtilities.getOntologyInfo(physicalURI);
-                        String ontologyUri = OWLUtilities.toString(ontologyInfo.getOntologyID());
-                        if (ontologyUri == null){
+                        String ontologyUri;
+                        if (physicalURI.toString().startsWith("jdbc"))
+                        {
                             ontologyUri = physicalURI.toString();
+                        }
+                        else
+                        {
+                            OWLOntologyInfo ontologyInfo = OWLFileUtilities.getOntologyInfo(physicalURI);
+                            ontologyUri = OWLUtilities.toString(ontologyInfo.getOntologyID());
+                            if (ontologyUri == null){
+                                ontologyUri = physicalURI.toString();
+                            }
                         }
                         URI ontologyURI = URI.create(ontologyUri);
                         IRI ontologyIRI = IRI.create(ontologyURI);
@@ -971,5 +982,22 @@ public class OWLManchesterProject extends AbstractOntologyProject {
         } catch (OWLOntologyChangeException e) {
             throw new InternalNeOnException(e);
         }
+    }
+    
+    public void setThirdPartyFactories(List<OWLOntologyFactory> thirdPartyFactories) {
+        this.thirdPartyFactories = thirdPartyFactories;
+    }
+
+    
+    /**
+     * @param ontologyProject
+     */
+    private void initThirdPartyFactories() {
+        Iterator<OWLOntologyFactory> iterator = thirdPartyFactories.iterator();
+        while (iterator.hasNext()) {
+            OWLOntologyFactory owlOntologyFactory = (OWLOntologyFactory) iterator.next();
+            _ontologyManager.addOntologyFactory(owlOntologyFactory);
+        }
+        
     }
 }
