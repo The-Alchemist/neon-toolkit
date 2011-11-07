@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point 
+   		id="com.softwareag.neontoolkit.ontostat.statproviders" 
+   		name="OntoStat Providers" 
+   		schema="schema/com.softwareag.neontoolkit.ontostat.statproviders.exsd"/>
+   		
+   <extension
+         point="com.softwareag.neontoolkit.ontostat.statproviders">
+      <StatsProvider
+            id="com.softwareag.neontoolkit.ontostat.ClassesStatsProvider"
+            order="1"
+            providerClass="com.softwareag.neontoolkit.ontostat.providers.ClassesStatsProvider"
+            title="Classes">
+      </StatsProvider>
+      <StatsProvider
+            id="com.softwareag.neontoolkit.ontostat.DataPropertiesStatsProvider"
+            order="2"
+            providerClass="com.softwareag.neontoolkit.ontostat.providers.DataPropertiesStatsProvider"
+            title="Data Properties">
+      </StatsProvider>
+      <StatsProvider
+            id="com.softwareag.neontoolkit.ontostat.ObjectPropertiesStatsProvider"
+            order="3"
+            providerClass="com.softwareag.neontoolkit.ontostat.providers.ObjectPropertiesStatsProvider"
+            title="Object Properties">
+      </StatsProvider>
+      <StatsProvider
+            id="com.softwareag.neontoolkit.ontostat.AnnotationsStatsProvider"
+            order="4"
+            providerClass="com.softwareag.neontoolkit.ontostat.providers.AnnotationsStatsProvider"
+            title="Annotation Properties">
+      </StatsProvider>
+      <StatsProvider
+            id="com.softwareag.neontoolkit.ontostat.DataTypesStatsProvider"
+            order="5"
+            providerClass="com.softwareag.neontoolkit.ontostat.providers.DataTypesStatsProvider"
+            title="Datatypes">
+      </StatsProvider>
+      <StatsProvider
+            id="com.softwareag.neontoolkit.ontostat.IndividualsStatsProvider"
+            order="6"
+            providerClass="com.softwareag.neontoolkit.ontostat.providers.IndividualsStatsProvider"
+            title="Individuals">
+      </StatsProvider>
+
+      <StatsProvider
+            id="com.softwareag.neontoolkit.ontostat.AxiomStatsProvider"
+            order="20"
+            providerClass="com.softwareag.neontoolkit.ontostat.providers.AxiomsStatsProvider"
+            title="Axioms">
+      </StatsProvider>
+      <StatsProvider
+            id="com.softwareag.neontoolkit.ontostat.LogicalAxiomsStatsProvider"
+            order="21"
+            providerClass="com.softwareag.neontoolkit.ontostat.providers.LogicalAxiomsStatsProvider"
+            title="Logical Axioms">
+      </StatsProvider>
+      <StatsProvider
+            id="com.softwareag.neontoolkit.ontostat.SubClassesStatsProvider"
+            order="22"
+            providerClass="com.softwareag.neontoolkit.ontostat.providers.SubClassesStatsProvider"
+            title="Subclass Axioms">
+      </StatsProvider>
+
+      <StatsProvider
+            id="com.softwareag.neontoolkit.ontostat.ImportedOntologiesStatsProvider"
+            order="40"
+            providerClass="com.softwareag.neontoolkit.ontostat.providers.ImportedOntologiesStatsProvider"
+            title="Imported Ontologies">
+      </StatsProvider>
+   </extension>
+   
+   <extension
+         point="org.neontoolkit.gui.entityProperties">
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement"
+            class="com.softwareag.neontoolkit.ontostat.properties.OntologyStatsPropertyPage"
+            id="com.softwareag.neontoolkit.ontostat.ontologystatspropertypage"
+            name="Statistics">
+         <subContributorOf
+               priority="0"
+               superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorOWLModules2">
+         </subContributorOf>
+      </entityPropertyContributor>
+   </extension>
+    <extension
+          point="org.neontoolkit.gui.entityProperties">
+       <entityPropertyContributor
+			activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.project.OWLProjectTreeElement"
+            class="com.softwareag.neontoolkit.ontostat.properties.ProjectStatsPropertyPage"
+            id="com.softwareag.neontoolkit.ontostat.projectstatspropertypage"
+            name="Aggregated Statistics">
+         <subContributorOf
+               priority="0"
+               superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorProject">
+         </subContributorOf>
+       </entityPropertyContributor>
+    </extension>
+</plugin>
