@@ -1,0 +1,48 @@
+// --------------------------------------------------------------------
+//
+//  ontology: "http://www.test.org"#""
+//      date: Sun Mar 20 18:30:03 CET 2005
+//
+// ---------------------------------------------------------------------
+
+
+<ns ontons="http://www.defaultnamespace.org">
+
+
+// Taxonomy ---------------------------------------------
+
+// Concepts ---------------------------------------------
+"http://www.test.org"#Subterm :: "http://www.test.org"#Ontology@"http://www.test.org"#"".
+"http://www.test.org"#Subotherterm :: "http://www.test.org"#Otherterm@"http://www.test.org"#"".
+"http://www.test.org"#Otherterm :: "http://www.test.org"#Ontology@"http://www.test.org"#"".
+"http://www.test.org"#Meta[]@"http://www.test.org"#"".
+"http://www.test.org"#AnnotationObject[]@"http://www.test.org"#"".
+"http://www.test.org"#Ontology[]@"http://www.test.org"#"".
+
+// Relations --------------------------------------------
+"http://www.test.org"#AnnotationObject["http://www.test.org"#URL=>>"http://www.w3.org/2001/XMLSchema"#string]@"http://www.test.org"#"".
+"http://www.test.org"#AnnotationObject["http://www.test.org"#Type=>>"http://www.w3.org/2001/XMLSchema"#string]@"http://www.test.org"#"".
+"http://www.test.org"#AnnotationObject["http://www.test.org"#Comment=>>"http://www.w3.org/2001/XMLSchema"#string]@"http://www.test.org"#"".
+"http://www.test.org"#AnnotationObject["http://www.test.org"#Reference=>>"http://www.test.org"#Meta]@"http://www.test.org"#"".
+"http://www.test.org"#AnnotationObject["http://www.test.org"#Term=>>"http://www.w3.org/2001/XMLSchema"#string]@"http://www.test.org"#"".
+"http://www.test.org"#AnnotationObject["http://www.test.org"#Relation=>>"http://www.w3.org/2001/XMLSchema"#string]@"http://www.test.org"#"".
+"http://www.test.org"#AnnotationObject["http://www.test.org"#Document=>>"http://www.w3.org/2001/XMLSchema"#string]@"http://www.test.org"#"".
+
+// Instances --------------------------------------------
+"http://www.test.org"#"Instance of Subotherterm" : "http://www.test.org"#Subotherterm@"http://www.test.org"#"".
+"http://www.test.org"#Subterm : "http://www.test.org"#Meta@"http://www.test.org"#"".
+"http://www.test.org"#Otherterm : "http://www.test.org"#Meta@"http://www.test.org"#"".
+"http://www.test.org"#Subotherterm : "http://www.test.org"#Meta@"http://www.test.org"#"".
+"http://www.test.org"#Ontology : "http://www.test.org"#Meta@"http://www.test.org"#"".
+"http://www.test.org"#"Instance of Ontology" : "http://www.test.org"#Ontology@"http://www.test.org"#"".
+
+// External Representations ---------------------------------------------
+
+// Documentation ---------------------------------------------
+
+// Attribute/Values -------------------------------------
+"http://www.test.org"#""["description"->>"newDescription"]@"http://www.test.org"#"".
+
+
+</ns>
+
