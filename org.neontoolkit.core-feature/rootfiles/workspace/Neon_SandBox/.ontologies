@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<container ontologyLanguage="com.ontoprise.ontostudio.owl.model.OWLManchesterProjectFactory">
-    <ontology
-        id="http://www.co-ode.org/ontologies/pizza/2006/07/18/pizza.owl" showImports="true"/>
-</container>
