@@ -1,0 +1,75 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Ontology Visualizer</title>
+    <link rel="stylesheet" type="text/css" href="../css/stylesheet.css">
+</head>
+
+<body class="bodynormal">
+
+<h4>Ontology Visualizer</h4>
+
+<p>
+The Ontology Visualizer Panel displays the ontology and all elements of the hierarchy 
+(classes, individuals, object properties) as a graph. 
+You can open the view by selecting "Visualize Ontology" in the context menu of an ontology element or 
+a class element in the Ontology Navigator.
+</p>
+
+<p> 
+<img class="format" src="../images/screenshots/owlvisualizer.jpg" title="OWL Visualizer" alt="OWL Visualizer">
+</p>
+
+<h5>Functions:</h5>
+<ul>
+<li>Display of classes, individuals and inheritance hierarchy by directed graphs</li>
+<li>Display of object properties, data properties and values by directed graphs</li>
+<li>Zoom function</li>
+<li>Rotation function</li>
+<li>Automatic layout for optimized view of the graph</li>
+</ul>
+
+<h5>How to use the visualizer?</h5>
+<ul>
+<li>Left-clicking an element in the Ontology Visualizer will refresh the visualization rendering with 
+the currently selected element becoming its center. 
+</li>
+<li>By right-clicking an element all of its connections will be added 
+to the current visualization without shifting the focus to this element.
+</li>
+<li>In case there are many instances or classes displayed, the visualizer gets quite cluttered, i.e. 
+you should avoid visualizing large ontologies with it.
+</li>
+<li>On the left side of the view a legend is displayed.  Here you can activate or deactivate different ontology 
+	entities by selecting the check boxes. 
+</li>
+<li>You can also enlarge or reduce the view of the graph. 
+	This can be achieved by changing the zoom value or by pressing Ctrl/+ 
+	to zoom in and Ctrl/- to zoom out.
+</li>
+<li>The context menu of the visualizer panel provides means for stopping and starting the layout engine, which helps
+    when you want to manually arrange the nodes on the screen.
+</li>
+<li>Also, in the context menu you can find the functionality to rotate the whole graph, which sometimes
+	improves the overall layout.
+</li>
+</ul>
+
+
+<h5>Graph elements:</h5>
+<ul>
+<li><p>Grey arrows:<br>
+Represent the connection between super and subclasses or between a class and its ontology.</p>
+</li>
+
+<li><p>Blue arrows:<br>
+Represent the connection between classes and their individuals, and between individuals and their properties.</p>
+</li>
+
+<li><p>Green arrows:<br>
+The values of object properties are connected to the object property via green links.</p>
+</li>
+</ul>
+
+</body>
+</html>
