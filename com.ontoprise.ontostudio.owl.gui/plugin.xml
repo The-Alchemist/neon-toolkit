@@ -1,0 +1,1855 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.1"?>
+<plugin>
+   <extension-point id="syntaxDefinition" name="%syntaxManagerDescription" schema="schema/syntaxDefinition.exsd"/>
+
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++ PERSPECTIVES ++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="%owlPerspective"
+            icon="icons/owlperspective.gif"
+            class="com.ontoprise.ontostudio.owl.perspectives.OWLPerspective"
+            id="com.ontoprise.ontostudio.owl.perspectives.OWLPerspective">
+      </perspective>
+   </extension>
+   
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++    SEARCH   +++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+
+   <extension
+         point="org.eclipse.search.searchPages">
+      <page
+            canSearchEnclosingProjects="true"
+            label="%owlsearch"
+            icon="icons/csearch_obj.GIF"
+            class="com.ontoprise.ontostudio.search.owl.ui.OwlSearchPage"
+            showScopeSection="true"
+            id="com.ontoprise.ontostudio.owl.search.OwlSearchPage"
+            sizeHint="460,160"/>
+   </extension>
+   <!-- need this for a tree-like result view, as well as classes in package 
+   		com.ontoprise.ontostudio.search.owl.ui.tree, but this is not yet working. 
+            searchResultClass="com.ontoprise.ontostudio.search.owl.ui.OWLSearchResult"
+  
+-->
+   <extension
+         point="org.eclipse.search.searchResultViewPages">
+      <viewPage
+      		icon="icons/csearch_obj.GIF"
+      		label="%owlsearch"
+            class="com.ontoprise.ontostudio.search.owl.ui.OWLSearchResultPage"
+            searchResultClass="com.ontoprise.ontostudio.search.owl.ui.SearchResult"
+            id="org.neontoolkit.search.ui.SearchResultPage">
+      </viewPage>
+   </extension>
+ <!--
+   <extension
+         point="org.eclipse.search.searchResultViewPages">
+      <viewPage
+            class="com.ontoprise.ontostudio.search.owl.ui.SearchResultPage"
+            icon="icons/csearch_obj.GIF"
+            id="org.neontoolkit.search.ui.SearchResultPage"
+            searchResultClass="com.ontoprise.ontostudio.search.owl.ui.SearchResult">
+      </viewPage>
+   </extension>
+
+   -->
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++ PREFERENCES +++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+
+    <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="%owlPreferences"
+            class="com.ontoprise.ontostudio.owl.gui.preferences.OWLPreferencePage"
+            id="com.ontoprise.ontostudio.owl.gui.preferences.OWLPreferencePage">
+      </page>
+	</extension>
+
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++    VIEWS    +++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+   <extension
+         point="org.eclipse.ui.views">
+<!--
+      <category
+            name="%owlViews"
+            id="com.ontoprise.ontostudio.owl.views">
+      </category>
+-->
+      <view
+            category="org.neontoolkit.gui.views.general"
+            class="com.ontoprise.ontostudio.owl.gui.individualview.IndividualView"
+            icon="icons/individualview.gif"
+            id="com.ontoprise.ontostudio.owl.views.individualview"
+            name="%individualView"/>
+      <view
+            category="org.neontoolkit.gui.views.general"
+            class="com.ontoprise.ontostudio.owl.gui.views.domainview.DomainView"
+            icon="icons/domain.gif"
+            id="com.ontoprise.ontostudio.owl.views.domainview"
+            name="%DomainView"/>
+      <view
+            category="org.neontoolkit.gui.views.general"
+            class="com.ontoprise.ontostudio.owl.gui.views.rangeView.RangeView"
+            icon="icons/range.gif"
+            id="com.ontoprise.ontostudio.owl.views.rangeview"
+            name="%RangeView"/>
+      <view
+            category="org.neontoolkit.gui.views.general"
+            class="com.ontoprise.ontostudio.owl.gui.views.propertymember.PropertyMemberView"
+            icon="icons/propertymembers.png"
+            id="com.ontoprise.ontostudio.owl.views.propertymemberview"
+            name="%PropertyMembersView"/>
+	</extension>
+
+
+   <extension point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement">
+            <action
+               class="com.ontoprise.ontostudio.owl.gui.navigator.ontology.AssertAllNotAssertedIndividualsHandler"
+               id="com.ontoprise.ontostudio.owl.gui.navigator.ontology.AssertAllNotAssertedIndividualsHandler"
+               label="%assertAllNotAssertedIndividuals_Text">
+         </action>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.neontoolkit.gui.views.navigator?after=navigator.new">
+         <command
+               commandId="org.neontoolkit.gui.navigator.newCommand"
+               icon="icons/onto/ontology.gif"
+               label="%newOntology"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <reference
+                     definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneProjectSelected">
+               </reference>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.neontoolkit.gui.navigator.newCommand"
+               icon="icons/clazz.gif"
+               label="%newClazzLabel"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <reference
+                     definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneClazzOrClazzFolderSelected">
+               </reference>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.neontoolkit.gui.navigator.newCommand"
+               icon="icons/onto/object_property.gif"
+               label="%newObjectPropertyLabel"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <reference
+                     definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneObjectPropertyOrObjectPropertyFolderSelected">
+               </reference>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.neontoolkit.gui.navigator.newCommand"
+               icon="icons/onto/data_property.gif"
+               label="%newDataPropertyLabel"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <reference
+                     definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneDataPropertyOrDataPropertyFolderSelected">
+               </reference>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.neontoolkit.gui.navigator.newCommand"
+               icon="icons/onto/annotation_property.gif"
+               label="%newAnnotationPropertyLabel"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <reference
+                     definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneAnnotationPropertyOrAnnotationPropertyFolderSelected">
+               </reference>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.neontoolkit.gui.navigator.newCommand"
+               icon="icons/onto/datatype.gif"
+               label="%newDatatypeLabel"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <reference
+                     definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneDatatypeOrDatatypeFolderSelected">
+               </reference>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.neontoolkit.gui.navigator.newCommand2"
+               disabledIcon="icons/onto/newinstance_disabled.gif"
+               icon="icons/individualview.gif"
+               label="%newIndividualLabel"
+               style="push"
+               tooltip="%command.tooltip.0">
+            <visibleWhen
+                  checkEnabled="false">
+               <reference
+                     definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneClazzSelected">
+               </reference>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:navigator.refactor?after=additions">
+         <command
+               commandId="org.neontoolkit.gui.navigator.moveCommand"
+               label="%moveLabel"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <reference
+                     definitionId="com.ontoprise.ontostudio.owl.gui.navigator.nClazzesSelected">
+               </reference>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.neontoolkit.gui.navigator.moveCommand"
+               label="%moveLabel"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <reference
+                     definitionId="com.ontoprise.ontostudio.owl.gui.navigator.nObjectPropertiesSelected">
+               </reference>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.neontoolkit.gui.navigator.moveCommand"
+               label="%moveLabel"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <reference
+                     definitionId="com.ontoprise.ontostudio.owl.gui.navigator.nDataPropertiesSelected">
+               </reference>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:org.neontoolkit.gui.views.navigator?after=navigator.refactor">
+         <command
+			   commandId="com.ontoprise.ontostudio.owl.gui.navigator.findReferencesCommand"
+               label="%findReferencesLabel"
+               style="push">
+         </command>
+   <!--      <command
+			   commandId="com.ontoprise.ontostudio.owl.gui.navigator.findIn"
+               label="%findReferencesLabel2"
+               style="push">
+         </command>
+         -->
+      </menuContribution>
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar">
+         <toolbar
+               id="com.ontoprise.ontostudio.owl.gui.toolbar1">
+            <command
+                  commandId="org.neontoolkit.gui.navigator.newCommand"
+                  icon="icons/clazz.gif"
+                  label="%newClazzLabel"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <reference
+                        definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneClazzOrClazzFolderSelected">
+                  </reference>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="org.neontoolkit.gui.navigator.newCommand"
+                  icon="icons/onto/object_property.gif"
+                  label="%newObjectPropertyLabel"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <reference
+                        definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneObjectPropertyOrObjectPropertyFolderSelected">
+                  </reference>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="org.neontoolkit.gui.navigator.newCommand"
+                  icon="icons/onto/data_property.gif"
+                  label="%newDataPropertyLabel"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <reference
+                        definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneDataPropertyOrDataPropertyFolderSelected">
+                  </reference>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="org.neontoolkit.gui.navigator.newCommand"
+                  icon="icons/onto/annotation_property.gif"
+                  label="%newAnnotationPropertyLabel"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <reference
+                        definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneAnnotationPropertyOrAnnotationPropertyFolderSelected">
+                  </reference>
+               </visibleWhen>
+            </command>
+            <command
+                  commandId="org.neontoolkit.gui.navigator.newCommand"
+                  icon="icons/onto/datatype.gif"
+                  label="%newDatatypeLabel"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <reference
+                        definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneDatatypeOrDatatypeFolderSelected">
+                  </reference>
+               </visibleWhen>
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="toolbar:com.ontoprise.ontostudio.owl.views.individualview">
+         <command
+               commandId="com.ontoprise.ontostudio.owl.views.individualView.showIndividualsOfAllSubClassesCommand"
+               icon="icons/icon_TH_inher_co.gif"
+			   tooltip="%showIndividualsOfAllSubClasses"
+			   state="false"
+			   style="toogle">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:com.ontoprise.ontostudio.owl.views.individualview?after=individuals.new">
+         <command
+               commandId="com.ontoprise.ontostudio.owl.individuals.newIndividualCommand"
+               disabledIcon="icons/onto/newinstance_disabled.gif"
+               icon="icons/individualview.gif"
+               label="%newIndividualLabel"
+               style="push"
+               tooltip="%createNewIndividualLabel">
+            <visibleWhen
+                  checkEnabled="true">
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:com.ontoprise.ontostudio.owl.views.individualview?after=individuals.ccp">
+         <command
+               commandId="com.ontoprise.ontostudio.owl.individuals.deleteIndividualCommand"
+               icon="icons/common/delete.gif"
+               label="%command.label.0"
+               style="push"
+               tooltip="%command.tooltip.0">
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:com.ontoprise.ontostudio.owl.views.individualview?after=individuals.refGroup">
+            <command
+                  commandId="org.neontoolkit.gui.navigator.renameCommand"
+                  label="%command.label.1"
+                  style="push"
+                  tooltip="%command.tooltip.1">
+            </command>
+         <menu
+               id="individuals.refactorGroup1"
+               label="%menu.label.0">
+            <command
+                  commandId="com.ontoprise.ontostudio.owl.individuals.moveIndividual"
+                  label="%command.label.2"
+                  style="push"
+                  tooltip="%command.tooltip.2">
+            </command>
+         </menu>
+         <command
+               commandId="com.ontoprise.ontostudio.owl.gui.navigator.findReferencesCommand"
+               label="%findReferencesLabel"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+
+
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++   ACTIONS   +++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<!-- End of SchemaView Actions -->
+
+<!-- Toolbar Actions -->
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            label="%neonToolkitToolbarActions"
+            visible="false"
+            id="com.ontoprise.ontostudio.owl.gui.toolbaractions">
+         <action
+               class="com.ontoprise.ontostudio.owl.gui.actions.ShowNamespaceActionOWL"
+               icon="icons/common/namespace.gif"
+               id="com.ontoprise.ontostudio.owl.gui.toolbar.nsAction"
+               label="%showHideNS"
+               style="pulldown"
+               toolbarPath="Normal/additions"
+               tooltip="%showHideNS">
+         </action>
+         <action
+               class="com.ontoprise.ontostudio.owl.gui.actions.ShowNBInstancesActionOWL"
+               icon="icons/common/nb_individuals.gif"
+               id="com.ontoprise.ontostudio.owl.gui.toolbar.showNBInstancesAction"
+               label="%showHideNBInstances"
+               state="false"
+               style="toggle"
+               toolbarPath="Normal/additions"
+               tooltip="%showHideNBInstances">
+         </action>
+      </actionSet>
+   </extension>
+<!-- End of Toolbar Actions -->
+
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++ TREE DATA PROVIDERS +++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+   <extension
+         point="org.neontoolkit.gui.extendableTreeProvider">
+      <provider
+            class="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyProvider"
+            id="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyProvider"
+            subproviderOf="com.ontoprise.ontostudio.owl.gui.navigator.project.OWLOntologyProjectProvider">
+          <viewContribution
+                id="com.ontoprise.ontostudio.refactor.move.owlclazz">
+          </viewContribution>
+      </provider>
+      <provider
+            class="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzFolderProvider"
+            id="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzFolderProvider"
+            priority="9"
+            subproviderOf="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyProvider">
+          <viewContribution
+                id="com.ontoprise.ontostudio.refactor.move.owlclazz">
+          </viewContribution>
+      </provider>
+      <provider
+            class="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzHierarchyProvider"
+            id="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzHierarchyProvider"
+            subproviderOf="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzFolderProvider">
+          <viewContribution
+                id="com.ontoprise.ontostudio.refactor.move.owlclazz">
+          </viewContribution>
+      </provider>
+      <provider
+            class="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyFolderProvider"
+            id="com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyFolderProvider"
+            subproviderOf="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyProvider">
+         <viewContribution id="com.ontoprise.ontostudio.refactor.move.owl.objectproperty"/>
+      </provider>
+      <provider
+            class="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyHierarchyProvider"
+            id="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyHierarchyProvider"
+            subproviderOf="com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyFolderProvider">
+         <viewContribution id="com.ontoprise.ontostudio.refactor.move.owl.objectproperty"/>
+      </provider>
+      <provider
+            class="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyFolderProvider"
+            id="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyFolderProvider"
+            subproviderOf="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyProvider">
+         <viewContribution id="com.ontoprise.ontostudio.refactor.move.owl.dataproperty"/>
+      </provider>
+      <provider
+            class="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyHierarchyProvider"
+            id="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyHierarchyProvider"
+            subproviderOf="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyFolderProvider">
+         <viewContribution id="com.ontoprise.ontostudio.refactor.move.owl.dataproperty"/>
+      </provider>
+   </extension>
+   
+   <extension
+         point="org.neontoolkit.gui.extendableTreeProvider">
+      <provider
+            class="com.ontoprise.ontostudio.owl.gui.navigator.project.OWLOntologyProjectProvider"
+            id="com.ontoprise.ontostudio.owl.gui.navigator.project.OWLOntologyProjectProvider">
+      </provider>
+      <provider
+            class="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyProvider"
+            id="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyProvider"
+            subproviderOf="com.ontoprise.ontostudio.owl.gui.navigator.project.OWLOntologyProjectProvider">
+      </provider>
+      <provider
+            class="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzFolderProvider"
+            id="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzFolderProvider"
+            priority="9"
+            subproviderOf="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyProvider">
+      </provider>
+      <provider
+            class="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzHierarchyProvider"
+            id="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzHierarchyProvider"
+            subproviderOf="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzFolderProvider">
+      </provider>
+      <provider
+            class="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyFolderProvider"
+            id="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyFolderProvider"
+            subproviderOf="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyProvider">
+      </provider>
+      <provider
+            class="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyHierarchyProvider"
+            id="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyHierarchyProvider"
+            subproviderOf="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyFolderProvider">
+      </provider>
+      <provider
+            class="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyFolderProvider"
+            id="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyFolderProvider"
+            subproviderOf="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyProvider">
+      </provider>
+      <provider
+            class="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyHierarchyProvider"
+            id="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyHierarchyProvider"
+            subproviderOf="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyFolderProvider">
+      </provider>
+      <provider
+            class="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyFolderProvider"
+            id="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyFolderProvider"
+            subproviderOf="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyProvider">
+      </provider>
+      <provider
+            class="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyHierarchyProvider"
+            id="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyHierarchyProvider"
+            subproviderOf="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyFolderProvider">
+      </provider>
+      <provider
+            class="com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeFolderProvider"
+            id="com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeFolderProvider"
+            subproviderOf="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyProvider">
+      </provider>
+      <provider
+            class="com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeProvider"
+            id="com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeProvider"
+            subproviderOf="com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeFolderProvider">
+      </provider>
+      <provider
+            class="com.ontoprise.ontostudio.owl.gui.navigator.complexclazz.ComplexClazzHierarchyProvider"
+            id="com.ontoprise.ontostudio.owl.gui.navigator.complexclass.ComplexClassHierarchyProvider"
+            subproviderOf="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzFolderProvider">
+      </provider>
+   </extension>
+
+
+   <extension
+         point="org.neontoolkit.gui.entityProperties">
+
+<!-- ####################################################### -->
+<!-- ################# Main PropertyPages ################## -->
+<!-- ####################################################### -->
+
+	  <!-- ProjectPropertyPage -->
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.project.OWLProjectTreeElement"
+            class="org.neontoolkit.gui.properties.project.ProjectPropertyPage"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorProject"
+            name="%OWLProjectPropertyPage"/>
+            
+      <!-- Ontology PropertyPage -->
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.ontology.OntologyPropertyPage2"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorOWLModules2"
+            name="%OWLOntologyPropertyPage">
+      </entityPropertyContributor>            
+
+
+      <!-- Clazz PropertyPage -->
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.clazz.ClazzPropertyPage2"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorClazzes2"
+            name="%ClazzPropertyPage">
+      </entityPropertyContributor>
+      
+      
+      <!-- ComplexClazz PropertyPage -->
+
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.complexclazz.ComplexClazzTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.complexclazz.ComplexClazzPropertyPage2"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorComplexClazzes2"
+            name="%ComplexClassPropertyPage">
+      </entityPropertyContributor>
+      
+      <!-- ObjectProperty PropertyPage2 -->
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.objectProperty.ObjectPropertyPropertyPage2"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorObjectProperty2"
+            name="%ObjectPropertyPropertyPage">
+      </entityPropertyContributor>            
+      <!-- ObjectProperty PropertyPage -->
+
+
+      <!-- DataProperty PropertyPage2 -->
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.dataProperty.DataPropertyPropertyPage2"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorDataProperty2"
+            name="%DataPropertyPropertyPage">
+      </entityPropertyContributor>            
+      <!-- DataProperty PropertyPage -->
+
+      <!-- AnnotationProperty PropertyPage -->
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.annotationProperty.AnnotationPropertyPage2"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorAnnotationProperty"
+            name="%AnnotationPropertyPropertyPage"/>
+
+      <!-- Datatype PropertyPage -->
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.datatypes.DatatypePropertyPage"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorDatatype"
+            name="%DatatypePropertyPage"/>
+
+      <!-- Individual PropertyPage -->
+      <!-- activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem" -->
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.AnonymousIndividualViewItem" 
+            class="com.ontoprise.ontostudio.owl.gui.properties.individual.IndividualPropertyPage2"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorAnonymousIndividual2"
+            name="%IndividualPropertyPage">
+      </entityPropertyContributor>
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.NamedIndividualViewItem" 
+            class="com.ontoprise.ontostudio.owl.gui.properties.individual.IndividualPropertyPage2"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorNamedIndividual2"
+            name="%IndividualPropertyPage">
+      </entityPropertyContributor>
+      
+<!-- ####################################################### -->
+<!-- ################# Sub PropertyPages ################### -->
+<!-- ####################################################### -->
+
+      <!-- SubPropertyPages of OntologyPropertyPage -->
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.ontology.OntologyAnnotationsPropertyPage2"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorOntologyAnnotations2"
+            name="%annotationsPropertyPage">
+            <subContributorOf
+            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorOWLModules2"
+            	priority="900" />
+      </entityPropertyContributor>
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.ontology.OntologySourceViewTab"
+            id="com.ontoprise.ontostudio.owl.gui.properties.ontology.OntologySourceViewTab"
+            name="%TextViewTab">
+            <subContributorOf
+            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorOWLModules2"
+            	priority="899" />
+      </entityPropertyContributor>
+
+
+      <!-- SubPropertyPages of ClazzPropertyPage -->
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.clazz.ClazzTaxonomyPropertyPage2"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorDisjointClazzes2"
+            name="%disjointClazzesPropertyPage">
+            <subContributorOf
+            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorClazzes2"
+            	priority="909" />
+      </entityPropertyContributor>
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.AnnotationPropertyTab"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorAnnotations2"
+            name="%annotationsPropertyPage">
+            <subContributorOf
+            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorClazzes2"
+            	priority="900" />
+      </entityPropertyContributor>
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab"
+            id="com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab"
+            name="%TextViewTab">
+            <subContributorOf
+            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorClazzes2"
+            	priority="899" />
+      </entityPropertyContributor>
+     
+
+      <!-- SubPropertyPages of ComplexClazzesPropertyPage -->
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.complexclazz.ComplexClazzTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.complexclazz.ComplexClazzTaxonomyPropertyPage2"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorDisjointComplexClazzes2"
+            name="%disjointClazzesPropertyPage">
+            <subContributorOf
+            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorComplexClazzes2"
+            	priority="909" />
+      </entityPropertyContributor>
+
+
+      <!-- SubPropertyPages of ObjectPropertyPage -->
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.AnnotationPropertyTab"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorAnnotations2"
+            name="%annotationsPropertyPage">
+            <subContributorOf
+            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorObjectProperty2"
+            	priority="900" />
+      </entityPropertyContributor>
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab"
+            id="com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab"
+            name="%TextViewTab">
+            <subContributorOf
+            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorObjectProperty2"
+            	priority="899" />
+      </entityPropertyContributor>
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.objectProperty.ObjectPropertyTaxonomyPropertyPage"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorObjectTaxonomy"
+            name="%taxonomyPropertyPage">
+            <subContributorOf
+            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorObjectProperty2"
+            	priority="910" />
+      </entityPropertyContributor>
+
+      
+      <!-- SubPropertyPages of DataPropertyPage -->
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.dataProperty.DataPropertyTaxonomyPropertyPage"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorDataTaxonomy"
+            name="%taxonomyPropertyPage">
+            <subContributorOf
+            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorDataProperty2"
+            	priority="910" />
+      </entityPropertyContributor>
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.AnnotationPropertyTab"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorAnnotations2"
+            name="%annotationsPropertyPage">
+            <subContributorOf
+                superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorDataProperty2"
+                priority="900" />
+      </entityPropertyContributor>
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab"
+            id="com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab"
+            name="%TextViewTab">
+            <subContributorOf
+                superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorDataProperty2"
+                priority="899" />
+      </entityPropertyContributor>
+
+
+      <!-- SubPropertyPages of AnnotationProperty PropertyPage -->
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab"
+            id="com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab"
+            name="%TextViewTab">
+            <subContributorOf
+                superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorAnnotationProperty"
+                priority="899" />
+      </entityPropertyContributor>
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.AnnotationPropertyTab"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorAnnotations2"
+            name="%annotationsPropertyPage">
+            <subContributorOf
+                superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorAnnotationProperty"
+            	priority="900" />
+      </entityPropertyContributor>
+
+      <!-- SubPropertyPages of Datatype PropertyPage -->
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab"
+            id="com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab"
+            name="%TextViewTab">
+            <subContributorOf
+                superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorDatatype"
+                priority="899" />
+      </entityPropertyContributor>
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.properties.AnnotationPropertyTab"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorAnnotations2"
+            name="%annotationsPropertyPage">
+            <subContributorOf
+                superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorDatatype"
+            	priority="900" />
+      </entityPropertyContributor>
+
+
+      <!-- SubPropertyPages of IndividualPropertyPage -->
+      <!-- activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.IndividualViewItem"-->
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.NamedIndividualViewItem"
+            class="com.ontoprise.ontostudio.owl.gui.properties.individual.IndividualTaxonomyPropertyPage"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorIndividualTaxonomy"
+            name="%taxonomyPropertyPage">
+            <subContributorOf
+            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorNamedIndividual2"
+            	priority="910" />
+      </entityPropertyContributor>
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.NamedIndividualViewItem"
+            class="com.ontoprise.ontostudio.owl.gui.properties.AnnotationPropertyTab"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorAnnotations2"
+            name="%annotationsPropertyPage">
+            <subContributorOf
+            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorNamedIndividual2"
+            	priority="900" />
+      </entityPropertyContributor>
+      <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.NamedIndividualViewItem"
+            class="com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab"
+            id="com.ontoprise.ontostudio.owl.gui.properties.SourceViewTab"
+            name="%TextViewTab">
+            <subContributorOf
+            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorNamedIndividual2"
+            	priority="899" />
+      </entityPropertyContributor>
+
+      
+       <!-- SubPropertyPages of *anonymous* IndividualPropertyPage -->
+       <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.AnonymousIndividualViewItem"
+            class="com.ontoprise.ontostudio.owl.gui.properties.individual.IndividualTaxonomyPropertyPage"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorIndividualTaxonomy"
+            name="%taxonomyPropertyPage">
+            <subContributorOf
+            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorAnonymousIndividual2"
+            	priority="910" />
+      </entityPropertyContributor>
+       <entityPropertyContributor
+            activatorClass="com.ontoprise.ontostudio.owl.gui.individualview.AnonymousIndividualViewItem"
+            class="com.ontoprise.ontostudio.owl.gui.properties.AnnotationPropertyTab"
+            id="com.ontoprise.ontostudio.owl.gui.propertyContributorAnnotations2"
+            name="%annotationsPropertyPage">
+            <subContributorOf
+            	superContributorId="com.ontoprise.ontostudio.owl.gui.propertyContributorAnonymousIndividual2"
+            	priority="900" />
+      </entityPropertyContributor>
+   </extension>
+
+
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<!--++++++++++++++++++++++++++ REFACTORINGS +++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+   <extension
+         point="org.neontoolkit.refactor.ontologyRefactorings">
+         <!-- DELETE -->
+      <refactoring
+            factoryClass="com.ontoprise.ontostudio.owl.gui.refactor.delete.clazz.DeleteClazzRefactoringFactory"
+            id="com.ontoprise.ontostudio.owl.gui.refactor.deleteClazz"/>
+      <refactoring
+            factoryClass="com.ontoprise.ontostudio.owl.gui.refactor.delete.axiom.DeleteAxiomRefactoringFactory"
+            id="com.ontoprise.ontostudio.owl.gui.refactor.deleteAxiom"/>
+      <refactoring
+            factoryClass="com.ontoprise.ontostudio.owl.gui.refactor.delete.objectProperty.DeleteObjectPropertyRefactoringFactory"
+            id="com.ontoprise.ontostudio.owl.gui.refactor.deleteObjectProperty"/>
+      <refactoring
+            factoryClass="com.ontoprise.ontostudio.owl.gui.refactor.delete.dataProperty.DeleteDataPropertyRefactoringFactory"
+            id="com.ontoprise.ontostudio.owl.gui.refactor.deleteDataProperty"/>
+      <refactoring
+            factoryClass="com.ontoprise.ontostudio.owl.gui.refactor.delete.annotationProperty.DeleteAnnotationPropertyRefactoringFactory"
+            id="com.ontoprise.ontostudio.owl.gui.refactor.deleteAnnotationProperty"/>
+      <refactoring
+            factoryClass="com.ontoprise.ontostudio.owl.gui.refactor.delete.annotationProperty.DeleteAnnotationPropertyRefactoringFactory"
+            id="com.ontoprise.ontostudio.owl.gui.refactor.deleteAnnotationProperty"/>
+      <refactoring
+            factoryClass="com.ontoprise.ontostudio.owl.gui.refactor.delete.individual.DeleteIndividualRefactoringFactory"
+            id="com.ontoprise.ontostudio.owl.gui.refactor.deleteIndividual"/>
+      <refactoring
+            factoryClass="com.ontoprise.ontostudio.owl.gui.refactor.delete.datatype.DeleteDatatypeRefactoringFactory"
+            id="com.ontoprise.ontostudio.owl.gui.refactor.deleteDatatype"/>
+         <!-- MOVE -->
+      <refactoring
+            factoryClass="com.ontoprise.ontostudio.owl.gui.refactor.move.clazz.MoveClazzRefactoringFactory"
+            id="com.ontoprise.ontostudio.owl.gui.refactor.moveClazz"/>
+      <refactoring
+            factoryClass="com.ontoprise.ontostudio.owl.gui.refactor.move.property.MovePropertyRefactoringFactory"
+            id="com.ontoprise.ontostudio.owl.gui.refactor.moveObjectProperty"/>
+      <refactoring
+            factoryClass="com.ontoprise.ontostudio.owl.gui.refactor.move.property.MovePropertyRefactoringFactory"
+            id="com.ontoprise.ontostudio.owl.gui.refactor.moveDataProperty"/>
+      <refactoring
+            factoryClass="com.ontoprise.ontostudio.owl.gui.refactor.move.individual.MoveIndividualRefactoringFactory"
+            id="com.ontoprise.ontostudio.owl.gui.refactor.moveIndividual"/>
+   </extension>
+ 
+   
+   
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<!--++++++++++++++++++++++++++++ DROP HANDLERS+++ +++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+   <extension
+         point="org.neontoolkit.gui.extendableDropHandler">
+      <dropHandler
+            dragClass="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement"
+            dropClass="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzDropHandler"/>
+      <dropHandler
+            dragClass="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement"
+            dropClass="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzFolderTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzDropHandler"/>
+      <!-- SubAnnotationProperties are not yet allowed, so drag'n drop makes no sense
+      <dropHandler
+            dragClass="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement"
+            dropClass="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyDropHandler"/>
+      <dropHandler
+            dragClass="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement"
+            dropClass="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyFolderTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyDropHandler"/>
+      -->            
+      <dropHandler
+            dragClass="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement"
+            dropClass="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyDropHandler"/>
+      <dropHandler
+            dragClass="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement"
+            dropClass="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyFolderTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyDropHandler"/>
+      <dropHandler
+            dragClass="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement"
+            dropClass="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyDropHandler"/>
+      <dropHandler
+            dragClass="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement"
+            dropClass="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyFolderTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.navigator.property.PropertyDropHandler"/>
+      <dropHandler
+            dragClass="com.ontoprise.ontostudio.owl.gui.individualview.NamedIndividualViewItem"
+            dropClass="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement"
+            class="com.ontoprise.ontostudio.owl.gui.individualview.IndividualDropHandler"/>
+   </extension>
+
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++ SYNTAX DEFINITIONS ++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+   <extension
+         point="com.ontoprise.ontostudio.owl.gui.syntaxDefinition">
+      <manager
+            class="com.ontoprise.ontostudio.owl.gui.syntax.manchester.ManchesterSyntaxManager"
+            name="Manchester Syntax">
+      </manager>
+   </extension>
+   
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++++++ HANDLERS ++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.navigator.ontology.NewOWLOntologyHandler"
+            commandId="org.neontoolkit.gui.navigator.newCommand">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneProjectSelected">
+            </reference>
+         </activeWhen>
+      </handler>
+       <handler
+            class="com.ontoprise.ontostudio.owl.gui.individualview.actions.NewIndividualHandler"
+            commandId="org.neontoolkit.gui.navigator.newCommand2">
+          <activeWhen>
+             <reference
+                   definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneClazzSelected">
+             </reference>
+          </activeWhen>
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.navigator.ontology.DeleteOntologyHandler"
+            commandId="org.neontoolkit.gui.navigator.deleteCommand">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.nOntologiesSelected">
+            </reference>
+         </activeWhen>
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.navigator.ontology.RenameOntologyHandler"
+            commandId="org.neontoolkit.gui.navigator.renameCommand">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneOntologySelected">
+            </reference>
+         </activeWhen>
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.navigator.clazz.NewClazzHandler"
+            commandId="org.neontoolkit.gui.navigator.newCommand">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneClazzOrClazzFolderSelected">
+            </reference>
+         </activeWhen>
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.navigator.clazz.DeleteClazzHandler"
+            commandId="org.neontoolkit.gui.navigator.deleteCommand">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.nClazzesSelected">
+            </reference>
+         </activeWhen>
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.navigator.clazz.MoveClazzHandler"
+            commandId="org.neontoolkit.gui.navigator.moveCommand">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.nClazzesSelected">
+            </reference>
+         </activeWhen>
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.refactor.move.property.MovePropertyHandler"
+            commandId="org.neontoolkit.gui.navigator.moveCommand">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.nObjectPropertiesSelected">
+            </reference>
+         </activeWhen>
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.refactor.move.property.MovePropertyHandler"
+            commandId="org.neontoolkit.gui.navigator.moveCommand">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.nDataPropertiesSelected">
+            </reference>
+         </activeWhen>
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.navigator.RenameOWLEntityHandler"
+            commandId="org.neontoolkit.gui.navigator.renameCommand">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneClazzSelected">
+            </reference>
+         </activeWhen>
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.navigator.RenameOWLEntityHandler"
+            commandId="org.neontoolkit.gui.navigator.renameCommand">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneObjectPropertySelected">
+            </reference>
+         </activeWhen>
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.navigator.RenameOWLEntityHandler"
+            commandId="org.neontoolkit.gui.navigator.renameCommand">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneDataPropertySelected">
+            </reference>
+         </activeWhen>
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.navigator.RenameOWLEntityHandler"
+            commandId="org.neontoolkit.gui.navigator.renameCommand">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneAnnotationPropertySelected">
+            </reference>
+         </activeWhen>
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.navigator.RenameOWLEntityHandler"
+            commandId="org.neontoolkit.gui.navigator.renameCommand">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneDatatypeSelected">
+            </reference>
+         </activeWhen>
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.NewObjectPropertyHandler"
+            commandId="org.neontoolkit.gui.navigator.newCommand">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneObjectPropertyOrObjectPropertyFolderSelected">
+            </reference>
+         </activeWhen>
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.DeleteObjectPropertyHandler"
+            commandId="org.neontoolkit.gui.navigator.deleteCommand">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.nObjectPropertiesSelected">
+            </reference>
+         </activeWhen>
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.NewDataPropertyHandler"
+            commandId="org.neontoolkit.gui.navigator.newCommand">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneDataPropertyOrDataPropertyFolderSelected">
+            </reference>
+         </activeWhen>
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DeleteDataPropertyHandler"
+            commandId="org.neontoolkit.gui.navigator.deleteCommand">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.nDataPropertiesSelected">
+            </reference>
+         </activeWhen>
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.NewAnnotationPropertyHandler"
+            commandId="org.neontoolkit.gui.navigator.newCommand">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneAnnotationPropertyOrAnnotationPropertyFolderSelected">
+            </reference>
+         </activeWhen>
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.DeleteAnnotationPropertyHandler"
+            commandId="org.neontoolkit.gui.navigator.deleteCommand">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.nAnnotationPropertiesSelected">
+            </reference>
+         </activeWhen>
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.navigator.datatypes.NewDatatypeHandler"
+            commandId="org.neontoolkit.gui.navigator.newCommand">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneDatatypeOrDatatypeFolderSelected">
+            </reference>
+         </activeWhen>
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DeleteDatatypeHandler"
+            commandId="org.neontoolkit.gui.navigator.deleteCommand">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.nDatatypesSelected">
+            </reference>
+         </activeWhen>
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.individualview.actions.NewIndividualHandler"
+            commandId="com.ontoprise.ontostudio.owl.individuals.newIndividualCommand">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneClazzSelected">
+            </reference>
+         </activeWhen>
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.io.actions.OpenOntologyHandler"
+            commandId="org.neontoolkit.gui.menu.file.openOntologyCommand">
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.io.actions.LoadOntologyFromWebHandler"
+            commandId="org.neontoolkit.gui.menu.file.loadOntologyFromWebCommand">
+      </handler>
+       <!--     class="com.ontoprise.ontostudio.owl.gui.navigator.clazz.NewClazzHandler" !-->
+      <handler
+            class="com.ontoprise.ontostudio.search.owl.references.FindReferencesHandler"
+			commandId="com.ontoprise.ontostudio.owl.gui.navigator.findReferencesCommand">
+         <activeWhen>
+            <reference
+	              definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneEntitySelected">
+            </reference>
+         </activeWhen> 
+      </handler>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.individualview.actions.NewIndividualHandler"
+            commandId="com.ontoprise.ontostudio.owl.individuals.newIndividualCommand">
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.individualview.actions.DeleteIndividualHandler"
+            commandId="com.ontoprise.ontostudio.owl.individuals.deleteIndividualCommand">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.nIndividualsSelected">
+            </reference>
+         </activeWhen>
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.individualview.actions.RenameIndividualHandler"
+            commandId="org.neontoolkit.gui.navigator.renameCommand">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.oneIndividualSelected">
+            </reference>
+         </activeWhen>
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.individualview.actions.MoveIndividualHandler"
+            commandId="com.ontoprise.ontostudio.owl.individuals.moveIndividual">
+         <activeWhen>
+            <reference
+                  definitionId="com.ontoprise.ontostudio.owl.gui.navigator.nIndividualsSelected">
+            </reference>
+         </activeWhen>
+      </handler>
+      <handler
+            class="com.ontoprise.ontostudio.owl.gui.individualview.ShowIndividualsOfAllSubclasses"
+            commandId="com.ontoprise.ontostudio.owl.views.individualView.showIndividualsOfAllSubClassesCommand">
+      </handler>
+   </extension>
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++++++ DEFINITIONS +++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="com.ontoprise.ontostudio.owl.gui.navigator.oneProjectSelected">
+         <and>
+            <count
+                  value="1">
+            </count>
+            <iterate>
+               <instanceof
+                     value="com.ontoprise.ontostudio.owl.gui.navigator.project.OWLProjectTreeElement">
+               </instanceof>
+            </iterate>
+         </and>
+      </definition>
+      <definition
+            id="com.ontoprise.ontostudio.owl.gui.navigator.nProjectsSelected">
+         <iterate
+               ifEmpty="false">
+            <instanceof
+                  value="com.ontoprise.ontostudio.owl.gui.navigator.project.OWLProjectTreeElement">
+            </instanceof>
+         </iterate>
+      </definition>
+      <definition
+            id="com.ontoprise.ontostudio.owl.gui.navigator.oneOntologySelected">
+         <and>
+            <count
+                  value="1">
+            </count>
+            <iterate>
+               <instanceof
+                     value="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement">
+               </instanceof>
+            </iterate>
+         </and>
+      </definition>
+      <definition
+            id="com.ontoprise.ontostudio.owl.gui.navigator.nOntologiesSelected">
+         <iterate
+               ifEmpty="false">
+            <instanceof
+                  value="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement">
+            </instanceof>
+         </iterate>
+      </definition>
+      <definition
+            id="com.ontoprise.ontostudio.owl.gui.navigator.oneClazzSelected">
+         <and>
+            <count
+                  value="1">
+            </count>
+            <iterate>
+               <instanceof
+                     value="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement">
+               </instanceof>
+            </iterate>
+         </and>
+      </definition>
+      <definition
+            id="com.ontoprise.ontostudio.owl.gui.navigator.oneObjectPropertySelected">
+         <and>
+            <count
+                  value="1">
+            </count>
+            <iterate>
+               <instanceof
+                     value="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement">
+               </instanceof>
+            </iterate>
+         </and>
+      </definition>
+      <definition
+            id="com.ontoprise.ontostudio.owl.gui.navigator.oneDataPropertySelected">
+         <and>
+            <count
+                  value="1">
+            </count>
+            <iterate>
+               <instanceof
+                     value="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement">
+               </instanceof>
+            </iterate>
+         </and>
+      </definition>
+      <definition
+            id="com.ontoprise.ontostudio.owl.gui.navigator.oneAnnotationPropertySelected">
+         <and>
+            <count
+                  value="1">
+            </count>
+            <iterate>
+               <instanceof
+                     value="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement">
+               </instanceof>
+            </iterate>
+         </and>
+      </definition>
+      <definition
+            id="com.ontoprise.ontostudio.owl.gui.navigator.oneDatatypeSelected">
+         <and>
+            <count
+                  value="1">
+            </count>
+            <iterate>
+               <instanceof
+                     value="com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeTreeElement">
+               </instanceof>
+            </iterate>
+         </and>
+      </definition>
+      <definition
+            id="com.ontoprise.ontostudio.owl.gui.navigator.oneClazzOrClazzFolderSelected">
+         <and>
+            <count
+                  value="1">
+            </count>
+            <iterate>
+               <or>
+                  <instanceof
+                        value="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement">
+                  </instanceof>
+                  <instanceof
+                        value="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzFolderTreeElement">
+                  </instanceof>
+               </or>
+            </iterate>
+         </and>
+      </definition>
+      <definition
+            id="com.ontoprise.ontostudio.owl.gui.navigator.nClazzesSelected">
+         <iterate
+               ifEmpty="false">
+            <instanceof
+                  value="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement">
+            </instanceof>
+         </iterate>
+      </definition>
+      <definition
+            id="com.ontoprise.ontostudio.owl.gui.navigator.oneIndividualSelected">
+         <and>
+            <count
+                  value="1">
+            </count>
+            <iterate>
+               <instanceof
+                     value="com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement">
+               </instanceof>
+            </iterate>
+         </and>
+      </definition>
+      <definition
+            id="com.ontoprise.ontostudio.owl.gui.navigator.nIndividualsSelected">
+         <iterate
+               ifEmpty="false">
+            <instanceof
+                  value="com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement">
+            </instanceof>
+         </iterate>
+      </definition>
+      <definition
+            id="com.ontoprise.ontostudio.owl.gui.navigator.oneObjectPropertyOrObjectPropertyFolderSelected">
+         <and>
+            <count
+                  value="1">
+            </count>
+            <iterate>
+               <or>
+                  <instanceof
+                        value="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement">
+                  </instanceof>
+                  <instanceof
+                        value="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyFolderTreeElement">
+                  </instanceof>
+               </or>
+            </iterate>
+         </and>
+      </definition>
+      <definition
+            id="com.ontoprise.ontostudio.owl.gui.navigator.nObjectPropertiesSelected">
+         <iterate
+               ifEmpty="false">
+            <instanceof
+                  value="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement">
+            </instanceof>
+         </iterate>
+      </definition>
+      <definition
+            id="com.ontoprise.ontostudio.owl.gui.navigator.oneDataPropertyOrDataPropertyFolderSelected">
+         <and>
+            <count
+                  value="1">
+            </count>
+            <iterate>
+               <or>
+                  <instanceof
+                        value="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement">
+                  </instanceof>
+                  <instanceof
+                        value="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyFolderTreeElement">
+                  </instanceof>
+               </or>
+            </iterate>
+         </and>
+      </definition>
+      <definition
+            id="com.ontoprise.ontostudio.owl.gui.navigator.nDataPropertiesSelected">
+         <iterate
+               ifEmpty="false">
+            <instanceof
+                  value="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement">
+            </instanceof>
+         </iterate>
+      </definition>
+      <definition
+            id="com.ontoprise.ontostudio.owl.gui.navigator.oneAnnotationPropertyOrAnnotationPropertyFolderSelected">
+         <and>
+            <count
+                  value="1">
+            </count>
+            <iterate>
+               <or>
+                  <instanceof
+                        value="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement">
+                  </instanceof>
+                  <instanceof
+                        value="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyFolderTreeElement">
+                  </instanceof>
+               </or>
+            </iterate>
+         </and>
+      </definition>
+      <definition
+            id="com.ontoprise.ontostudio.owl.gui.navigator.nAnnotationPropertiesSelected">
+         <iterate
+               ifEmpty="false">
+            <instanceof
+                  value="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement">
+            </instanceof>
+         </iterate>
+      </definition>
+      <definition
+            id="com.ontoprise.ontostudio.owl.gui.navigator.oneDatatypeOrDatatypeFolderSelected">
+         <and>
+            <count
+                  value="1">
+            </count>
+            <iterate>
+               <or>
+                  <instanceof
+                        value="com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeTreeElement">
+                  </instanceof>
+                  <instanceof
+                        value="com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeFolderTreeElement">
+                  </instanceof>
+               </or>
+            </iterate>
+         </and>
+      </definition>
+      <definition
+            id="com.ontoprise.ontostudio.owl.gui.navigator.nDatatypesSelected">
+         <iterate
+               ifEmpty="false">
+            <instanceof
+                  value="com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeTreeElement">
+            </instanceof>
+         </iterate>
+      </definition>
+      <definition
+            id="com.ontoprise.ontostudio.owl.gui.oneAnnotationPropertyFolderSelected">
+         <and>
+            <count
+                  value="1">
+            </count>
+            <iterate>
+               <instanceof
+                     value="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyFolderTreeElement">
+               </instanceof>
+            </iterate>
+         </and>
+      </definition>
+  	  <definition
+            id="com.ontoprise.ontostudio.owl.gui.navigator.oneEntitySelected">
+         <and>
+            <count
+                  value="1">
+            </count>
+            <iterate>
+               <or>
+                  <instanceof
+                        value="com.ontoprise.ontostudio.owl.gui.navigator.clazz.ClazzTreeElement">
+                  </instanceof>
+                  <instanceof
+                        value="com.ontoprise.ontostudio.owl.gui.navigator.datatypes.DatatypeTreeElement">
+                  </instanceof>
+                  <instanceof
+                        value="com.ontoprise.ontostudio.owl.gui.navigator.property.annotationProperty.AnnotationPropertyTreeElement">
+                  </instanceof>
+                  <instanceof
+                        value="com.ontoprise.ontostudio.owl.gui.navigator.property.dataProperty.DataPropertyTreeElement">
+                  </instanceof>
+                  <instanceof
+                        value="com.ontoprise.ontostudio.owl.gui.navigator.property.objectProperty.ObjectPropertyTreeElement">
+                  </instanceof>
+                  <instanceof
+                        value="com.ontoprise.ontostudio.owl.gui.individualview.IIndividualTreeElement">
+                  </instanceof>
+               </or>
+            </iterate>
+         </and>
+      </definition>
+      <definition
+            id="com.ontoprise.ontostudio.owl.gui.navigator.nOntologiesOrProjetctSelected">
+         <or>
+	         <iterate
+	               ifEmpty="false">
+	            <instanceof
+	                  value="com.ontoprise.ontostudio.owl.gui.navigator.ontology.OntologyTreeElement">
+	            </instanceof>
+	         </iterate>
+	         <iterate
+	               ifEmpty="false">
+	            <instanceof
+	                  value="com.ontoprise.ontostudio.owl.gui.navigator.project.OWLProjectTreeElement">
+	            </instanceof>
+	         </iterate>
+         </or>
+      </definition>
+   </extension>
+
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++++++++ CONTEXTS ++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+   <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            description="%context.description.0"
+            id="com.ontoprise.ontostudio.owl.views.individualContext"
+            name="%context.name.0"
+            parentId="org.eclipse.ui.contexts.window">
+      </context>
+   </extension>
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++++++++ COMMANDS ++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="com.ontoprise.ontostudio.owl.individualCategory"
+            name="%category.name.0">
+      </category>
+      <command
+            categoryId="com.ontoprise.ontostudio.owl.individualCategory"
+            description="%command.description.0"
+            id="com.ontoprise.ontostudio.owl.individuals.newIndividualCommand"
+            name="%command.name.0">
+      </command>
+      <command
+            categoryId="com.ontoprise.ontostudio.owl.individualCategory"
+            description="%command.description.1"
+            id="com.ontoprise.ontostudio.owl.individuals.deleteIndividualCommand"
+            name="%command.name.1">
+      </command>
+      <command
+            categoryId="com.ontoprise.ontostudio.owl.individualCategory"
+            description="%command.description.2"
+            id="com.ontoprise.ontostudio.owl.individuals.moveIndividual"
+            name="%command.name.2">
+      </command>
+      <command
+            description="%command.openontology.description"
+            id="org.neontoolkit.gui.menu.file.openOntologyCommand"
+            name="%command.openontology.label">
+      </command>
+      <command
+            description="%command.loadontologyfromweb.description"
+            id="org.neontoolkit.gui.menu.file.loadOntologyFromWebCommand"
+            name="%command.loadontologyfromweb.label">
+      </command>
+      <command
+            description="%findReferencesDescription"
+			id="com.ontoprise.ontostudio.owl.gui.navigator.findReferencesCommand"
+            name="%findReferencesLabel">
+      </command>
+      <command
+            description="%showIndividualsOfAllSubClasses"
+			id="com.ontoprise.ontostudio.owl.views.individualView.showIndividualsOfAllSubClassesCommand"
+            name="%showIndividualsOfAllSubClasses">
+      </command>
+   </extension>
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++++++ KEY BINDINGS ++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="com.ontoprise.ontostudio.owl.individuals.newIndividualCommand"
+            contextId="com.ontoprise.ontostudio.owl.views.individualContext"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+N">
+      </key>
+      <key
+            commandId="com.ontoprise.ontostudio.owl.individuals.deleteIndividualCommand"
+            contextId="com.ontoprise.ontostudio.owl.views.individualContext"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="DEL">
+      </key>
+      <key
+            commandId="com.ontoprise.ontostudio.owl.individuals.moveIndividual"
+            contextId="com.ontoprise.ontostudio.owl.views.individualContext"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M2+M3+V">
+      </key>
+      <key
+            commandId="org.neontoolkit.gui.navigator.renameCommand"
+            contextId="com.ontoprise.ontostudio.owl.views.individualContext"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="F2">
+      </key>
+   </extension>
+
+	<extension point="org.eclipse.core.runtime.preferences">
+		<initializer class="com.ontoprise.ontostudio.owl.gui.OWLPluginPreferenceInitializer"/>
+	</extension>
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++   WIZARDS   +++++++++++++++++++++++++++++++++-->
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+   <extension 
+   		point="org.eclipse.ui.newWizards"
+   		id="new">
+      <category
+            name="OWL2 Ontology"
+            id="NewOWL2OntologyWizard">
+      </category>
+      <wizard
+            name="OWL2 Ontology Development Project"
+            icon="icons/ontoprj_obj.gif"
+            category="NewOWL2OntologyWizard"
+            class="com.ontoprise.ontostudio.owl.gui.wizard.NewOntologyProjectWizard"
+            project="true"
+            id="com.ontoprise.ontostudio.owl.gui.wizard.NewOntologyProjectWizard">
+      </wizard>
+      <wizard
+            name="OWL2 Ontology"
+            icon="icons/ontology.gif"
+            category="NewOWL2OntologyWizard"
+            class="com.ontoprise.ontostudio.owl.gui.wizard.NewOntologyWizard"
+            id="com.ontoprise.ontostudio.owl.gui.wizard.NewOntologyWizard">
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.importWizards">
+      <category
+            id="com.ontoprise.ontostudio.owl"
+            name="Ontologies"/>
+      <wizard
+            category="com.ontoprise.ontostudio.owl"
+            class="com.ontoprise.ontostudio.owl.gui.io.FileSystemImportWizard"
+            icon="./icons/onto/owlontology.gif"
+            id="FileSystem"
+            name="%fileSystemImportWizard">
+         default
+         <description>
+            %fileSystemImportWizardDescription
+         </description>
+      </wizard>
+      <wizard
+            name="Import Ontology from the Web"
+            icon="icons/browser.gif"
+            category="com.ontoprise.ontostudio.owl"
+            class="com.ontoprise.ontostudio.owl.gui.io.WebImportOntologyWizard"
+            id="com.ontoprise.ontostudio.owl.gui.io.WebImportOntologyWizard">
+         <description>
+            Import an ontology from the Web.
+         </description>
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.exportWizards">
+      <category
+            id="com.ontoprise.ontostudio.owl"
+            name="Ontologies"/>
+      <wizard
+            category="com.ontoprise.ontostudio.owl"
+            class="com.ontoprise.ontostudio.owl.gui.io.FileSystemExportWizard"
+            icon="./icons/onto/owlontology.gif"
+            id="FileSystem"
+            name="%fileSystemExportWizard">
+         default
+         <description>
+            %fileSystemExportWizardDescription
+         </description>
+      </wizard>
+   </extension>
+   
+   
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:file?after=New">
+         <command
+               commandId="org.neontoolkit.gui.menu.file.loadOntologyFromWebCommand"
+               label="%command.loadontologyfromweb.label"
+               style="push"
+               tooltip="%command.loadontologyfromweb.description">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:file?after=New">
+         <command
+               commandId="org.neontoolkit.gui.menu.file.openOntologyCommand"
+               label="%command.openontology.label"
+               style="push"
+               tooltip="%command.openontology.description">
+         </command>
+      </menuContribution>
+   </extension>
+
+  <extension 
+  	point="org.eclipse.ui.perspectiveExtensions">
+  	<perspectiveExtension
+  		targetID="com.ontoprise.ontostudio.owl.perspectives.OWLPerspective">
+  		<view
+          closeable="true"
+          id="com.ontoprise.ontostudio.owl.views.domainview"
+          moveable="true"
+          relationship="stack"
+          relative="com.ontoprise.ontostudio.owl.views.individualview"
+          visible="true"/>
+  	</perspectiveExtension>
+  	<perspectiveExtension
+  		targetID="com.ontoprise.ontostudio.owl.perspectives.OWLPerspective">
+  		<view
+          closeable="true"
+          id="com.ontoprise.ontostudio.owl.views.rangeview"
+          moveable="true"
+          relationship="stack"
+          relative="com.ontoprise.ontostudio.owl.views.individualview"
+          visible="true"/>
+  	</perspectiveExtension>
+  	<perspectiveExtension
+  		targetID="com.ontoprise.ontostudio.owl.perspectives.OWLPerspective">
+  		<view
+          closeable="true"
+          id="com.ontoprise.ontostudio.owl.views.propertymemberview"
+          moveable="true"
+          relationship="stack"
+          relative="com.ontoprise.ontostudio.owl.views.individualview"
+          visible="true"/>
+  	</perspectiveExtension>
+  </extension>
+
+  <extension 
+  	point="org.eclipse.ui.perspectiveExtensions">
+  	<perspectiveExtension
+  		targetID="com.ontoprise.ontostudio.owl.perspectives.OWLPerspective">
+  		<view
+          closeable="true"
+  			id="org.eclipse.search.ui.views.SearchView"
+          moveable="true"
+          ratio="0.8"
+          relationship="bottom"
+          relative="org.neontoolkit.gui.views.propertiesview"
+          visible="false"/>
+  	</perspectiveExtension>
+  </extension>
+<!--
+   <extension
+         point="org.eclipse.search.searchResultViewPages">
+      <viewPage
+            class="org.neontoolkit.search.ui.SearchResultPage"
+            icon="icons/csearch_obj.GIF"
+            id="org.neontoolkit.search.ui.SearchResultPage"
+            searchResultClass="org.neontoolkit.search.ui.SearchResult">
+      </viewPage>
+   </extension>
+-->
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<!-- additional extension of the gOntt plugin for the NeOn project         -->
+<!--                                                                       -->
+<!-- Note:                                                                 -->
+<!-- This will give a warning, but that's no problem for compile or deploy -->
+<!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<extension point="org.neontoolkit.upm.gontt">
+  <plugin
+    name= "OWL modeling"
+    perspectiveId="com.ontoprise.ontostudio.owl.perspectives.OWLPerspective"
+    viewId="org.neontoolkit.gui.views.navigator"
+    activityId="ontologyImplementation"
+  />
+</extension>
+<extension point="org.neontoolkit.upm.gontt">
+  <plugin
+    name= "OWL modeling"
+    perspectiveId="com.ontoprise.ontostudio.owl.perspectives.OWLPerspective"
+    viewId="org.neontoolkit.gui.views.navigator"
+    activityId="ontologyFormalization"
+  />
+</extension>
+<extension point="org.neontoolkit.upm.gontt">
+  <plugin
+    name= "OWL modeling"
+    perspectiveId="com.ontoprise.ontostudio.owl.perspectives.OWLPerspective"
+    viewId="com.ontoprise.ontostudio.owl.views.individualview"
+    activityId="ontologyPopulation"
+  />
+</extension>
+</plugin>
