@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workbench progressCount="12" version="2.0">
+<workbenchAdvisor/>
+<window height="800" width="1200" x="75" y="75">
+<fastViewData fastViewLocation="1024"/>
+<perspectiveBar>
+<itemSize x="160"/>
+</perspectiveBar>
+<coolbarLayout locked="0">
+<coolItem id="group.file" itemType="typeGroupMarker"/>
+<coolItem id="org.eclipse.ui.workbench.file" itemType="typeToolBarContribution" x="99" y="22"/>
+<coolItem id="additions" itemType="typeGroupMarker"/>
+<coolItem id="com.ontoprise.ontostudio.owl.gui.toolbar1" itemType="typeToolBarContribution" x="-1" y="-1"/>
+<coolItem id="com.ontoprise.ontostudio.owl.gui.toolbaractions" itemType="typeToolBarContribution" x="76" y="22"/>
+<coolItem id="org.eclipse.debug.ui.launchActionSet" itemType="typeToolBarContribution" x="-1" y="-1"/>
+<coolItem id="org.eclipse.search.searchActionSet" itemType="typeToolBarContribution" x="53" y="22"/>
+<coolItem id="group.nav" itemType="typeGroupMarker"/>
+<coolItem id="org.eclipse.ui.workbench.navigate" itemType="typeToolBarContribution" x="91" y="22"/>
+<coolItem id="group.editor" itemType="typeGroupMarker"/>
+<coolItem id="group.help" itemType="typeGroupMarker"/>
+<coolItem id="org.eclipse.ui.workbench.help" itemType="typeToolBarContribution" x="-1" y="-1"/>
+</coolbarLayout>
+<page focus="true" label="&lt;Unknown Label&gt; - OWL">
+<editors>
+<editorArea activeWorkbook="DefaultEditorWorkbook">
+<info part="DefaultEditorWorkbook">
+<folder appearance="1" expanded="2">
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
+</folder>
+</info>
+</editorArea>
+</editors>
+<views>
+<view id="com.ontoprise.ontostudio.owl.views.rangeview" partName="Range"/>
+<view id="com.ontoprise.ontostudio.owl.views.domainview" partName="Domain"/>
+<view id="org.neontoolkit.gui.views.propertiesview" partName="Entity Properties">
+<viewState/>
+</view>
+<view id="com.ontoprise.ontostudio.owl.views.individualview" partName="Individuals">
+<viewState/>
+</view>
+<view id="org.neontoolkit.gui.views.navigator" partName="Ontology Navigator">
+<viewState/>
+</view>
+<view id="com.ontoprise.ontostudio.owl.views.propertymemberview" partName="Property Members"/>
+</views>
+<perspectives activePart="org.neontoolkit.gui.views.navigator" activePerspective="com.ontoprise.ontostudio.owl.perspectives.OWLPerspective">
+<perspective editorAreaTrimState="2" editorAreaVisible="0" fixed="0" version="0.016">
+<descriptor class="com.ontoprise.ontostudio.owl.perspectives.OWLPerspective" id="com.ontoprise.ontostudio.owl.perspectives.OWLPerspective" label="OWL"/>
+<alwaysOnActionSet id="org.eclipse.ui.cheatsheets.actionSet"/>
+<alwaysOnActionSet id="org.eclipse.search.searchActionSet"/>
+<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.annotationNavigation"/>
+<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.navigation"/>
+<alwaysOnActionSet id="org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo"/>
+<alwaysOnActionSet id="org.eclipse.ui.externaltools.ExternalToolsSet"/>
+<alwaysOnActionSet id="org.eclipse.ui.actionSet.keyBindings"/>
+<alwaysOnActionSet id="org.eclipse.ui.actionSet.openFiles"/>
+<alwaysOnActionSet id="com.ontoprise.ontostudio.owl.gui.toolbaractions"/>
+<show_view_action id="com.ontoprise.ontostudio.owl.views.navigator"/>
+<show_view_action id="org.neontoolkit.gui.views.navigator"/>
+<show_view_action id="com.ontoprise.ontostudio.owl.views.individualview"/>
+<show_view_action id="org.neontoolkit.gui.views.propertiesview"/>
+<show_view_action id="org.eclipse.help.ui.HelpView"/>
+<hide_menu_item_id id="launch"/>
+<hide_toolbar_item_id id="org.eclipse.ui.edit.text.toggleShowSelectedElementOnly"/>
+<view id="org.neontoolkit.gui.views.navigator"/>
+<view id="org.neontoolkit.gui.views.propertiesview"/>
+<view id="com.ontoprise.ontostudio.owl.views.individualview"/>
+<view id="com.ontoprise.ontostudio.owl.views.domainview"/>
+<view id="com.ontoprise.ontostudio.owl.views.rangeview"/>
+<view id="com.ontoprise.ontostudio.owl.views.propertymemberview"/>
+<fastViewBars/>
+<layout>
+<mainWindow>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@3d1102">
+<folder activePageID="org.neontoolkit.gui.views.navigator" appearance="2" expanded="2">
+<page content="org.neontoolkit.gui.views.navigator" label="Ontology Navigator"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
+</presentation>
+</folder>
+</info>
+<info folder="true" part="org.eclipse.ui.internal.ViewStack@a1e7ad" ratio="0.75" ratioLeft="882" ratioRight="294" relationship="2" relative="org.eclipse.ui.internal.ViewStack@3d1102">
+<folder appearance="2" expanded="2">
+<page content="org.eclipse.help.ui.HelpView" label="LabelNotFound"/>
+<page content="org.eclipse.ui.internal.introview" label="LabelNotFound"/>
+<page content="org.eclipse.ui.cheatsheets.views.CheatSheetView" label="LabelNotFound"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory"/>
+</folder>
+</info>
+<info part="org.eclipse.ui.editorss" ratio="0.7496318" ratioLeft="509" ratioRight="170" relationship="4" relative="org.eclipse.ui.internal.ViewStack@3d1102"/>
+<info folder="true" part="right" ratio="0.25" ratioLeft="294" ratioRight="882" relationship="2" relative="org.eclipse.ui.internal.ViewStack@3d1102">
+<folder activePageID="org.neontoolkit.gui.views.propertiesview" appearance="2" expanded="2">
+<page content="org.neontoolkit.gui.views.propertiesview" label="Entity Properties"/>
+<page content="org.neontoolkit.ontovisualize2.OntoVisualizerView2" label="LabelNotFound"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
+</presentation>
+</folder>
+</info>
+<info part="org.eclipse.search.ui.views.SearchView" ratio="0.7996071" ratioLeft="407" ratioRight="102" relationship="4" relative="right"/>
+<info folder="true" part="bottom" ratio="0.6994106" ratioLeft="356" ratioRight="153" relationship="4" relative="org.eclipse.ui.internal.ViewStack@3d1102">
+<folder activePageID="com.ontoprise.ontostudio.owl.views.individualview" appearance="2" expanded="2">
+<page content="com.ontoprise.ontostudio.owl.views.individualview" label="Individuals"/>
+<page content="com.ontoprise.ontostudio.owl.views.domainview" label="Domain"/>
+<page content="com.ontoprise.ontostudio.owl.views.rangeview" label="Range"/>
+<page content="com.ontoprise.ontostudio.owl.views.propertymemberview" label="Property Members"/>
+<presentation id="org.eclipse.ui.presentations.WorkbenchPresentationFactory">
+<part id="0"/>
+<part id="1"/>
+<part id="2"/>
+<part id="3"/>
+</presentation>
+</folder>
+</info>
+</mainWindow>
+</layout>
+</perspective>
+</perspectives>
+<workingSets/>
+<navigationHistory/>
+</page>
+<workbenchWindowAdvisor/>
+<actionBarAdvisor/>
+<trimLayout>
+<trimArea IMemento.internal.id="128">
+<trimItem IMemento.internal.id="org.eclipse.ui.internal.WorkbenchWindow.topBar"/>
+</trimArea>
+<trimArea IMemento.internal.id="1024">
+<trimItem IMemento.internal.id="org.eclipse.jface.action.StatusLineManager"/>
+<trimItem IMemento.internal.id="org.eclipse.ui.internal.progress.ProgressRegion"/>
+</trimArea>
+</trimLayout>
+</window>
+<mruList/>
+</workbench>
