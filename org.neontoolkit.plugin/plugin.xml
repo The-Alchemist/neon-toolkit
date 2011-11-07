@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.5"?>
+<plugin>
+<!--   <extension
+         id="ide"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.neontoolkit.plugin.application"
+            name="NeOn Toolkit">
+      </product>
+   </extension>
+-->
+
+
+   <!--
+   <extension
+         point="org.eclipse.ui.cheatsheets.cheatSheetContent">
+      <cheatsheet
+            name="%cheatsheet.cvs.name"
+            contentFile="$nl$/cheatsheets/CVS_1.xml"
+            id="org.eclipse.platform.cvs_1">
+         <description>
+            %cheatsheet.cvs.desc
+         </description>
+      </cheatsheet>
+   </extension>
+   -->
+
+   <!-- =====================================================  -->
+   <!--Standby Content Part contributions                     -->
+   <!-- =====================================================  
+   <extension point="org.eclipse.ui.intro.configExtension">
+      <standbyContentPart
+            id="org.eclipse.platform.cheatsheet"
+            class="org.eclipse.platform.internal.CheatSheetStandbyContent"
+            pluginId="org.eclipse.platform"/>
+   </extension>
+   -->
+
+   <!-- =====================================================  -->
+   <!-- Using Capabilities to disable unneeded Eclipse stuff   -->
+   <!-- =====================================================  -->
+
+</plugin>
