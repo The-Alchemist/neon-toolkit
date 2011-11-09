@@ -10,6 +10,72 @@
   <body>
     <b><font size="4">Release notes - NeOn Toolkit</font></b>
     <p>
+	    <b><font size="3">What's new in the NeOn Toolkit 2.5.1</font></b>
+	    <p><b><font size="2">New version of KC-Viz (1.3.1.2) </font></b></p>
+<ul><li>Customizable KCE criteria weights. All the weights of the formulas used in the KCE algorithm are now customizable by the user.
+</li><li>Left-right layout. After clicking on the button "Re-layout" in the KC-Viz toolbar, a sub-menu is opened, which asks the user whether she wants to redraw the current visualization using a top-bottom orientation or a (new) left-right orientation.
+</li><li>Macro and micro moves. The distinction between macro (extraction and hiding) and micro (re-layout, axis adjustments, node movements) moves, in relation to the "cancel/re-apply steps" box in the KC-Viz toolbar, has been strenghtened. Now, micro moves can be canceled/re-applied only if they are not preceded/followed by macro moves in the operation history. For instance, considering the sequence "Mac1 mic1 mic2 Mac2 mic3..." and supposing to be visualizing in KC-Viz the window after mic2 and before Mac2, a user can decide a) to cancel mic2, or b) to cancel Mac1, or c) to re-apply Mac2.
+</li><li>KCE score explanation. Node tooltips, which pop up when hovering the mouse cursor over nodes in KC-Viz, now contain a section, called "Reason", which indicates how a node (i.e., a class) fares with respect to the criteria used to determine key concepts. Here, we use a 0-5 scale of labeled values (0 very poor, 1 poor, 2 fair, 3 good, 4 strong, 5 very strong).
+</li><li>Refresh visualization. The pop-up obtained after right-clicking inside the KC-Viz view has a new option called "Refresh", which allows the user to re-sync the visualization with respect to changes in the model, which may have occurred since the visualization was produced.
+</li><li>Multiple arcs descriptions. Multiple arc descriptions, which pop up when hovering the mouse cursor simultaneously on different arcs (handled in older versions of KC- Viz with different overlapping tooltips), are now merged in a single tooltip.
+</li><li>Indirect subclasses in global density. It is now possible to consider indirect sub-classes when computing the global density of a concept.
+</li></ul>
+	 
+	    
+	    <b><font size="3">What's new in the NeOn Toolkit 2.5</font></b>
+<p><b><font size="2">New Features: </font></b></p>
+<ul><li> Sandbox: NTK now comes with a pre-installed workspace to help beginners getting started with the NeOn Toolkit.
+</li><li> History: like in a browser you can now  go back and forward in the history of entities you have visited (ALT-left and ALT-right).
+</li><li> Owl:Thing and owl:Nothing are shown in Classes Hierachry.
+</li><li> Individual View now also visualized inherited instances (a switch has been added  to toggle to the original behavior of only showing direct instances).
+</li><li> The "Statistics" tab in the Entity Property view does now provide for ontologies local information about number of entities and axioms and also these numbers with imported ontologies included. 
+</li><li> Support for indivuals that are not a member of any class: 
+<ul><li> in the past these individuals were invisible in NTK, now they are accessible as instances of owl:Thing,
+</li><li> in case a new (so far invisible) individual is created e.g. while creating a new property member, a dialog opens to ask the user if he wants to create a class assertion axiom to owl:Thing (similar to deleting last class assertion of an individual) and
+</li><li> additionally a feature is added to look for these individuals that are not a member of any class and insert assertions to owl:Thing. This can be found in the context/popUp menu of each ontology in the Ontology Navigator.
+</li></ul>
+</li><li> Save All functionality inserted.
+</li></ul>
+<p><b><font size="2">Changes in the Interface: </font></b></p>
+<ul><li> The OWL API version has been changed from 3.0.0 to 3.2.0
+</li><li> The Eclipse/RCP version has been updated from 3.5.2 to 3.6.1
+</li><li> Change of the internal string representation to OWL Functional Syntax. Compared to the status before, different parameters are needed to parse and serialize the OWLObjects. These Methods are provided by OWLUtilities.java.
+</li></ul>
+<p><b><font size="2">Bug fixes: </font></b></p>
+<ul><li> Save is saving and should save only the ontology which is selected in the navigator, but the save button is enabled when some ontology in the navigator is modified or new. fixed
+</li><li> If you rename an individual the new name overwrites the value of all annotation
+properties of all clases in the ontology. fixed
+</li></ul>
+	 
+	    
+	    <b><font size="3">What's new in the NeOn Toolkit 2.4.2</font></b>
+	    <p><b><font size="2">New version of KC-Viz (1.3) </font></b></p>
+<ul><li> new library for handling internal data structures to compute the key concept values
+</li><li> (bug fix) object properties and data properties will be considered in calculating key concept values of the ontology classes
+</li><li> KCE improved for ontologies with a large number of individuals
+</li></ul>
+	    
+	    <p><b><font size="2">Changes_in_NTK_Core</font></b></p>
+<ul><li> The verify information of an new created datatype is set by using the verify information of the "super datatype".
+</li><li> When deleting an entity in the Ontology Navigator, the parent tree element(super element or, in case its a root element, the folder) is selected and shown in the EPV, in case the folder is selected a empty page is shown in the EPV.
+</li><li> Correct handling and error messaging for "has self"-restrictions. When selecting "has self" in Class Restrictions tab...
+<ul><li> ...set warning "Please provide an Object Property", if an Data Property is entered and ...
+</li><li> ...unable the range field.
+</li></ul>
+</li><li> When deleting the last Class Assertion axiom of an entity a dialog opens and asks the user, if he wants to add an explicit assertion axiom instead.
+<ul><li> the user decision is handled
+</li><li> the user decision can be saved in the preferences
+</li><li> special case: if the class of this Class Assertion is owl:Thing the user will always be asked, independent on the saved preferences. 
+</li></ul>
+</li></ul>
+	    
+	 
+	    <b><font size="3">What's new in the NeOn Toolkit 2.4.1</font></b>
+	    <p><b>Bug Fix:
+</b></p>
+<ul><li> User Interface did not display search results
+
+</li></ul>
 	    <b><font size="3">What's new in the NeOn Toolkit 2.4</font></b>
 	    <p><b>Search result:
 </b></p>
@@ -17,12 +83,12 @@
 <ul><li> tree structure: project > ontology > entity/axiom
 
 </li></ul>
-</li><li> Axioms in search results presentated in Manchester Syntax
-</li><li> Jump behaviour for search results, especially for axioms, are changed 
+</li><li> Axioms in search results presented in Manchester Syntax
+</li><li> Jump behavior for search results, especially for axioms, are changed 
 <ul><li> e.g.: Class: class1 SubClassOf: class2 --&gt; taxonomy tab of class1
 </li></ul>
 </li></ul>
-<p><b>Editing functionallity of axioms of imported ontologies:
+<p><b>Editing functionality of axioms of imported ontologies:
 </b></p>
 <ul><li> Grayed edit button without functional --&gt; edit* button 
 <ul><li> allows you to edit axioms of imported ontologies
@@ -72,7 +138,7 @@
 <ul><li> jumps to the entity if it can be clearly identified
 </li><li> change the Display Style to QNAME, in case it can't be clearly identified
 </li></ul>
-</li><li> Labels of restriction quantifiers changed to Manchaster Syntax
+</li><li> Labels of restriction quantifiers changed to Manchester Syntax
 </li><li> "Find References" does not work for annotation properties FIXED
 </li></ul>
 
