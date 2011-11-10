@@ -128,6 +128,8 @@ public class PropertyMemberViewLabelProvider extends LabelProvider implements IT
             return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.DATA_PROPERTY);
         } else if (o instanceof OWLObjectProperty) {
             return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.OBJECT_PROPERTY);
+        } else if (o instanceof OWLAnnotationProperty) {
+            return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.ANNOTATION_PROPERTY);
         } else if (o instanceof OWLDataRange) {
             return OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.DATATYPE);
         } else if (o instanceof OWLAnnotationProperty) {
