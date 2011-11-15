@@ -127,6 +127,8 @@ can be organized in a hierarchy. For example, a hierarchy of the property <tt>ha
 by the <tt>hasParent</tt> property, and return all results that are linked by its subproperties.</li>
 <li><b>Equivalent Properties.</b> The <tt>owl:equivalentProperty</tt> construct can be used to state that two properties
 have the same property extension.</li>
+<li><b>Disjoint Properties.</b> The <tt>owl:propertyDisjointWith</tt> construct can be used to state that two properties
+are disjoint.</li>
 <li><b>Inverse Properties.</b> Properties usually have a direction, from domain to range. In practice, it is often useful
 to define relations in both directions: authors write books, books are written by authors. The <tt>owl:inverseOf</tt>
 construct can be used to define such an inverse relation between properties.</li> 
@@ -134,7 +136,7 @@ construct can be used to define such an inverse relation between properties.</li
 that the the composition of a sequence of properties is a subproperty of a named property, eg.
 the famous uncle example <tt>hasParent</tt> o <tt>hasBrother</tt> is a subproperty of <tt>hasUncle</tt>. 
 </ul>
-<p><img class="format" src="../images/screenshots/objpropentprop2.jpg" title="OWL Object Property" alt="OWL Object Property"></p>
+<p><img class="format" src="../images/screenshots/ObjectProperty_Taxonomy_WithDisjointProperties.png" title="OWL Object Property" alt="OWL Object Property"></p>
 
 
 

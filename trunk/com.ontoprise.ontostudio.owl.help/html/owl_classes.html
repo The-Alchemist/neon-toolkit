@@ -108,12 +108,14 @@ is a subset of another class.</li>
 say that a class has exactly the same members as another class.</li>
 <li><b>Disjoint Classes.</b> The OWL language construct <tt>owl:disjointWith</tt> allows you to say 
 that a class has no members in common with another class.</li>
+<li><b>Disjoint Union.</b> The OWL language construct <tt>owl:disjointUnionOf</tt> allows you to say 
+that a class is equal to a union of a set of disjoint classes.</li>
 </ul>
 <p>In addition to these language constructs, the OWL Perpective allows you to specify the <b>super classes</b> of a
 class, which is the same as making the class under consideration a subclass of another (parent) class.
 For example, you will notice that <tt>owl:Thing</tt> is the super class of all other classes because
 every user-defined class is implicitly a subclass of <tt>owl:Thing</tt>.</p>  
-<p><img class="format" src="../images/screenshots/Classes_Taxonomy_WithoutRestrictions.png" title="OWL Classes - Taxonomy" alt="OWL Classes - Taxonomy"></p>
+<p><img class="format" src="../images/screenshots/Classes_Taxonomy_WithoutRestrictions_WithDisjointUnion.png" title="OWL Classes - Taxonomy" alt="OWL Classes - Taxonomy"></p>
 <p>To create a class axiom, proceed as follows:</p>
 <ol>
 <li><b>Select a class in the Ontology Navigator.</b><br>
