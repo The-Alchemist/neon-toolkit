@@ -82,7 +82,7 @@ public class ImportingGraphContextMenuListener extends OntoPowerGraphContextMenu
         MenuItem showImporting = new MenuItem(theMenu, SWT.ICON);
         if(OntologyNodeContentProvider.SHOWIMPORTING)
             showImporting.setImage(OWLPlugin.getDefault().getImageRegistry().get(OWLSharedImages.CHECK));
-        showImporting.setText(Messages.ImportingGraphContextMenuListener_Imported);
+        showImporting.setText(Messages.ImportingGraphContextMenuListener_Importing);
         showImporting.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetSelected(SelectionEvent arg0) {

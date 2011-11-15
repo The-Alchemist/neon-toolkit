@@ -29,9 +29,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
@@ -203,7 +201,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
         createSubDescriptionsArea(body);
         createEquivalentDescriptionsArea(body);
         createDisjointClassesArea(body);
-        createDisjointClassUnionArea(body);
+        createDisjointClassUnionArea(body);//NICO switch disjoint union of
         _form.reflow(true);
         return body;
     }
@@ -215,7 +213,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
         initSubDescriptionsSection(false);
         initEquivalentDescriptionsSection(false);
         initDisjointDescriptionsSection(false);
-        initDisjointUnionDescriptionsSection(false);
+        initDisjointUnionDescriptionsSection(false);//NICO switch disjoint union of
 
         layoutSections();
         _form.reflow(true);
@@ -228,7 +226,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
         initSubDescriptionsSection(false);
         initEquivalentDescriptionsSection(false);
         initDisjointDescriptionsSection(false);
-        initDisjointUnionDescriptionsSection(false);
+        initDisjointUnionDescriptionsSection(false);//NICO switch disjoint union of
 
         layoutSections();
         _form.reflow(true);
@@ -553,7 +551,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
             activeComposite.setFocus();
         }
     }
-
+//  TODO layout is not optimal
     private void initDisjointUnionDescriptionsSection(boolean setFocus) {
         closeAllToolbars();
         clearComposite(_disjointClazzUnionComp);
@@ -594,6 +592,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
     /**
      * Create disjoint union of classes area
      */
+    //TODO layout is not optimal
     private void createDisjointClassUnionArea(Composite composite) {
         _disjointClazzUnionSection = _toolkit.createSection(composite, Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
         _disjointClazzUnionSection.setText(Messages.ClazzTaxonomyPropertyPage2_DisjointUnion);
@@ -612,6 +611,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
         _toolkit.adapt(_disjointClazzUnionComp);
         _disjointClazzUnionSection.setClient(_disjointClazzUnionComp);
     } 
+    //TODO layout is not optimal
     private Composite createEmptyDisjointUnionRow(Composite parent) {
         final EmptyFormRow formRow = new EmptyFormRow(_toolkit, parent, NUM_COLS);
 
@@ -1061,6 +1061,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
      * @param enabled
      * @throws NeOnCoreException
      */
+  //TODO layout is not optimal
     private void createDisjointUnionRow(Composite parent, final Set<OWLClassExpression> descriptions, final List<LocatedAxiom> axioms, boolean imported, boolean enabled, String sourceOnto) throws NeOnCoreException {
         final FormRow row = new FormRow(_toolkit, parent, 2, imported, sourceOnto,_owlModel.getProjectId(),_id);
         OWLModel sourceOwlModel =_owlModel;
@@ -1169,7 +1170,7 @@ public class ClazzTaxonomyPropertyPage2 extends AbstractOWLIdPropertyPage {
         sections.add(_subClazzesSection);
         sections.add(_equivClazzesSection);
         sections.add(_disjointClazzesSection);
-        sections.add(_disjointClazzUnionSection);
+        sections.add(_disjointClazzUnionSection);//NICO switch disjoint union of
         return sections;
     }
 
