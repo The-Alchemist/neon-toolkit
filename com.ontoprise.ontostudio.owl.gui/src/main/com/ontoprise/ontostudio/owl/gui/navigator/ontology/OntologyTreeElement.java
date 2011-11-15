@@ -42,15 +42,17 @@ public class OntologyTreeElement extends AbstractOntologyTreeElement implements 
     @Override
     public boolean equals(Object arg0) {
         boolean res = super.equals(arg0);
-        if (res && arg0.getClass() == getClass()) {
-            OntologyTreeElement that = (OntologyTreeElement) arg0;
-            res = _dataProvider == that._dataProvider && equal(getOntologyUri(), that.getOntologyUri()) && equal(getProjectName(), that.getProjectName());
-        } else {
-            if(arg0.getClass() == getClass()){ //needed for jump from search result to ontology 
+        if(arg0 != null){
+            if (res && arg0.getClass() == getClass()) {
                 OntologyTreeElement that = (OntologyTreeElement) arg0;
-                res = equal(getOntologyUri(), that.getOntologyUri()) && equal(getProjectName(), that.getProjectName());
-            }else{
-                res = false;
+                res = _dataProvider == that._dataProvider && equal(getOntologyUri(), that.getOntologyUri()) && equal(getProjectName(), that.getProjectName());
+            } else {
+                if(arg0.getClass() == getClass()){ //needed for jump from search result to ontology 
+                    OntologyTreeElement that = (OntologyTreeElement) arg0;
+                    res = equal(getOntologyUri(), that.getOntologyUri()) && equal(getProjectName(), that.getProjectName());
+                }else{
+                    res = false;
+                }
             }
         }
         return res;
